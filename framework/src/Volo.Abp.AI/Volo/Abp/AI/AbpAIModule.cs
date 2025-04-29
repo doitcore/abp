@@ -3,5 +3,6 @@
 namespace Volo.Abp.AI;
 
 public class AbpAIModule : AbpModule
-{ 
+{
+    
 }

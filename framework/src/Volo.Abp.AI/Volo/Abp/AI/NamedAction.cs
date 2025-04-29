@@ -2,7 +2,7 @@ using System;
 
 namespace Volo.Abp.AI;
 
-public class NamedAction<T> : NamedObject //TODO: Move to Core package?
+public class NamedAction<T> : NamedObject
 {
     public Action<T> Action { get; set; }
     

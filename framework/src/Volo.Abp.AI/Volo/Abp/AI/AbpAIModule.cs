@@ -7,6 +7,7 @@ namespace Volo.Abp.AI;
  * - A factory service (IChatClientFactory) to create a IChatClient by given name
  *   (currently, we are using a keyed service collection to resolve the IChatClient)
  *   - We can also inject typed clients, like ICommentSummaryChatClient or IChatClient<CommentSummaryChatClient> (more practical to resolve)
+ *     In this way, we can write specific extension methods to some clients, for prompts.
  * - 
  */
 

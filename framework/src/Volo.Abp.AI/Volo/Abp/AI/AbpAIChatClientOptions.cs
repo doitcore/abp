@@ -1,6 +1,6 @@
 namespace Volo.Abp.AI;
 
-public class AbpAIOptions
+public class AbpAIChatClientOptions
 {
     public ChatClientConfigurationDictionary ChatClients { get; } = new();
 }

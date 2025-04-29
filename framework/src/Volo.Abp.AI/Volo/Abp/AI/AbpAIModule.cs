@@ -3,11 +3,18 @@ using Volo.Abp.Modularity;
 
 namespace Volo.Abp.AI;
 
+/* TODO:
+ * - A factory service (IChatClientFactory) to create a IChatClient by given name
+ *   (currently, we are using a keyed service collection to resolve the IChatClient)
+ *   - We can also inject typed clients, like ICommentSummaryChatClient or IChatClient<CommentSummaryChatClient> (more practical to resolve)
+ * - 
+ */
+
 public class AbpAIModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        var options = context.Services.ExecutePreConfiguredActions<AbpAIOptions>();
+        var options = context.Services.ExecutePreConfiguredActions<AbpAIChatClientOptions>();
 
         foreach (var chatClientConfig in options.ChatClients.Values)
         {

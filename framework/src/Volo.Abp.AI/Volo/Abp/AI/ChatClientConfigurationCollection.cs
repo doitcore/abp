@@ -7,6 +7,7 @@ public class ChatClientConfigurationDictionary : Dictionary<string, ChatClientCo
 {
     public static string DefaultChatClientName => "Default";
     
+    // TODO: Consider to rename to Configure only.
     public void ConfigureDefault(Action<ChatClientConfiguration> configureAction) =>
         Configure(DefaultChatClientName, configureAction);
 

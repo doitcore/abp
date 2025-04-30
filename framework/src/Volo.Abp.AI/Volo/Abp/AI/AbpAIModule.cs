@@ -7,7 +7,7 @@ namespace Volo.Abp.AI;
 
 public class AbpAIModule : AbpModule
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    public override void PostConfigureServices(ServiceConfigurationContext context)
     {
         var options = context.Services.ExecutePreConfiguredActions<AbpAIOptions>();
 

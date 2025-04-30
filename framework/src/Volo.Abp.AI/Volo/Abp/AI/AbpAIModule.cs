@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp.Modularity;
 
@@ -26,6 +27,14 @@ public class AbpAIModule : AbpModule
                 AbpAIOptions.GetChatClientServiceKeyName(chatClientConfig.Name),
                 provider => chatClientConfig.Builder.Build(provider)
             );
+
+            if (chatClientConfig.Name == ChatClientConfigurationDictionary.DefaultChatClientName)
+            {
+                context.Services.AddTransient<IChatClient>(sp => sp.GetRequiredKeyedService<IChatClient>(
+                        AbpAIOptions.GetChatClientServiceKeyName(chatClientConfig.Name)
+                    )
+                );
+            }
         }
         
         context.Services.TryAddTransient(typeof(IChatClient<>), typeof(TypedChatClient<>));

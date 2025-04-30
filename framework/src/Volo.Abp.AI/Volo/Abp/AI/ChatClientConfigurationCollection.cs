@@ -5,10 +5,10 @@ namespace Volo.Abp.AI;
 
 public class ChatClientConfigurationDictionary : Dictionary<string, ChatClientConfiguration>
 {
-    public static string DefaultName => "Default";
+    public static string DefaultChatClientName => "Default";
     
     public void ConfigureDefault(Action<ChatClientConfiguration> configureAction) =>
-        Configure(DefaultName, configureAction);
+        Configure(DefaultChatClientName, configureAction);
 
     public void Configure<T>(Action<ChatClientConfiguration> configureAction)
     {

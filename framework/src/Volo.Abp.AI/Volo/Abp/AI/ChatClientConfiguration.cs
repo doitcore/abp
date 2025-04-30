@@ -10,6 +10,8 @@ public class ChatClientConfiguration
     public ChatClientBuilder? Builder { get; set; }
     
     public BuilderConfigurerList BuilderConfigurers { get; }
+    
+    // TODO: Base chat client (for inheriting a chat client configuration from some other one) 
 
     public ChatClientConfiguration(string name)
     {

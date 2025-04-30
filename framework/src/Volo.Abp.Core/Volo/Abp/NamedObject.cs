@@ -1,6 +1,6 @@
-namespace Volo.Abp.AI;
+namespace Volo.Abp;
 
-public class NamedObject //TODO: Move to Core package?
+public class NamedObject
 {
     public string Name { get; }
 

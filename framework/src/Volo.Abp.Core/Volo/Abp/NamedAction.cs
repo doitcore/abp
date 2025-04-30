@@ -1,6 +1,6 @@
 using System;
 
-namespace Volo.Abp.AI;
+namespace Volo.Abp;
 
 public class NamedAction<T> : NamedObject
 {

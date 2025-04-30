@@ -1,6 +1,6 @@
 namespace Volo.Abp.AI;
 
-public class AbpAIChatClientOptions
+public class AbpAIOptions
 {
     public const string ChatClientServiceKeyNamePrefix = "Abp.AI.ChatClient_";
     

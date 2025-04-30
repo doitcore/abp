@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp.Modularity;
 
 namespace Volo.Abp.AI;
@@ -28,8 +29,13 @@ public class AbpAIModule : AbpModule
             {
                 builderConfigurer.Action(chatClientConfig.Builder);
             }
-            
-            context.Services.AddKeyedChatClient(chatClientConfig.Name, provider => chatClientConfig.Builder.Build(provider));
+
+            context.Services.AddKeyedChatClient(
+                AbpAIChatClientOptions.GetChatClientServiceKeyName(chatClientConfig.Name),
+                provider => chatClientConfig.Builder.Build(provider)
+            );
         }
+        
+        context.Services.TryAddTransient(typeof(IChatClient<>), typeof(TypedChatClient<>));
     }
 }

@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 import { appRoutes } from './app.routes';
 import { APP_ROUTE_PROVIDER } from './route.provider';
@@ -35,5 +36,6 @@ export const appConfig: ApplicationConfig = {
     provideFeatureManagementConfig(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
+    provideClientHydration(withEventReplay()),
   ],
 };

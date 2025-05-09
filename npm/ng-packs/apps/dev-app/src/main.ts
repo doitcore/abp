@@ -1,6 +1,6 @@
 import { enableProdMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 import { environment } from './environments/environment';
 import { APP_ROUTE_PROVIDER } from './app/route.provider';
@@ -38,6 +38,6 @@ bootstrapApplication(AppComponent, {
     provideAccountConfig(),
     provideIdentityConfig(),
     provideTenantManagementConfig(),
-    provideFeatureManagementConfig(),
+    provideFeatureManagementConfig(), provideClientHydration(withEventReplay()),
   ],
 }).catch(err => console.error(err));

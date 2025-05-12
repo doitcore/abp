@@ -12,6 +12,8 @@ import { provideIdentityConfig } from '@abp/ng.identity/config';
 import { provideTenantManagementConfig } from '@abp/ng.tenant-management/config';
 import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
 import { APP_ROUTE_PROVIDER } from './route.provider';
+import { provideThemeBasicConfig } from '@abp/ng.theme.basic';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 const serverConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +34,8 @@ const serverConfig: ApplicationConfig = {
     provideTenantManagementConfig(),
     provideFeatureManagementConfig(),
     provideServerRendering(),
+    provideThemeBasicConfig(),
+    provideAnimations(),
   ],
 };
 

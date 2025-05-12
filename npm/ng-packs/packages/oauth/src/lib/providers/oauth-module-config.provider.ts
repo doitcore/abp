@@ -15,7 +15,7 @@ import { AbpOAuthGuard, abpOAuthGuard } from '../guards';
 import { OAuthConfigurationHandler } from '../handlers';
 import { OAuthApiInterceptor } from '../interceptors';
 import { AbpOAuthService, OAuthErrorFilterService } from '../services';
-import { pipeToLogin, checkAccessToken } from '../utils';
+import { pipeToLogin, checkAccessToken, oAuthStorageFactory } from '../utils';
 import { NavigateToManageProfileProvider } from './navigate-to-manage-profile.provider';
 
 export function provideAbpOAuth() {
@@ -35,6 +35,10 @@ export function provideAbpOAuth() {
     {
       provide: ApiInterceptor,
       useClass: OAuthApiInterceptor,
+    },
+    {
+      provide: OAuthStorage,
+      useFactory: oAuthStorageFactory,
     },
     {
       provide: PIPE_TO_LOGIN_FN_KEY,

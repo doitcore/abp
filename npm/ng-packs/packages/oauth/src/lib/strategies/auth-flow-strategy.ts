@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { inject, Injector } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Params, Router } from '@angular/router';
 
@@ -23,7 +23,6 @@ import {
 } from '@abp/ng.core';
 
 import { clearOAuthStorage } from '../utils/clear-o-auth-storage';
-import { oAuthStorage } from '../utils/oauth-storage';
 import { OAuthErrorFilterService } from '../services';
 import { isTokenExpired } from '../utils';
 import { RememberMeService } from '../services/remember-me.service';
@@ -74,8 +73,8 @@ export abstract class AuthFlowStrategy {
 
   async init(): Promise<any> {
     if (this.oAuthConfig.clientId) {
-      const shouldClear = shouldStorageClear(this.oAuthConfig.clientId, oAuthStorage);
-      if (shouldClear) clearOAuthStorage(oAuthStorage);
+      const shouldClear = shouldStorageClear(this.oAuthConfig.clientId);
+      if (shouldClear) clearOAuthStorage();
     }
     this.oAuthService.configure(this.oAuthConfig);
     this.oAuthService.events
@@ -142,7 +141,8 @@ export abstract class AuthFlowStrategy {
   }
 }
 
-function shouldStorageClear(clientId: string, storage: OAuthStorage): boolean {
+function shouldStorageClear(clientId: string): boolean {
+  const storage = inject(OAuthStorage);
   const key = 'abpOAuthClientId';
   if (!storage.getItem(key)) {
     storage.setItem(key, clientId);

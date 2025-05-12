@@ -1,6 +1,29 @@
-import { OAuthStorage } from 'angular-oauth2-oidc';
-import { oAuthStorage } from './oauth-storage';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
-export function storageFactory(): OAuthStorage {
-  return oAuthStorage;
+export class MockStorage implements Storage {
+  private data = new Map<string, string>();
+  get length() {
+    return this.data.size;
+  }
+  clear() {
+    this.data.clear();
+  }
+  getItem(key: string) {
+    return this.data.get(key) || null;
+  }
+  key(index: number) {
+    return Array.from(this.data.keys())[index] || null;
+  }
+  removeItem(key: string) {
+    this.data.delete(key);
+  }
+  setItem(key: string, value: string) {
+    this.data.set(key, value);
+  }
+}
+
+export function oAuthStorageFactory(): Storage {
+  const platformId = inject(PLATFORM_ID);
+  return isPlatformBrowser(platformId) ? localStorage : new MockStorage();
 }

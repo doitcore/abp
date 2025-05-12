@@ -1,6 +1,7 @@
-import { Injector } from '@angular/core';
+import { Injector, inject, PLATFORM_ID } from '@angular/core';
 import clone from 'just-clone';
 import { Environment } from '../models/environment';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 import { FindTenantResultDto } from '../proxy/volo/abp/asp-net-core/mvc/multi-tenancy/models';
 import { EnvironmentService } from '../services/environment.service';
@@ -10,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
 import { TENANT_NOT_FOUND_BY_NAME } from '../tokens/tenant-not-found-by-name';
 import { HttpErrorResponse } from '@angular/common/http';
 
+const platformId = inject(PLATFORM_ID);
 const tenancyPlaceholder = '{0}';
 
 function getCurrentTenancyName(appBaseUrl: string): string {
@@ -17,11 +19,21 @@ function getCurrentTenancyName(appBaseUrl: string): string {
 
   const parseTokens = createTokenParser(appBaseUrl);
   const token = tenancyPlaceholder.replace(/[}{]/g, '');
-  return parseTokens(window.location.href)[token]?.[0];
+  const tokenValue = isPlatformBrowser(platformId)
+    ? parseTokens(inject(DOCUMENT).defaultView?.location.href)[token]?.[0]
+    : undefined;
+  return tokenValue;
 }
 
-function getCurrentTenancyNameFromUrl(tenantKey: string) {
-  const urlParams = new URLSearchParams(window.location.search);
+export function getCurrentTenancyNameFromUrl(tenantKey: string): string | null {
+  const platformId = inject(PLATFORM_ID);
+
+  if (!isPlatformBrowser(platformId)) {
+    return null;
+  }
+
+  const search = inject(DOCUMENT).defaultView?.location.search;
+  const urlParams = new URLSearchParams(search);
   return urlParams.get(tenantKey);
 }
 

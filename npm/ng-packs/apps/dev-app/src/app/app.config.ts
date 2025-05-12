@@ -14,6 +14,8 @@ import { provideAccountConfig } from '@abp/ng.account/config';
 import { provideIdentityConfig } from '@abp/ng.identity/config';
 import { provideTenantManagementConfig } from '@abp/ng.tenant-management/config';
 import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
+import { provideThemeBasicConfig } from '@abp/ng.theme.basic';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,6 +37,8 @@ export const appConfig: ApplicationConfig = {
     provideTenantManagementConfig(),
     provideFeatureManagementConfig(),
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideThemeBasicConfig(),
+    provideAnimations(),
     provideRouter(appRoutes),
     provideClientHydration(withEventReplay()),
   ],

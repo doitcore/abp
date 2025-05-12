@@ -73,8 +73,8 @@ export abstract class AuthFlowStrategy {
 
   async init(): Promise<any> {
     if (this.oAuthConfig.clientId) {
-      const shouldClear = shouldStorageClear(this.oAuthConfig.clientId);
-      if (shouldClear) clearOAuthStorage();
+      const shouldClear = shouldStorageClear(this.oAuthConfig.clientId, this.injector);
+      if (shouldClear) clearOAuthStorage(this.injector);
     }
     this.oAuthService.configure(this.oAuthConfig);
     this.oAuthService.events
@@ -122,7 +122,7 @@ export abstract class AuthFlowStrategy {
   }
 
   protected refreshToken() {
-    return this.oAuthService.refreshToken().catch(() => clearOAuthStorage());
+    return this.oAuthService.refreshToken().catch(() => clearOAuthStorage(this.injector));
   }
 
   protected listenToOauthErrors() {
@@ -132,7 +132,7 @@ export abstract class AuthFlowStrategy {
         tap((err: OAuthErrorEvent) => {
           const shouldSkip = this.oAuthErrorFilterService.run(err);
           if (!shouldSkip) {
-            clearOAuthStorage();
+            clearOAuthStorage(this.injector);
           }
         }),
         switchMap(() => this.configState.refreshAppState()),
@@ -141,8 +141,8 @@ export abstract class AuthFlowStrategy {
   }
 }
 
-function shouldStorageClear(clientId: string): boolean {
-  const storage = inject(OAuthStorage);
+function shouldStorageClear(clientId: string, injector: Injector): boolean {
+  const storage = injector.get(OAuthStorage);
   const key = 'abpOAuthClientId';
   if (!storage.getItem(key)) {
     storage.setItem(key, clientId);

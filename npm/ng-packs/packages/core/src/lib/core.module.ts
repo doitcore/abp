@@ -4,6 +4,7 @@ import {
   withInterceptorsFromDi,
   withXsrfConfiguration,
   HTTP_INTERCEPTORS,
+  withFetch,
 } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -97,7 +98,7 @@ const CORE_COMPONENTS = [
     ...CORE_COMPONENTS,
   ],
   declarations: [],
-  providers: [LocalizationPipe, provideHttpClient(withInterceptorsFromDi())],
+  providers: [LocalizationPipe, provideHttpClient(withInterceptorsFromDi(), withFetch())],
 })
 export class BaseCoreModule {}
 

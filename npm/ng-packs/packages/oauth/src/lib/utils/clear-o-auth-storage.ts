@@ -1,8 +1,8 @@
 import { OAuthStorage } from 'angular-oauth2-oidc';
-import { inject } from '@angular/core';
+import { Injector } from '@angular/core';
 
-export function clearOAuthStorage() {
-  const storage = inject(OAuthStorage);
+export function clearOAuthStorage(injector: Injector) {
+  const storage = injector.get(OAuthStorage);
   const keys = [
     'access_token',
     'id_token',

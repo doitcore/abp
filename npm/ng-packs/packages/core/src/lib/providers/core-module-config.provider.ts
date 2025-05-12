@@ -3,6 +3,7 @@ import { TitleStrategy } from '@angular/router';
 import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
+  withFetch,
   withInterceptorsFromDi,
   withXsrfConfiguration,
 } from '@angular/common/http';
@@ -105,6 +106,7 @@ export function provideAbpCore(...features: CoreFeature<CoreFeatureKind>[]) {
         cookieName: 'XSRF-TOKEN',
         headerName: 'RequestVerificationToken',
       }),
+      withFetch(),
     ),
     provideAppInitializer(() => {
       getInitialData();

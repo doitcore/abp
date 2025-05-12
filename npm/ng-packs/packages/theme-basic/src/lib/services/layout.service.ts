@@ -1,11 +1,13 @@
-import {RouterEvents, SubscriptionService} from '@abp/ng.core';
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { RouterEvents, SubscriptionService } from '@abp/ng.core';
+import { ChangeDetectorRef, inject, Injectable } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { eThemeBasicComponents } from '../enums';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class LayoutService {
+  document = inject(DOCUMENT);
   isCollapsed = true;
 
   smallScreen!: boolean; // do not set true or false
@@ -16,16 +18,18 @@ export class LayoutService {
 
   navItemsComponentKey = eThemeBasicComponents.NavItems;
 
-  constructor(private subscription: SubscriptionService,
-              private cdRef: ChangeDetectorRef,
-              routerEvents:RouterEvents) {
-    subscription.addOne(routerEvents.getNavigationEvents("End"),() => {
+  constructor(
+    private subscription: SubscriptionService,
+    private cdRef: ChangeDetectorRef,
+    routerEvents: RouterEvents,
+  ) {
+    subscription.addOne(routerEvents.getNavigationEvents('End'), () => {
       this.isCollapsed = true;
-    })
+    });
   }
 
   private checkWindowWidth() {
-    const isSmallScreen = window.innerWidth < 992;
+    const isSmallScreen = this.document.defaultView.innerWidth < 992;
     if (isSmallScreen && this.smallScreen === false) {
       this.isCollapsed = false;
       setTimeout(() => {
@@ -39,7 +43,7 @@ export class LayoutService {
   subscribeWindowSize() {
     this.checkWindowWidth();
 
-    const resize$ = fromEvent(window, 'resize').pipe(debounceTime(150));
+    const resize$ = fromEvent(this.document.defaultView, 'resize').pipe(debounceTime(150));
     this.subscription.addOne(resize$, () => this.checkWindowWidth());
   }
 }

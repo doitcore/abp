@@ -1,8 +1,8 @@
 import { ConfigStateService, CoreModule, LanguageInfo, SessionStateService } from '@abp/ng.core';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -42,8 +42,9 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [CommonModule, CoreModule, NgbDropdownModule],
 })
 export class LanguagesComponent {
+  document = inject(DOCUMENT);
   get smallScreen(): boolean {
-    return window.innerWidth < 992;
+    return this.document.defaultView.innerWidth < 992;
   }
 
   languages$: Observable<LanguageInfo[]> = this.configState.getDeep$('localization.languages');

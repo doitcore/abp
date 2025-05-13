@@ -50,14 +50,13 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
     const location = this.windowService.window.location;
     const history = this.windowService.window.history;
 
-    const href =
-      location.origin +
-      location.pathname +
-      location.search
-        .replace(/iss=[^&$]*/, '')
-        .replace(/culture=[^&$]*/, '')
-        .replace(/ui-culture=[^&$]*/, '') +
-      location.hash;
+    const query = location.search
+      .replace(/([?&])iss=[^&]*&?/, '$1')
+      .replace(/([?&])culture=[^&]*&?/, '$1')
+      .replace(/([?&])ui-culture=[^&]*&?/, '$1')
+      .replace(/[?&]+$/, '');
+
+    const href = location.origin + location.pathname + query + location.hash;
 
     history.replaceState(null, '', href);
   }

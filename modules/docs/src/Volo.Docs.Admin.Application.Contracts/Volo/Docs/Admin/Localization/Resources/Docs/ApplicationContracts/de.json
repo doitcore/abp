@@ -57,6 +57,15 @@
     "LastCachedTime": "Zwischenspeicher",
     "Project": "Projekt",
     "AdvancedFilters": "Erweiterte Filter",
-    "RemoveCacheAndReIndexConfirmation": "Das Dokument „{0}“ wird aus dem Cache entfernt und neu indiziert. Bestätigen Sie?"
+    "RemoveCacheAndReIndexConfirmation": "Das Dokument „{0}“ wird aus dem Cache entfernt und neu indiziert. Bestätigen Sie?",
+    "GeneratePdf": "PDF generieren",
+    "Generating": "Generieren...",
+    "Language": "Sprache",
+    "ForceToGenerateNewPdf": "Neues PDF erzwingen",
+    "PdfGeneratedSuccessfully": "PDF erfolgreich generiert",
+    "GenerateAndDownloadPdf": "PDF generieren und herunterladen",
+    "PdfFileDeletionWarningMessage": "Sind Sie sicher, dass Sie das PDF-Datei \"{0}\" löschen wollen?",
+    "ManagePdfFiles": "PDF-Dateien verwalten",
+    "Permission:ManagePdfFiles": "PDF-Dateien verwalten"
   }
 }

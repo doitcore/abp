@@ -32,10 +32,14 @@ using Localization.Resources.AbpUi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Volo.Abp.Account;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.BlobStoring.Database;
 using Volo.Abp.PermissionManagement.HttpApi;
 using Volo.Abp.Validation.Localization;
 using Volo.Docs.Documents.FullSearch.Elastic;
 using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Docs.Common.Documents;
+using Volo.Docs.Projects.Pdf;
 
 namespace VoloDocs.Web
 {
@@ -82,7 +86,7 @@ namespace VoloDocs.Web
             //     options.SingleProjectMode.ProjectName = "abp";
             //     options.MultiLanguageMode = false;
             // });
-
+            
             Configure<DocsElasticSearchOptions>(options =>
             {
                 options.Enable = false;
@@ -169,6 +173,22 @@ namespace VoloDocs.Web
                 options.EnableGoogleTranslate = true;
                 options.EnableGoogleProgrammableSearchEngine = true;
                 options.GoogleSearchEngineId = "77c7266532da1427f";
+            });
+            
+            Configure<DocsProjectPdfGeneratorOptions>(options =>
+            {
+                options.BaseUrl = configuration["App:SelfUrl"];
+                options.IndexPagePath = "index.md";
+                options.CalculatePdfFileTitle = project => project.ShortName == "abp" ? "ABP Documentation" : null;
+                options.DocumentContentNormalizer = content => content.Replace("<i class=\"fa fa-minus text-secondary\"></i>", "No").Replace("<i class=\"fa fa-check text-success\"></i>", "Yes");
+            });
+            
+            Configure<AbpBlobStoringOptions>(options =>
+            {
+                options.Containers.ConfigureDefault(container =>
+                {
+                    container.UseDatabase();
+                });
             });
         }
 

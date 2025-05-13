@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities;
@@ -47,9 +48,12 @@ namespace Volo.Docs.Projects
         public virtual string MainWebsiteUrl { get; set; }
 
         public virtual string LatestVersionBranchName { get; set; }
+        
+        public virtual List<ProjectPdfFile> PdfFiles { get; set; }
 
         protected Project()
         {
+            PdfFiles = new List<ProjectPdfFile>();
         }
 
         public Project(
@@ -102,6 +106,25 @@ namespace Volo.Docs.Projects
         private void NormalizeShortName()
         {
             ShortName = ShortName.ToLower();
+        }
+        
+        public virtual ProjectPdfFile FindPdfFile(string fileName)
+        {
+            return PdfFiles.Find(x => x.FileName == fileName);
+        }
+        
+        public virtual void AddPdfFile(Guid projectId, string fileName, string version, string languageCode)
+        {
+            PdfFiles.Add(new ProjectPdfFile(projectId, fileName, version, languageCode));
+        }
+        
+        public virtual void RemovePdfFile(string fileName)
+        {
+            var pdfFile = FindPdfFile(fileName);
+            if (pdfFile != null)
+            {
+                PdfFiles.Remove(pdfFile);
+            }
         }
     }
 }

@@ -3,12 +3,14 @@ using Volo.Abp.Application;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Caching;
 using Volo.Abp.Modularity;
+using Volo.Docs.Common;
 
 namespace Volo.Docs.Admin
 {
     [DependsOn(
         typeof(DocsDomainModule),
         typeof(DocsAdminApplicationContractsModule),
+        typeof(DocsCommonApplicationModule),
         typeof(AbpCachingModule),
         typeof(AbpAutoMapperModule),
         typeof(AbpDddApplicationModule)

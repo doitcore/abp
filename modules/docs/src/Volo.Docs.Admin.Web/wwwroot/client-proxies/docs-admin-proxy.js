@@ -136,6 +136,21 @@
       }, ajaxParams));
     };
 
+    volo.docs.admin.projectsAdmin.getPdfFiles = function(input, ajaxParams) {
+      return abp.ajax($.extend(true, {
+        url: abp.appPath + 'api/docs/admin/projects/PdfFiles' + abp.utils.buildQueryString([{ name: 'projectId', value: input.projectId }, { name: 'sorting', value: input.sorting }, { name: 'skipCount', value: input.skipCount }, { name: 'maxResultCount', value: input.maxResultCount }]) + '',
+        type: 'GET'
+      }, ajaxParams));
+    };
+
+    volo.docs.admin.projectsAdmin.deletePdfFile = function(input, ajaxParams) {
+      return abp.ajax($.extend(true, {
+        url: abp.appPath + 'api/docs/admin/projects/DeletePdfFile' + abp.utils.buildQueryString([{ name: 'projectId', value: input.projectId }, { name: 'version', value: input.version }, { name: 'languageCode', value: input.languageCode }]) + '',
+        type: 'DELETE',
+        dataType: null
+      }, ajaxParams));
+    };
+
     volo.docs.admin.projectsAdmin.reindex = function(input, ajaxParams) {
       return abp.ajax($.extend(true, {
         url: abp.appPath + 'api/docs/admin/projects/Reindex',

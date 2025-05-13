@@ -57,6 +57,15 @@
     "LastCachedTime": "Время кеширования",
     "Project": "Проект",
     "AdvancedFilters": "Расширенные фильтры",
-    "RemoveCacheAndReIndexConfirmation": "Документ \"{0}\" будет удален из кэша и переиндексирован. Вы подтверждаете?"
+    "RemoveCacheAndReIndexConfirmation": "Документ \"{0}\" будет удален из кэша и переиндексирован. Вы подтверждаете?",
+    "GeneratePdf": "Генерировать PDF",
+    "Generating": "Генерация...",
+    "Language": "Язык",
+    "ForceToGenerateNewPdf": "Принудительное создание нового PDF",
+    "PdfGeneratedSuccessfully": "PDF успешно сгенерирован",
+    "GenerateAndDownloadPdf": "Сгенерировать и скачать PDF",
+    "PdfFileDeletionWarningMessage": "Вы уверены, что хотите удалить файл PDF \"{0}\"?",
+    "ManagePdfFiles": "Управление файлами PDF",
+    "Permission:ManagePdfFiles": "Управление файлами PDF"
   }
 }

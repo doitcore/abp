@@ -56,6 +56,15 @@
     "FileName": "Όνομα αρχείου",
     "LastCachedTime": "Χρόνος προσωρινής αποθήκευσης",
     "Project": "Εργο",
-    "RemoveCacheAndReIndexConfirmation": "Το έγγραφο \"{0}\" θα αφαιρεθεί από την προσωρινή μνήμη και θα αναπροσαρμοστεί εκ νέου. Επιβεβαιώνετε;"
+    "RemoveCacheAndReIndexConfirmation": "Το έγγραφο \"{0}\" θα αφαιρεθεί από την προσωρινή μνήμη και θα αναπροσαρμοστεί εκ νέου. Επιβεβαιώνετε;",
+    "GeneratePdf": "Δημιουργία PDF",
+    "Generating": "Δημιουργία...",
+    "Language": "Γλώσσα",
+    "ForceToGenerateNewPdf": "Βάλτε το νέο PDF",
+    "PdfGeneratedSuccessfully": "Το PDF αναπροσαρμοστεί εκ νέου",
+    "GenerateAndDownloadPdf": "Δημιουργία και λήψη PDF",
+    "PdfFileDeletionWarningMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το PDF αρχείο \"{0}\";",
+    "ManagePdfFiles": "Διαχείρηση PDF αρχείων",
+    "Permission:ManagePdfFiles": "Διαχείρηση PDF αρχείων"
   }
 }

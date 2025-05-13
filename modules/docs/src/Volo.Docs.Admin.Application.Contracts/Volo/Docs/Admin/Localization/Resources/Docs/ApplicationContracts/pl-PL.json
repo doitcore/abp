@@ -57,6 +57,15 @@
     "LastCachedTime": "Czas w pamięci podręcznej",
     "Project": "Projekt",
     "AdvancedFilters": "Zaawansowane filtry",
-    "RemoveCacheAndReIndexConfirmation": "Dokument \"{0}\" zostanie usunięty z pamięci podręcznej i ponownie zaindeksowany. Czy potwierdzasz?"
+    "RemoveCacheAndReIndexConfirmation": "Dokument \"{0}\" zostanie usunięty z pamięci podręcznej i ponownie zaindeksowany. Czy potwierdzasz?",
+    "GeneratePdf": "Generuj PDF",
+    "Generating": "Generowanie...",
+    "Language": "Język",
+    "ForceToGenerateNewPdf": "Wymuś generowanie nowego PDF",
+    "PdfGeneratedSuccessfully": "PDF został pomyślnie wygenerowany",
+    "GenerateAndDownloadPdf": "Generuj i pobierz PDF",
+    "PdfFileDeletionWarningMessage": "Czy na pewno chcesz usunąć plik PDF \"{0}\"?",
+    "ManagePdfFiles": "Zarządzanie plikami PDF",
+    "Permission:ManagePdfFiles": "Zarządzanie plikami PDF"
   }
 }

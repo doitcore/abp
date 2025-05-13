@@ -6,6 +6,12 @@
 
 This article shows how we can use this workflow library within our ABP-based application. We will start with a couple of examples and then we will integrate the **Elsa Dashboard** (you can see it in the above gif) into our application to be able to design our workflows visually.
 
+---
+> 🛠 Liked this post? I now share all my content on Substack — real-world .NET, AI, and scalable software design.
+> 👉 Subscribe here → engincanveske.substack.com
+> 🎥 Also, check out my YouTube channel for hands-on demos and deep dives: https://www.youtube.com/@engincanv
+---
+
 ## Source Code
 
 You can find the source of the example solution used in this article [here](https://github.com/abpframework/abp-samples/tree/master/ElsaDemo).
@@ -454,3 +460,9 @@ namespace ElsaDemo.Web.Menus
 * Now we can click the "Workflow" menu item, display the Elsa Dashboard and designing workflows.
 
 ![elsa-demo-result](./elsa-demo-result.gif)
+
+---
+> 🛠 Liked this post? I now share all my content on Substack — real-world .NET, AI, and scalable software design.
+> 👉 Subscribe here → engincanveske.substack.com
+> 🎥 Also, check out my YouTube channel for hands-on demos and deep dives: https://www.youtube.com/@engincanv
+---

@@ -1,0 +1,7 @@
+{
+  "culture": "tr",
+  "texts": {
+    "Permission:DocumentManagement.Common": "Genel Belge Yönetimi",
+    "Permission:PdfGeneration": "PDF Oluşturma"
+  }
+}

@@ -57,6 +57,15 @@
     "LastCachedTime": "Cache tijd",
     "Project": "Project",
     "AdvancedFilters": "Geavanceerde filters",
-    "RemoveCacheAndReIndexConfirmation": "Het document \"{0}\" wordt uit de cache verwijderd en opnieuw geïndexeerd. Bevestigt u?"
+    "RemoveCacheAndReIndexConfirmation": "Het document \"{0}\" wordt uit de cache verwijderd en opnieuw geïndexeerd. Bevestigt u?",
+    "GeneratePdf": "PDF genereren",
+    "Generating": "Genereren...",
+    "Language": "Taal",
+    "ForceToGenerateNewPdf": "Forceer nieuwe PDF te genereren",
+    "PdfGeneratedSuccessfully": "PDF succesvol gegenereerd",
+    "GenerateAndDownloadPdf": "PDF genereren en downloaden",
+    "PdfFileDeletionWarningMessage": "Weet u zeker dat u het PDF-bestand \"{0}\" wilt verwijderen?",
+    "ManagePdfFiles": "PDF-bestanden beheren",
+    "Permission:ManagePdfFiles": "PDF-bestanden beheren"
   }
 }

@@ -57,6 +57,15 @@
     "LastCachedTime": "Välimuistin aika",
     "Project": "Projekti",
     "AdvancedFilters": "Edistyneet suodattimet",
-    "RemoveCacheAndReIndexConfirmation": "Dokumentti \"{0}\" poistetaan välimuistista ja indeksoidaan uudelleen. Vahvistatko?"
+    "RemoveCacheAndReIndexConfirmation": "Dokumentti \"{0}\" poistetaan välimuistista ja indeksoidaan uudelleen. Vahvistatko?",
+    "GeneratePdf": "Generoi PDF",
+    "Generating": "Generoiminen...",
+    "Language": "Kieli",
+    "ForceToGenerateNewPdf": "Vahvista uusi PDF",
+    "PdfGeneratedSuccessfully": "PDF generoidaan onnistuneesti",
+    "GenerateAndDownloadPdf": "Generoi ja lataa PDF",
+    "PdfFileDeletionWarningMessage": "Oletko varma, että haluat poistaa PDF-tiedoston \"{0}\"?",
+    "ManagePdfFiles": "Hallitse PDF-tiedostoja",
+    "Permission:ManagePdfFiles": "Hallitse PDF-tiedostoja"
   }
 }

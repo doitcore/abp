@@ -34,6 +34,9 @@
     <PackageVersion Include="DistributedLock.Core" Version="1.0.8" />
     <PackageVersion Include="DistributedLock.Redis" Version="1.0.3" />
     <PackageVersion Include="DeepL.net" Version="1.15.0" />
+    <PackageVersion Include="itext.bouncy-castle-adapter" Version="9.1.0" />
+    <PackageVersion Include="itext7" Version="9.1.0" />
+    <PackageVersion Include="itext7.pdfhtml" Version="6.1.0" />
     <PackageVersion Include="MongoSandbox.Core" Version="2.0.0" />
     <PackageVersion Include="MongoSandbox8.runtime.linux-x64" Version="2.0.0" />
     <PackageVersion Include="MongoSandbox8.runtime.osx-arm64" Version="2.0.0" />

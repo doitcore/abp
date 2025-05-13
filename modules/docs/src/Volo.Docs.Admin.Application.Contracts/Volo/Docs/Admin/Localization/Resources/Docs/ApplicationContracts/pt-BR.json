@@ -57,6 +57,15 @@
     "LastCachedTime": "Tempo de cache",
     "Project": "Projeto",
     "AdvancedFilters": "Filtros Avançados",
-    "RemoveCacheAndReIndexConfirmation": "O documento \"{0}\" será removido do cache e indexado novamente. Você confirma?"
+    "RemoveCacheAndReIndexConfirmation": "O documento \"{0}\" será removido do cache e indexado novamente. Você confirma?",
+    "GeneratePdf": "Gerar PDF",
+    "Generating": "Gerando...",
+    "Language": "Idioma",
+    "ForceToGenerateNewPdf": "Forçar para gerar um novo PDF",
+    "PdfGeneratedSuccessfully": "PDF gerado com sucesso",
+    "GenerateAndDownloadPdf": "Gerar e baixar PDF",
+    "PdfFileDeletionWarningMessage": "Tem certeza de que deseja excluir o arquivo PDF \"{0}\"?",
+    "ManagePdfFiles": "Gerenciar arquivos PDF",
+    "Permission:ManagePdfFiles": "Gerenciar arquivos PDF"
   }
 }

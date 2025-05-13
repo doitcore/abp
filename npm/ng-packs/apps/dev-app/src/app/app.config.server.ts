@@ -26,7 +26,7 @@ const serverConfig: ApplicationConfig = {
       }),
     ),
     APP_ROUTE_PROVIDER,
-    provideAbpOAuth(),
+    provideAbpOAuth({ ssr: true }),
     provideAbpThemeShared(),
     provideSettingManagementConfig(),
     provideAccountConfig(),

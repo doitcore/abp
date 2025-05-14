@@ -5,7 +5,6 @@ import {
   ApiInterceptor,
   PIPE_TO_LOGIN_FN_KEY,
   CHECK_AUTHENTICATION_STATE_FN_KEY,
-  AbpLocalStorageService,
   AuthErrorFilterService,
 } from '@abp/ng.core';
 import { Provider, makeEnvironmentProviders, inject, provideAppInitializer } from '@angular/core';
@@ -14,11 +13,12 @@ import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { AbpOAuthGuard, abpOAuthGuard } from '../guards';
 import { OAuthConfigurationHandler } from '../handlers';
 import { OAuthApiInterceptor } from '../interceptors';
-import { AbpOAuthService, OAuthErrorFilterService } from '../services';
+import { AbpOAuthService, BrowserTokenStorageService, OAuthErrorFilterService } from '../services';
 import { pipeToLogin, checkAccessToken, oAuthStorageFactory } from '../utils';
 import { NavigateToManageProfileProvider } from './navigate-to-manage-profile.provider';
+import { ServerTokenStorageService } from '../services/server-token-storage.service';
 
-export function provideAbpOAuth() {
+export function provideAbpOAuth({ ssr = false }: { ssr?: boolean }) {
   const providers = [
     {
       provide: AuthService,
@@ -58,7 +58,10 @@ export function provideAbpOAuth() {
       inject(OAuthConfigurationHandler);
     }),
     OAuthModule.forRoot().providers as Provider[],
-    { provide: OAuthStorage, useClass: AbpLocalStorageService },
+    {
+      provide: OAuthStorage,
+      useClass: ssr ? ServerTokenStorageService : BrowserTokenStorageService,
+    },
     { provide: AuthErrorFilterService, useExisting: OAuthErrorFilterService },
   ];
 

@@ -29,7 +29,7 @@ export const appConfig: ApplicationConfig = {
         skipGetAppConfiguration: false,
       }),
     ),
-    provideAbpOAuth(),
+    provideAbpOAuth({ ssr: false }),
     provideAbpThemeShared(),
     provideSettingManagementConfig(),
     provideAccountConfig(),

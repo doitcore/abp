@@ -44,9 +44,7 @@ export function provideTenantManagement(options: TenantManagementConfigOptions =
   ];
 }
 
-export const createTenantManagementRoutingConfiguration = (
-  options: TenantManagementConfigOptions = {},
-): Routes => [
+export const createRoutes = (options: TenantManagementConfigOptions = {}): Routes => [
   {
     path: '',
     component: RouterOutletComponent,

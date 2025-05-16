@@ -44,7 +44,7 @@ export function provideIdentity(options: IdentityConfigOptions = {}): Provider[]
   ];
 }
 
-export const createIdentityRoutingConfiguration = (options: IdentityConfigOptions = {}): Routes => [
+export const createRoutes = (options: IdentityConfigOptions = {}): Routes => [
   {
     path: '',
     component: RouterOutletComponent,

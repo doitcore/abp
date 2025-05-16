@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    loadChildren: () => import('./home/home.routes').then(m => m.homeRoutes),
   },
   {
     path: 'account',
@@ -26,9 +25,3 @@ const routes: Routes = [
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

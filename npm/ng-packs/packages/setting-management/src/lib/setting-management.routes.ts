@@ -12,7 +12,7 @@ export function provideSettingManagement() {
   return [];
 }
 
-export const createSettingManagementRoutingConfiguration = (): Routes => [
+export const createRoutes = (): Routes => [
   {
     path: '',
     component: RouterOutletComponent,

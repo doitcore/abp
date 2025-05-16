@@ -1,9 +1,8 @@
-import { NgModule } from '@angular/core';
 import { RouterOutletComponent } from '@abp/ng.core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { MyProjectNameComponent } from './components/my-project-name.component';
 
-const routes: Routes = [
+export const myProjectNameRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -16,9 +15,3 @@ const routes: Routes = [
     ],
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class MyProjectNameRoutingModule {}

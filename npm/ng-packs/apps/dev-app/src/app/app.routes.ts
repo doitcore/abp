@@ -8,23 +8,18 @@ export const appRoutes: Routes = [
   },
   {
     path: 'account',
-    loadChildren: () => import('@abp/ng.account').then(m => m.createAccountRoutingConfiguration()),
+    loadChildren: () => import('@abp/ng.account').then(m => m.createRoutes()),
   },
   {
     path: 'identity',
-    loadChildren: () =>
-      import('@abp/ng.identity').then(m => m.createIdentityRoutingConfiguration()),
+    loadChildren: () => import('@abp/ng.identity').then(m => m.createRoutes()),
   },
   {
     path: 'tenant-management',
-    loadChildren: () =>
-      import('@abp/ng.tenant-management').then(m => m.createTenantManagementRoutingConfiguration()),
+    loadChildren: () => import('@abp/ng.tenant-management').then(m => m.createRoutes()),
   },
   {
     path: 'setting-management',
-    loadChildren: () =>
-      import('@abp/ng.setting-management').then(m =>
-        m.createSettingManagementRoutingConfiguration(),
-      ),
+    loadChildren: () => import('@abp/ng.setting-management').then(m => m.createRoutes()),
   },
 ];

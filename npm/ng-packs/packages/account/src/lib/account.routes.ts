@@ -44,7 +44,7 @@ export function provideAccount(options: AccountConfigOptions = {}) {
 
 const canActivate = [authenticationFlowGuard];
 
-export const createAccountRoutingConfiguration = (options: AccountConfigOptions = {}): Routes => [
+export const createRoutes = (options: AccountConfigOptions = {}): Routes => [
   {
     path: '',
     component: RouterOutletComponent,

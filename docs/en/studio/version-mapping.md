@@ -4,6 +4,7 @@ This document provides a general overview of the relationship between various ve
 
 | **ABP Studio Version** | **ABP Version of Startup Template**           |
 |------------------------|---------------------------|
+| 0.9.26                 | 9.1.1                     |
 | 0.9.24 - 0.9.25        | 9.1.0                     |
 | 0.9.22 - 0.9.23        | 9.0.4                     |
 | 0.9.20 - 0.9.21        | 9.0.3                     |

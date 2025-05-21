@@ -37,7 +37,7 @@ $(function () {
                     abpHandleError : false,
                     error: function (jqXHR) {
                         if (jqXHR.status === 200) {
-                            abp.message.success(l('PdfFileDeletedSuccessfully'));
+                            abp.message.success(l('PdfFileGeneratedSuccessfully'));
                             $btn.buttonBusy(false);
                             $("#GenerateAndDownloadPdfBtn").buttonBusy(false);
                         } else {

@@ -2,6 +2,19 @@
 
 This document contains **brief release notes** for each ABP Studio release. Release notes only include **major features** and **visible enhancements**. Therefore, they don't include all the development done in the related version. 
 
+## 0.9.26 (2025-04-30)
+
+* Fixed the issue where C# applications would not stop when requested.  
+* Added idle session timeout feature to Blazor WebAssembly applications.  
+* Added “Setup as a modular solution” option to application startup templates.  
+* Automatically added remote service base URL after generating C# proxies.
+* Configured Helm charts for Kubernetes health check endpoints.  
+* Fixed auditing issue in Blazor WebAssembly applications.  
+* Fixed login error after registering a new user in Blazor WebApp.  
+* Implemented password login flow in Studio CLI.  
+* Supported non-root user mode in Docker Compose configurations.
+* Upgraded templates to version `9.1.1`.
+
 ## 0.9.25 (2025-03-12)
 
 * Added ready/health check for solution runner.

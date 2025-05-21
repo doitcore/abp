@@ -15,6 +15,7 @@ import {
   getAppConfigPath,
   cleanEmptyExprFromModule,
   cleanEmptyExprFromProviders,
+  getWorkspace,
 } from '../../utils';
 import { ThemeOptionsEnum } from './theme-options.enum';
 import { findNodes, getDecoratorMetadata, getMetadataField } from '../../utils/angular/ast-utils';
@@ -82,6 +83,7 @@ function updateAppModule(selectedProject: string, targetThemeName: ThemeOptionsE
       insertImports(selectedProject, targetThemeName),
       insertProviders(selectedProject, targetThemeName),
       adjustProvideAbpThemeShared(appModulePath, targetThemeName),
+      updateIndexHtml(selectedProject, targetThemeName),
       formatFile(appModulePath),
       cleanEmptyExpressions(appModulePath, isStandalone),
     ]);
@@ -533,4 +535,40 @@ function findProvideAbpThemeSharedCalls(source: ts.SourceFile): ts.CallExpressio
   visit(source);
 
   return result;
+}
+
+export function updateIndexHtml(projectName: string, themeName: ThemeOptionsEnum): Rule {
+  return async (host: Tree) => {
+    const workspace = await getWorkspace(host);
+    const project = workspace.projects.get(projectName);
+
+    if (!project) {
+      throw new Error(`Project "${projectName}" not found in workspace.`);
+    }
+
+    const buildOptions = project.targets.get('build')?.options;
+    const indexPath = buildOptions?.index as string;
+
+    if (!indexPath || !host.exists(indexPath)) {
+      throw new Error(`index.html not found at path: ${indexPath}`);
+    }
+
+    const buffer = host.read(indexPath);
+    if (!buffer) return;
+    const content = buffer.toString('utf-8');
+
+    const loaderDiv = `<div id="lp-page-loader"></div>`;
+    let updatedContent = content;
+
+    if (themeName === ThemeOptionsEnum.LeptonX) {
+      if (!content.includes(loaderDiv)) {
+        updatedContent = content.replace(/<body([^>]*)>/i, `<body$1>\n  ${loaderDiv}`);
+      }
+    } else {
+      if (content.includes(loaderDiv)) {
+        updatedContent = content.replace(loaderDiv, '');
+      }
+    }
+    host.overwrite(indexPath, updatedContent);
+  };
 }

@@ -13,18 +13,15 @@ namespace Volo.Docs.Admin.Pages.Docs.Admin.Projects;
 
 public class GeneratePdfModal : DocsAdminPageModel
 {
-    protected IDocumentPdfGeneratorAppService DocumentPdfGeneratorAppService { get; }
     protected IProjectAppService ProjectAppService { get; }
     protected IProjectAdminAppService ProjectAdminAppService { get; }
 
     public GeneratePdfViewModel ViewModel { get; set; }
 
     public GeneratePdfModal(
-        IDocumentPdfGeneratorAppService documentPdfGeneratorAppService,
         IProjectAppService projectAppService, 
         IProjectAdminAppService projectAdminAppService)
     {
-        DocumentPdfGeneratorAppService = documentPdfGeneratorAppService;
         ProjectAppService = projectAppService;
         ProjectAdminAppService = projectAdminAppService;
     }

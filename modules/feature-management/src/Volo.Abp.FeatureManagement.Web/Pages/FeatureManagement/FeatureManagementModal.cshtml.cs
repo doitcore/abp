@@ -85,12 +85,15 @@ public class FeatureManagementModal : AbpPageModel
         return NoContent();
     }
 
-    public bool IsDisabled(FeatureDto featureDto)
+    public virtual bool IsDisabled(FeatureDto feature)
     {
-        return featureDto.Provider.Name != ProviderName && featureDto.Provider.Name != DefaultValueFeatureValueProvider.ProviderName;
+        return feature.Value != null &&
+               feature.Provider.Name != null &&
+               feature.Provider.Name != ProviderName &&
+               feature.Provider.Name != DefaultValueFeatureValueProvider.ProviderName;
     }
 
-    public string GetShownName(FeatureDto featureDto)
+    public virtual string GetShownName(FeatureDto featureDto)
     {
         return !IsDisabled(featureDto)
             ? featureDto.DisplayName

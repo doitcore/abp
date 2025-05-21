@@ -55,7 +55,7 @@ $.validator.defaults.ignore = ''; //TODO: Would be better if we can apply only f
 
             function _createContainer() {
                 _removeContainer();
-                _$modalContainer = $('<div id="' + _modalId + 'Container' + '"></div>');
+                _$modalContainer = $('<div id="' + _modalId + '"></div>');
                 var existsModals = $('[id^="Abp_Modal_"]');
                 if (existsModals.length) {
                     existsModals.last().after(_$modalContainer)

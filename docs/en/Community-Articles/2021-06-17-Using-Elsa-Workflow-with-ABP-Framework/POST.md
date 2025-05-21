@@ -1,5 +1,7 @@
 # Using Elsa Workflow with ABP Framework
 
+> **UPDATE:** There is a newer version of this article, which covers Elsa 3 with ABP Framework. You can check it at https://abp.io/community/articles/using-elsa-3-workflow-with-abp-framework-usqk8afg
+
 **Elsa Core** is an open-source workflows library that can be used in any kind of .NET Core application. Using such a workflow library can be useful to implement business rules visually or programmatically.
 
 ![elsa-overview](./elsa-overview.gif)

@@ -1,6 +1,10 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import {
+  provideClientHydration,
+  withEventReplay,
+  withHttpTransferCacheOptions,
+} from '@angular/platform-browser';
 
 import { appRoutes } from './app.routes';
 import { APP_ROUTE_PROVIDER } from './route.provider';
@@ -16,30 +20,33 @@ import { provideTenantManagementConfig } from '@abp/ng.tenant-management/config'
 import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
 import { provideThemeBasicConfig } from '@abp/ng.theme.basic';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideServerRendering } from '@angular/platform-server';
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideRouter(appRoutes),
-    APP_ROUTE_PROVIDER,
-    provideAbpCore(
-      withOptions({
-        environment,
-        registerLocaleFn: registerLocale(),
-        sendNullsAsQueryParam: false,
-        skipGetAppConfiguration: false,
-      }),
-    ),
-    provideAbpOAuth({ ssr: false }),
-    provideAbpThemeShared(),
-    provideSettingManagementConfig(),
-    provideAccountConfig(),
-    provideIdentityConfig(),
-    provideTenantManagementConfig(),
-    provideFeatureManagementConfig(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideThemeBasicConfig(),
-    provideAnimations(),
-    provideRouter(appRoutes),
-    provideClientHydration(withEventReplay()),
-  ],
-};
+export function createAppConfig(ssr: boolean): ApplicationConfig {
+  return {
+    providers: [
+      APP_ROUTE_PROVIDER,
+      provideAbpCore(
+        withOptions({
+          environment,
+          registerLocaleFn: registerLocale(),
+          sendNullsAsQueryParam: false,
+          skipGetAppConfiguration: false,
+        }),
+      ),
+      provideAbpOAuth({ ssr }),
+      provideAbpThemeShared(),
+      provideSettingManagementConfig(),
+      provideAccountConfig(),
+      provideIdentityConfig(),
+      provideTenantManagementConfig(),
+      provideFeatureManagementConfig(),
+      provideZoneChangeDetection({ eventCoalescing: true }),
+      provideThemeBasicConfig(),
+      provideAnimations(),
+      provideRouter(appRoutes),
+      provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({})),
+      ...(ssr ? [provideServerRendering()] : []),
+    ],
+  };
+}

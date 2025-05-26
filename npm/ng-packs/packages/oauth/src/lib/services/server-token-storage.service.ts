@@ -7,7 +7,6 @@ import { OAuthStorage } from 'angular-oauth2-oidc';
 export class ServerTokenStorageService implements OAuthStorage {
   private cookies: Map<string, string>;
   constructor(@Inject('cookies') c: any) {
-    console.log('cookies ---->>>>>>>', c);
     const cookies = JSON.parse(c);
     this.cookies = new Map<string, string>();
 

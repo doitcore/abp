@@ -46,7 +46,9 @@ export class IdentityModule {
       ],
     };
   }
-
+  /**
+   * @deprecated `IdentityModule.forLazy()` is deprecated. You can use `createRoutes` **function** instead.
+   */
   static forLazy(options: IdentityConfigOptions = {}): NgModuleFactory<IdentityModule> {
     return new LazyModuleFactory(IdentityModule.forChild(options));
   }

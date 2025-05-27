@@ -1,4 +1,11 @@
-import { ABP, CoreModule, RoutesService, TreeNode } from '@abp/ng.core';
+import {
+  ABP,
+  LazyLocalizationPipe,
+  LocalizationPipe,
+  PermissionDirective,
+  RoutesService,
+  TreeNode,
+} from '@abp/ng.core';
 import {
   Component,
   ElementRef,
@@ -12,11 +19,20 @@ import {
 import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
+import { EllipsisDirective } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'abp-routes',
   templateUrl: 'routes.component.html',
-  imports: [CommonModule, RouterModule, CoreModule, NgbDropdownModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    NgbDropdownModule,
+    LazyLocalizationPipe,
+    PermissionDirective,
+    EllipsisDirective,
+    LocalizationPipe,
+  ],
 })
 export class RoutesComponent {
   public readonly routesService = inject(RoutesService);

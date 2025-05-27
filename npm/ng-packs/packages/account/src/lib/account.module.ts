@@ -15,6 +15,7 @@ import {
   RegisterComponent,
   ResetPasswordComponent,
 } from './components';
+import { AccountRoutingModule } from './account-routing.module';
 
 @NgModule({
   declarations: [],
@@ -24,6 +25,7 @@ import {
     ForgotPasswordComponent,
     ResetPasswordComponent,
     ManageProfileComponent,
+    AccountRoutingModule,
   ],
   exports: [],
 })
@@ -51,7 +53,9 @@ export class AccountModule {
       ],
     };
   }
-
+  /**
+   * @deprecated `AccountModule.forLazy()` is deprecated. You can use `createRoutes` **function** instead.
+   */
   static forLazy(options = {} as AccountConfigOptions): NgModuleFactory<AccountModule> {
     return new LazyModuleFactory(AccountModule.forChild(options));
   }

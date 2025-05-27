@@ -3,12 +3,12 @@ import { SettingTabsService } from '@abp/ng.setting-management/config';
 import { Component, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { PageModule } from '@abp/ng.components/page';
+import { PageComponent } from '@abp/ng.components/page';
 
 @Component({
   selector: 'abp-setting-management',
   templateUrl: './setting-management.component.html',
-  imports: [CommonModule, PageModule, LocalizationPipe, PermissionDirective, ForDirective],
+  imports: [CommonModule, PageComponent, LocalizationPipe, PermissionDirective, ForDirective],
 })
 export class SettingManagementComponent implements OnDestroy, OnInit {
   private subscription = new Subscription();

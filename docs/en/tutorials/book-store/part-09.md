@@ -1038,8 +1038,6 @@ Create a new Razor Component Page, `/Pages/Authors.razor`, in the {{ if UI == "B
 
 * This code is similar to the `Books.razor`, except it doesn't inherit from the `AbpCrudPageBase`, but uses its own implementation.
 * Injects the `IAuthorAppService` to consume the server side HTTP APIs from the UI. We can directly inject application service interfaces and use just like regular method calls by the help of [Dynamic C# HTTP API Client Proxy System](../../framework/api-development/dynamic-csharp-clients.md), which performs REST API calls for us. See the `Authors` class below to see the usage.
-* Injects the `IAuthorizationService` to check [permissions](../../framework/fundamentals/authorization.md).
-* Injects the `IObjectMapper` for [object to object mapping](../../framework/infrastructure/object-to-object-mapping.md).
 
 Create a new code behind file, `Authors.razor.cs`, under the `Pages` folder, with the following content:
 
@@ -1158,14 +1156,21 @@ public partial class Authors
 
     private async Task DeleteAuthorAsync(AuthorDto author)
     {
-        var confirmMessage = L["AuthorDeletionConfirmationMessage", author.Name];
-        if (!await Message.Confirm(confirmMessage))
+        try
         {
-            return;
-        }
+            var confirmMessage = L["AuthorDeletionConfirmationMessage", author.Name];
+            if (!await Message.Confirm(confirmMessage))
+            {
+                return;
+            }
 
-        await AuthorAppService.DeleteAsync(author.Id);
-        await GetAuthorsAsync();
+            await AuthorAppService.DeleteAsync(author.Id);
+            await GetAuthorsAsync();
+        }
+        catch(Exception ex)
+        {
+            await HandleErrorAsync(ex);
+        }
     }
 
     private void CloseEditAuthorModal()
@@ -1175,21 +1180,35 @@ public partial class Authors
 
     private async Task CreateAuthorAsync()
     {
-        if (await CreateValidationsRef.ValidateAll())
+        try
         {
-            await AuthorAppService.CreateAsync(NewAuthor);
-            await GetAuthorsAsync();
-            CreateAuthorModal.Hide();
+            if (await CreateValidationsRef.ValidateAll())
+            {
+                await AuthorAppService.CreateAsync(NewAuthor);
+                await GetAuthorsAsync();
+                CreateAuthorModal.Hide();
+            }
+        }
+        catch(Exception ex)
+        {
+            await HandleErrorAsync(ex);
         }
     }
 
     private async Task UpdateAuthorAsync()
     {
-        if (await EditValidationsRef.ValidateAll())
+        try
         {
-            await AuthorAppService.UpdateAsync(EditingAuthorId, EditingAuthor);
-            await GetAuthorsAsync();
-            EditAuthorModal.Hide();
+            if (await EditValidationsRef.ValidateAll())
+            {
+                await AuthorAppService.UpdateAsync(EditingAuthorId, EditingAuthor);
+                await GetAuthorsAsync();
+                EditAuthorModal.Hide();
+            }
+        }
+        catch(Exception ex)
+        {
+            await HandleErrorAsync(ex);
         }
     }
 }

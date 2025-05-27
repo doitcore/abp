@@ -5,9 +5,7 @@ import {
   EXTENSIBLE_FORM_VIEW_PROVIDER,
 } from '@abp/ng.components/extensible';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { CoreModule } from '@abp/ng.core';
-import { ThemeSharedModule } from '@abp/ng.theme.shared';
+import { LocalizationPipe } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-personal-settings-half-row',
@@ -23,7 +21,7 @@ import { ThemeSharedModule } from '@abp/ng.theme.shared';
   </div>`,
   styles: [],
   viewProviders: [EXTENSIBLE_FORM_VIEW_PROVIDER],
-  imports: [CommonModule, ReactiveFormsModule, CoreModule, ThemeSharedModule],
+  imports: [ReactiveFormsModule, LocalizationPipe],
 })
 export class PersonalSettingsHalfRowComponent {
   public displayName: string;

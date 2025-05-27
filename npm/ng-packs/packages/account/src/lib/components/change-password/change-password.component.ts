@@ -12,7 +12,7 @@ import { finalize } from 'rxjs/operators';
 import { Account } from '../../models';
 import { ManageProfileStateService } from '../../services';
 import { comparePasswords, NgxValidateCoreModule, Validation } from '@ngx-validate/core';
-import { LocalizationPipe } from '@abp/ng.core';
+import { AutofocusDirective, LocalizationPipe } from '@abp/ng.core';
 const { required } = Validators;
 
 const PASSWORD_FIELDS = ['newPassword', 'repeatNewPassword'];
@@ -21,7 +21,13 @@ const PASSWORD_FIELDS = ['newPassword', 'repeatNewPassword'];
   selector: 'abp-change-password-form',
   templateUrl: './change-password.component.html',
   exportAs: 'abpChangePasswordForm',
-  imports: [ReactiveFormsModule, LocalizationPipe, ButtonComponent, NgxValidateCoreModule],
+  imports: [
+    ReactiveFormsModule,
+    LocalizationPipe,
+    ButtonComponent,
+    NgxValidateCoreModule,
+    AutofocusDirective,
+  ],
 })
 export class ChangePasswordComponent
   implements OnInit, Account.ChangePasswordComponentInputs, Account.ChangePasswordComponentOutputs

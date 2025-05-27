@@ -1,5 +1,10 @@
 import { AccountService, RegisterDto } from '@abp/ng.account.core/proxy';
-import { AuthService, ConfigStateService, LocalizationPipe } from '@abp/ng.core';
+import {
+  AuthService,
+  AutofocusDirective,
+  ConfigStateService,
+  LocalizationPipe,
+} from '@abp/ng.core';
 import { ButtonComponent, getPasswordValidators, ToasterService } from '@abp/ng.theme.shared';
 import { Component, Injector, OnInit } from '@angular/core';
 import {
@@ -26,6 +31,7 @@ const { maxLength, required, email } = Validators;
     NgxValidateCoreModule,
     LocalizationPipe,
     ButtonComponent,
+    AutofocusDirective,
   ],
 })
 export class RegisterComponent implements OnInit {

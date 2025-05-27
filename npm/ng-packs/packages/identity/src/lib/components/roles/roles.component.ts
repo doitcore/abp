@@ -1,32 +1,37 @@
 import {
-  CoreModule,
+  InitDirective,
   ListService,
+  LocalizationPipe,
   PagedAndSortedResultRequestDto,
   PagedResultDto,
+  ReplaceableTemplateDirective,
 } from '@abp/ng.core';
 import { IdentityRoleDto, IdentityRoleService } from '@abp/ng.identity/proxy';
 import {
   ePermissionManagementComponents,
-  PermissionManagementModule,
+  PermissionManagementComponent,
 } from '@abp/ng.permission-management';
 import {
+  ButtonComponent,
   Confirmation,
   ConfirmationService,
-  ThemeSharedModule,
+  ModalCloseDirective,
+  ModalComponent,
   ToasterService,
 } from '@abp/ng.theme.shared';
 import {
-  ExtensibleModule,
+  ExtensibleFormComponent,
+  ExtensibleTableComponent,
   EXTENSIONS_IDENTIFIER,
   FormPropData,
   generateFormFromProps,
 } from '@abp/ng.components/extensible';
 import { Component, inject, Injector, OnInit } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { eIdentityComponents } from '../../enums/components';
-import { CommonModule } from '@angular/common';
-import { PageModule } from '@abp/ng.components/page';
+import { PageComponent } from '@abp/ng.components/page';
+import { NgxValidateCoreModule } from '@ngx-validate/core';
 
 @Component({
   selector: 'abp-roles',
@@ -39,12 +44,18 @@ import { PageModule } from '@abp/ng.components/page';
     },
   ],
   imports: [
-    CommonModule,
-    CoreModule,
-    ThemeSharedModule,
-    ExtensibleModule,
-    PageModule,
-    PermissionManagementModule,
+    ReactiveFormsModule,
+    LocalizationPipe,
+    ExtensibleTableComponent,
+    ModalComponent,
+    ButtonComponent,
+    PageComponent,
+    ExtensibleFormComponent,
+    ModalCloseDirective,
+    PermissionManagementComponent,
+    ReplaceableTemplateDirective,
+    NgxValidateCoreModule,
+    InitDirective,
   ],
 })
 export class RolesComponent implements OnInit {

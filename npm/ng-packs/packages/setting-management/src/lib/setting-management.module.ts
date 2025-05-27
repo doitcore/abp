@@ -17,7 +17,9 @@ export class SettingManagementModule {
       providers: [],
     };
   }
-
+  /**
+   * @deprecated `SettingManagementModule.forLazy()` is deprecated. You can use `createRoutes` **function** instead.
+   */
   static forLazy(): NgModuleFactory<SettingManagementModule> {
     return new LazyModuleFactory(SettingManagementModule.forChild());
   }

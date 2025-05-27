@@ -48,7 +48,9 @@ export class TenantManagementModule {
       ],
     };
   }
-
+  /**
+   * @deprecated `TenantManagementModule.forLazy()` is deprecated. You can use `createRoutes` **function** instead.
+   */
   static forLazy(
     options: TenantManagementConfigOptions = {},
   ): NgModuleFactory<TenantManagementModule> {

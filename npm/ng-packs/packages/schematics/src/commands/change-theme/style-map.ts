@@ -13,6 +13,7 @@ export type ImportDefinition = {
   importName: string;
   provider?: string;
   expression?: string;
+  doNotImport?: boolean;
 };
 
 export const styleMap = new Map<ThemeOptionsEnum, StyleDefinition[]>();
@@ -365,6 +366,12 @@ importMap.set(ThemeOptionsEnum.LeptonX, [
     path: '@volosoft/abp.ng.theme.lepton-x/layouts',
     importName: 'SideMenuLayoutModule',
     expression: 'SideMenuLayoutModule.forRoot()',
+  },
+  {
+    path: '@volosoft/abp.ng.theme.lepton-x/layouts',
+    importName: 'TopMenuLayoutModule',
+    expression: 'TopMenuLayoutModule.forRoot()',
+    doNotImport: true,
   },
   {
     path: '@abp/ng.theme.shared',

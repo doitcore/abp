@@ -1,5 +1,5 @@
-import { ConfigStateService, CoreModule, LanguageInfo, SessionStateService } from '@abp/ng.core';
-import { Component, inject } from '@angular/core';
+import { ConfigStateService, LanguageInfo, SessionStateService } from '@abp/ng.core';
+import { Component, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CommonModule, DOCUMENT } from '@angular/common';
@@ -39,7 +39,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
       </div>
     }
   `,
-  imports: [CommonModule, CoreModule, NgbDropdownModule],
+  imports: [CommonModule, NgbDropdownModule],
 })
 export class LanguagesComponent {
   document = inject(DOCUMENT);

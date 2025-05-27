@@ -1,10 +1,12 @@
 import {
   AuthService,
   ConfigStateService,
-  CoreModule,
   CurrentUserDto,
+  LocalizationPipe,
   NAVIGATE_TO_MANAGE_PROFILE,
+  PermissionDirective,
   SessionStateService,
+  ToInjectorPipe,
 } from '@abp/ng.core';
 import { AbpVisibleDirective, UserMenu, UserMenuService } from '@abp/ng.theme.shared';
 import { Component, Inject, TrackByFunction } from '@angular/core';
@@ -15,7 +17,14 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'abp-current-user',
   templateUrl: './current-user.component.html',
-  imports: [CommonModule, CoreModule, NgbDropdownModule, AbpVisibleDirective],
+  imports: [
+    CommonModule,
+    NgbDropdownModule,
+    AbpVisibleDirective,
+    PermissionDirective,
+    ToInjectorPipe,
+    LocalizationPipe,
+  ],
 })
 export class CurrentUserComponent {
   currentUser$: Observable<CurrentUserDto> = this.configState.getOne$('currentUser');

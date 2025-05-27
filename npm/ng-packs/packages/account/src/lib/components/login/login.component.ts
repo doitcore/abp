@@ -10,6 +10,7 @@ import { throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import {
   AuthService,
+  AutofocusDirective,
   ConfigStateService,
   LocalizationPipe,
   NgxValidateCoreModule,
@@ -29,6 +30,7 @@ const { maxLength, required } = Validators;
     LocalizationPipe,
     ButtonComponent,
     NgxValidateCoreModule,
+    AutofocusDirective,
   ],
 })
 export class LoginComponent implements OnInit {

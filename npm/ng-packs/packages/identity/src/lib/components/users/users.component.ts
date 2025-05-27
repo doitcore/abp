@@ -13,7 +13,7 @@ import {
 } from '@abp/ng.identity/proxy';
 import {
   ePermissionManagementComponents,
-  PermissionManagementModule,
+  PermissionManagementComponent,
 } from '@abp/ng.permission-management';
 import {
   ButtonComponent,
@@ -68,7 +68,7 @@ import { NgxValidateCoreModule } from '@ngx-validate/core';
   imports: [
     ReactiveFormsModule,
     FormsModule,
-    PermissionManagementModule,
+    PermissionManagementComponent,
     PageComponent,
     NgbNavModule,
     NgbDropdownModule,

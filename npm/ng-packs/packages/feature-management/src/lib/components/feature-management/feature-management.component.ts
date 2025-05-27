@@ -13,6 +13,7 @@ import {
   Confirmation,
   ConfirmationService,
   LocaleDirection,
+  ModalCloseDirective,
   ModalComponent,
   ToasterService,
 } from '@abp/ng.theme.shared';
@@ -40,6 +41,7 @@ enum ValueTypes {
     NgbNavModule,
     FreeTextInputDirective,
     NgTemplateOutlet,
+    ModalCloseDirective,
   ],
 })
 export class FeatureManagementComponent

@@ -1,11 +1,14 @@
+import { Inject, PLATFORM_ID } from '@angular/core';
 import { noop } from '@abp/ng.core';
 import { Params } from '@angular/router';
 import { filter, from, of, take, tap } from 'rxjs';
 import { AuthFlowStrategy } from './auth-flow-strategy';
 import { isTokenExpired } from '../utils';
+import { isPlatformBrowser } from '@angular/common';
 
 export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   readonly isInternalAuth = false;
+  @Inject(PLATFORM_ID) platformId: string;
 
   async init() {
     this.checkRememberMeOption();
@@ -42,51 +45,61 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   protected setUICulture() {
-    const urlParams = new URLSearchParams(window.location.search);
-    this.configState.uiCultureFromAuthCodeFlow = urlParams.get('ui-culture');
+    if (isPlatformBrowser(this.platformId)) {
+      const urlParams = new URLSearchParams(window.location.search);
+      this.configState.uiCultureFromAuthCodeFlow = urlParams.get('ui-culture');
+    }
   }
 
   protected replaceURLParams() {
-    const location = this.windowService.window.location;
-    const history = this.windowService.window.history;
+    if (isPlatformBrowser(this.platformId)) {
+      const location = this.windowService.window.location;
+      const history = this.windowService.window.history;
 
-    const query = location.search
-      .replace(/([?&])iss=[^&]*&?/, '$1')
-      .replace(/([?&])culture=[^&]*&?/, '$1')
-      .replace(/([?&])ui-culture=[^&]*&?/, '$1')
-      .replace(/[?&]+$/, '');
+      const query = location.search
+        .replace(/([?&])iss=[^&]*&?/, '$1')
+        .replace(/([?&])culture=[^&]*&?/, '$1')
+        .replace(/([?&])ui-culture=[^&]*&?/, '$1')
+        .replace(/[?&]+$/, '');
 
-    const href = location.origin + location.pathname + query + location.hash;
+      const href = location.origin + location.pathname + query + location.hash;
 
-    history.replaceState(null, '', href);
+      history.replaceState(null, '', href);
+    }
   }
 
   protected listenToTokenReceived() {
-    this.oAuthService.events
-      .pipe(
-        filter(event => event.type === 'token_received'),
-        tap(() => {
-          this.setUICulture();
-          this.replaceURLParams();
-        }),
-        take(1),
-      )
-      .subscribe();
+    if (isPlatformBrowser(this.platformId)) {
+      this.oAuthService.events
+        .pipe(
+          filter(event => event.type === 'token_received'),
+          tap(() => {
+            this.setUICulture();
+            this.replaceURLParams();
+          }),
+          take(1),
+        )
+        .subscribe();
+    }
   }
 
   navigateToLogin(queryParams?: Params) {
-    let additionalState = '';
-    if (queryParams?.returnUrl) {
-      additionalState = queryParams.returnUrl;
-    }
+    if (isPlatformBrowser(this.platformId)) {
+      let additionalState = '';
+      if (queryParams?.returnUrl) {
+        additionalState = queryParams.returnUrl;
+      }
 
-    const cultureParams = this.getCultureParams(queryParams);
-    this.oAuthService.initCodeFlow(additionalState, cultureParams);
+      const cultureParams = this.getCultureParams(queryParams);
+      this.oAuthService.initCodeFlow(additionalState, cultureParams);
+    }
   }
 
   checkIfInternalAuth(queryParams?: Params) {
-    this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
-    return false;
+    if (isPlatformBrowser(this.platformId)) {
+      this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
+      return false;
+    }
   }
 
   logout(queryParams?: Params) {
@@ -99,7 +112,9 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   login(queryParams?: Params) {
-    this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
-    return of(null);
+    if (isPlatformBrowser(this.platformId)) {
+      this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
+      return of(null);
+    }
   }
 }

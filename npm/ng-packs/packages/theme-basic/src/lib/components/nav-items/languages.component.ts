@@ -1,8 +1,8 @@
-import { ConfigStateService, LanguageInfo, SessionStateService } from '@abp/ng.core';
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { ConfigStateService, LanguageInfo, SessionStateService } from '@abp/ng.core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

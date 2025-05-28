@@ -26,6 +26,7 @@ export function app(): express.Express {
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
+  server.get('/.well-known/*', (_, res) => res.sendStatus(404));
   server.get(
     '*.*',
     express.static(distFolder, {

@@ -37,10 +37,6 @@ export function provideAbpOAuth({ ssr = false }: { ssr?: boolean }) {
       useClass: OAuthApiInterceptor,
     },
     {
-      provide: OAuthStorage,
-      useFactory: oAuthStorageFactory,
-    },
-    {
       provide: PIPE_TO_LOGIN_FN_KEY,
       useValue: pipeToLogin,
     },
@@ -60,10 +56,16 @@ export function provideAbpOAuth({ ssr = false }: { ssr?: boolean }) {
     OAuthModule.forRoot().providers as Provider[],
     {
       provide: OAuthStorage,
-      useClass: ssr ? ServerTokenStorageService : BrowserTokenStorageService,
+      useFactory: oAuthStorageFactory,
     },
     { provide: AuthErrorFilterService, useExisting: OAuthErrorFilterService },
   ];
+  console.log('ssr --->>>>', ssr);
+  if (ssr) {
+    providers.push(ServerTokenStorageService);
+  } else {
+    providers.push(BrowserTokenStorageService);
+  }
 
   return makeEnvironmentProviders(providers);
 }

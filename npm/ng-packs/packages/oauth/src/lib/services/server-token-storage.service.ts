@@ -2,16 +2,17 @@ import { Inject, Injectable } from '@angular/core';
 import { OAuthStorage } from 'angular-oauth2-oidc';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: null,
 })
 export class ServerTokenStorageService implements OAuthStorage {
-  private cookies: Map<string, string>;
+  private cookies: Map<string, string> = new Map();
   constructor(@Inject('cookies') c: any) {
-    const cookies = JSON.parse(c);
-    this.cookies = new Map<string, string>();
-
-    for (const cookie of cookies) {
-      this.cookies.set(cookie.key, cookie.value);
+    const cookieItems = c.split(';');
+    for (const item of cookieItems) {
+      const [key, value] = item.split('=');
+      if (key && value) {
+        this.cookies.set(key.trim(), value.trim());
+      }
     }
   }
 

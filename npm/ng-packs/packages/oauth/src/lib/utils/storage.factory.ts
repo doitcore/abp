@@ -1,5 +1,7 @@
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ServerTokenStorageService } from '../services/server-token-storage.service';
+import { BrowserTokenStorageService } from '../services';
 
 export class MockStorage implements Storage {
   private data = new Map<string, string>();
@@ -23,7 +25,9 @@ export class MockStorage implements Storage {
   }
 }
 
-export function oAuthStorageFactory(): Storage {
+export function oAuthStorageFactory(): ServerTokenStorageService | BrowserTokenStorageService {
   const platformId = inject(PLATFORM_ID);
-  return isPlatformBrowser(platformId) ? localStorage : new MockStorage();
+  return isPlatformBrowser(platformId)
+    ? inject(BrowserTokenStorageService)
+    : inject(ServerTokenStorageService);
 }

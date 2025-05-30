@@ -34,9 +34,11 @@ import {
 } from '@abp/ng.components/extensible';
 import {
   Component,
+  Inject,
   inject,
   Injector,
   OnInit,
+  PLATFORM_ID,
   TemplateRef,
   TrackByFunction,
   ViewChild,
@@ -54,6 +56,7 @@ import { eIdentityComponents } from '../../enums/components';
 import { PageComponent } from '@abp/ng.components/page';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'abp-users',
@@ -120,6 +123,8 @@ export class UsersComponent implements OnInit {
   inputKey = eFormComponets.FormCheckboxComponent;
 
   trackByFn: TrackByFunction<AbstractControl> = (index, item) => Object.keys(item)[0] || index;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: any) {}
 
   onVisiblePermissionChange = (event: boolean) => {
     this.visiblePermissions = event;

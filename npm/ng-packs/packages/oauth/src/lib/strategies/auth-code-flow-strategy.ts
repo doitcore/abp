@@ -1,4 +1,4 @@
-import { Inject, PLATFORM_ID } from '@angular/core';
+import { Injector, PLATFORM_ID } from '@angular/core';
 import { noop } from '@abp/ng.core';
 import { Params } from '@angular/router';
 import { filter, from, of, take, tap } from 'rxjs';
@@ -8,7 +8,12 @@ import { isPlatformBrowser } from '@angular/common';
 
 export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   readonly isInternalAuth = false;
-  @Inject(PLATFORM_ID) platformId: string;
+  private platformId: object;
+
+  constructor(protected injector: Injector) {
+    super(injector);
+    this.platformId = injector.get(PLATFORM_ID);
+  }
 
   async init() {
     this.checkRememberMeOption();
@@ -69,6 +74,7 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   protected listenToTokenReceived() {
+    console.log('listenToTokenReceived');
     if (isPlatformBrowser(this.platformId)) {
       this.oAuthService.events
         .pipe(
@@ -84,6 +90,8 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   navigateToLogin(queryParams?: Params) {
+    console.log('navigateToLogin');
+    console.log(isPlatformBrowser(this.platformId));
     if (isPlatformBrowser(this.platformId)) {
       let additionalState = '';
       if (queryParams?.returnUrl) {
@@ -96,6 +104,7 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   checkIfInternalAuth(queryParams?: Params) {
+    console.log('checkIfInternalAuth');
     if (isPlatformBrowser(this.platformId)) {
       this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
       return false;
@@ -112,6 +121,8 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   login(queryParams?: Params) {
+    console.log('login');
+    console.log(isPlatformBrowser(this.platformId));
     if (isPlatformBrowser(this.platformId)) {
       this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
       return of(null);

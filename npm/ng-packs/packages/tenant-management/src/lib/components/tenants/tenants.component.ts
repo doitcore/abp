@@ -3,6 +3,7 @@ import {
   LocalizationPipe,
   PagedResultDto,
   ReplaceableTemplateDirective,
+  SSRService,
 } from '@abp/ng.core';
 import {
   eFeatureManagementComponents,
@@ -24,7 +25,7 @@ import {
   FormPropData,
   generateFormFromProps,
 } from '@abp/ng.components/extensible';
-import { Component, inject, Injector, OnInit } from '@angular/core';
+import { Component, inject, Injector, makeStateKey, OnInit, TransferState } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -68,6 +69,7 @@ export class TenantsComponent implements OnInit {
   protected readonly toasterService = inject(ToasterService);
   private readonly fb = inject(UntypedFormBuilder);
   private readonly injector = inject(Injector);
+  private readonly ssrService = inject(SSRService);
 
   data: PagedResultDto<TenantDto> = { items: [], totalCount: 0 };
 
@@ -84,10 +86,13 @@ export class TenantsComponent implements OnInit {
   modalBusy = false;
 
   featureManagementKey = eFeatureManagementComponents.FeatureManagement;
+  TENANTS_KEY = makeStateKey<PagedResultDto<TenantDto>>('tenants');
 
   get hasSelectedTenant(): boolean {
     return Boolean(this.selected.id);
   }
+
+  constructor(private transferState: TransferState) {}
 
   onVisibleFeaturesChange = (value: boolean) => {
     this.visibleFeatures = value;
@@ -152,11 +157,19 @@ export class TenantsComponent implements OnInit {
   }
 
   hookToQuery() {
-    this.list
-      .hookToQuery(query => this.service.getList(query))
-      .subscribe(res => {
-        this.data = res;
-      });
+    if (this.transferState.hasKey(this.TENANTS_KEY)) {
+      this.data = this.transferState.get(this.TENANTS_KEY, { items: [], totalCount: 0 });
+      this.transferState.remove(this.TENANTS_KEY);
+    } else {
+      this.list
+        .hookToQuery(query => this.service.getList(query))
+        .subscribe(res => {
+          this.data = res;
+          if (this.ssrService.isSsr) {
+            this.transferState.set(this.TENANTS_KEY, res);
+          }
+        });
+    }
   }
 
   onSharedDatabaseChange(value: boolean) {

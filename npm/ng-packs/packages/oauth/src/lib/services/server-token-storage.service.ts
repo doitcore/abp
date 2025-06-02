@@ -6,12 +6,16 @@ import { OAuthStorage } from 'angular-oauth2-oidc';
 })
 export class ServerTokenStorageService implements OAuthStorage {
   private cookies: Map<string, string> = new Map();
-  constructor(@Inject('cookies') c: any) {
-    const cookieItems = c.split(';');
-    for (const item of cookieItems) {
-      const [key, value] = item.split('=');
-      if (key && value) {
-        this.cookies.set(key.trim(), value.trim());
+  constructor(@Inject('cookies') c: string | undefined) {
+    if (c) {
+      const cookieItems = c.split(';');
+      for (const item of cookieItems) {
+        const index = item.indexOf('=');
+        if (index > -1) {
+          const key = item.slice(0, index).trim();
+          const value = item.slice(index + 1).trim();
+          this.cookies.set(key, value);
+        }
       }
     }
   }

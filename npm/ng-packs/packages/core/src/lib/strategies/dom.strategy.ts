@@ -1,29 +1,31 @@
-import { inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, DOCUMENT } from '@angular/common';
-
 export class DomStrategy {
-  private readonly isBrowser: boolean;
-
   constructor(
-    private targetFactory: () => HTMLElement,
+    private getTarget: () => HTMLElement,
     public position: InsertPosition = 'beforeend',
-  ) {
-    const platformId = inject(PLATFORM_ID);
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
+  ) {}
 
   insertElement<T extends HTMLElement>(element: T) {
-    if (this.isBrowser) {
-      const target = this.targetFactory();
+    if (typeof document !== 'undefined') {
+      const target = this.getTarget();
       target.insertAdjacentElement(this.position, element);
     }
   }
 }
 
 export const DOM_STRATEGY = {
-  AfterElement: (el: HTMLElement) => new DomStrategy(() => el, 'afterend'),
-  BeforeElement: (el: HTMLElement) => new DomStrategy(() => el, 'beforebegin'),
-  AppendToBody: () => new DomStrategy(() => inject(DOCUMENT).body, 'beforeend'),
-  AppendToHead: () => new DomStrategy(() => inject(DOCUMENT).head, 'beforeend'),
-  PrependToHead: () => new DomStrategy(() => inject(DOCUMENT).head, 'afterbegin'),
+  AfterElement(element: HTMLElement) {
+    return new DomStrategy(() => element, 'afterend');
+  },
+  AppendToBody() {
+    return new DomStrategy(() => document?.body, 'beforeend');
+  },
+  AppendToHead() {
+    return new DomStrategy(() => document?.head, 'beforeend');
+  },
+  BeforeElement(element: HTMLElement) {
+    return new DomStrategy(() => element, 'beforebegin');
+  },
+  PrependToHead() {
+    return new DomStrategy(() => document?.head, 'afterbegin');
+  },
 };

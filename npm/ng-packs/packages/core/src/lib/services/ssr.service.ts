@@ -7,7 +7,7 @@ import { isPlatformServer } from '@angular/common';
 export class SSRService {
   constructor(@Inject(PLATFORM_ID) private platformId: unknown) {}
 
-  isSsr() {
+  get isSsr() {
     return isPlatformServer(this.platformId);
   }
 }

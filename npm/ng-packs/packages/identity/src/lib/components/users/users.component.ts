@@ -4,6 +4,7 @@ import {
   LocalizationPipe,
   PagedResultDto,
   ReplaceableTemplateDirective,
+  SSRService,
 } from '@abp/ng.core';
 import {
   GetIdentityUsersInput,
@@ -34,13 +35,13 @@ import {
 } from '@abp/ng.components/extensible';
 import {
   Component,
-  Inject,
   inject,
   Injector,
+  makeStateKey,
   OnInit,
-  PLATFORM_ID,
   TemplateRef,
   TrackByFunction,
+  TransferState,
   ViewChild,
 } from '@angular/core';
 import {
@@ -56,7 +57,6 @@ import { eIdentityComponents } from '../../enums/components';
 import { PageComponent } from '@abp/ng.components/page';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
-import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'abp-users',
@@ -94,6 +94,7 @@ export class UsersComponent implements OnInit {
   protected readonly toasterService = inject(ToasterService);
   private readonly fb = inject(UntypedFormBuilder);
   private readonly injector = inject(Injector);
+  USERS_KEY = makeStateKey<any>('users');
 
   data: PagedResultDto<IdentityUserDto> = { items: [], totalCount: 0 };
 
@@ -124,7 +125,9 @@ export class UsersComponent implements OnInit {
 
   trackByFn: TrackByFunction<AbstractControl> = (index, item) => Object.keys(item)[0] || index;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {}
+  public ssrService = inject(SSRService);
+
+  constructor(private transferState: TransferState) {}
 
   onVisiblePermissionChange = (event: boolean) => {
     this.visiblePermissions = event;
@@ -237,7 +240,19 @@ export class UsersComponent implements OnInit {
   }
 
   private hookToQuery() {
-    this.list.hookToQuery(query => this.service.getList(query)).subscribe(res => (this.data = res));
+    if (this.transferState.hasKey(this.USERS_KEY)) {
+      this.data = this.transferState.get(this.USERS_KEY, { items: [], totalCount: 0 });
+      this.transferState.remove(this.USERS_KEY);
+    } else {
+      this.list
+        .hookToQuery(query => this.service.getList(query))
+        .subscribe(res => {
+          this.data = res;
+          if (this.ssrService.isSsr) {
+            this.transferState.set(this.USERS_KEY, res);
+          }
+        });
+    }
   }
 
   openPermissionsModal(providerKey: string, entityDisplayName?: string) {

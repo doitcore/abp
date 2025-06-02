@@ -5,6 +5,7 @@ import {
   PagedAndSortedResultRequestDto,
   PagedResultDto,
   ReplaceableTemplateDirective,
+  SSRService,
 } from '@abp/ng.core';
 import { IdentityRoleDto, IdentityRoleService } from '@abp/ng.identity/proxy';
 import {
@@ -26,7 +27,7 @@ import {
   FormPropData,
   generateFormFromProps,
 } from '@abp/ng.components/extensible';
-import { Component, inject, Injector, OnInit } from '@angular/core';
+import { Component, inject, Injector, makeStateKey, OnInit, TransferState } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { eIdentityComponents } from '../../enums/components';
@@ -64,6 +65,8 @@ export class RolesComponent implements OnInit {
   protected readonly toasterService = inject(ToasterService);
   private readonly injector = inject(Injector);
   protected readonly service = inject(IdentityRoleService);
+  protected readonly ssrService = inject(SSRService);
+  ROLES_KEY = makeStateKey<any>('roles');
 
   data: PagedResultDto<IdentityRoleDto> = { items: [], totalCount: 0 };
 
@@ -80,6 +83,8 @@ export class RolesComponent implements OnInit {
   modalBusy = false;
 
   permissionManagementKey = ePermissionManagementComponents.PermissionManagement;
+
+  constructor(private transferState: TransferState) {}
 
   onVisiblePermissionChange = (event: boolean) => {
     this.visiblePermissions = event;
@@ -142,12 +147,22 @@ export class RolesComponent implements OnInit {
   }
 
   private hookToQuery() {
-    this.list
-      .hookToQuery(query => this.service.getList(query))
-      .subscribe(res => {
-        console.log(res);
-        this.data = res;
+    if (this.transferState.hasKey(this.ROLES_KEY)) {
+      this.data = this.transferState.get<PagedResultDto<IdentityRoleDto>>(this.ROLES_KEY, {
+        items: [],
+        totalCount: 0,
       });
+      this.transferState.remove(this.ROLES_KEY);
+    } else {
+      this.list
+        .hookToQuery(query => this.service.getList(query))
+        .subscribe(res => {
+          this.data = res;
+          if (this.ssrService.isSsr) {
+            this.transferState.set(this.ROLES_KEY, res);
+          }
+        });
+    }
   }
 
   openPermissionsModal(providerKey: string) {

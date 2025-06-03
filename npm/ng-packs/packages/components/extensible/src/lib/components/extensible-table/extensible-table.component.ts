@@ -28,7 +28,7 @@ import {
   LocalizationModule,
   PermissionDirective,
   PermissionService,
-  TimezoneService,
+  SSRService,
   UtcToLocalPipe,
 } from '@abp/ng.core';
 import {
@@ -78,9 +78,9 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   protected readonly cdr = inject(ChangeDetectorRef);
   protected readonly locale = inject(LOCALE_ID);
   protected readonly config = inject(ConfigStateService);
-  protected readonly timeZoneService = inject(TimezoneService);
   protected readonly entityPropTypeClasses = inject(ENTITY_PROP_TYPE_CLASSES);
   protected readonly permissionService = inject(PermissionService);
+  protected readonly ssrService = inject(SSRService);
 
   protected _actionsText!: string;
   @Input()
@@ -227,8 +227,8 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
   ngAfterViewInit(): void {
     this.list?.requestStatus$?.pipe(filter(status => status === 'loading')).subscribe(() => {
-        this.data = [];
-        this.cdr.markForCheck();
-      });
+      this.data = [];
+      this.cdr.markForCheck();
+    });
   }
 }

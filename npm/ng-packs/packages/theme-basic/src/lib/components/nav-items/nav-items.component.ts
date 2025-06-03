@@ -1,22 +1,16 @@
-import { NavItem, NavItemsService } from '@abp/ng.theme.shared';
-import { Component, TrackByFunction } from '@angular/core';
+import { AbpVisibleDirective, NavItem, NavItemsService } from '@abp/ng.theme.shared';
+import { Component, inject, TrackByFunction } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PermissionDirective, ToInjectorPipe } from '@abp/ng.core';
-import { map } from 'rxjs/operators';
-
-//TODO: Refactor AbpVisibleDirective to ssr compatible
+import { PermissionDirective, SSRService, ToInjectorPipe } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-nav-items',
   templateUrl: 'nav-items.component.html',
-  imports: [CommonModule, PermissionDirective, ToInjectorPipe],
+  imports: [CommonModule, AbpVisibleDirective, PermissionDirective, ToInjectorPipe],
 })
 export class NavItemsComponent {
+  protected readonly ssrService = inject(SSRService);
   trackByFn: TrackByFunction<NavItem> = (_, element) => element.id;
-  visibleItems$ = this.navItems.items$.pipe(
-    map(
-      items => items.filter(item => !item.visible || item.visible(item)), // sadece görünmesi gerekenleri seç
-    ),
-  );
+
   constructor(public readonly navItems: NavItemsService) {}
 }

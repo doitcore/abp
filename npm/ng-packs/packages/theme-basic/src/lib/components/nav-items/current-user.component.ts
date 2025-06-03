@@ -34,7 +34,7 @@ export class CurrentUserComponent {
   private ssrService = inject(SSRService);
 
   get smallScreen(): boolean {
-    if (this.ssrService.isSsr) {
+    if (this.ssrService.isServer) {
       return false;
     } else {
       return window.innerWidth < 992;

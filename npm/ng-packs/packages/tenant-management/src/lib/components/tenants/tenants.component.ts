@@ -165,7 +165,7 @@ export class TenantsComponent implements OnInit {
         .hookToQuery(query => this.service.getList(query))
         .subscribe(res => {
           this.data = res;
-          if (this.ssrService.isSsr) {
+          if (this.ssrService.isServer) {
             this.transferState.set(this.TENANTS_KEY, res);
           }
         });

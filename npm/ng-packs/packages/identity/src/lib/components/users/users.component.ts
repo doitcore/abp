@@ -248,7 +248,7 @@ export class UsersComponent implements OnInit {
         .hookToQuery(query => this.service.getList(query))
         .subscribe(res => {
           this.data = res;
-          if (this.ssrService.isSsr) {
+          if (this.ssrService.isServer) {
             this.transferState.set(this.USERS_KEY, res);
           }
         });

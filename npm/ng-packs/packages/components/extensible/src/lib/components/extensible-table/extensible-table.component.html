@@ -1,4 +1,4 @@
-@if (!ssrService.isSsr) {
+@if (ssrService.isBrowser) {
   <ngx-datatable
     default
     [rows]="data"

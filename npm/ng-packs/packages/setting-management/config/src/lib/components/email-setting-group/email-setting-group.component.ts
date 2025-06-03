@@ -80,7 +80,7 @@ export class EmailSettingGroupComponent implements OnInit {
     } else {
       this.emailSettingsService.get().subscribe(res => {
         this.buildForm(res);
-        if (this.ssrService.isSsr) {
+        if (this.ssrService.isServer) {
           this.transferState.set(this.EMAIL_SETTINGS_KEY, res);
         }
       });

@@ -1,5 +1,5 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformServer } from '@angular/common';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +7,11 @@ import { isPlatformServer } from '@angular/common';
 export class SSRService {
   constructor(@Inject(PLATFORM_ID) private platformId: unknown) {}
 
-  get isSsr() {
+  get isBrowser() {
+    return isPlatformBrowser(this.platformId);
+  }
+
+  get isServer() {
     return isPlatformServer(this.platformId);
   }
 }

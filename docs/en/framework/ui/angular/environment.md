@@ -111,12 +111,16 @@ import { environment } from '../environments/environment';
 @NgModule({
   imports: [
     //...other imports
-    CoreModule.forRoot({
-      environment
-    }),
+    provideAbpCore(
+      withOptions({
+        environment
+      })
+    ),
+
   ]
 })
 ```
+
 ## EnvironmentService
 
 ` EnvironmentService` is a singleton service, i.e. provided in root level of your application, and keeps the environment in the internal store.
@@ -132,7 +136,7 @@ import { EnvironmentService } from '@abp/ng.core';
   /* class metadata here */
 })
 class DemoComponent {
-  constructor(private environment: EnvironmentService) {}
+  private environment = inject(EnvironmentService);
 }
 ```
 

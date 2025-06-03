@@ -6,10 +6,11 @@ import {
   NAVIGATE_TO_MANAGE_PROFILE,
   PermissionDirective,
   SessionStateService,
+  SSRService,
   ToInjectorPipe,
 } from '@abp/ng.core';
 import { AbpVisibleDirective, UserMenu, UserMenuService } from '@abp/ng.theme.shared';
-import { Component, Inject, TrackByFunction } from '@angular/core';
+import { Component, inject, Inject, TrackByFunction } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -29,11 +30,15 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 export class CurrentUserComponent {
   currentUser$: Observable<CurrentUserDto> = this.configState.getOne$('currentUser');
   selectedTenant$ = this.sessionState.getTenant$();
-
   trackByFn: TrackByFunction<UserMenu> = (_, element) => element.id;
+  private ssrService = inject(SSRService);
 
   get smallScreen(): boolean {
-    return window.innerWidth < 992;
+    if (this.ssrService.isSsr) {
+      return false;
+    } else {
+      return window.innerWidth < 992;
+    }
   }
 
   constructor(

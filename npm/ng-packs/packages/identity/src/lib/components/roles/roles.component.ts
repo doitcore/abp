@@ -66,22 +66,15 @@ export class RolesComponent implements OnInit {
   private readonly injector = inject(Injector);
   protected readonly service = inject(IdentityRoleService);
   protected readonly ssrService = inject(SSRService);
+
   ROLES_KEY = makeStateKey<any>('roles');
-
   data: PagedResultDto<IdentityRoleDto> = { items: [], totalCount: 0 };
-
   form!: UntypedFormGroup;
-
   selected?: IdentityRoleDto;
-
   isModalVisible!: boolean;
-
   visiblePermissions = false;
-
   providerKey?: string;
-
   modalBusy = false;
-
   permissionManagementKey = ePermissionManagementComponents.PermissionManagement;
 
   constructor(private transferState: TransferState) {}

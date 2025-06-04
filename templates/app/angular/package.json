@@ -8,7 +8,11 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "dev:ssr": "ng run MyProjectName:serve-ssr",
+    "serve:ssr": "node dist/MyProjectName/server/main.js",
+    "build:ssr": "ng build && ng run MyProjectName:server",
+    "prerender": "ng run MyProjectName:prerender"
   },
   "private": true,
   "dependencies": {
@@ -29,8 +33,11 @@
     "@angular/localize": "~19.1.0",
     "@angular/platform-browser": "~19.1.0",
     "@angular/platform-browser-dynamic": "~19.1.0",
+    "@angular/platform-server": "~19.1.0",
     "@angular/router": "~19.1.0",
+    "@angular/ssr": "^19.1.9",
     "bootstrap-icons": "~1.8.0",
+    "express": "^4.18.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.15.0"
@@ -46,10 +53,12 @@
     "@angular/cli": "~19.1.0",
     "@angular/compiler-cli": "~19.1.0",
     "@angular/language-service": "~19.1.0",
+    "@types/express": "^4.17.17",
     "@types/jasmine": "~3.6.0",
-    "@types/node": "^12.11.1",
+    "@types/node": "^18.18.0",
     "@typescript-eslint/eslint-plugin": "7.16.0",
     "@typescript-eslint/parser": "7.16.0",
+    "browser-sync": "^3.0.0",
     "eslint": "^8.0.0",
     "jasmine-core": "~4.0.0",
     "karma": "~6.3.0",

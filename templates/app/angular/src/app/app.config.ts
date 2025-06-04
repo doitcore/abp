@@ -17,30 +17,37 @@ import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
 import {ThemeLeptonXModule} from "@abp/ng.theme.lepton-x";
 import {SideMenuLayoutModule} from "@abp/ng.theme.lepton-x/layouts";
 import {AccountLayoutModule} from "@abp/ng.theme.lepton-x/account";
+import {provideClientHydration, withEventReplay, withHttpTransferCacheOptions} from '@angular/platform-browser';
+import {provideServerRouting} from "@angular/ssr";
+import {provideServerRendering} from "@angular/platform-server";
+import {serverRoutes} from "./app.routes.server";
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideRouter(appRoutes),
-    APP_ROUTE_PROVIDER,
-    provideAbpCore(
-      withOptions({
-        environment,
-        registerLocaleFn: registerLocale(),
-      })
-    ),
-    provideAbpOAuth(),
-    provideAbpThemeShared(),
-    provideSettingManagementConfig(),
-    provideAccountConfig(),
-    provideIdentityConfig(),
-    provideTenantManagementConfig(),
-    provideFeatureManagementConfig(),
-    provideAnimations(),
-    provideAbpCore(),
-    importProvidersFrom([
-      ThemeLeptonXModule.forRoot(),
-      SideMenuLayoutModule.forRoot(),
-      AccountLayoutModule.forRoot(),
-    ])
-  ],
+export function createAppConfig(ssr: boolean): ApplicationConfig {
+  return {
+    providers: [
+      provideRouter(appRoutes),
+      APP_ROUTE_PROVIDER,
+      provideAbpCore(
+        withOptions({
+          environment,
+          registerLocaleFn: registerLocale(),
+        })
+      ),
+      provideAbpOAuth({ssr}),
+      provideAbpThemeShared(),
+      provideSettingManagementConfig(),
+      provideAccountConfig(),
+      provideIdentityConfig(),
+      provideTenantManagementConfig(),
+      provideFeatureManagementConfig(),
+      provideAnimations(),
+      provideAbpCore(),
+      importProvidersFrom([
+        ThemeLeptonXModule.forRoot(),
+        SideMenuLayoutModule.forRoot(),
+        AccountLayoutModule.forRoot(),
+      ]), provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({})),
+      ...(ssr ? [provideServerRendering(), provideServerRouting(serverRoutes)] : []),
+    ],
+  }
 };

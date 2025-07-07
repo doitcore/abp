@@ -40,7 +40,7 @@ In this section, we will create an application service in the main application's
 Open the main `ModularCrm` .NET solution in your IDE, create an `Orders` folder under the `Services` folder and add an `IOrderReportingAppService` interface. Here is the definition of that interface:
 
 ````csharp
-using ModularCrm.Orders;
+using ModularCrm.Services.Dtos.Orders;
 using Volo.Abp.Application.Services;
 
 namespace ModularCrm.Services.Orders;
@@ -51,13 +51,12 @@ public interface IOrderReportingAppService : IApplicationService
 }
 ````
 
-We have a single method, `GetLatestOrders`, that will return a list of the latest orders. We should also define the `OrderReportDto` class that that method returns. Create the `Orders` folder under the `Services/Dtos` folder and create a class named `OrderReportDto`.
+We have a single method, `GetLatestOrders`, that will return a list of the latest orders. We should also define the `OrderReportDto` class that method returns. Create the `Orders` folder under the `Services/Dtos` folder and create a class named `OrderReportDto`.
 
 ````csharp
-using System;
 using ModularCrm.Ordering;
 
-namespace ModularCrm.Orders;
+namespace ModularCrm.Services.Dtos.Orders;
 
 public class OrderReportDto
 {
@@ -87,11 +86,10 @@ Open the `OrderReportingAppService.cs` file and change its content by the follow
 ````csharp
 using ModularCrm.Catalog;
 using ModularCrm.Ordering;
-using ModularCrm.Services;
-using ModularCrm.Services.Orders;
+using ModularCrm.Services.Dtos.Orders;
 using Volo.Abp.Domain.Repositories;
 
-namespace ModularCrm.Orders;
+namespace ModularCrm.Services.Orders;
 
 public class OrderReportingAppService :
     ModularCrmAppService,
@@ -114,16 +112,16 @@ public class OrderReportingAppService :
         var products = await _productRepository.GetQueryableAsync();
 
         var latestOrders = (from order in orders
-                            join product in products on order.ProductId equals product.Id
-                            orderby order.CreationTime descending
-                            select new OrderReportDto
-                            {
-                                OrderId = order.Id,
-                                CustomerName = order.CustomerName,
-                                State = order.State,
-                                ProductId = product.Id,
-                                ProductName = product.Name
-                            })
+                join product in products on order.ProductId equals product.Id
+                orderby order.CreationTime descending
+                select new OrderReportDto
+                {
+                    OrderId = order.Id,
+                    CustomerName = order.CustomerName,
+                    State = order.State,
+                    ProductId = product.Id,
+                    ProductName = product.Name
+                })
             .Take(10)
             .ToList();
 
@@ -150,7 +148,7 @@ Open the ABP Studio UI, stop the application if it is running, build and run it 
 
 You should get the order objects with product names.
 
-Alternatively, you can visit the `/api/app/order-reporting/latest-orders` URL to directly execute the HTTP API on the browser (you should write the full URL, like `https://localhost:44303/api/app/order-reporting/latest-orders` - port can be different for your case)
+Alternatively, you can visit the `/api/app/order-reporting/latest-orders` URL to directly execute the HTTP API on the browser (you should write the full URL, like `https://localhost:44303/api/app/order-reporting/latest-orders` - the **port number** can be different for your case)
 
 ## Summary
 

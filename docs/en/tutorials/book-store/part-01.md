@@ -101,6 +101,8 @@ The final folder/file structure should be as shown below:
 EF Core requires that you relate the entities with your `DbContext`. The easiest way to do so is adding a `DbSet` property to the `BookStoreDbContext` class in the `Acme.BookStore.EntityFrameworkCore` project, as shown below:
 
 ````csharp
+using Acme.BookStore.Books;
+
 public class BookStoreDbContext : AbpDbContext<BookStoreDbContext>
 {
     public DbSet<Book> Books { get; set; }

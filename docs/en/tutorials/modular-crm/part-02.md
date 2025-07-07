@@ -16,20 +16,6 @@
 
 In this part, you will install the `ModularCrm.Catalog` module to the main application, which was created in the [previous part](part-01.md).
 
-## Creating an ABP Studio Solution Folder
-
-Before installing the `ModularCrm.Catalog` module to the main application, let's create a "main" folder and move the `ModularCrm` module (the main application) to it to tidy up the solution structure. Right-click to the solution root on the *Solution Explorer* panel, and select *Add* -> *New Folder* command:
-
-![abp-studio-add-new-folder-command-2](images/abp-studio-add-new-folder-command-2.png)
-
-That command opens a dialog where you can set the *Folder name*:
-
-![abp-studio-new-folder-dialog](images/abp-studio-new-folder-dialog.png)
-
-After the folder is created, now you can move the `ModularCrm` module to the `main` folder (simply by drag & drop). The _Solution Explorer_ panel should look like the following figure now:
-
-![abp-studio-solution-explorer-with-folders](images/abp-studio-solution-explorer-with-folders-v2.png)
-
 ## Installing the Catalog Module to the Main Application
 
 A module does not contain an executable application inside. The `ModularCrm.Catalog.UI` project is just a class library project, not an executable web application. A module should be installed in an executable application to run it.
@@ -62,7 +48,7 @@ Graph Build is a dotnet CLI command that recursively builds all the referenced d
 
 > While developing multi-module solutions with ABP Studio, you may need to perform *Graph Build* on the root/main module if you change the depending modules.
 
-### Run the Main Application
+## Running the Main Application
 
 Open the *Solution Runner* panel, click the *Play* button (near to the solution root), right-click the `ModularCrm` application and select the *Browse* command. It will open the web application in the built-in browser. Then you can navigate to the *Catalog* page on the main menu of the application to see the Catalog page that is coming from the `ModularCrm.Catalog` module:
 

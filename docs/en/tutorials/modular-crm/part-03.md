@@ -353,9 +353,9 @@ We've added the `CreateMap<Product, ProductDto>();` line to define the mapping.
 To create HTTP API endpoints for the catalog module, you have two options:
 
 * You can create a regular ASP.NET Core Controller class in the `ModularCrm.Catalog` project, inject `IProductAppService` and create wrapper methods for each public method of the product application service. You will do this later while you create the Ordering module. (Also, you can check the `SampleController` class under the **Samples** folder in the `ModularCrm.Catalog` project for an example)
-* Alternatively, you can use the ABP's [Auto API Controllers](../../framework/api-development/auto-controllers.md) feature to expose your application services as API controllers by conventions. We will do it here.
+* Alternatively, you can use the ABP's [Auto API Controllers](../../framework/api-development/auto-controllers.md) feature to expose your application services as API controllers by conventions.
 
-Open the `CatalogModule` class in the Catalog module's .NET solution (the `ModularCrm.Catalog` .NET solution, the `ModularCrm.Catalog` .NET project) in your IDE, find the `ConfigureServices` method and add the following code block into that method:
+We will use the second approach here. Open the `CatalogModule` class in the Catalog module's .NET solution (the `ModularCrm.Catalog` .NET solution, the `ModularCrm.Catalog` .NET project) in your IDE, find the `ConfigureServices` method and add the following code block into that method:
 
 ````csharp
 Configure<AbpAspNetCoreMvcOptions>(options =>
@@ -375,15 +375,13 @@ Now, ABP will automatically expose the application services defined in the `Modu
 
 This section will create a few example products using the [Swagger UI](../../framework/api-development/swagger.md). Thus, you will have some sample products to show on the UI.
 
-Now, right-click the `ModularCrm` under the `main` folder in the Solution Explorer panel and select the *Dotnet CLI* -> *Graph Build* command. This will ensure that the catalog module and the main application are built and ready to run.
-
-After the build process completes, open the Solution Runner panel and click the *Play* button near the solution root. Once the `ModularCrm` application runs, you can right-click it and select the *Browse* command to open the user interface.
+Open the Solution Runner panel and click the *Play* button near the solution root. Once the `ModularCrm` application runs, you can right-click it and select the *Browse* command to open the user interface.
 
 Once you see the user interface of the web application, type `/swagger` at the end of the URL to open the Swagger UI. If you scroll down, you should see the `Catalog` API:
 
 ![abp-studio-swagger-ui-in-browser](images/abp-studio-swagger-ui-in-browser.png)
 
-> **Note:** If you have a swagger error on the UI, then you can open the `SampleAppService` class in the `ModularCrm.Catalog` project and add `[RemoteService(false)]` attribute to the `SampleAppService` class. With this attribute, the `SampleAppService` class will not be exposed as a remote service automatically but since there is a `SampleController` class in the `ModularCrm.Catalog` project, the `Catalog` API will be exposed as a remote service.
+> If you don't see the Product API, you may need to re-build the entire solution. Right-click the `ModularCrm` under the `main` folder in the ABP Studio Solution Explorer panel and select the *Dotnet CLI* -> *Graph Build* command. This will ensure that the catalog module and the main application are completely built.
 
 Expand the `POST /api/catalog/product` API and click the *Try it out* button as shown in the following figure:
 
@@ -443,7 +441,6 @@ Here, you simply use the `IProductAppService` to get a list of all products and 
 @page
 @using Microsoft.Extensions.Localization
 @using ModularCrm.Catalog.Localization
-@using ModularCrm.Catalog.UI.Pages.Catalog
 @model ModularCrm.Catalog.UI.Pages.Catalog.IndexModel
 @inject IStringLocalizer<CatalogResource> L
 

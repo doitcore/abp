@@ -103,6 +103,12 @@ Here, you can select the database management systems (DBMS){{ if DB == "EF" }} a
 
 If you uncheck the *Kubernetes Configuration* option, the solution will not include the Kubernetes configuration files, such as Helm charts and other Kubernetes-related files. You can also specify *Social Logins*; if you uncheck this option, the solution will not be configured for social login. Lastly, you can specify the *Include Tests* option to include or exclude the test projects from the solution.
 
+On the next screen, you can configure the modularity options for your solution:
+
+> If you select the *Setup as a modular solution* option, the solution is created more ready for [modular monolith development](../tutorials/modular-crm/index.md) and allows you to add sub-modules during the solution creation phase.
+
+![abp-studio-new-solution-modularity](images/abp-studio-new-solution-dialog-modularity.png)
+
 Now, we are ready to allow ABP Studio to create our solution. Just click the *Create* button and let the ABP Studio do the rest for you. After clicking the Create button, the dialog is closed and your solution is loaded into ABP Studio:
 
 ![abp-studio-created-new-solution](images/abp-studio-created-new-solution.png)

@@ -64,12 +64,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ModularCrm.Catalog.Integration;
 using ModularCrm.Ordering.Events;
-using ModularCrm.Products.Integration;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
-namespace ModularCrm.Ordering.Services;
+namespace ModularCrm.Ordering;
 
 public class OrderAppService : OrderingAppService, IOrderAppService
 {
@@ -163,22 +163,21 @@ You can check the ABP Studio's *Solution Explorer* panel to see the module impor
 
 Now, it is possible to use the `OrderPlacedEto` class inside the Catalog module since it has the `ModularCrm.Ordering.Contracts` package reference.
 
-Open the Catalog module's .NET solution in your IDE, locate the `ModularCrm.Catalog` project, and create a new `Orders` folder and an `OrderEventHandler` class inside that folder. The final folder structure should be like this:
+Open the Catalog module's .NET solution in your IDE, locate the `ModularCrm.Catalog` project, and create a new `EventHandlers` folder and an `OrderEventHandler` class inside that folder. The final folder structure should be like this:
 
 ![visual-studio-order-event-handler](images/visual-studio-order-event-handler-v2.png)
 
 Replace the `OrderEventHandler.cs` file's content with the following code block:
 
 ````csharp
-using ModularCrm.Catalog;
-using ModularCrm.Ordering.Events;
 using System;
 using System.Threading.Tasks;
+using ModularCrm.Ordering.Events;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
-namespace ModularCrm.Products.Orders;
+namespace ModularCrm.Catalog.EventHandlers;
 
 public class OrderEventHandler :
     IDistributedEventHandler<OrderPlacedEto>,

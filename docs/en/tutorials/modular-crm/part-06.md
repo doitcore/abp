@@ -56,11 +56,10 @@ Open the `IProductIntegrationService.cs` file and replace it's content with the 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ModularCrm.Catalog;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 
-namespace ModularCrm.Products.Integration;
+namespace ModularCrm.Catalog.Integration;
 
 [IntegrationService]
 public interface IProductIntegrationService : IApplicationService
@@ -91,13 +90,10 @@ Open the `ProductIntegrationService.cs` file and replace its content with the fo
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ModularCrm.Catalog;
-using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 
-namespace ModularCrm.Products.Integration;
+namespace ModularCrm.Catalog.Integration;
 
-[IntegrationService]
 public class ProductIntegrationService
     : CatalogAppService, IProductIntegrationService
 {
@@ -152,13 +148,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ModularCrm.Products.Integration;
-using Volo.Abp.Application.Services;
+using ModularCrm.Catalog.Integration;
 using Volo.Abp.Domain.Repositories;
 
 namespace ModularCrm.Ordering;
 
-public class OrderAppService : ApplicationService, IOrderAppService
+public class OrderAppService : OrderingAppService, IOrderAppService
 {
     private readonly IRepository<Order, Guid> _orderRepository;
     private readonly IProductIntegrationService _productIntegrationService;

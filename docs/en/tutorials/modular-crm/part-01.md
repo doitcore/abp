@@ -42,23 +42,26 @@ The *Standard Module* template is suggested for building modular monolith applic
 
 The initial solution structure should be like the following in ABP Studio's *[Solution Explorer](../../studio/solution-explorer.md)*:
 
-![solution-explorer-modular-crm-initial-with-modules](images/solution-explorer-modular-crm-initial-with-modules.png)
+![solution-explorer-modular-crm-initial-with-modules](images/solution-explorer-modular-crm-initial-with-modules-v2.png)
 
-Initially, you see a `ModularCrm` solution, a `ModularCrm` module under that solution (our main single layer application), and a `modules` folder that contains the `ModularCrm.Catalog` module and its sub .NET projects.
+Initially, you see a `ModularCrm` solution with two solution folders:
 
-> An ABP Studio module is typically a .NET solution and an ABP Studio solution is an umbrella concept for multiple .NET Solutions (see the [concepts](../../studio/concepts.md) document for more).
+* `main`: That folder contains the `ModularCrm` ABP Studio Module, which is the main executable web application of the solution.
+* `modules`: A folder to place your modules. It contains the `ModularCrm.Catalog` module initially.
 
-The `ModularCrm` module is the core of your application, built as a single-layer ASP.NET Core Web application. On the other hand, the `ModularCrm.Catalog` module consist of four packages (.NET projects) and used to implement the catalog module's functionality.
+> An **ABP Studio Module** is typically a separate .NET solution. On the other hand, an **ABP Studio Solution** is an umbrella concept for multiple .NET Solutions (see the [concepts](../../studio/concepts.md) document for details).
 
 ## Catalog Module's Packages
 
-Here are the .NET projects (ABP Studio packages) of the Catalog module:
+If you expand it, you can see the .NET projects (ABP Studio Packages) of the `ModularCrm.Catalog` module:
+
+![abp-studio-catalog-module-expanded-in-solution-explorer](images/abp-studio-catalog-module-expanded-in-solution-explorer.png)
 
 - `ModularCrm.Catalog`: The main module project that contains your [entities](../../framework/architecture/domain-driven-design/entities.md), [application service](../../framework/architecture/domain-driven-design/application-services.md) implementations and other business objects
-- `ModularCrm.Catalog.Contracts`: Basically contains [application service](../../framework/architecture/domain-driven-design/application-services.md) interfaces and [DTOs](../../framework/architecture/domain-driven-design/data-transfer-objects.md)
-- `ModularCrm.Catalog.Tests`: Unit and integration tests (if you selected the _Include Tests_ option)
-- `ModularCrm.Catalog.UI`: Contains user interface pages components for the module
+- `ModularCrm.Catalog.Contracts`: Basically contains [application service](../../framework/architecture/domain-driven-design/application-services.md) interfaces and [DTOs](../../framework/architecture/domain-driven-design/data-transfer-objects.md). These interfaces then can be used by client modules for integration purposes or by the user interface to perform use cases related to that module
+- `ModularCrm.Catalog.Tests`: Unit and integration tests (if you selected the _Include Tests_ option) for that module
+- `ModularCrm.Catalog.UI`: Contains user interface pages and components for the module
 
 ## Summary
 
-You've created the initial single layer monolith modular solution with a Catalog module included. In the next part, you will learn how install the Catalog module to the main application.
+You've created the initial single layer monolith modular solution with a Catalog module included. In the [next part](part-02.md), you will learn how install the Catalog module to the main application.

@@ -73,6 +73,12 @@ Here, you can select the database management systems (DBMS){{ if DB == "EF" }} a
 
 ![abp-studio-no-layers-new-solution-additional-options](images/abp-studio-no-layers-new-solution-additional-options-0.9.13.png)
 
+Configure any additional options as needed and click the *Next* button to continue. On the next screen, you can configure the modularity options for your solution:
+
+> If you select the *Setup as a modular solution* option, the solution is created more ready for [modular monolith development](../tutorials/modular-crm/index.md) and allows you to add sub-modules during the solution creation phase.
+
+![abp-studio-no-layers-new-solution-modularity](images/abp-studio-no-layers-new-solution-modularity.png)
+
 Now, we are ready to allow ABP Studio to create our solution. Just click the *Create* button and let the ABP Studio do the rest for you.
 
 After clicking the *Create* button, the dialog is closed and your solution is loaded into ABP Studio:

@@ -16,6 +16,7 @@ import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
 import { ThemeLeptonXModule } from '@abp/ng.theme.lepton-x';
 import { SideMenuLayoutModule } from '@abp/ng.theme.lepton-x/layouts';
 import { provideLogo, withEnvironmentOptions } from '@volo/ngx-lepton-x.core';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,6 +37,6 @@ export const appConfig: ApplicationConfig = {
     provideFeatureManagementConfig(),
     provideAnimations(),
     provideLogo(withEnvironmentOptions(environment)),
-    importProvidersFrom([ThemeLeptonXModule.forRoot(), SideMenuLayoutModule.forRoot()]),
+    importProvidersFrom([ThemeLeptonXModule.forRoot(), SideMenuLayoutModule.forRoot()]), provideClientHydration(withEventReplay()),
   ],
 };

@@ -2,7 +2,7 @@ import 'zone.js/node';
 
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr/node';
-import express from 'express';
+import * as express from 'express';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import bootstrap from './main.server';
@@ -21,15 +21,14 @@ export function app(): express.Express {
   server.set('views', distFolder);
 
   // Example Express Rest API endpoints
-  // server.get('/api/{*splat}', (req, res) => { });
+  // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.use(express.static(distFolder, {
-    maxAge: '1y',
-    index: false,
+  server.get('*.*', express.static(distFolder, {
+    maxAge: '1y'
   }));
 
   // All regular routes use the Angular engine
-  server.use((req, res, next) => {
+  server.get('*', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
 
     commonEngine
@@ -52,11 +51,7 @@ function run(): void {
 
   // Start up the Node server
   const server = app();
-  server.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
-
+  server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }

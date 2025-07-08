@@ -8,12 +8,13 @@ You do not have to provide the `ConfirmationService` at module or component leve
 
 ```js
 import { ConfirmationService } from '@abp/ng.theme.shared';
+import { inject } from '@angular/core';
 
 @Component({
   /* class metadata here */
 })
 class DemoComponent {
-  constructor(private confirmation: ConfirmationService) {}
+  private confirmation = inject(ConfirmationService);
 }
 ```
 
@@ -36,8 +37,10 @@ You can subscribe to the confirmation closing event like below:
 
 ```js
 import { Confirmation, ConfirmationService } from '@abp/ng.theme.shared';
+import { inject } from '@angular/core';
 
-constructor(private confirmation: ConfirmationService) {}
+// Sınıf içinde:
+private confirmation = inject(ConfirmationService);
 
 this.confirmation
   .warn('::WillBeDeleted', { key: '::AreYouSure', defaultValue: 'Are you sure?' })

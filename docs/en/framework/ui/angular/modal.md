@@ -133,10 +133,14 @@ See an example form inside a modal:
 
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { inject } from '@angular/core';
 
 @Component(/* component metadata */)
 export class BookComponent {
- form = this.fb.group({
+  private fb = inject(FormBuilder);
+  private service = inject(BookService);
+
+  form = this.fb.group({
     author: [null, [Validators.required]],
     name: [null, [Validators.required]],
     price: [null, [Validators.required, Validators.min(0)]],
@@ -145,10 +149,7 @@ export class BookComponent {
   });
 
   inProgress: boolean;
-
   isModalOpen: boolean;
-
-  constructor(private fb: FormBuilder, private service: BookService) {}
 
   save() {
     if (this.form.invalid) return;

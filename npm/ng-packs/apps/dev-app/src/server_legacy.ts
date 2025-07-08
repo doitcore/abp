@@ -1,5 +1,8 @@
+import { environment } from './environments/environment';
+if (environment.production === false) {
+  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+}
 import 'zone.js/node';
-
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr/node';
 import express from 'express';
@@ -21,19 +24,19 @@ export function app(): express.Express {
   server.set('views', distFolder);
 
   // Example Express Rest API endpoints
-  // server.get('/api/{*splat}', (req, res) => { });
+  // server.get('/api/**', (req, res) => { });
   // Serve static files from /browser
-  server.use(
+  server.get('/.well-known/*', (_, res) => res.sendStatus(404));
+  server.get(
+    '*.*',
     express.static(distFolder, {
       maxAge: '1y',
-      index: false,
     }),
   );
 
   // All regular routes use the Angular engine
-  server.use((req, res, next) => {
+  server.get('*', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
-
     commonEngine
       .render({
         bootstrap,
@@ -57,11 +60,7 @@ function run(): void {
 
   // Start up the Node server
   const server = app();
-  server.listen(port, error => {
-    if (error) {
-      throw error;
-    }
-
+  server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }

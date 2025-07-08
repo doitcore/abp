@@ -11,6 +11,7 @@
   },
   "files": [
     "src/main.server.ts",
+    "src/server.ts",
     "src/server.ts"
   ]
 }

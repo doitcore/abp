@@ -126,13 +126,14 @@ import { environment } from '../environments/environment';
 In order to use the `EnvironmentService` you must inject it in your class as a dependency.
 
 ```js
-import { EnvironmentService } from '@abp/ng.core';
+import { EnvironmentService } from '@abp/ng.core';
+import { inject } from '@angular/core';
 
 @Component({
   /* class metadata here */
 })
 class DemoComponent {
-  constructor(private environment: EnvironmentService) {}
+  private environment = inject(EnvironmentService);
 }
 ```
 

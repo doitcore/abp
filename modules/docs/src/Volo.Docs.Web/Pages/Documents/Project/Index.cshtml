@@ -291,12 +291,12 @@
                     id="sidebar-scroll"
                     class="nav nav-list">
                 </ul>
-                @if (Model.HasDownloadPdfPermission)
+                @if (Model.HasDownloadPdf)
                 {
                     <div class="docs-sidebar-footer">
-                        <a href="@Url.Content($"~/api/docs/documents/pdf?ProjectId={Model.Project.Id}&Version={(Model.LatestVersionInfo.IsSelected ? Model.LatestVersionInfo.Version : Model.Version)}&LanguageCode={Model.LanguageCode ?? Model.DefaultLanguageCode}")" target="_blank" class="download-pdf-btn">
+                        <button data-url="@Url.Content($"~/api/docs/documents/pdf/download?ProjectId={Model.Project.Id}&Version={(Model.LatestVersionInfo.IsSelected ? Model.LatestVersionInfo.Version : Model.Version)}&LanguageCode={Model.LanguageCode ?? Model.DefaultLanguageCode}")" class="download-pdf-btn" id="DownloadPdfBtn">
                             <i class="fa fa-download"></i> @L["DownloadPDF"]
-                        </a>
+                        </button>
                     </div>
                 }
             }

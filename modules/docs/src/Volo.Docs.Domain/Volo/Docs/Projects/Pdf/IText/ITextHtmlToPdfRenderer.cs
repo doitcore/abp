@@ -8,11 +8,10 @@ using iText.Kernel.Pdf.Action;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 using Volo.Docs.Utils;
-using ITextDocument = iText.Layout.Document;
 
 namespace Volo.Docs.Projects.Pdf.IText;
 
-public class ITextHtmlToPdfRenderer : IHtmlToPdfRenderer ,ITransientDependency
+public class ITextHtmlToPdfRenderer : IHtmlToPdfRenderer, ITransientDependency
 {
     protected IOptions<DocsProjectPdfGeneratorOptions> Options { get; }
     
@@ -21,15 +20,26 @@ public class ITextHtmlToPdfRenderer : IHtmlToPdfRenderer ,ITransientDependency
         Options = options;
     }
     
-    public virtual Task<MemoryStream> RenderAsync(string title, string html, List<PdfDocument> documents)
+    public virtual Task<Stream> RenderAsync(string title, string html, List<PdfDocument> documents)
     {
         var pdfStream = new MemoryStream();
-        var pdfWrite = new PdfWriter(pdfStream);
-        var pdfDocument = new iText.Kernel.Pdf.PdfDocument(pdfWrite);
-        pdfDocument.GetDocumentInfo().SetTitle(title);
-        var textDocument = new ITextDocument(pdfDocument);
-        pdfWrite.SetCloseStream(false);
-        
+        using (var pdfWriter = new PdfWriter(pdfStream))
+        {
+            pdfWriter.SetCloseStream(false);
+            using (var pdfDocument = new iText.Kernel.Pdf.PdfDocument(pdfWriter))
+            {
+                pdfDocument.GetDocumentInfo().SetTitle(title);
+                CreatePdfFromHtml(html, pdfDocument);
+                AddOutlinesToPdf(pdfDocument, documents);
+            }
+        }
+            
+        pdfStream.Position = 0;
+        return Task.FromResult<Stream>(pdfStream);
+    }
+
+    private void CreatePdfFromHtml(string html, iText.Kernel.Pdf.PdfDocument pdfDocument)
+    {
         var converter = new ConverterProperties();
         var tagWorkerFactory = new HtmlIdTagWorkerFactory(pdfDocument);
         converter.SetTagWorkerFactory(tagWorkerFactory);
@@ -37,12 +47,12 @@ public class ITextHtmlToPdfRenderer : IHtmlToPdfRenderer ,ITransientDependency
         HtmlConverter.ConvertToDocument(html, pdfDocument, converter);
         
         tagWorkerFactory.AddNamedDestinations();
+    }
+
+    private void AddOutlinesToPdf(iText.Kernel.Pdf.PdfDocument pdfDocument, List<PdfDocument> documents)
+    {
         var pdfOutlines = pdfDocument.GetOutlines(false);
         BuildPdfOutlines(pdfOutlines, documents);
-                
-        textDocument.Close();
-        pdfStream.Position = 0;
-        return Task.FromResult(pdfStream);
     }
 
     private void BuildPdfOutlines(PdfOutline parentOutline, List<PdfDocument> pdfDocumentNodes)

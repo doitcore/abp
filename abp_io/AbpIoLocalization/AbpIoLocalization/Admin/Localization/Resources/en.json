@@ -717,6 +717,12 @@
     "IncludePrereleaseInfo": "Gets or sets whether to include prerelease versions in the cache",
     "CacheVersionCount": "Cache Version Count",
     "CacheVersionCountInfo": "Gets or sets the number of versions to cache",
-    "CacheLatestVersionsInfo": "This caches the latest versions of the NuGet packages"
+    "CacheLatestVersionsInfo": "This caches the latest versions of the NuGet packages",
+    "NuGetApiKey": "NuGet API key",
+    "QuestionCount": "Question Count",
+    "MakeAnnouncement": "Make Announcement",
+    "MakeAnnouncementInfo": "Check it if you want to make an announcement for this post",
+    "Permission:ViewCounts": "View counts",
+    "ReadCount": "Read Count"
   }
 }

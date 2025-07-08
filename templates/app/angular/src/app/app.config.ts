@@ -1,6 +1,6 @@
-import {ApplicationConfig, importProvidersFrom} from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import {provideAnimations} from "@angular/platform-browser/animations";
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { appRoutes } from './app.routes';
 import { APP_ROUTE_PROVIDER } from './route.provider';
@@ -21,6 +21,7 @@ import {provideClientHydration, withEventReplay, withHttpTransferCacheOptions} f
 import {provideServerRouting} from "@angular/ssr";
 import {provideServerRendering} from "@angular/platform-server";
 import {serverRoutes} from "./app.routes.server";
+import { provideLogo, withEnvironmentOptions } from '@volo/ngx-lepton-x.core';
 
 export function createAppConfig(ssr: boolean): ApplicationConfig {
   return {
@@ -42,6 +43,7 @@ export function createAppConfig(ssr: boolean): ApplicationConfig {
       provideFeatureManagementConfig(),
       provideAnimations(),
       provideAbpCore(),
+      provideLogo(withEnvironmentOptions(environment)),
       importProvidersFrom([
         ThemeLeptonXModule.forRoot(),
         SideMenuLayoutModule.forRoot(),

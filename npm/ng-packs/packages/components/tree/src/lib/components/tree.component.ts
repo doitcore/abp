@@ -152,6 +152,17 @@ export class TreeComponent implements OnInit {
     this.dropdowns[key] = dropdown;
   }
 
+  onContextMenuChange(event: NzFormatEmitEvent) {
+    const dropdownKey = event.node?.key;
+
+    Object.entries(this.dropdowns).forEach(([key, dropdown]) => {
+      if (key !== dropdownKey && dropdown?.isOpen()) {
+        dropdown.close();
+      }
+    });
+    this.dropdowns[dropdownKey]?.toggle();
+  }
+
   setSelectedNode(node: any) {
     const newSelectedNode = this.findNode(node, this.nodes);
     this.selectedNode = { ...newSelectedNode };

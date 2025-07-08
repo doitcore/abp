@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.RequestLocalization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using MyCSharp.HttpUserAgentParser.DependencyInjection;
 using Volo.Abp.AspNetCore.Auditing;
 using Volo.Abp.AspNetCore.VirtualFileSystem;
 using Volo.Abp.Auditing;
@@ -59,6 +60,8 @@ public class AbpAspNetCoreModule : AbpModule
         context.Services.AddAbpDynamicOptions<RequestLocalizationOptions, AbpRequestLocalizationOptionsManager>();
 
         StaticWebAssetsLoader.UseStaticWebAssets(context.Services.GetHostingEnvironment(), context.Services.GetConfiguration());
+
+        context.Services.AddHttpUserAgentCachedParser();
     }
 
     private static void AddAspNetServices(IServiceCollection services)

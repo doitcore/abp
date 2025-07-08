@@ -48,17 +48,13 @@ permissions:
 jobs:
   build-test:
     runs-on: ubuntu-22.04
-    timeout-minutes: 40
+    timeout-minutes: 50
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-dotnet@master
       with:
         dotnet-version: 9.0.100
-
-    - name: chown
-      run: |
-        sudo chown -R $USER:$USER /home/runneradmin
 
     - name: Build All
       run: ./build-all.ps1

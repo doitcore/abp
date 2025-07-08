@@ -18,6 +18,7 @@ using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.EventBus.Local;
 using Volo.Docs.Common;
+using Volo.Docs.Common.Documents;
 using Volo.Docs.Common.Projects;
 using Volo.Docs.Documents;
 using Volo.Docs.Documents.Rendering;
@@ -92,7 +93,7 @@ namespace Volo.Docs.Pages.Documents.Project
 
         public bool IsLatestVersion { get; private set; }
         
-        public bool HasDownloadPdfPermission { get; set; }
+        public bool HasDownloadPdf { get; set; }
 
         public DocumentNavigationsDto DocumentNavigationsDto { get; private set; }
 
@@ -103,6 +104,7 @@ namespace Volo.Docs.Pages.Documents.Project
         private readonly IWebDocumentSectionRenderer _webDocumentSectionRenderer;
         private readonly DocsUiOptions _uiOptions;
         private readonly IPermissionChecker _permissionChecker;
+        private readonly IDocumentPdfAppService _documentPdfAppService;
 
         protected IDocsLinkGenerator DocsLinkGenerator => LazyServiceProvider.LazyGetRequiredService<IDocsLinkGenerator>();
         
@@ -114,7 +116,8 @@ namespace Volo.Docs.Pages.Documents.Project
             IProjectAppService projectAppService,
             IOptions<DocsUiOptions> options,
             IWebDocumentSectionRenderer webDocumentSectionRenderer, 
-            IPermissionChecker permissionChecker)
+            IPermissionChecker permissionChecker, 
+            IDocumentPdfAppService documentPdfAppService)
         {
             ObjectMapperContext = typeof(DocsWebModule);
 
@@ -123,6 +126,7 @@ namespace Volo.Docs.Pages.Documents.Project
             _projectAppService = projectAppService;
             _webDocumentSectionRenderer = webDocumentSectionRenderer;
             _permissionChecker = permissionChecker;
+            _documentPdfAppService = documentPdfAppService;
             _uiOptions = options.Value;
             
             LocalizationResourceType = typeof(DocsResource);
@@ -152,7 +156,7 @@ namespace Volo.Docs.Pages.Documents.Project
             ShowProjectsCombobox = _uiOptions.ShowProjectsCombobox && !_uiOptions.SingleProjectMode.Enable;
             ShowProjectsComboboxLabel = ShowProjectsCombobox && _uiOptions.ShowProjectsComboboxLabel;
             FullSearchEnabled = await _documentAppService.FullSearchEnabledAsync();
-            HasDownloadPdfPermission = await _permissionChecker.IsGrantedAsync(DocsCommonPermissions.Projects.PdfGeneration);
+            
             try
             {
                 await SetProjectAsync();
@@ -209,6 +213,12 @@ namespace Volo.Docs.Pages.Documents.Project
 
             await SetNavigationAsync();
             SetLanguageSelectListItems();
+
+            HasDownloadPdf = await _permissionChecker.IsGrantedAsync(DocsCommonPermissions.Projects.PdfDownload)
+                             && await _documentPdfAppService.ExistsAsync(new()
+                             {
+                                 ProjectId = Project.Id, Version = LatestVersionInfo.IsSelected ? LatestVersionInfo.Version : Version, LanguageCode = DocumentLanguageCode
+                             });
 
             return Page();
         }

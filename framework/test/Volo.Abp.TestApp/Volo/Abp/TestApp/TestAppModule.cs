@@ -27,7 +27,8 @@ public class TestAppModule : AbpModule
     {
         ConfigureAutoMapper();
         ConfigureDistributedEventBus();
-        
+
+        context.Services.AddHttpContextAccessor();
         context.Services.Replace(ServiceDescriptor.Singleton<IDistributedCache, TestMemoryDistributedCache>());
         context.Services.AddEntityCache<Product, Guid>();
         context.Services.AddEntityCache<Product, ProductCacheItem, Guid>();

@@ -32,6 +32,7 @@ using Localization.Resources.AbpUi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Volo.Abp.Account;
+using Volo.Abp.BackgroundJobs;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.Database;
 using Volo.Abp.PermissionManagement.HttpApi;
@@ -62,7 +63,8 @@ namespace VoloDocs.Web
         typeof(AbpPermissionManagementApplicationModule),
         typeof(AbpPermissionManagementHttpApiModule),
         typeof(AbpAspNetCoreMvcUiBasicThemeModule)
-        ,typeof(AbpCachingStackExchangeRedisModule)
+        ,typeof(AbpCachingStackExchangeRedisModule),
+        typeof(AbpBackgroundJobsModule)
     )]
     public class VoloDocsWebModule : AbpModule
     {
@@ -71,6 +73,11 @@ namespace VoloDocs.Web
             PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
             {
                 options.AddAssemblyResource(typeof(DocsResource), typeof(VoloDocsWebModule).Assembly);
+            });
+            
+            PreConfigure<AbpBackgroundJobWorkerOptions>(options =>
+            {
+                options.ApplicationName = context.Services.GetApplicationName()!;
             });
         }
 

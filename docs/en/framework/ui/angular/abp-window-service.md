@@ -14,9 +14,9 @@ Firstly, ensure that the service is injected into the component or any other Ang
 ```js
 import { AbpWindowService } from '@abp/ng.core';
 
-constructor(private abpWindowService: AbpWindowService) { }
+private abpWindowService   = inject(AbpWindowService) 
 // or
-// private abpWindowService   = inject(AbpWindowService)
+// constructor(private abpWindowService: AbpWindowService) { }
 ```
 
 ### Downloading a Blob

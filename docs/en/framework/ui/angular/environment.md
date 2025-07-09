@@ -101,24 +101,26 @@ export interface RemoteEnv {
 - `method`: HTTP method to be used when retrieving environment config. Default: `GET`
 - `headers`: If extra headers are needed for the request, it can be set through this field.
 
-## Provide Environment Variable to Core Module
+## Configure Core Provider with Environment
 
 `environment` variable comes from angular host application.
 
 ```js
 import { environment } from '../environments/environment';
 
-@NgModule({
-  imports: [
-    //...other imports
+export const appConfig: ApplicationConfig = {
+  providers: [
+    ...
     provideAbpCore(
       withOptions({
-        environment
+        environment,
+        ...
       })
     ),
+    ...
+  ],
+};
 
-  ]
-})
 ```
 
 ## EnvironmentService

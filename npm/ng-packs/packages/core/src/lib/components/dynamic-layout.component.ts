@@ -103,7 +103,7 @@ export class DynamicLayoutComponent implements OnInit {
     let message = `Layout ${layoutName} not found.`;
     if (layoutName === 'account') {
       message =
-        'Account layout not found. Please check your configuration. If you are using LeptonX, please make sure you have added "AccountLayoutModule.forRoot()" to your app.module configuration.';
+        'Account layout not found. Please check your configuration. If you are using LeptonX, please make sure you have added "provideAccountLayout()" to your app configuration.';
     }
     console.warn(message);
   }

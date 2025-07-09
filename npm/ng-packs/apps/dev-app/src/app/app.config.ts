@@ -4,6 +4,7 @@ import {
   provideClientHydration,
   withEventReplay,
   withHttpTransferCacheOptions,
+  withIncrementalHydration,
 } from '@angular/platform-browser';
 
 import { appRoutes } from './app.routes';
@@ -43,6 +44,10 @@ export const appConfig: ApplicationConfig = {
     provideThemeBasicConfig(),
     provideAnimations(),
     provideRouter(appRoutes),
-    provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({})),
+    provideClientHydration(
+      withEventReplay(),
+      withHttpTransferCacheOptions({}),
+      withIncrementalHydration(),
+    ),
   ],
 };

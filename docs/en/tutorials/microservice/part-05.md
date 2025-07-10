@@ -516,14 +516,6 @@ abp generate-proxy -t ng -m ordering -u http://localhost:44311 --target ordering
 
 For more information, please refer to the [Service Proxies](https://abp.io/docs/latest/framework/ui/angular/service-proxies) documentation.
 
-### Create Order Module
-
-Run the following command line to create a new module, named `OrderModule` in the root folder of the angular application:
-
-```bash
-yarn ng generate module order --module ordering-service --project ordering-service --routing --route orders
-```
-
 ### Add Order Route
 
 * Create `order-base.routes.ts` file under the `projects/ordering-service/config/src/providers` folder and add the following code:
@@ -565,24 +557,86 @@ function configureRoutes() {
   routesService.add(routes);
 }
 ```
+* Open the `projects/ordering-service/config/src/providers/route.provider.ts` file and add `ORDERS_ORDER_ROUTE_PROVIDER` to the `ORDER_SERVICE_PROVIDERS` array as following code:
 
-* Open the `projects/ordering-service/config/src/ordering-service-config.module.ts` file and add `ORDERS_ORDER_ROUTE_PROVIDER` to the `providers` array as following code:
-
-*ordering-service-config.module.ts*
+*route.provider.ts*
 ```typescript
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { ORDERING_SERVICE_ROUTE_PROVIDERS } from './providers/route.provider';
-import { ORDERS_ORDER_ROUTE_PROVIDER } from './providers/order-route.provider';
+import { eLayoutType, RoutesService } from '@abp/ng.core';
+import {
+  EnvironmentProviders,
+  inject,
+  makeEnvironmentProviders,
+  provideAppInitializer,
+} from '@angular/core';
+import { eOrderingServiceRouteNames } from '../enums/route-names';
+import { ORDERS_ORDER_ROUTE_PROVIDER } from './order-route.provider';
 
-@NgModule()
-export class OrderingServiceConfigModule {
-  static forRoot(): ModuleWithProviders<OrderingServiceConfigModule> {
-    return {
-      ngModule: OrderingServiceConfigModule,
-      providers: [ORDERING_SERVICE_ROUTE_PROVIDERS, ORDERS_ORDER_ROUTE_PROVIDER],
-    };
-  }
+
+export const ORDER_SERVICE_ROUTE_PROVIDERS = [
+  provideAppInitializer(() => {
+    configureRoutes();
+  }),
+];
+
+export function configureRoutes() {
+  const routesService = inject(RoutesService);
+  routesService.add([
+    {
+      path: '/order-service',
+      name: eOrderingServiceRouteNames.OrderService,
+      iconClass: 'fas fa-book',
+      layout: eLayoutType.application,
+      order: 3,
+    },
+  ]);
 }
+
+const ORDER_SERVICE_PROVIDERS: EnvironmentProviders[] = [
+  ...ORDER_SERVICE_ROUTE_PROVIDERS,
+  ...ORDERS_ORDER_ROUTE_PROVIDER
+];
+
+export function provideOrderService() {
+  return makeEnvironmentProviders(ORDER_SERVICE_PROVIDERS);
+}
+```
+
+* Do not forget adding `provideOrderService()` to the providers inside `app.config.ts` as follows:
+
+```typescript
+import { provideOrderService } from '@order-service/config';
+
+export const appConfig: ApplicationConfig = {
+  providers: [ 
+    // ...
+    provideOrderService()
+  ],
+};
+```
+
+* Lastly, you need to update the `APP_ROUTES` array in `app.routes.ts` file as follows:
+
+```typescript
+// app.routes.ts
+export const APP_ROUTES: Routes = [
+  // ...
+  {
+    path: 'order-service',
+    children: ORDER_SERVICE_ROUTES,
+  },
+];
+```
+
+```typescript
+// order-service.routes.ts
+export const ORDER_SERVICE_ROUTES: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    component: RouterOutletComponent,
+  },
+  { path: 'orders', children: ORDER_ROUTES },
+];
 ```
 
 ### Create Order Page
@@ -595,7 +649,6 @@ import { OrderDto, OrderService } from './proxy/ordering-service/services';
 
 @Component({
   selector: 'lib-order',
-  standalone: false,
   templateUrl: './order.component.html',
   styleUrl: './order.component.css'
 })

@@ -296,17 +296,26 @@ Below is a simple, generic example of a nested reactive form. This form includes
 **TypeScript: Building the Form**
 
 ```ts
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgxValidateCoreModule } from '@ngx-validate/core';
 
 @Component({
   selector: 'app-nested-form',
   templateUrl: './nested-form.component.html',
+  standalone: true,
+  imports: [NgxValidateCoreModule],
 })
-export class NestedFormComponent {
+export class NestedFormComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  private fb = inject(FormBuilder);
+
+  ngOnInit() {
+    this.buildForm();
+  }
+
+  buildForm() {
     this.form = this.fb.group({
       userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -330,30 +339,40 @@ export class NestedFormComponent {
 
 ```html
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <div class="form-group">
-    <label>User Name</label>
+  <div class="mb-3">
+    <label class="form-label">User Name</label>
     <input type="text" class="form-control" formControlName="userName" />
   </div>
-  <div class="form-group">
-    <label>Email</label>
+
+  <div class="mb-3">
+    <label class="form-label">Email</label>
     <input type="email" class="form-control" formControlName="email" />
   </div>
+
   <div formGroupName="profile" class="card mt-3">
     <div class="card-header">
       <strong>Profile Details</strong>
     </div>
     <div class="card-body">
-      <div class="form-group">
-        <label>First Name</label>
+      <div class="mb-3">
+        <label class="form-label">First Name</label>
         <input type="text" class="form-control" formControlName="firstName" />
       </div>
-      <div class="form-group">
-        <label>Last Name</label>
+
+      <div class="mb-3">
+        <label class="form-label">Last Name</label>
         <input type="text" class="form-control" formControlName="lastName" />
       </div>
     </div>
   </div>
-  <button class="btn btn-primary mt-3" type="submit" [disabled]="form.invalid">Save</button>
+
+  <hr class="my-3" />
+
+  <div>
+    <abp-button buttonType="submit" iconClass="fa fa-save" [disabled]="form.invalid">
+      Save
+    </abp-button>
+  </div>
 </form>
 ```
 

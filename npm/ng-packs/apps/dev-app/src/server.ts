@@ -1,3 +1,7 @@
+import { environment } from './environments/environment';
+if (environment.production === false) {
+  process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+}
 import 'zone.js/node';
 
 import { APP_BASE_HREF } from '@angular/common';

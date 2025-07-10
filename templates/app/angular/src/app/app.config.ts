@@ -18,13 +18,9 @@ import {ThemeLeptonXModule} from "@abp/ng.theme.lepton-x";
 import {SideMenuLayoutModule} from "@abp/ng.theme.lepton-x/layouts";
 import {AccountLayoutModule} from "@abp/ng.theme.lepton-x/account";
 import {provideClientHydration, withEventReplay, withHttpTransferCacheOptions} from '@angular/platform-browser';
-import {provideServerRouting} from "@angular/ssr";
-import {provideServerRendering} from "@angular/platform-server";
-import {serverRoutes} from "./app.routes.server";
 import { provideLogo, withEnvironmentOptions } from '@volo/ngx-lepton-x.core';
 
-export function createAppConfig(ssr: boolean): ApplicationConfig {
-  return {
+export const appConfig: ApplicationConfig = {
     providers: [
       provideRouter(appRoutes),
       APP_ROUTE_PROVIDER,
@@ -34,7 +30,7 @@ export function createAppConfig(ssr: boolean): ApplicationConfig {
           registerLocaleFn: registerLocale(),
         })
       ),
-      provideAbpOAuth({ssr}),
+      provideAbpOAuth({ssr: false}),
       provideAbpThemeShared(),
       provideSettingManagementConfig(),
       provideAccountConfig(),
@@ -48,8 +44,6 @@ export function createAppConfig(ssr: boolean): ApplicationConfig {
         ThemeLeptonXModule.forRoot(),
         SideMenuLayoutModule.forRoot(),
         AccountLayoutModule.forRoot(),
-      ]), provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({})),
-      ...(ssr ? [provideServerRendering(), provideServerRouting(serverRoutes)] : []),
+      ]), provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({}))
     ],
-  }
 };

@@ -119,8 +119,8 @@ public class ClientProxyUrlBuilder : ITransientDependency
                         if (path != null)
                         {
                             urlBuilder = urlBuilder.Replace($"{{{pathParameter.Name}}}", path);
-                            continue;
                         }
+                        continue;
                     }
                 }
 
@@ -164,8 +164,8 @@ public class ClientProxyUrlBuilder : ITransientDependency
                         urlBuilder.Append(isFirstParam ? "?" : "&");
                         urlBuilder.Append(queryString);
                         isFirstParam = false;
-                        continue;
                     }
+                    continue;
                 }
             }
 

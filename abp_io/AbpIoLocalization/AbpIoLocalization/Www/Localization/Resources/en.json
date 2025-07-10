@@ -1890,6 +1890,7 @@
     "BiographyContainsUrlValidationMessage": "Biography cannot contain URL.",
     "CreatePostSEOTitleInfo": "SEO URL is a clean, readable, keyword-rich URL that helps both users and search engines understand what this post is about. Keep it short with 60 characters. SEO titles over 60 characters will be truncated. Use hyphens (-) to separate words (not underscores). Include target keywords near the start. Lowercase only. No stop words unless needed (e.g: \"and\", \"or\", \"the\").",
     "SEOTitle": "SEO URL",
-    "InvalidYouTubeUrl": "The URL you entered is not a valid YouTube video link. Please make sure it points to a specific video and try again."
+    "InvalidYouTubeUrl": "The URL you entered is not a valid YouTube video link. Please make sure it points to a specific video and try again.",
+    "SelectAnOption": "Select an option"
   }
 }

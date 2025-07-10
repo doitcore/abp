@@ -68,7 +68,7 @@ public class AbpBackgroundJobOptions
 
     public void AddJob(Type jobType)
     {
-        AddJob(new BackgroundJobConfiguration(jobType, GetBackgroundJobName(jobType)));
+        AddJob(new BackgroundJobConfiguration(jobType, GetBackgroundJobName(BackgroundJobArgsHelper.GetJobArgsType(jobType))));
     }
 
     public void AddJob(BackgroundJobConfiguration jobConfiguration)

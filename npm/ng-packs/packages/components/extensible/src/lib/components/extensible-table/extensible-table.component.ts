@@ -19,7 +19,7 @@ import { AsyncPipe, NgComponentOutlet, NgTemplateOutlet } from '@angular/common'
 import { Observable, filter, map } from 'rxjs';
 
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
 
 import {
   ABP,
@@ -103,6 +103,17 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Input() actionsTemplate?: TemplateRef<any>;
 
   @Output() tableActivate = new EventEmitter();
+
+  @Input() selectable = false;
+
+  @Input() set selectionType(value: SelectionType | string) {
+    this._selectionType = typeof value === 'string' ? SelectionType[value] : value;
+  }
+  _selectionType: SelectionType = SelectionType.multiClick;
+  
+  
+  @Input() selected: any[] = [];
+  @Output() selectionChange = new EventEmitter<any[]>();
 
   hasAtLeastOnePermittedAction: boolean;
 
@@ -223,6 +234,12 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     });
 
     return visibleActions.length > 0;
+  }
+
+  onSelect({ selected }) {
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
+    this.selectionChange.emit(selected);
   }
 
   ngAfterViewInit(): void {

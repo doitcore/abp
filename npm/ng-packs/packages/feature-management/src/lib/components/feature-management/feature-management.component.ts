@@ -28,6 +28,8 @@ enum ValueTypes {
   SelectionStringValueType = 'SelectionStringValueType',
 }
 
+const DEFAULT_PROVIDER_NAME = 'D';
+
 @Component({
   selector: 'abp-feature-management',
   templateUrl: './feature-management.component.html',
@@ -73,6 +75,8 @@ export class FeatureManagementComponent
   };
 
   valueTypes = ValueTypes;
+
+  defaultProviderName = DEFAULT_PROVIDER_NAME;
 
   protected _visible;
 

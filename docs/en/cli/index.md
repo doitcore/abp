@@ -161,7 +161,7 @@ For more samples, go to [ABP CLI Create Solution Samples](new-command-samples.md
     * `--database-provider` or `-d`: Specifies the database provider. Default provider is `ef`. Available providers:
         * `ef`: Entity Framework Core.
         * `mongodb`: MongoDB.
-    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution).
+    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution). **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
     * `--skip-migrations` or `-sm`: Skips the creating initial database migration step.
     * `--skip-migrator` or `-smr`: Skips the run database migrator step.
     * `--public-website`: Public Website is a front-facing website for describing your project, listing your products and doing SEO for marketing purposes. Users can login and register on your website with this website. This option is only included in PRO templates.
@@ -183,7 +183,7 @@ For more samples, go to [ABP CLI Create Solution Samples](new-command-samples.md
     * `--database-provider` or `-d`: Specifies the database provider. Default provider is `ef`. Available providers:
       * `ef`: Entity Framework Core.
       * `mongodb`: MongoDB.
-    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution).
+    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution). **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
     * `--skip-migrations` or `-sm`: Skips the creating initial database migration step.
     * `--skip-migrator` or `-smr`: Skips the run database migrator step.
     * `--sample-crud-page` or `-scp`: It adds the [BookStore](./../tutorials/book-store/index.md) sample to your solution.
@@ -295,7 +295,7 @@ abp new-package --name Acme.BookStore.Domain --template lib.domain
 	* `lib.ef`
 		* `--include-migrations`: Allows migration operations on this package.
 		* `--connection-string-name`: Default value is the last part of the package's namespace (or package name simply).
-		* `--connection-string`: Connection string value. Defaut value is null. You can set it alter.
+		* `--connection-string`: Connection string value. Defaut value is null. You can set it alter. **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
 	* `lib.mongodb`
 	* `lib.http-api`
 	* `lib.http-api-client`

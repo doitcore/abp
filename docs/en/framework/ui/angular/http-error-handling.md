@@ -84,7 +84,7 @@ export const appConfig: ApplicationConfig = {
 
 In the example above:
 
-- Created a function named `handleHttpErrors` and defined as value of the `HTTP_ERROR_HANDLER` provider in app.module. After this, the function executes when an HTTP error occurs.
+- Created a function named `handleHttpErrors` and defined as value of the `HTTP_ERROR_HANDLER` provider in `app.config.ts`. After this, the function executes when an HTTP error occurs.
 - 400 bad request errors is handled. When a 400 error occurs.
 
 - Since `of(httpError)` is returned at bottom of the `handleHttpErrors`, the `ErrorHandler` will handle the HTTP errors except 400 and 404 errors.

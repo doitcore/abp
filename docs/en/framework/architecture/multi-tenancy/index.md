@@ -229,18 +229,20 @@ services.Configure<AbpAspNetCoreMultiTenancyOptions>(options =>
 If you change the `TenantKey`, make sure to pass it to `provideAbpCore` via `withOptions` method in the Angular client as follows:
 
 ```js
-@NgModule({
+// app.config.ts
+// ...
+export const appConfig: ApplicationConfig = {
   providers: [
+    // ...
     provideAbpCore(
       withOptions({
         // ...
         tenantKey: "MyTenantKey",
       })
     ),
+    // ...
   ],
-  // ...
-})
-export class AppModule {}
+};
 ```
 
 If you need to access it, you can inject it as follows:

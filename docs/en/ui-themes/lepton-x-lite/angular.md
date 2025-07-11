@@ -39,6 +39,7 @@ import { provideSideMenuLayout } from "@abp/ng.theme.lepton-x/layouts";
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // ...
     provideSideMenuLayout(),
     provideThemeLeptonX(
       withThemeLeptonXOptions({
@@ -58,6 +59,7 @@ import { provideAccountLayout } from "@abp/ng.theme.lepton-x/account";
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // ...
     provideAccountLayout()
   ],
 };

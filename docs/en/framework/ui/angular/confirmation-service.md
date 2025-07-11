@@ -129,7 +129,7 @@ this.confirmation.clear();
 
 ### How to Change Icons of The Confirmation Popup
 
-You can change icons with the `withConfirmationIcon()` method of `provideAbpThemeShared` function in the app.config.ts. The changes will affect all confirmation popup in the project.
+You can change icons with the `withConfirmationIcon()` method inside `provideAbpThemeShared` function in the app.config.ts. The changes will affect all confirmation popup in the project.
 
 ```ts
 import { provideAbpThemeShared, withConfirmationIcon } from '@abp/ng.theme.shared';

@@ -23,7 +23,7 @@ Open the `app.config.ts` and add `provideAccountConfig()` to the providers array
 // app.config.ts
 
 import { provideAccountConfig } from "@abp/ng.account/config";
-//...
+// ...
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -60,10 +60,10 @@ npm install @volo/abp.ng.account
 
 Open the `app.config.ts` and add `provideAccountPublicConfig()` to the providers array as shown below:
 
-> Ensure that the `Account Layout Provider` has been added if you are using the Lepton X theme. If you miss the step, you will get an error message that says `Account layout not found. Please check your configuration. If you are using LeptonX, please make sure you have added "provideAccountLayout()" to your app configuration.` when you try to access the account pages. Otherwise, you can skip adding the `provideAccountLayout()` step.
+> Ensure that the `Account Layout Provider` has been added if you are using the Lepton X theme. If you miss the step, you will get an error message that says `Account layout not found. Please check your configuration. If you are using LeptonX, please make sure you have added "provideAccountLayout()" to your app configuration.` Otherwise, you can skip adding the `provideAccountLayout()` step.
 
 ```js
-// app.module.ts
+// app.config.ts
 
 import { provideAccountPublicConfig } from "@volo/abp.ng.account/public/config";
 // if you are using or want to use Lepton X, you should add provideAccountLayout

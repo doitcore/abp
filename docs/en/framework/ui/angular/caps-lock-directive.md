@@ -5,7 +5,7 @@ In password inputs, You may want to show if Caps Lock is on. To make this even e
 
 ## Getting Started
 
-`TrackCapsLockDirective` is standalone. In order to use the `TrackCapsLockDirective` in an HTML template, import it to related component. The directive's selector is **`abpCapsLock`**. By adding the `abpCapsLock` event to an element, you can track the status of Caps Lock. You can use this to warn user.
+`TrackCapsLockDirective` is standalone. In order to use the `TrackCapsLockDirective` in an HTML template, import it to related component. The selector of the directive is **`abpCapsLock`**. By adding the `abpCapsLock` event to an element, you can track the status of Caps Lock. You can use this to warn user.
 
 See an example usage:
 
@@ -23,7 +23,7 @@ import { TrackCapsLockDirective } from '@abp/ng.core'
       }
     </div>
   `,
-  imports: [ TrackCapsLockDirective ]
+  imports: [TrackCapsLockDirective]
 })
 export class SampleComponent{
   capsLock = false;

@@ -17,7 +17,7 @@ class DemoComponent {
 }
 ```
 
-You do not have to provide the `ConfigStateService` at module or component/directive level, because it is already **provided in root**.
+You do not have to provide the `ConfigStateService` at component or directive level, because it is already **provided in root**.
 
 ## Get Methods
 

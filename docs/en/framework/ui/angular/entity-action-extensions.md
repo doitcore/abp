@@ -14,7 +14,7 @@ In this example, we will add a "Click Me!" action and alert the current row's `u
 
 ### Step 1. Create Entity Action Contributors
 
-The following code prepares a constant named `identityEntityActionContributors`, ready to be imported and used in your root app configuration:
+The following code prepares a constant named `identityEntityActionContributors`, ready to be imported and used in your root application configuration:
 
 ```ts
 // src/app/entity-action-contributors.ts
@@ -49,7 +49,7 @@ The list of actions, conveniently named as `actionList`, is a **doubly linked li
 
 ### Step 2. Import and Use Entity Action Contributors
 
-Import `identityEntityActionContributors` in your routing configuration and pass it to the static `configureRoutes` of `identity` package as seen below:
+Import `identityEntityActionContributors` in your routing configuration and pass it to the static `configureRoutes` method for `identity` routes as seen below:
 
 ```js
 // src/app/app.routes.ts

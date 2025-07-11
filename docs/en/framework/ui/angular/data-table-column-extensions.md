@@ -14,7 +14,7 @@ In this example, we will add a "Name" column and display the value of the `name`
 
 ### Step 1. Create Entity Prop Contributors
 
-The following code prepares a constant named `identityEntityPropContributors`, ready to be imported and used in your root app configuration:
+The following code prepares a constant named `identityEntityPropContributors`, ready to be imported and used in your root application configuration:
 
 ```js
 // src/app/entity-prop-contributors.ts
@@ -52,7 +52,7 @@ The list of props, conveniently named as `propList`, is a **doubly linked list**
 
 ### Step 2. Import and Use Entity Prop Contributors
 
-Import `identityEntityPropContributors` in your routing configuration and pass it to the static `createRoutes` method of `identity` routes as seen below:
+Import `identityEntityPropContributors` in your routing configuration and pass it to the static `createRoutes` method for `identity` route as seen below:
 
 ```js
 // src/app/app.routes.ts

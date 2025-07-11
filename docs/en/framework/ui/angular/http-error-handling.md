@@ -192,7 +192,7 @@ export class MyCustomErrorHandlerService
 
 ```ts
 
-// app.module.ts
+// app.config.ts
 import { CUSTOM_ERROR_HANDLERS, ... } from '@abp/ng.theme.shared';
 import { MyCustomErrorHandlerService } from './custom-error-handler.service';
 

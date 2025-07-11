@@ -32,7 +32,7 @@ export class AppComponent {
 
 ## How to Replace a Layout
 
-Each ABP theme module has 3 layouts named `ApplicationLayoutComponent`, `AccountLayoutComponent`, `EmptyLayoutComponent`. These layouts can be replaced the same way.
+Each ABP theme package has 3 layouts named `ApplicationLayoutComponent`, `AccountLayoutComponent`, `EmptyLayoutComponent`. These layouts can be replaced the same way.
 
 > A layout component template should contain `<router-outlet></router-outlet>` element.
 
@@ -70,7 +70,7 @@ export class AppComponent {
 }
 ```
 
-> If you like to replace a layout component at runtime (e.g: changing the layout by pressing a button), pass the second parameter of the `add` method of `ReplaceableComponentsService` as true. DynamicLayoutComponent loads content using a router-outlet. When the second parameter of the `add` method is true, the route will be refreshed, so use it with caution. Your component state will be gone and any initiation logic (including HTTP requests) will be repeated.
+> If you would like to replace a layout component at runtime (e.g: changing the layout by pressing a button), pass the second parameter of the `add` method of `ReplaceableComponentsService` as true. DynamicLayoutComponent loads content using a router-outlet. When the second parameter of the `add` method is true, the route will be refreshed, so use it with caution. Your component state will be gone and any initiation logic (including HTTP requests) will be repeated.
 
 ### Layout Components
 
@@ -150,7 +150,7 @@ export const myDynamicLayouts = new Map<string, string>([...DEFAULT_DYNAMIC_LAYO
 
 #### Step 5: Pass the Dynamic Layouts to the Core Provider
 
-The final step is to pass the dynamic layouts to the `provideAbpCore` using the `withOptions` method. This method allows you to configure the module with a static method.
+The final step is to pass the dynamic layouts to the `provideAbpCore` using the `withOptions` method. This method allows you to configure the provider with a static method.
 
 Here's how you can do it:
 

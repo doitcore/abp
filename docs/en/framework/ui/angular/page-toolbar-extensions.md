@@ -14,7 +14,7 @@ In this example, we will add a "Click Me!" action and log `userName` of all user
 
 ### Step 1. Create Toolbar Action Contributors
 
-The following code prepares a constant named `identityToolbarActionContributors`, ready to be imported and used in your root app configuration:
+The following code prepares a constant named `identityToolbarActionContributors`, ready to be imported and used in your root application configuration:
 
 ```js
 // src/app/toolbar-action-contributors.ts
@@ -53,7 +53,7 @@ The list of actions, conveniently named as `actionList`, is a **doubly linked li
 
 ### Step 2. Import and Use Toolbar Action Contributors
 
-Import `identityToolbarActionContributors` in your routing module and pass it to the static `createRoutes` method of `identity` package as seen below:
+Import `identityToolbarActionContributors` in your routing configuration and pass it to the static `createRoutes` method for `identity` route as seen below:
 
 ```js
 // src/app/app.routes.ts
@@ -120,7 +120,7 @@ Here, `EXTENSIONS_ACTION_DATA` token provides us the context from the page toolb
 
 ### Step 2. Create Toolbar Action Contributors
 
-The following code prepares a constant named `identityToolbarActionContributors`, ready to be imported and used in your root app configuration. When `ToolbarComponent` is used instead of `ToolbarAction`, we can pass a component in:
+The following code prepares a constant named `identityToolbarActionContributors`, ready to be imported and used in your root application configuration. When `ToolbarComponent` is used instead of `ToolbarAction`, we can pass a component in:
 
 ```js
 // src/app/toolbar-action-contributors.ts
@@ -156,7 +156,7 @@ The list of actions, conveniently named as `actionList`, is a **doubly linked li
 
 ### Step 3. Import and Use Toolbar Action Contributors
 
-Import `identityToolbarActionContributors` in your routing configuration and pass it to the static `createRoutes` method of `identity` package as seen below.
+Import `identityToolbarActionContributors` in your routing configuration and pass it to the static `createRoutes` method for `identity` route as seen below.
 
 ```js
 // src/app/app.routes.ts

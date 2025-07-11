@@ -6,7 +6,7 @@ Reactive forms in ABP Angular UI are validated by [ngx-validate](https://www.npm
 
 ## How to Add New Error Messages
 
-You can add a new error message by passing validation options to the `withValidationBluePrint` method of `provideAbpThemeShared` function in your root app configuration.
+You can add a new error message by passing validation options to the `withValidationBluePrint` method inside `provideAbpThemeShared` function in your root application configuration.
 
 ```ts
 import { provideAbpThemeShared, withValidationBluePrint } from '@abp/ng.theme.shared';
@@ -58,7 +58,7 @@ In this example;
 
 ## How to Change Existing Error Messages
 
-You can overwrite an existing error message by passing validation options to the `provideAbpThemeShared` in your root app configuration. Let's imagine you have a custom localization resource for required inputs.
+You can overwrite an existing error message by passing validation options to the `provideAbpThemeShared` in your root application configuration. Let's imagine you have a custom localization resource for required inputs.
 
 ```json
 "RequiredInput": "Oops! We need this input."

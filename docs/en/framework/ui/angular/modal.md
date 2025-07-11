@@ -32,7 +32,7 @@ import { ModalComponent, ModalCloseDirective } from '@abp/ng.theme.shared';
   ],
 })
 export class SampleComponent {
-  isModalOpen = false
+  isModalOpen = false;
 }
 ```
 

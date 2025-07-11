@@ -5,7 +5,7 @@ Text inside an HTML element can be truncated easily with an ellipsis by using CS
 
 ## Getting Started
 
-In order to use the `EllipsisDirective` in an HTML template, it should be imported in your component. The directive's selector is **`abpEllipsis`**. By adding the `abpEllipsis` attribute to an HTML element, you can activate the `EllipsisDirective` for the HTML element.
+In order to use the `EllipsisDirective` in an HTML template, it should be imported in your component. The selector of directive is **`abpEllipsis`**. By adding the `abpEllipsis` attribute to an HTML element, you can activate the `EllipsisDirective` for the HTML element.
 
 ```js
 // ...

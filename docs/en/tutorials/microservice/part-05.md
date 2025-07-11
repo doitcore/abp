@@ -645,12 +645,14 @@ export const ORDER_SERVICE_ROUTES: Routes = [
 
 ```typescript
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { OrderDto, OrderService } from './proxy/ordering-service/services';
 
 @Component({
   selector: 'lib-order',
   templateUrl: './order.component.html',
   styleUrl: './order.component.css'
+  imports: [CommonModule]
 })
 export class OrderComponent {
 

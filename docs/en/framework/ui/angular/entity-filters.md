@@ -54,7 +54,7 @@ As shown in the screenshot, `abp-advanced-entity-filters` usually contain two pa
 </abp-advanced-entity-filters>
 ```
 
-The `abp-advanced-entity-filters` already contains the `abp-entity-filter` component so you do not need to pass it. However, the `abp-entity-filter` component needs an instance of `ListService` which is usually stored in the `list` field of the page. You can also change the placeholder of the component via `entityFilterPlaceholder` input which is passed into the `abpLocalization` pipe so that it uses the translated text. Default is `'AbpUi::PagerSearch'`
+The `abp-advanced-entity-filters` already contains the `abp-entity-filter` component so you do not need to pass it. However, the `abp-entity-filter` component needs an instance of `ListService` which is usually stored in the `list` field of the page. You can also change the placeholder of the component via `entityFilterPlaceholder` input which is passed into the `abpLocalization` pipe so that it uses the translated text. The default is `'AbpUi::PagerSearch'`
 
 E.g
 

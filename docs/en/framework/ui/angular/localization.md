@@ -271,7 +271,7 @@ export class AppComponent {}
 
 ## Registering a New Locale
 
-Since ABP has more than one language, Angular locale files loads lazily using [Webpack's import function](https://webpack.js.org/api/module-methods/#import-1) to avoid increasing the bundle size and register to Angular core using the [`registerLocaleData`](https://angular.io/api/common/registerLocaleData) function. The chunks to be included in the bundle are specified by the [Webpack's magic comments](https://webpack.js.org/api/module-methods/#magic-comments) as hard-coded. Therefore a `registerLocale` function that returns Webpack `import` function must be passed to `CoreModule`.
+Since ABP has more than one language, Angular locale files loads lazily using [Webpack's import function](https://webpack.js.org/api/module-methods/#import-1) to avoid increasing the bundle size and register to Angular core using the [`registerLocaleData`](https://angular.io/api/common/registerLocaleData) function. The chunks to be included in the bundle are specified by the [Webpack's magic comments](https://webpack.js.org/api/module-methods/#magic-comments) as hard-coded. Therefore a `registerLocale` function that returns Webpack `import` function must be passed to `provideAbpCore(withOptions({...}))`.
 
 ### registerLocaleFn
 

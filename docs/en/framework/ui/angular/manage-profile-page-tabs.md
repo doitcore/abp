@@ -18,7 +18,6 @@ import {
 import { MyAwesomeTabComponent } from "./my-awesome-tab/my-awesome-tab.component";
 
 @Component({
-  standalone: true,
   selector: "abp-my-awesome-tab",
   template: `My Awesome Tab`,
 })

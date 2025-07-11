@@ -6,7 +6,7 @@ Reactive forms in ABP Angular UI are validated by [ngx-validate](https://www.npm
 
 ## How to Add New Error Messages
 
-You can add a new error message by passing validation options to the `withValidationBluePrint` method of `provideAbpThemeShared` function in your root module.
+You can add a new error message by passing validation options to the `withValidationBluePrint` method of `provideAbpThemeShared` function in your root app configuration.
 
 ```ts
 import { provideAbpThemeShared, withValidationBluePrint } from '@abp/ng.theme.shared';
@@ -82,7 +82,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-Alternatively, you may provide the `VALIDATION_BLUEPRINTS` token directly in your root module. Please do not forget to spread `DEFAULT_VALIDATION_BLUEPRINTS`. Otherwise, built-in ABP validation messages will not work.
+Alternatively, you may provide the `VALIDATION_BLUEPRINTS` token directly in your root app configuration. Please do not forget to spread `DEFAULT_VALIDATION_BLUEPRINTS`. Otherwise, built-in ABP validation messages will not work.
 
 ```js
 import { VALIDATION_BLUEPRINTS } from "@ngx-validate/core";
@@ -130,17 +130,20 @@ Validation works on any element or component with a `formControl` or `formContro
 First, build a custom error component. Extending the existing `ValidationErrorComponent` would make it easier.
 
 ```js
+import { LocalizationPipe } from "@abp/ng.core";
 import { ValidationErrorComponent } from "@abp/ng.theme.basic";
+import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
   selector: "app-validation-error",
+  imports:[CommonModule, LocalizationPipe],
   template: `
     <div
       class="font-weight-bold font-italic px-1 invalid-feedback"
       *ngFor="let error of abpErrors; trackBy: trackByFn"
     >
-      {%{{{ error.message | abpLocalization: error.interpoliteParams }}}%}
+      {{ error.message | abpLocalization: error.interpoliteParams }}
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -20,7 +20,7 @@
     "Menu:Emailing": "Slanje e-poštom",
     "Menu:TimeZone": "Vremenska Zona",
     "DisplayName:Timezone": "Vremenska zona",
-    "TimezoneHelpText": "Ova se postavka koristi za cijelu aplikaciju ili zakupce.",
+    "TimezoneHelpText": "Ova značajka omogućuje vam postavljanje zadanog vremenskog pojasa za vaš poslužitelj, dok korisnici mogu odabrati svoj vlastiti. Ako se vremenski pojas korisnika razlikuje od vremenskog pojasa poslužitelja, sva vremena će se prilagoditi u skladu s tim. Na primjer, kada je poslužitelj postavljen na Europa/London(00:00) i korisnik je u Europa/Pariz(+01:00), vremena će se prilagoditi za 1 sat za tog korisnika. Odabirom 'Zadani vremenski pojas' automatski će se koristiti vremenski pojas poslužitelja ili preglednika.",
     "DefaultTimeZone": "Zadana vremenska zona",
     "DefaultTimeZoneInfo": "Zadana vremenska zona pokušat će koristiti vremensku zonu preglednika ili poslužitelja.",
     "SmtpHost": "Domaćin",

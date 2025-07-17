@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp.Caching.Hybrid;
 using Volo.Abp.Json;
 using Volo.Abp.Modularity;

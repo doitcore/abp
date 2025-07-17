@@ -16,9 +16,9 @@
 
   <ItemGroup>
     <PackageReference Include="MongoSandbox.Core" />
-    <PackageReference Include="MongoSandbox6.runtime.linux-x64" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
-    <PackageReference Include="MongoSandbox6.runtime.osx-x64" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
-    <PackageReference Include="MongoSandbox6.runtime.win-x64" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <PackageReference Include="MongoSandbox8.runtime.linux-x64" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="MongoSandbox8.runtime.osx-arm64" Condition="$([MSBuild]::IsOSPlatform('OSX'))" />
+    <PackageReference Include="MongoSandbox8.runtime.win-x64" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
   </ItemGroup>
 

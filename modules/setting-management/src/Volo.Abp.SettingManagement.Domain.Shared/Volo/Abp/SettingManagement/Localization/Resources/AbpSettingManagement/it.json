@@ -20,7 +20,7 @@
     "Menu:Emailing": "Invio di e-mail",
     "Menu:TimeZone": "Fuso Orario",
     "DisplayName:Timezone": "Fuso orario",
-    "TimezoneHelpText": "Questa impostazione viene utilizzata per l'intera applicazione o in base al tenant. Il fuso orario predefinito tenterà di utilizzare il fuso orario del browser o del server.",
+    "TimezoneHelpText": "Questa funzione ti permette di impostare un fuso orario predefinito per il tuo server, mentre gli utenti possono selezionare il proprio. Se il fuso orario di un utente differisce da quello del server, tutti gli orari verranno adeguati di conseguenza. Ad esempio, con il server impostato su Europa/Londra(00:00) e un utente in Europa/Parigi(+01:00), gli orari verranno adeguati di 1 ora per quell'utente. Selezionando 'Fuso orario predefinito' verrà utilizzato automaticamente il fuso orario del server o del browser.",
     "DefaultTimeZone": "Fuso orario predefinito",
     "SmtpHost": "Host",
     "SmtpPort": "Porta",

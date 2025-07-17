@@ -20,7 +20,7 @@
     "Menu:Emailing": "Emailing",
     "Menu:TimeZone": "Time Zone",
     "DisplayName:Timezone": "Time zone",
-    "TimezoneHelpText": "This setting is used for application-wide or tenant-based. The default timezone will try to use the browser's or the server's timezone.",
+    "TimezoneHelpText": "This feature allows you to set a default time zone for your server, while users can select their own. If a user's time zone differs from the server's, all times will adjust accordingly. For example, with the server set to Europe/London(00:00) and a user in Europe/Paris(+01:00), times will be adjusted by 1 hour for that user. Selecting 'Default Timezone' will automatically use the server's or browser's time zone.",
     "DefaultTimeZone": "Default time zone",
     "SmtpHost": "Host",
     "SmtpPort": "Port",

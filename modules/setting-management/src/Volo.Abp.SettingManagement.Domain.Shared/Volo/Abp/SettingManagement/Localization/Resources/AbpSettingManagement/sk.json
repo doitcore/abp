@@ -20,7 +20,7 @@
     "Menu:Emailing": "Posielanie emailov",
     "Menu:TimeZone": "Časové Pásmo",
     "DisplayName:Timezone": "Časové pásmo",
-    "TimezoneHelpText": "Toto nastavenie sa používa pre celú aplikáciu alebo pre nájomníkov. Predvolené časové pásmo sa pokúsi použiť časové pásmo prehliadača alebo servera.",
+    "TimezoneHelpText": "Táto funkcia vám umožňuje nastaviť predvolené časové pásmo pre váš server, zatiaľ čo používatelia si môžu vybrať svoje vlastné. Ak sa časové pásmo používateľa líši od časového pásma servera, všetky časy sa príslušne upravia. Napríklad, keď je server nastavený na Európa/Londýn(00:00) a používateľ je v Európa/Paríž(+01:00), časy sa pre tohto používateľa upravia o 1 hodinu. Výberom 'Predvolené časové pásmo' sa automaticky použije časové pásmo servera alebo prehliadača.",
     "DefaultTimeZone": "Predvolené časové pásmo",
     "SmtpHost": "Host",
     "SmtpPort": "Port",

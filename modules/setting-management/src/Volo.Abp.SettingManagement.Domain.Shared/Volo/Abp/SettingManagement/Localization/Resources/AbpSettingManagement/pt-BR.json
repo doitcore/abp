@@ -20,7 +20,7 @@
     "Menu:Emailing": "Enviando por e-mail",
     "Menu:TimeZone": "Fuso Horário",
     "DisplayName:Timezone": "Fuso horário",
-    "TimezoneHelpText": "Essa configuração é usada para todo o aplicativo ou com base em locatário. O fuso horário padrão tentará usar o fuso horário do navegador ou do servidor.",
+    "TimezoneHelpText": "Este recurso permite que você defina um fuso horário padrão para seu servidor, enquanto os usuários podem selecionar o seu próprio. Se o fuso horário de um usuário for diferente do fuso horário do servidor, todos os horários serão ajustados de acordo. Por exemplo, com o servidor definido como Europa/Londres(00:00) e um usuário na Europa/Paris(+01:00), os horários serão ajustados em 1 hora para esse usuário. Selecionar 'Fuso horário padrão' usará automaticamente o fuso horário do servidor ou do navegador.",
     "DefaultTimeZone": "Fuso horário padrão",
     "SmtpHost": "Hospedeiro",
     "SmtpPort": "Porta",

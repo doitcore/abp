@@ -14,23 +14,22 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { AsyncPipe, formatDate, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
 import { Observable, filter, map } from 'rxjs';
 
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
 
 import {
   ABP,
   ConfigStateService,
-  getShortDateFormat,
-  getShortDateShortTimeFormat,
-  getShortTimeFormat,
   ListService,
   LocalizationModule,
   PermissionDirective,
   PermissionService,
+  TimezoneService,
+  UtcToLocalPipe,
 } from '@abp/ng.core';
 import {
   AbpVisibleDirective,
@@ -47,6 +46,7 @@ import {
   ENTITY_PROP_TYPE_CLASSES,
   EXTENSIONS_IDENTIFIER,
   PROP_DATA_STREAM,
+  ROW_RECORD,
 } from '../../tokens/extensions.token';
 import { GridActionsComponent } from '../grid-actions/grid-actions.component';
 
@@ -64,6 +64,7 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
     NgxDatatableListDirective,
     PermissionDirective,
     LocalizationModule,
+    UtcToLocalPipe,
     AsyncPipe,
     NgTemplateOutlet,
     NgComponentOutlet,
@@ -77,6 +78,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   protected readonly cdr = inject(ChangeDetectorRef);
   protected readonly locale = inject(LOCALE_ID);
   protected readonly config = inject(ConfigStateService);
+  protected readonly timeZoneService = inject(TimezoneService);
   protected readonly entityPropTypeClasses = inject(ENTITY_PROP_TYPE_CLASSES);
   protected readonly permissionService = inject(PermissionService);
 
@@ -101,6 +103,17 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Input() actionsTemplate?: TemplateRef<any>;
 
   @Output() tableActivate = new EventEmitter();
+
+  @Input() selectable = false;
+
+  @Input() set selectionType(value: SelectionType | string) {
+    this._selectionType = typeof value === 'string' ? SelectionType[value] : value;
+  }
+  _selectionType: SelectionType = SelectionType.multiClick;
+  
+  
+  @Input() selected: any[] = [];
+  @Output() selectionChange = new EventEmitter<any[]>();
 
   hasAtLeastOnePermittedAction: boolean;
 
@@ -134,10 +147,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     (this.columnWidths as any) = widths;
   }
 
-  private getDate(value: Date | undefined, format: string | undefined) {
-    return value && format ? formatDate(value, format, this.locale) : '';
-  }
-
   private getIcon(value: boolean) {
     return value
       ? '<div class="text-success"><i class="fa fa-check" aria-hidden="true"></i></div>'
@@ -156,12 +165,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
         switch (prop.type) {
           case ePropType.Boolean:
             return this.getIcon(value);
-          case ePropType.Date:
-            return this.getDate(value, getShortDateFormat(this.config));
-          case ePropType.Time:
-            return this.getDate(value, getShortTimeFormat(this.config));
-          case ePropType.DateTime:
-            return this.getDate(value, getShortDateShortTimeFormat(this.config));
           case ePropType.Enum:
             return this.getEnum(value, prop.enumList || []);
           default:
@@ -196,6 +199,10 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
                 provide: PROP_DATA_STREAM,
                 useValue: value,
               },
+              {
+                provide: ROW_RECORD,
+                useValue: record,
+              },
             ],
             parent: this.#injector,
           });
@@ -229,10 +236,16 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     return visibleActions.length > 0;
   }
 
+  onSelect({ selected }) {
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
+    this.selectionChange.emit(selected);
+  }
+
   ngAfterViewInit(): void {
     this.list?.requestStatus$?.pipe(filter(status => status === 'loading')).subscribe(() => {
-      this.data = [];
-      this.cdr.markForCheck();
-    });
+        this.data = [];
+        this.cdr.markForCheck();
+      });
   }
 }

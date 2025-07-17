@@ -1,15 +1,14 @@
 <ng-container *abpPermission="prop.permission; runChangeDetection: false">
   @switch (getComponent(prop)) {
     @case ('template') {
-      <ng-container *ngComponentOutlet="prop.template; injector: injectorForCustomComponent">
-      </ng-container>
+      <ng-container *ngComponentOutlet="prop.template; injector: injectorForCustomComponent" />
     }
   }
 
   <div [ngClass]="containerClassName" class="mb-2">
     @switch (getComponent(prop)) {
       @case ('input') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
+        <ng-template [ngTemplateOutlet]="label" />
         <input
           #field
           [id]="prop.id"
@@ -22,7 +21,7 @@
         />
       }
       @case ('hidden') {
-        <input [formControlName]="prop.name" type="hidden"/>
+        <input [formControlName]="prop.name" type="hidden" />
       }
       @case ('checkbox') {
         <div class="form-check" validationTarget>
@@ -37,11 +36,11 @@
           <ng-template
             [ngTemplateOutlet]="label"
             [ngTemplateOutletContext]="{ $implicit: 'form-check-label' }"
-          ></ng-template>
+          />
         </div>
       }
       @case ('select') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
+        <ng-template [ngTemplateOutlet]="label" />
         <select
           #field
           [id]="prop.id"
@@ -66,10 +65,11 @@
           [prop]="prop"
           [options]="options$ | async"
           [formControlName]="prop.name"
-          [abpDisabled]="disabled"/>
+          [abpDisabled]="disabled"
+        />
       }
       @case ('typeahead') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
+        <ng-template [ngTemplateOutlet]="label" />
         <div #typeahead class="position-relative" validationStyle validationTarget>
           <input
             #field
@@ -87,11 +87,11 @@
             [class.is-invalid]="typeahead.classList.contains('is-invalid')"
             class="form-control"
           />
-          <input [formControlName]="prop.name" type="hidden"/>
+          <input [formControlName]="prop.name" type="hidden" />
         </div>
       }
       @case ('date') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
+        <ng-template [ngTemplateOutlet]="label" />
         <input
           [id]="prop.id"
           [formControlName]="prop.name"
@@ -104,15 +104,15 @@
         />
       }
       @case ('time') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
-        <ngb-timepicker [formControlName]="prop.name"></ngb-timepicker>
+        <ng-template [ngTemplateOutlet]="label" />
+        <ngb-timepicker [formControlName]="prop.name" />
       }
       @case ('dateTime') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
-        <abp-extensible-date-time-picker [prop]="prop" [meridian]="meridian$ | async"/>
+        <ng-template [ngTemplateOutlet]="label" />
+        <abp-extensible-date-time-picker [prop]="prop" [meridian]="meridian$ | async" />
       }
       @case ('textarea') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
+        <ng-template [ngTemplateOutlet]="label" />
         <textarea
           #field
           [id]="prop.id"
@@ -123,7 +123,7 @@
         ></textarea>
       }
       @case ('passwordinputgroup') {
-        <ng-template [ngTemplateOutlet]="label"></ng-template>
+        <ng-template [ngTemplateOutlet]="label" />
         <div class="input-group form-group" validationTarget>
           <input
             class="form-control"
@@ -152,24 +152,26 @@
 </ng-container>
 
 <ng-template #label let-classes>
-  <label [htmlFor]="prop.id" [ngClass]="classes || 'form-label'">
-    @if (prop.displayTextResolver) {
-      {{ prop.displayTextResolver(data) | abpLocalization }}
-    } @else {
-      @if (prop.isExtra) {
-        {{ '::' + prop.displayName | abpLocalization }}
+  <label [htmlFor]="prop.id" [ngClass]="classes || 'form-label d-inline-block'">
+    <span class="d-inline-flex align-items-center gap-1 text-nowrap">
+      @if (prop.displayTextResolver) {
+        {{ prop.displayTextResolver(data) | abpLocalization }}
       } @else {
-        {{ prop.displayName | abpLocalization }}
+        @if (prop.isExtra) {
+          {{ '::' + prop.displayName | abpLocalization }}
+        } @else {
+          {{ prop.displayName | abpLocalization }}
+        }
       }
-    }
-    {{ asterisk }}
-    @if (prop.tooltip) {
-      <i
-        [ngbTooltip]="prop.tooltip.text | abpLocalization"
-        [placement]="prop.tooltip.placement || 'auto'"
-        container="body"
-        class="bi bi-info-circle"
-      ></i>
-    }
+      {{ asterisk }}
+      @if (prop.tooltip) {
+        <i
+          [ngbTooltip]="prop.tooltip.text | abpLocalization"
+          [placement]="prop.tooltip.placement || 'auto'"
+          container="body"
+          class="bi bi-info-circle"
+        ></i>
+      }
+    </span>
   </label>
 </ng-template>

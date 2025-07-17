@@ -12,6 +12,8 @@ export type ImportDefinition = {
   path: string;
   importName: string;
   provider?: string;
+  expression?: string;
+  doNotImport?: boolean;
 };
 
 export const styleMap = new Map<ThemeOptionsEnum, StyleDefinition[]>();
@@ -260,7 +262,7 @@ styleMap.set(ThemeOptionsEnum.LeptonXLite, [
     bundleName: 'bootstrap-icons',
   },
 ]);
-// the code written by Github co-pilot. thank go-pilot. You are the best sidekick.
+
 export const allStyles = Array.from(styleMap.values()).reduce((acc, val) => [...acc, ...val], []);
 
 export const importMap = new Map<ThemeOptionsEnum, ImportDefinition[]>();
@@ -269,40 +271,128 @@ importMap.set(ThemeOptionsEnum.Basic, [
   {
     path: '@abp/ng.theme.basic',
     importName: 'ThemeBasicModule',
-    provider: 'provideThemeBasicConfig',
+    expression: 'ThemeBasicModule',
+  },
+  {
+    path: '@abp/ng.theme.basic',
+    importName: 'provideThemeBasicConfig',
+    provider: 'provideThemeBasicConfig()',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'ThemeSharedModule',
+    expression: 'ThemeSharedModule',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'withValidationBluePrint',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'provideAbpThemeShared',
+    provider: 'provideAbpThemeShared()',
   },
 ]);
 
 importMap.set(ThemeOptionsEnum.Lepton, [
   {
     path: '@volo/abp.ng.theme.lepton',
-    importName: 'ThemeLeptonModule',
-    provider: 'provideThemeLepton',
+    importName: 'provideThemeLepton',
+    provider: 'provideThemeLepton()',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'ThemeSharedModule',
+    expression: 'ThemeSharedModule',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'withHttpErrorConfig',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'withValidationBluePrint',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'provideAbpThemeShared',
+    provider: 'provideAbpThemeShared()',
   },
 ]);
 
 importMap.set(ThemeOptionsEnum.LeptonXLite, [
   {
     path: '@abp/ng.theme.lepton-x',
-    importName: 'ThemeLeptonXModule.forRoot()',
+    importName: 'ThemeLeptonXModule',
+    expression: 'ThemeLeptonXModule.forRoot()',
   },
   {
     path: '@abp/ng.theme.lepton-x/layouts',
-    importName: 'SideMenuLayoutModule.forRoot()',
+    importName: 'SideMenuLayoutModule',
+    expression: 'SideMenuLayoutModule.forRoot()',
   },
   {
     path: '@abp/ng.theme.lepton-x/account',
-    importName: 'AccountLayoutModule.forRoot()',
+    importName: 'AccountLayoutModule',
+    expression: 'AccountLayoutModule.forRoot()',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'ThemeSharedModule',
+    expression: 'ThemeSharedModule',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'withHttpErrorConfig',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'withValidationBluePrint',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'provideAbpThemeShared',
+    provider: 'provideAbpThemeShared()',
   },
 ]);
 
 importMap.set(ThemeOptionsEnum.LeptonX, [
   {
     path: '@volosoft/abp.ng.theme.lepton-x',
-    importName: 'ThemeLeptonXModule.forRoot()',
+    importName: 'ThemeLeptonXModule',
+    expression: 'ThemeLeptonXModule.forRoot()',
   },
   {
     path: '@volosoft/abp.ng.theme.lepton-x/layouts',
-    importName: 'SideMenuLayoutModule.forRoot()',
+    importName: 'SideMenuLayoutModule',
+    expression: 'SideMenuLayoutModule.forRoot()',
+  },
+  {
+    path: '@volosoft/abp.ng.theme.lepton-x/layouts',
+    importName: 'TopMenuLayoutModule',
+    expression: 'TopMenuLayoutModule.forRoot()',
+    doNotImport: true,
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'ThemeSharedModule',
+    expression: 'ThemeSharedModule',
+  },
+  {
+    path: '@volosoft/abp.ng.theme.lepton-x',
+    importName: 'HttpErrorComponent',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'withHttpErrorConfig',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'withValidationBluePrint',
+  },
+  {
+    path: '@abp/ng.theme.shared',
+    importName: 'provideAbpThemeShared',
+    provider: 'provideAbpThemeShared()',
   },
 ]);

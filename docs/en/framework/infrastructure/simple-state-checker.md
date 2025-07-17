@@ -11,11 +11,11 @@ public class MyObject : IHasSimpleStateCheckers<MyObject>
 {
     public int Id { get; set; }
 
-    public List<ISimpleStateChecker<MyObject>> SimpleStateCheckers { get; }
+    public List<ISimpleStateChecker<MyObject>> StateCheckers { get; }
 
     public MyObject()
     {
-        SimpleStateCheckers = new List<ISimpleStateChecker<MyObject>>();
+        StateCheckers = new List<ISimpleStateChecker<MyObject>>();
     }
 }
 ````

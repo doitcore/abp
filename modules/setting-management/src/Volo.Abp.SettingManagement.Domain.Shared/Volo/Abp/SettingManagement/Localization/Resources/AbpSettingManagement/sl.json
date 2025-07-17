@@ -20,7 +20,7 @@
     "Menu:Emailing": "Pošiljanje po e-pošti",
     "Menu:TimeZone": "Časovni Pas",
     "DisplayName:Timezone": "Časovni pas",
-    "TimezoneHelpText": "Ta nastavitev se uporablja za celotno aplikacijo ali za najemnika. Privzeto časovno pas bo poskusilo uporabiti časovni pas brskalnika ali strežnika.",
+    "TimezoneHelpText": "Ta funkcija vam omogoča nastavitev privzetega časovnega pasu za vaš strežnik, medtem ko lahko uporabniki izberejo svojega. Če se časovni pas uporabnika razlikuje od časovnega pasu strežnika, se vsi časi ustrezno prilagodijo. Na primer, ko je strežnik nastavljen na Evropa/London(00:00) in je uporabnik v Evropa/Pariz(+01:00), se časi za tega uporabnika prilagodijo za 1 uro. Z izbiro 'Privzeti časovni pas' se samodejno uporabi časovni pas strežnika ali brskalnika.",
     "DefaultTimeZone": "Privzeto časovno pas",
     "SmtpHost": "Gostitelj",
     "SmtpPort": "pristanišče",

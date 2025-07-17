@@ -20,7 +20,7 @@
     "Menu:Emailing": "Email",
     "Menu:TimeZone": "Zaman Dilimi",
     "DisplayName:Timezone": "Zaman dilimi",
-    "TimezoneHelpText": "Bu ayar uygulama genelinde veya müşteri tabanlı olarak kullanılır. Varsayılan saat dilimi, tarayıcının veya sunucunun saat dilimini kullanmaya çalışacaktır.",
+    "TimezoneHelpText": "Bu özellik, kullanıcılar kendi saat dilimlerini seçebilirken, sunucunuz için varsayılan bir saat dilimi ayarlamanıza olanak tanır. Bir kullanıcının saat dilimi sunucunun saat diliminden farklıysa, tüm saatler buna göre ayarlanacaktır. Örneğin, sunucu Avrupa/Londra(00:00) olarak ayarlandığında ve bir kullanıcı Avrupa/Paris(+01:00)'te olduğunda, o kullanıcı için saatler 1 saat ayarlanacaktır. 'Varsayılan Saat Dilimi' seçimi otomatik olarak sunucunun veya tarayıcının saat dilimini kullanacaktır.",
     "DefaultTimeZone": "Varsayılan saat dilimi",
     "SmtpHost": "Sunucu",
     "SmtpPort": "Port",

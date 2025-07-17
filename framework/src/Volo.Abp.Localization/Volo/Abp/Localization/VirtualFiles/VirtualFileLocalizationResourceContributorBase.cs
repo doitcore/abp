@@ -103,7 +103,7 @@ public abstract class VirtualFileLocalizationResourceContributorBase : ILocaliza
             {
                 continue;
             }
-            
+
             if (dictionaries.ContainsKey(dictionary.CultureName))
             {
                 throw new AbpException($"{file.GetVirtualOrPhysicalPathOrNull()} dictionary has a culture name '{dictionary.CultureName}' which is already defined! Localization resource: {_resource.ResourceName}");
@@ -121,7 +121,14 @@ public abstract class VirtualFileLocalizationResourceContributorBase : ILocaliza
     {
         using (var stream = file.CreateReadStream())
         {
-            return CreateDictionaryFromFileContent(Utf8Helper.ReadStringFromStream(stream));
+            try
+            {
+                return CreateDictionaryFromFileContent(Utf8Helper.ReadStringFromStream(stream));
+            }
+            catch (Exception e)
+            {
+                throw new AbpException("Invalid localization file format: " + (file.GetVirtualOrPhysicalPathOrNull() ?? file.Name), e);
+            }
         }
     }
 

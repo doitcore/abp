@@ -20,7 +20,7 @@
     "Menu:Emailing": "Emailing",
     "Menu:TimeZone": "Fus Orar",
     "DisplayName:Timezone": "Fus orar",
-    "TimezoneHelpText": "Această setare este utilizată pentru aplicație sau pentru chiriași. Fusul orar implicit va încerca să folosească fusul orar al browserului sau al serverului.",
+    "TimezoneHelpText": "Această funcționalitate vă permite să setați un fus orar implicit pentru serverul dvs., în timp ce utilizatorii pot selecta propriul lor. Dacă fusul orar al unui utilizator diferă de cel al serverului, toate orele vor fi ajustate în consecință. De exemplu, cu serverul setat la Europa/Londra(00:00) și un utilizator în Europa/Paris(+01:00), orele vor fi ajustate cu 1 oră pentru acel utilizator. Selectarea 'Fus orar implicit' va folosi automat fusul orar al serverului sau browserului.",
     "DefaultTimeZone": "Fus orar implicit",
     "SmtpHost": "Host",
     "SmtpPort": "Port",

@@ -12,7 +12,7 @@
   (nzCheckboxChange)="onCheckboxChange($event)"
   (nzOnDrop)="onDrop($event)"
   [nzNoAnimation]="noAnimation"
-  (nzContextMenu)="dropdowns[$event.node?.key]?.toggle()"
+  (nzContextMenu)="onContextMenuChange($event)"
 />
 <ng-template #treeTemplate let-node>
   <div

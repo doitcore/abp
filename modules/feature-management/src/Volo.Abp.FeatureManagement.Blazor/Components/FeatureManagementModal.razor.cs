@@ -152,10 +152,13 @@ public partial class FeatureManagementModal
 
     protected virtual bool IsDisabled(FeatureDto feature)
     {
-        return feature.Provider.Name != ProviderName && feature.Provider.Name != DefaultValueFeatureValueProvider.ProviderName;
+        return feature.Value != null &&
+               feature.Provider.Name != null &&
+               feature.Provider.Name != ProviderName &&
+               feature.Provider.Name != DefaultValueFeatureValueProvider.ProviderName;
     }
 
-    public string GetShownName(FeatureDto featureDto)
+    public virtual string GetShownName(FeatureDto featureDto)
     {
         return !IsDisabled(featureDto)
             ? featureDto.DisplayName

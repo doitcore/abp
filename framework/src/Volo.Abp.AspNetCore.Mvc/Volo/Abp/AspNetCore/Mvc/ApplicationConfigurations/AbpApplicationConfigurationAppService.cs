@@ -313,17 +313,42 @@ public class AbpApplicationConfigurationAppService : ApplicationService, IAbpApp
     {
         var timeZone = await _settingProvider.GetOrNullAsync(TimingSettingNames.TimeZone);
 
+        string? timeZoneId = null;
+        string? timeZoneName = null;
+        if (!timeZone.IsNullOrWhiteSpace())
+        {
+            try
+            {
+                if (_timezoneProvider.GetIanaTimezones().Any(x => x.Value == timeZone))
+                {
+                    timeZoneId = _timezoneProvider.IanaToWindows(timeZone);
+                    timeZoneName = timeZone;
+                }
+                else if (_timezoneProvider.GetWindowsTimezones().Any(x => x.Value == timeZone))
+                {
+                    timeZoneId = timeZone;
+                    timeZoneName = _timezoneProvider.WindowsToIana(timeZone);
+                }
+            }
+            catch (Exception ex)
+            {
+                timeZoneId = null;
+                timeZoneName = null;
+                Logger.LogWarning(ex, $"Exception occurred while getting timezone({timeZone}) information");
+            }
+        }
+
         return new TimingDto
         {
             TimeZone = new TimeZone
             {
                 Windows = new WindowsTimeZone
                 {
-                    TimeZoneId = timeZone.IsNullOrWhiteSpace() ? null : _timezoneProvider.IanaToWindows(timeZone)
+                    TimeZoneId = timeZoneId
                 },
                 Iana = new IanaTimeZone
                 {
-                    TimeZoneName = timeZone
+                    TimeZoneName = timeZoneName
                 }
             }
         };

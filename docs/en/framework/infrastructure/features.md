@@ -424,7 +424,7 @@ namespace FeaturesDemo
                 return Task.FromResult("true");
             }
 
-            return null;
+            return Task.FromResult<string>(null);
         }
     }
 }

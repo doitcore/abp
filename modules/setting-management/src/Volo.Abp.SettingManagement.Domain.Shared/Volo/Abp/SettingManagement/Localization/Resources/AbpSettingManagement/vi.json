@@ -20,7 +20,7 @@
     "Menu:Emailing": "Gửi email",
     "Menu:TimeZone": "Múi Giờ",
     "DisplayName:Timezone": "Múi giờ",
-    "TimezoneHelpText": "Cài đặt này được sử dụng cho toàn bộ ứng dụng hoặc dựa trên đối tượng thuê. Múi giờ mặc định sẽ cố gắng sử dụng múi giờ của trình duyệt hoặc máy chủ.",
+    "TimezoneHelpText": "Tính năng này cho phép bạn đặt múi giờ mặc định cho máy chủ của mình, trong khi người dùng có thể chọn múi giờ của riêng họ. Nếu múi giờ của người dùng khác với múi giờ của máy chủ, tất cả thời gian sẽ được điều chỉnh tương ứng. Ví dụ: với máy chủ được đặt ở Châu Âu/Luân Đôn(00:00) và người dùng ở Châu Âu/Paris(+01:00), thời gian sẽ được điều chỉnh 1 giờ cho người dùng đó. Chọn 'Múi giờ mặc định' sẽ tự động sử dụng múi giờ của máy chủ hoặc trình duyệt.",
     "DefaultTimeZone": "Múi giờ mặc định",
     "SmtpHost": "Tổ chức",
     "SmtpPort": "Hải cảng",

@@ -11,24 +11,44 @@ import {
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { NzFormatBeforeDropEvent, NzFormatEmitEvent, NzTreeNode } from 'ng-zorro-antd/tree';
-import { LazyLoadService, LOADING_STRATEGY, SubscriptionService } from '@abp/ng.core';
+import { NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NzFormatBeforeDropEvent,
+  NzFormatEmitEvent,
+  NzTreeComponent,
+  NzTreeNode,
+} from 'ng-zorro-antd/tree';
+import {
+  InitDirective,
+  LazyLoadService,
+  LOADING_STRATEGY,
+  SubscriptionService,
+} from '@abp/ng.core';
 import { of } from 'rxjs';
 import { DISABLE_TREE_STYLE_LOADING_TOKEN } from '../disable-tree-style-loading.token';
 import { TreeNodeTemplateDirective } from '../templates/tree-node-template.directive';
 import { ExpandedIconTemplateDirective } from '../templates/expanded-icon-template.directive';
+import { CommonModule } from '@angular/common';
+import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 
 export type DropEvent = NzFormatEmitEvent & { pos: number };
 
 @Component({
-  standalone: false,
   selector: 'abp-tree',
   templateUrl: 'tree.component.html',
   styleUrls: ['tree.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [SubscriptionService],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    NzTreeComponent,
+    NgbDropdown,
+    NgbDropdownMenu,
+    NgbDropdownToggle,
+    InitDirective,
+    NzNoAnimationDirective,
+  ],
 })
 export class TreeComponent implements OnInit {
   private lazyLoadService = inject(LazyLoadService);
@@ -130,6 +150,17 @@ export class TreeComponent implements OnInit {
 
   initDropdown(key: string, dropdown: NgbDropdown) {
     this.dropdowns[key] = dropdown;
+  }
+
+  onContextMenuChange(event: NzFormatEmitEvent) {
+    const dropdownKey = event.node?.key;
+
+    Object.entries(this.dropdowns).forEach(([key, dropdown]) => {
+      if (key !== dropdownKey && dropdown?.isOpen()) {
+        dropdown.close();
+      }
+    });
+    this.dropdowns[dropdownKey]?.toggle();
   }
 
   setSelectedNode(node: any) {

@@ -1,5 +1,14 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, Directive, HostBinding, Input, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  HostBinding,
+  Input,
+  OnDestroy,
+  inject,
+  PLATFORM_ID,
+  Inject,
+} from '@angular/core';
 import { ColumnMode, DatatableComponent, ScrollerComponent } from '@swimlane/ngx-datatable';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';

@@ -33,18 +33,23 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
   ],
 })
 export class ManageProfileComponent implements OnInit {
+  protected profileService = inject(ProfileService);
+  protected manageProfileState = inject(ManageProfileStateService);
+
   protected readonly ssrService = inject(SSRService);
   selectedTab = 0;
+
   changePasswordKey = eAccountComponents.ChangePassword;
+
   personalSettingsKey = eAccountComponents.PersonalSettings;
+
   profile$ = this.manageProfileState.getProfile$();
+
   hideChangePasswordTab?: boolean;
   PROFILE_SETTINGS_KEY = makeStateKey<any>('profileSettings');
 
   constructor(
-    private transferState: TransferState,
-    protected profileService: ProfileService,
-    protected manageProfileState: ManageProfileStateService,
+    private transferState: TransferState
   ) {}
 
   ngOnInit() {

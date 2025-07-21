@@ -1,5 +1,5 @@
 import { ApplicationInfo, EnvironmentService } from '@abp/ng.core';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,9 +16,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class LogoComponent {
+  private environment = inject(EnvironmentService);
+
   get appInfo(): ApplicationInfo {
     return this.environment.getEnvironment().application;
   }
-
-  constructor(private environment: EnvironmentService) {}
 }

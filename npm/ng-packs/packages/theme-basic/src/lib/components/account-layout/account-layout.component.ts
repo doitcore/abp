@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { eLayoutType, ReplaceableTemplateDirective, SubscriptionService } from '@abp/ng.core';
 import { LayoutService } from '../../services/layout.service';
 import { CommonModule } from '@angular/common';
@@ -8,10 +8,12 @@ import { NavItemsComponent } from '../nav-items/nav-items.component';
 import { AuthWrapperComponent } from './auth-wrapper/auth-wrapper.component';
 import { PageAlertContainerComponent } from '../page-alert-container/page-alert-container.component';
 import { RouterModule } from '@angular/router';
+import { collapseWithMargin } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'abp-layout-account',
   templateUrl: './account-layout.component.html',
+  animations: [collapseWithMargin],
   providers: [LayoutService, SubscriptionService],
   imports: [
     CommonModule,
@@ -25,12 +27,12 @@ import { RouterModule } from '@angular/router';
   ],
 })
 export class AccountLayoutComponent implements AfterViewInit {
+  service = inject(LayoutService);
+
   // required for dynamic component
   static type = eLayoutType.account;
 
   authWrapperKey = 'Account.AuthWrapperComponent';
-
-  constructor(public service: LayoutService) {}
 
   ngAfterViewInit() {
     this.service.subscribeWindowSize();

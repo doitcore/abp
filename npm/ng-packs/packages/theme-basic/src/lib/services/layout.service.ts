@@ -1,5 +1,5 @@
-import { RouterEvents, SubscriptionService } from '@abp/ng.core';
-import { ChangeDetectorRef, inject, Injectable } from '@angular/core';
+import {RouterEvents, SubscriptionService} from '@abp/ng.core';
+import { ChangeDetectorRef, Injectable, inject } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { eThemeBasicComponents } from '../enums';
@@ -7,6 +7,9 @@ import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class LayoutService {
+  private subscription = inject(SubscriptionService);
+  private cdRef = inject(ChangeDetectorRef);
+
   document = inject(DOCUMENT);
   isCollapsed = true;
 
@@ -18,14 +21,13 @@ export class LayoutService {
 
   navItemsComponentKey = eThemeBasicComponents.NavItems;
 
-  constructor(
-    private subscription: SubscriptionService,
-    private cdRef: ChangeDetectorRef,
-    routerEvents: RouterEvents,
-  ) {
-    subscription.addOne(routerEvents.getNavigationEvents('End'), () => {
+  constructor() {
+    const subscription = this.subscription;
+    const routerEvents = inject(RouterEvents);
+
+    subscription.addOne(routerEvents.getNavigationEvents("End"),() => {
       this.isCollapsed = true;
-    });
+    })
   }
 
   private checkWindowWidth() {

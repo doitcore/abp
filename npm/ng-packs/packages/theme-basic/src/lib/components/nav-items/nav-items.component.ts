@@ -1,5 +1,5 @@
 import { AbpVisibleDirective, NavItem, NavItemsService } from '@abp/ng.theme.shared';
-import { Component, inject, TrackByFunction } from '@angular/core';
+import { Component, TrackByFunction, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PermissionDirective, SSRService, ToInjectorPipe } from '@abp/ng.core';
 
@@ -10,7 +10,7 @@ import { PermissionDirective, SSRService, ToInjectorPipe } from '@abp/ng.core';
 })
 export class NavItemsComponent {
   protected readonly ssrService = inject(SSRService);
-  trackByFn: TrackByFunction<NavItem> = (_, element) => element.id;
+  readonly navItems = inject(NavItemsService);
 
-  constructor(public readonly navItems: NavItemsService) {}
+  trackByFn: TrackByFunction<NavItem> = (_, element) => element.id;
 }

@@ -6,7 +6,7 @@ import {
   LocalizationPipe,
 } from '@abp/ng.core';
 import { ButtonComponent, getPasswordValidators, ToasterService } from '@abp/ng.theme.shared';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, inject } from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormBuilder,
@@ -35,6 +35,13 @@ const { maxLength, required, email } = Validators;
   ],
 })
 export class RegisterComponent implements OnInit {
+  protected fb = inject(UntypedFormBuilder);
+  protected accountService = inject(AccountService);
+  protected configState = inject(ConfigStateService);
+  protected toasterService = inject(ToasterService);
+  protected authService = inject(AuthService);
+  protected injector = inject(Injector);
+
   form!: UntypedFormGroup;
 
   inProgress?: boolean;
@@ -42,15 +49,6 @@ export class RegisterComponent implements OnInit {
   isSelfRegistrationEnabled = true;
 
   authWrapperKey = eAccountComponents.AuthWrapper;
-
-  constructor(
-    protected fb: UntypedFormBuilder,
-    protected accountService: AccountService,
-    protected configState: ConfigStateService,
-    protected toasterService: ToasterService,
-    protected authService: AuthService,
-    protected injector: Injector,
-  ) {}
 
   ngOnInit() {
     this.init();

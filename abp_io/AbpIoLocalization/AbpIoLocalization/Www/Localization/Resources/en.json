@@ -1892,6 +1892,8 @@
     "SEOTitle": "SEO URL",
     "InvalidYouTubeUrl": "The URL you entered is not a valid YouTube video link. Please make sure it points to a specific video and try again.",
     "SelectAnOption": "Select an option",
-    "MostPopular": "Most Popular"
+    "MostPopular": "Most Popular",
+    "AnnouncmentsPageTitle": "ABP Community Announcements | Stay Updated with the Latest News",
+    "AnnouncmentsPageDescription": "Get the latest news, feature updates, release notes, and important announcements about the ABP framework and .NET ecosystem. Stay ahead with timely information directly from the ABP team."
   }
 }

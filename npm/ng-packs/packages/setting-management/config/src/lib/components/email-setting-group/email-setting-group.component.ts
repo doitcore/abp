@@ -46,6 +46,10 @@ const { required, email } = Validators;
   ],
 })
 export class EmailSettingGroupComponent implements OnInit {
+  private emailSettingsService = inject(EmailSettingsService);
+  private fb = inject(UntypedFormBuilder);
+  private toasterService = inject(ToasterService);
+
   protected readonly localizationService = inject(LocalizationService);
   protected readonly configStateSevice = inject(ConfigStateService);
   protected readonly ssrService = inject(SSRService);
@@ -62,9 +66,6 @@ export class EmailSettingGroupComponent implements OnInit {
   EMAIL_SETTINGS_KEY = makeStateKey<any>('emailSettings');
 
   constructor(
-    private emailSettingsService: EmailSettingsService,
-    private fb: UntypedFormBuilder,
-    private toasterService: ToasterService,
     private transferState: TransferState,
   ) {}
 

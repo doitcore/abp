@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReplaySubject } from 'rxjs';
 import { Confirmation } from '../../models/confirmation';
@@ -12,7 +12,8 @@ import { LocalizationPipe } from '@abp/ng.core';
   imports: [CommonModule, LocalizationPipe],
 })
 export class ConfirmationComponent {
-  constructor(@Inject(CONFIRMATION_ICONS) private icons: ConfirmationIcons) {}
+  private icons = inject<ConfirmationIcons>(CONFIRMATION_ICONS);
+
 
   confirm = Confirmation.Status.confirm;
   reject = Confirmation.Status.reject;

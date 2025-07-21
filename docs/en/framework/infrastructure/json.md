@@ -69,6 +69,19 @@ Add [Volo.Abp.Json.Newtonsoft](https://www.nuget.org/packages/Volo.Abp.Json.Newt
 
 ## Configuring JSON options in ASP.NET Core
 
-You can change the JSON behavior in ASP.NET Core by configuring [JsonOptions](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.jsonoptions) or
-[MvcNewtonsoftJsonOptions](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.mvcnewtonsoftjsonoptions)(if you use `Newtonsoft.Json`)
+Configuring JSON options in ABP does not affect ASP.NET Core's JSON settings. To modify ASP.NET Core JSON behavior, configure [JsonOptions](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.jsonoptions) or [MvcNewtonsoftJsonOptions](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.mvcnewtonsoftjsonoptions) (if you're using `Newtonsoft.Json`) separately.
 
+Example:
+
+```csharp
+Configure<JsonOptions>(options =>
+{
+    //options.SerializerOptions
+});
+
+// If you use Newtonsoft.Json
+Configure<MvcNewtonsoftJsonOptions>(options =>
+{
+    //options.SerializerSettings
+});
+```

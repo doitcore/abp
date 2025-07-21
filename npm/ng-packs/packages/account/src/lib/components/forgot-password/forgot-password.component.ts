@@ -1,5 +1,5 @@
 import { AccountService } from '@abp/ng.account.core/proxy';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormBuilder,
@@ -24,16 +24,16 @@ import { NgxValidateCoreModule } from '@ngx-validate/core';
   ],
 })
 export class ForgotPasswordComponent {
+  private fb = inject(UntypedFormBuilder);
+  private accountService = inject(AccountService);
+
   form: UntypedFormGroup;
 
   inProgress?: boolean;
 
   isEmailSent = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private accountService: AccountService,
-  ) {
+  constructor() {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });

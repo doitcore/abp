@@ -1,4 +1,4 @@
-import { Component, inject, isDevMode, OnInit, Optional, SkipSelf, Type } from '@angular/core';
+import { Component, inject, isDevMode, OnInit, Type } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { eLayoutType } from '../enums/common';
 import { ABP } from '../models';
@@ -39,7 +39,9 @@ export class DynamicLayoutComponent implements OnInit {
   protected readonly routerEvents = inject(RouterEvents);
   protected readonly environment = inject(EnvironmentService);
 
-  constructor(@Optional() @SkipSelf() dynamicLayoutComponent: DynamicLayoutComponent) {
+  constructor() {
+    const dynamicLayoutComponent = inject(DynamicLayoutComponent, { optional: true, skipSelf: true })!;
+
     if (dynamicLayoutComponent) {
       if (isDevMode()) console.warn('DynamicLayoutComponent must be used only in AppComponent.');
       return;

@@ -1,13 +1,5 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import {
-  AfterViewInit,
-  Directive,
-  HostBinding,
-  Inject,
-  Input,
-  OnDestroy,
-  PLATFORM_ID,
-} from '@angular/core';
+import { AfterViewInit, Directive, HostBinding, Input, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
 import { ColumnMode, DatatableComponent, ScrollerComponent } from '@swimlane/ngx-datatable';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -18,6 +10,9 @@ import { debounceTime } from 'rxjs/operators';
   exportAs: 'ngxDatatableDefault',
 })
 export class NgxDatatableDefaultDirective implements AfterViewInit, OnDestroy {
+  private table = inject(DatatableComponent);
+  private document = inject<MockDocument>(DOCUMENT);
+
   private subscription = new Subscription();
   private resizeDiff = 0;
 
@@ -28,11 +23,7 @@ export class NgxDatatableDefaultDirective implements AfterViewInit, OnDestroy {
     return `ngx-datatable ${this.class}`;
   }
 
-  constructor(
-    private table: DatatableComponent,
-    @Inject(PLATFORM_ID) private platformId: object,
-    @Inject(DOCUMENT) private document: MockDocument,
-  ) {
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {
     this.table.columnMode = ColumnMode.force;
     this.table.footerHeight = 50;
     this.table.headerHeight = 50;

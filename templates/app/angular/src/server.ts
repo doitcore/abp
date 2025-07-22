@@ -28,6 +28,10 @@ export function app(): express.Express {
     index: false,
   }));
 
+  server.get('/.well-known/*', (req, res) => {
+    res.status(404).send('Not found');
+  });
+
   // All regular routes use the Angular engine
   server.use((req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;

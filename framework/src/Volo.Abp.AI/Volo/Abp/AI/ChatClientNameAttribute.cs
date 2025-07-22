@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Concurrent;
 
 namespace Volo.Abp.AI;
 
@@ -15,6 +16,8 @@ public class ChatClientNameAttribute : Attribute
         Name = name;
     }
 
+    private static readonly ConcurrentDictionary<Type, string> _nameCache = new();
+
     public static string GetChatClientName<TChatClient>()
     {
         return GetChatClientName(typeof(TChatClient));
@@ -22,16 +25,14 @@ public class ChatClientNameAttribute : Attribute
     
     public static string GetChatClientName(Type chatClientType)
     {
-        var chatClientNameAttribute = chatClientType
-            .GetCustomAttributes(true)
-            .OfType<ChatClientNameAttribute>()
-            .FirstOrDefault();
-
-        if (chatClientNameAttribute != null)
+        return _nameCache.GetOrAdd(chatClientType, type =>
         {
-            return chatClientNameAttribute.Name;
-        }
+            var chatClientNameAttribute = type
+                .GetCustomAttributes(true)
+                .OfType<ChatClientNameAttribute>()
+                .FirstOrDefault();
 
-        return chatClientType.FullName!;
+            return chatClientNameAttribute?.Name ?? type.FullName!;
+        });
     }
 }

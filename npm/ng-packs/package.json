@@ -41,7 +41,7 @@
     "migrate-nx": "yarn nx migrate --run-migrations",
     "copy-to:app": "cd scripts && yarn && yarn copy-to-templates -t app",
     "update-version": "nx generate @abp/nx.generators:update-version",
-    "dev:ssr": "ng run dev-app:serve-ssr",
+    "dev:ssr": "nx serve-ssr dev-app",
     "serve:ssr": "node dist/dev-app/server/main.js",
     "build:ssr": "ng build && ng run dev-app:server",
     "prerender": "ng run dev-app:prerender"
@@ -97,7 +97,7 @@
     "@typescript-eslint/eslint-plugin": "7.16.0",
     "@typescript-eslint/parser": "7.16.0",
     "@typescript-eslint/utils": "^7.16.0",
-    "angular-oauth2-oidc": "^20.0.0",
+    "angular-oauth2-oidc": "~20.0.0",
     "autoprefixer": "^10.4.21",
     "bootstrap": "~5.0.0",
     "bootstrap-icons": "~1.13.0",

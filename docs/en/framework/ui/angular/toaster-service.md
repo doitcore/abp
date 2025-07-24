@@ -39,7 +39,7 @@ Options can be passed as the third parameter to `success`, `warn`, `error`, and 
 import { Toaster, ToasterService } from '@abp/ng.theme.shared';
 import { inject } from '@angular/core';
 
-// Sınıf içinde:
+// inside the class
 private toaster = inject(ToasterService);
 
 //...

@@ -207,7 +207,6 @@ import { inject } from '@angular/core';
 
 const sessionState = inject(SessionStateService);
 sessionState.setLanguage('en');
-}
 ````
 
 

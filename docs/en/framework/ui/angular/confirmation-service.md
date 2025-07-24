@@ -39,7 +39,7 @@ You can subscribe to the confirmation closing event like below:
 import { Confirmation, ConfirmationService } from '@abp/ng.theme.shared';
 import { inject } from '@angular/core';
 
-// Sınıf içinde:
+// inside the class:
 private confirmation = inject(ConfirmationService);
 
 this.confirmation
@@ -135,18 +135,23 @@ this.confirmation.clear();
 You can change icons with the `withConfirmationIcon()` method of `provideAbpThemeShared` function in the app.module.ts. The changes will affect all confirmation popup in the project.
 
 ```ts
-import { provideAbpThemeShared, withConfirmationIcon } from '@abp/ng.theme.shared';
+import {
+  provideAbpThemeShared,
+  withConfirmationIcon,
+} from "@abp/ng.theme.shared";
 
 @NgModule({
   providers: [
     // ...
-    provideAbpThemeShared(withConfirmationIcon({
-      info: 'fa fa-info-circle',
-      success: 'fa fa-check-circle',
-      warning: 'fa fa-exclamation-triangle',
-      error: 'fa fa-times-circle',
-      default: 'fa fa-question-circle',
-    })),
+    provideAbpThemeShared(
+      withConfirmationIcon({
+        info: "fa fa-info-circle",
+        success: "fa fa-check-circle",
+        warning: "fa fa-exclamation-triangle",
+        error: "fa fa-times-circle",
+        default: "fa fa-question-circle",
+      })
+    ),
   ],
 })
 export class AppModule {}

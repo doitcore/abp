@@ -224,7 +224,7 @@ All of the options are shown below. You can choose either of them.
 ````ts
 import { eUserMenuItems } from '@abp/ng.theme.basic';
 import { UserMenuService } from '@abp/ng.theme.shared';
-import { Component, inject, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 // make sure that you import this component in a NgModule
@@ -239,7 +239,7 @@ import { Router } from '@angular/router';
 })
 export class UserMenuItemComponent {
   // you can inject the data through `INJECTOR_PIPE_DATA_TOKEN` token
-  constructor(@Inject(INJECTOR_PIPE_DATA_TOKEN) public data: UserMenu) {}
+  public data = inject<UserMenu>(INJECTOR_PIPE_DATA_TOKEN);
 }
 
 @Component({/* component metadata */})

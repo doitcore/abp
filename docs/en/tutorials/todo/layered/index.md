@@ -747,7 +747,7 @@ Open the `/angular/src/app/home/home.component.ts` file and replace its content 
 
 ```js
 import { ToasterService } from '@abp/ng.theme.shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { TodoItemDto, TodoService } from '@proxy';
 
 @Component({
@@ -760,10 +760,8 @@ export class HomeComponent implements OnInit {
   todoItems: TodoItemDto[];
   newTodoText: string;
 
-  constructor(
-      private todoService: TodoService,
-      private toasterService: ToasterService)
-  { }
+  private readonly todoService = inject(TodoService);
+  private readonly toasterService = inject(ToasterService);
 
   ngOnInit(): void {
     this.todoService.getList().subscribe(response => {
@@ -771,7 +769,7 @@ export class HomeComponent implements OnInit {
     });
   }
   
-  create(): void{
+  create(): void {
     this.todoService.create(this.newTodoText).subscribe((result) => {
       this.todoItems = this.todoItems.concat(result);
       this.newTodoText = null;
@@ -785,7 +783,6 @@ export class HomeComponent implements OnInit {
     });
   }  
 }
-
 ```
 
 We've used `todoService` to get the list of todo items and assigned the returning value to the `todoItems` array. We've also added `create` and `delete` methods. These methods will be used on the view side.

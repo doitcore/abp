@@ -1,4 +1,6 @@
-﻿namespace Volo.Abp.Internal.Telemetry.Constants;
+﻿using System;
+
+namespace Volo.Abp.Internal.Telemetry.Constants;
 
 static internal class DeviceManager
 {
@@ -51,27 +53,12 @@ static internal class DeviceManager
 
             return osPrefix + platformId + osArchitecture + "-" + uniqueKey;
         }
-        catch (System.Exception ex)
+        catch
         {
-            System.Console.WriteLine("WARNING ABP-LIC-0025! Contact to license@abp.io with the below information" +
-                                     System.Environment.NewLine +
-                                     "* Architecture: " +
-                                     System.Runtime.InteropServices.RuntimeInformation.OSArchitecture +
-                                     System.Environment.NewLine +
-                                     "* Description: " +
-                                     System.Runtime.InteropServices.RuntimeInformation.OSDescription +
-                                     System.Environment.NewLine +
-                                     "* Platform Id: " + platformId + System.Environment.NewLine +
-                                     "* OS architecture: " + osArchitecture + System.Environment.NewLine +
-                                     "* Operating system: " + operatingSystem + System.Environment.NewLine +
-                                     "* Framework description: " +
-                                     System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription +
-                                     System.Environment.NewLine +
-                                     "* Error: " + ex.ToString());
-
-            return "95929008-b147-454a-8737-efed71fa2241";
+            return Guid.NewGuid().ToString();
         }
     }
+
     private static string GetNetworkAdapterSerial()
     {
         string macAddress = string.Empty;
@@ -96,15 +83,7 @@ static internal class DeviceManager
 
         return macAddress!;
     }
-    /// <returns>
-    /// 0 - Win32S
-    /// 1 - Win32Windows
-    /// 2 - Win32NT
-    /// 3 - WinCE
-    /// 4 - Unix
-    /// 5 - Xbox
-    /// 6 - MacOSX
-    /// </returns>
+
     private static char GetPlatformIdOrDefault(char defaultValue = '*')
     {
         try
@@ -116,6 +95,7 @@ static internal class DeviceManager
             return defaultValue;
         }
     }
+
     private static string ConvertToMd5(string text)
     {
         using (var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider())
@@ -123,7 +103,7 @@ static internal class DeviceManager
             return EncodeBase64(md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(text)));
         }
     }
-    
+
     private static string EncodeBase64(byte[] ba)
     {
         var hex = new System.Text.StringBuilder(ba.Length * 2);
@@ -136,12 +116,7 @@ static internal class DeviceManager
         return hex.ToString();
     }
 
-    /// <returns>
-    /// 0 - X86 (An Intel-based 32-bit processor architecture)
-    /// 1 - X64 (A 64-bit ARM processor architecture)
-    /// 2 - Arm (A 32-bit ARM processor architecture)
-    /// 3 - Arm64 (A 64-bit ARM processor architecture)
-    /// </returns>
+
     private static char GetOsArchitectureOrDefault(char defaultValue = '*')
     {
         try
@@ -162,7 +137,6 @@ static internal class DeviceManager
         }
         catch
         {
-            //couldn't get processor id when logon user has no required permission. try other methods...
         }
 
         return GetWindowsMachineUniqueId();
@@ -192,7 +166,7 @@ static internal class DeviceManager
         return RunCommandAndGetOutput("powershell (Get-CimInstance -Class Win32_ComputerSystemProduct).UUID");
     }
 
-  
+
     private static string GetHarddiskSerialForLinux()
     {
         return RunCommandAndGetOutput(

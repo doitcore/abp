@@ -1,7 +1,6 @@
 import { makeEnvironmentProviders, Provider, inject, provideAppInitializer } from '@angular/core';
 import { TitleStrategy } from '@angular/router';
 import {
-  HTTP_INTERCEPTORS,
   provideHttpClient,
   withFetch,
   withInterceptors,
@@ -27,7 +26,7 @@ import { DEFAULT_DYNAMIC_LAYOUTS } from '../constants';
 import { LocalizationService, LocalStorageListenerService, AbpTitleStrategy } from '../services';
 import { DefaultQueueManager, getInitialData, localeInitializer } from '../utils';
 import { CookieLanguageProvider, IncludeLocalizationResourcesProvider, LocaleProvider } from './';
-import { TimezoneInterceptor, transferStateInterceptor } from '../interceptors';
+import { timezoneInterceptor, transferStateInterceptor } from '../interceptors';
 
 export enum CoreFeatureKind {
   Options,
@@ -108,7 +107,7 @@ export function provideAbpCore(...features: CoreFeature<CoreFeatureKind>[]) {
         headerName: 'RequestVerificationToken',
       }),
       withFetch(),
-      withInterceptors([transferStateInterceptor]),
+      withInterceptors([transferStateInterceptor, timezoneInterceptor]),
     ),
     provideAppInitializer(() => {
       getInitialData();
@@ -133,11 +132,6 @@ export function provideAbpCore(...features: CoreFeature<CoreFeatureKind>[]) {
     {
       provide: TitleStrategy,
       useExisting: AbpTitleStrategy,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TimezoneInterceptor,
-      multi: true,
     },
   ];
 

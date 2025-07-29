@@ -22,14 +22,22 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
     return super
       .init()
       .then(() => this.oAuthService.tryLogin().catch(noop))
-      .then(() => this.oAuthService.setupAutomaticSilentRefresh());
+      .then(() => {
+        //TODO:Investigate silent refresh issue in SSR
+        if (isPlatformBrowser(this.platformId)) {
+          this.oAuthService.setupAutomaticSilentRefresh();
+        }
+      });
   }
 
   private checkRememberMeOption() {
+    console.log('checkRememberMeOption called ---->>>>>');
     const accessToken = this.oAuthService.getAccessToken();
+    console.log('accessToken New ----->>>>', accessToken);
     const isTokenExpire = isTokenExpired(this.oAuthService.getAccessTokenExpiration());
+    console.log('isTokenExpire New ----->>>>', isTokenExpire);
     let rememberMe = this.rememberMeService.get();
-
+    console.log('rememberMe New ----->>>>', rememberMe);
     if (accessToken && !rememberMe) {
       const rememberMeValue = this.rememberMeService.getFromToken(accessToken);
 

@@ -21,8 +21,4 @@ export const appServerRoutes: ServerRoute[] = [
     path: 'setting-management',
     renderMode: RenderMode.Server,
   },
-  {
-    path: '**',
-    renderMode: RenderMode.Server,
-  },
 ];

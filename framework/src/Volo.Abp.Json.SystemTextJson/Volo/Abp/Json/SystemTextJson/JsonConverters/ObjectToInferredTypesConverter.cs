@@ -9,11 +9,6 @@ namespace Volo.Abp.Json.SystemTextJson.JsonConverters;
 /// </summary>
 public class ObjectToInferredTypesConverter : JsonConverter<object>
 {
-    public override bool CanConvert(Type typeToConvert)
-    {
-        return typeToConvert == typeof(object);
-    }
-
     public override object Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,

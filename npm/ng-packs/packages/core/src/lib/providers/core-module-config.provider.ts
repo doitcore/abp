@@ -4,6 +4,7 @@ import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withFetch,
+  withInterceptors,
   withInterceptorsFromDi,
   withXsrfConfiguration,
 } from '@angular/common/http';
@@ -26,7 +27,7 @@ import { DEFAULT_DYNAMIC_LAYOUTS } from '../constants';
 import { LocalizationService, LocalStorageListenerService, AbpTitleStrategy } from '../services';
 import { DefaultQueueManager, getInitialData, localeInitializer } from '../utils';
 import { CookieLanguageProvider, IncludeLocalizationResourcesProvider, LocaleProvider } from './';
-import { TimezoneInterceptor } from '../interceptors';
+import { TimezoneInterceptor, transferStateInterceptor } from '../interceptors';
 
 export enum CoreFeatureKind {
   Options,
@@ -107,6 +108,7 @@ export function provideAbpCore(...features: CoreFeature<CoreFeatureKind>[]) {
         headerName: 'RequestVerificationToken',
       }),
       withFetch(),
+      withInterceptors([transferStateInterceptor]),
     ),
     provideAppInitializer(() => {
       getInitialData();

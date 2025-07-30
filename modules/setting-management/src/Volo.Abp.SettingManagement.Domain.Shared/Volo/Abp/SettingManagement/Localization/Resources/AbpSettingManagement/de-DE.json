@@ -17,6 +17,7 @@
     "SentSuccessfully": "Erfolgreich gesendet",
     "MailSendingFailed": "E-Mail-Versand fehlgeschlagen. Bitte überprüfen Sie Ihre E-Mail-Konfiguration und versuchen Sie es erneut.",
     "Send": "Senden",
+    "Menu:Settings": "Einstellungen",
     "Menu:Emailing": "E-Mail",
     "Menu:TimeZone": "Zeitzone",
     "DisplayName:Timezone": "Zeitzone",

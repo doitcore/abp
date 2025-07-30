@@ -20,6 +20,10 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', distFolder);
 
+  server.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+    res.status(404).send('Not Found');
+  });
+
   // Example Express Rest API endpoints
   // server.get('/api/{*splat}', (req, res) => { });
   // Serve static files from /browser

@@ -18,7 +18,7 @@ import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { eAccountComponents } from '../../enums/components';
 import { getRedirectUrl } from '../../utils/auth-utils';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
-import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 const { maxLength, required, email } = Validators;
 
@@ -27,7 +27,7 @@ const { maxLength, required, email } = Validators;
   templateUrl: './register.component.html',
   imports: [
     ReactiveFormsModule,
-    RouterModule,
+    RouterLink,
     NgxValidateCoreModule,
     LocalizationPipe,
     ButtonComponent,

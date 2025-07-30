@@ -17,6 +17,7 @@
     "SentSuccessfully": "Succesvol verzonden",
     "MailSendingFailed": "E-mail verzenden mislukt. Controleer uw e-mailconfiguratie en probeer het opnieuw.",
     "Send": "Versturen",
+    "Menu:Settings": "Instellingen",
     "Menu:Emailing": "E-mail",
     "Menu:TimeZone": "Tijdzone",
     "DisplayName:Timezone": "Tijdzone",

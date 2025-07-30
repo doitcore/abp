@@ -11,5 +11,8 @@ public class ClientConfig
 
     public ServiceBusClientOptions Client { get; set; } = new();
 
-    public ServiceBusProcessorOptions Processor { get; set; } = new();
+    public ServiceBusProcessorOptions Processor { get; set; } = new ()
+    {
+        AutoCompleteMessages = false
+    };
 }

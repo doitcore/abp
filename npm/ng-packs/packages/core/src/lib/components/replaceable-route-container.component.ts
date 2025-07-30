@@ -4,7 +4,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { ReplaceableComponents } from '../models/replaceable-components';
 import { ReplaceableComponentsService } from '../services/replaceable-components.service';
 import { SubscriptionService } from '../services/subscription.service';
-import { CommonModule } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 
 @Component({
   selector: 'abp-replaceable-route-container',
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
     <ng-container *ngComponentOutlet="externalComponent || defaultComponent"></ng-container>
   `,
   providers: [SubscriptionService],
-  imports: [CommonModule],
+  imports: [NgComponentOutlet],
 })
 export class ReplaceableRouteContainerComponent implements OnInit {
   private route = inject(ActivatedRoute);

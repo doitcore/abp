@@ -1,5 +1,5 @@
+import { NgClass, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { combineLatest, Subscription, timer } from 'rxjs';
 import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng.core';
 
@@ -20,7 +20,7 @@ import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng
   `,
   styleUrls: ['./loader-bar.component.scss'],
   providers: [SubscriptionService],
-  imports: [CommonModule],
+  imports: [NgClass, NgStyle],
 })
 export class LoaderBarComponent implements OnDestroy, OnInit {
   private cdRef = inject(ChangeDetectorRef);

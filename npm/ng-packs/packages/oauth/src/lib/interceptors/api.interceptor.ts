@@ -1,7 +1,8 @@
-import { HttpHandler, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import {
   HttpWaitService,
   IApiInterceptor,
@@ -19,8 +20,7 @@ export class OAuthApiInterceptor implements IApiInterceptor {
   private httpWaitService = inject(HttpWaitService);
   private tenantKey = inject(TENANT_KEY);
 
-
-  intercept(request: HttpRequest<any>, next: HttpHandler) {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.httpWaitService.addRequest(request);
     const isExternalRequest = request.context?.get(IS_EXTERNAL_REQUEST);
     const newRequest = isExternalRequest

@@ -9,7 +9,7 @@ import {
 import { EXTENSIONS_ACTION_TYPE } from '../../tokens/extensions.token';
 import { AbstractActionsComponent } from '../abstract-actions/abstract-actions.component';
 import { CreateInjectorPipe } from '../../pipes/create-injector.pipe';
-import { LocalizationModule, PermissionDirective } from '@abp/ng.core';
+import { LocalizationPipe, PermissionDirective } from '@abp/ng.core';
 import { NgClass, NgComponentOutlet } from '@angular/common';
 
 @Component({
@@ -18,7 +18,7 @@ import { NgClass, NgComponentOutlet } from '@angular/common';
   imports: [
     CreateInjectorPipe,
     PermissionDirective,
-    LocalizationModule,
+    LocalizationPipe,
     NgClass,
     NgComponentOutlet,
   ],

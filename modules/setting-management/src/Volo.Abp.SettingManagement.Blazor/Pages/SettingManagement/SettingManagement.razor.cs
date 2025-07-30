@@ -31,7 +31,8 @@ public partial class SettingManagement
 
     protected async override Task OnInitializedAsync()
     {
-        BreadcrumbItems.Add(new BreadcrumbItem(@L["Settings"]));
+        BreadcrumbItems.Add(new BreadcrumbItem(LUiNavigation["Menu:Administration"].Value));
+        BreadcrumbItems.Add(new BreadcrumbItem(@L["Menu:Settings"].Value));
 
         SettingComponentCreationContext = new SettingComponentCreationContext(ServiceProvider);
 

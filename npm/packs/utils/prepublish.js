@@ -1,11 +1,11 @@
 const fse = require('fs-extra');
-const execa = require('execa');
+const { execaSync } = require('execa');
 
 fse.copyFileSync('./package.json', './projects/utils/package.json');
 fse.copyFileSync('./README.md', './projects/utils/README.md');
 
 try {
-  execa.sync('yarn', ['build'], { stdout: 'inherit' });
+  execaSync('yarn', ['build'], { stdio: 'inherit' });
   process.exit(0);
 } catch (error) {
   console.error(error);

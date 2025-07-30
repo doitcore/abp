@@ -1,14 +1,14 @@
 import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { PageAlertService } from '@abp/ng.theme.shared';
-import { CommonModule } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { LocalizationPipe, SafeHtmlPipe } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-page-alert-container',
   templateUrl: './page-alert-container.component.html',
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, LocalizationPipe, SafeHtmlPipe],
+  imports: [NgClass, AsyncPipe, LocalizationPipe, SafeHtmlPipe],
 })
-export class PageAlertContainerComponent {  service = inject(PageAlertService);
-
+export class PageAlertContainerComponent {
+  service = inject(PageAlertService);
 }

@@ -12,14 +12,15 @@ import {
 import { AbpVisibleDirective, UserMenu, UserMenuService } from '@abp/ng.theme.shared';
 import { Component, TrackByFunction, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { NgComponentOutlet, AsyncPipe } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'abp-current-user',
   templateUrl: './current-user.component.html',
   imports: [
-    CommonModule,
+    NgComponentOutlet,
+    AsyncPipe,
     NgbDropdownModule,
     AbpVisibleDirective,
     PermissionDirective,

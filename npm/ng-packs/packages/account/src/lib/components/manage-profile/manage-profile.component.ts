@@ -4,7 +4,7 @@ import { transition, trigger, useAnimation } from '@angular/animations';
 import { Component, inject, makeStateKey, OnInit, TransferState } from '@angular/core';
 import { eAccountComponents } from '../../enums/components';
 import { ManageProfileStateService } from '../../services/manage-profile.state.service';
-import { CommonModule } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LocalizationPipe, ReplaceableTemplateDirective, SSRService } from '@abp/ng.core';
 import { PersonalSettingsComponent } from '../personal-settings/personal-settings.component';
@@ -23,7 +23,8 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
     `,
   ],
   imports: [
-    CommonModule,
+    NgClass,
+    AsyncPipe,
     ReactiveFormsModule,
     PersonalSettingsComponent,
     ChangePasswordComponent,

@@ -1,6 +1,6 @@
 import { ApplicationInfo, EnvironmentService } from '@abp/ng.core';
+import { RouterLink } from '@angular/router';
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'abp-logo',
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
       }
     </a>
   `,
-  imports: [CommonModule],
+  imports: [RouterLink],
 })
 export class LogoComponent {
   private environment = inject(EnvironmentService);

@@ -29,8 +29,8 @@
 
                     @for (feature of features[group.name]; track feature.id || i; let i = $index) {
                       @let provider = feature.provider.name;
-                      @let isFeatureDisabled =
-                        provider !== providerName && provider !== defaultProviderName;
+                      @let isFeatureDisabled = !feature.parentName ? isParentDisabled(feature.name, group.name, provider) :
+                        (provider !== providerName && provider !== defaultProviderName);
 
                       <div class="mt-2" [ngStyle]="feature.style" (keyup.enter)="save()">
                         @switch (feature.valueType?.name) {

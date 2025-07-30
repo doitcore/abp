@@ -7,7 +7,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { comparePasswords, NgxValidateCoreModule, Validation } from '@ngx-validate/core';
 import { finalize } from 'rxjs/operators';
 import { LocalizationPipe } from '@abp/ng.core';
@@ -19,7 +19,7 @@ const PASSWORD_FIELDS = ['password', 'confirmPassword'];
   templateUrl: './reset-password.component.html',
   imports: [
     ReactiveFormsModule,
-    RouterModule,
+    RouterLink,
     NgxValidateCoreModule,
     LocalizationPipe,
     ButtonComponent,

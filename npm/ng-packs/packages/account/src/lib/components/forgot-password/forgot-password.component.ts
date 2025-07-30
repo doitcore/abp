@@ -9,7 +9,7 @@ import {
 import { finalize } from 'rxjs/operators';
 import { LocalizationPipe } from '@abp/ng.core';
 import { ButtonComponent } from '@abp/ng.theme.shared';
-import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 
 @Component({
@@ -17,7 +17,7 @@ import { NgxValidateCoreModule } from '@ngx-validate/core';
   templateUrl: 'forgot-password.component.html',
   imports: [
     ReactiveFormsModule,
-    RouterModule,
+    RouterLink,
     LocalizationPipe,
     ButtonComponent,
     NgxValidateCoreModule,

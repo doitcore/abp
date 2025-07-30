@@ -1,6 +1,6 @@
 import { ConfigStateService, LanguageInfo, SessionStateService } from '@abp/ng.core';
 import { Component, inject } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT, AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -39,7 +39,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
       </div>
     }
   `,
-  imports: [CommonModule, NgbDropdownModule],
+  imports: [AsyncPipe, NgbDropdownModule],
 })
 export class LanguagesComponent {
   private sessionState = inject(SessionStateService);

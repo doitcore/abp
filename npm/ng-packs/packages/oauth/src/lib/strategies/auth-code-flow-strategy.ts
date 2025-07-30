@@ -31,13 +31,9 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   private checkRememberMeOption() {
-    console.log('checkRememberMeOption called ---->>>>>');
     const accessToken = this.oAuthService.getAccessToken();
-    console.log('accessToken New ----->>>>', accessToken);
     const isTokenExpire = isTokenExpired(this.oAuthService.getAccessTokenExpiration());
-    console.log('isTokenExpire New ----->>>>', isTokenExpire);
     let rememberMe = this.rememberMeService.get();
-    console.log('rememberMe New ----->>>>', rememberMe);
     if (accessToken && !rememberMe) {
       const rememberMeValue = this.rememberMeService.getFromToken(accessToken);
 
@@ -82,7 +78,6 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   protected listenToTokenReceived() {
-    console.log('listenToTokenReceived');
     if (isPlatformBrowser(this.platformId)) {
       this.oAuthService.events
         .pipe(
@@ -98,8 +93,6 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   navigateToLogin(queryParams?: Params) {
-    console.log('navigateToLogin');
-    console.log(isPlatformBrowser(this.platformId));
     if (isPlatformBrowser(this.platformId)) {
       let additionalState = '';
       if (queryParams?.returnUrl) {
@@ -112,7 +105,6 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   checkIfInternalAuth(queryParams?: Params) {
-    console.log('checkIfInternalAuth');
     if (isPlatformBrowser(this.platformId)) {
       this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
       return false;
@@ -129,8 +121,6 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
   }
 
   login(queryParams?: Params) {
-    console.log('login');
-    console.log(isPlatformBrowser(this.platformId));
     if (isPlatformBrowser(this.platformId)) {
       this.oAuthService.initCodeFlow('', this.getCultureParams(queryParams));
       return of(null);

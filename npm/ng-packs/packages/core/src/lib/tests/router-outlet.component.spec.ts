@@ -1,9 +1,9 @@
-import { Spectator, createComponentFactory, createHostFactory } from '@ngneat/spectator/jest';
+import { SpectatorHost, createHostFactory } from '@ngneat/spectator/jest';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RouterOutletComponent } from '../components/router-outlet.component';
 
 describe('RouterOutletComponent', () => {
-  let spectator: Spectator<RouterOutletComponent>;
+  let spectator: SpectatorHost<RouterOutletComponent>;
   const createHost = createHostFactory({
     component: RouterOutletComponent,
     imports: [RouterTestingModule],

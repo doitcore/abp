@@ -20,6 +20,7 @@ import { CONTEXT_STRATEGY } from '../strategies/context.strategy';
 describe('ComponentProjectionStrategy', () => {
   @Component({
     template: '<div class="foo">{{ bar || baz }}</div>',
+    standalone: true,
   })
   class TestComponent {
     bar: string;
@@ -28,6 +29,7 @@ describe('ComponentProjectionStrategy', () => {
 
   @Component({
     template: '<ng-container #container></ng-container>',
+    standalone: true,
   })
   class HostComponent {
     @ViewChild('container', { static: true, read: ViewContainerRef })
@@ -40,7 +42,7 @@ describe('ComponentProjectionStrategy', () => {
 
   const createComponent = createComponentFactory({
     component: HostComponent,
-    entryComponents: [TestComponent],
+    imports: [TestComponent],
   });
 
   beforeEach(() => {
@@ -49,7 +51,9 @@ describe('ComponentProjectionStrategy', () => {
   });
 
   afterEach(() => {
-    componentRef.destroy();
+    if (componentRef) {
+      componentRef.destroy();
+    }
     spectator.detectChanges();
   });
 
@@ -84,13 +88,14 @@ describe('ComponentProjectionStrategy', () => {
 describe('RootComponentProjectionStrategy', () => {
   @Component({
     template: '<div class="foo">{{ bar || baz }}</div>',
+    standalone: true,
   })
   class TestComponent {
     bar: string;
     baz = 'baz';
   }
 
-  @Component({ template: '' })
+  @Component({ template: '', standalone: true })
   class HostComponent {}
 
   let spectator: Spectator<HostComponent>;
@@ -98,7 +103,7 @@ describe('RootComponentProjectionStrategy', () => {
 
   const createComponent = createComponentFactory({
     component: HostComponent,
-    entryComponents: [TestComponent],
+    imports: [TestComponent],
   });
 
   beforeEach(() => {
@@ -106,7 +111,9 @@ describe('RootComponentProjectionStrategy', () => {
   });
 
   afterEach(() => {
-    componentRef.destroy();
+    if (componentRef) {
+      componentRef.destroy();
+    }
     spectator.detectChanges();
   });
 
@@ -144,6 +151,7 @@ describe('TemplateProjectionStrategy', () => {
       </ng-template>
       <ng-container #container></ng-container>
     `,
+    standalone: true,
   })
   class HostComponent {
     @ViewChild('container', { static: true, read: ViewContainerRef })
@@ -169,7 +177,9 @@ describe('TemplateProjectionStrategy', () => {
   });
 
   afterEach(() => {
-    embeddedViewRef.destroy();
+    if (embeddedViewRef) {
+      embeddedViewRef.destroy();
+    }
     spectator.detectChanges();
   });
 

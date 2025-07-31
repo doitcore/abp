@@ -8,12 +8,14 @@ import { ReplaceableComponentsService } from '../services/replaceable-components
 @Component({
   selector: 'abp-external-component',
   template: '<p>external</p>',
+  standalone: true,
 })
 export class ExternalComponent {}
 
 @Component({
   selector: 'abp-default-component',
   template: '<p>default</p>',
+  standalone: true,
 })
 export class DefaultComponent {}
 
@@ -38,8 +40,7 @@ describe('ReplaceableRouteContainerComponent', () => {
       { provide: ActivatedRoute, useValue: activatedRouteMock },
       { provide: ReplaceableComponentsService, useValue: { get$: () => get$Res } },
     ],
-    declarations: [ExternalComponent, DefaultComponent],
-    entryComponents: [DefaultComponent, ExternalComponent],
+    imports: [ExternalComponent, DefaultComponent],
     mocks: [Router],
   });
 

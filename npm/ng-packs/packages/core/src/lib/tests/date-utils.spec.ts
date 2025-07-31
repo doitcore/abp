@@ -1,3 +1,4 @@
+import { TestBed } from '@angular/core/testing';
 import { ConfigStateService } from '../services';
 import { getShortDateFormat, getShortDateShortTimeFormat, getShortTimeFormat } from '../utils';
 
@@ -15,7 +16,17 @@ describe('Date Utils', () => {
   let config: ConfigStateService;
 
   beforeEach(() => {
-    config = new ConfigStateService(null, null, null);
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: ConfigStateService,
+          useValue: {
+            getDeep: jest.fn(),
+          },
+        },
+      ],
+    });
+    config = TestBed.inject(ConfigStateService);
   });
 
   describe('#getShortDateFormat', () => {
@@ -36,6 +47,20 @@ describe('Date Utils', () => {
       expect(getShortTimeFormat(config)).toBe('h:mm a');
       expect(getDeepSpy).toHaveBeenCalledWith('localization.currentCulture.dateTimeFormat');
     });
+
+    test('should handle null shortTimePattern', () => {
+      const getDeepSpy = jest.spyOn(config, 'getDeep');
+      getDeepSpy.mockReturnValueOnce({ ...dateTimeFormat, shortTimePattern: null });
+
+      expect(getShortTimeFormat(config)).toBeUndefined();
+    });
+
+    test('should handle undefined shortTimePattern', () => {
+      const getDeepSpy = jest.spyOn(config, 'getDeep');
+      getDeepSpy.mockReturnValueOnce({ ...dateTimeFormat, shortTimePattern: undefined });
+
+      expect(getShortTimeFormat(config)).toBeUndefined();
+    });
   });
 
   describe('#getShortDateShortTimeFormat', () => {
@@ -45,6 +70,20 @@ describe('Date Utils', () => {
 
       expect(getShortDateShortTimeFormat(config)).toBe('M/d/yyyy h:mm a');
       expect(getDeepSpy).toHaveBeenCalledWith('localization.currentCulture.dateTimeFormat');
+    });
+
+    test('should handle null shortTimePattern', () => {
+      const getDeepSpy = jest.spyOn(config, 'getDeep');
+      getDeepSpy.mockReturnValueOnce({ ...dateTimeFormat, shortTimePattern: null });
+
+      expect(getShortDateShortTimeFormat(config)).toBe('M/d/yyyy undefined');
+    });
+
+    test('should handle undefined shortTimePattern', () => {
+      const getDeepSpy = jest.spyOn(config, 'getDeep');
+      getDeepSpy.mockReturnValueOnce({ ...dateTimeFormat, shortTimePattern: undefined });
+
+      expect(getShortDateShortTimeFormat(config)).toBe('M/d/yyyy undefined');
     });
   });
 });

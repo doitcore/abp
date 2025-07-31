@@ -13,19 +13,27 @@ import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NavigationEventKey, RouterEvents } from '../services/router-events.service';
 
+class MockRouterEvent extends RouterEvent { constructor(id: number) { super(id, ''); (this as any).id = id; } }
+class MockNavigationStart extends NavigationStart { constructor(id: number) { super(id, '', 'imperative'); (this as any).id = id; } }
+class MockResolveStart extends ResolveStart { constructor(id: number) { super(id, '', '', null); (this as any).id = id; } }
+class MockNavigationError extends NavigationError { constructor(id: number) { super(id, '', '', null); (this as any).id = id; } }
+class MockNavigationEnd extends NavigationEnd { constructor(id: number) { super(id, '', ''); (this as any).id = id; } }
+class MockResolveEnd extends ResolveEnd { constructor(id: number) { super(id, '', '', null); (this as any).id = id; } }
+class MockNavigationCancel extends NavigationCancel { constructor(id: number) { super(id, '', ''); (this as any).id = id; } }
+
 describe('RouterEvents', () => {
   let spectator: SpectatorService<RouterEvents>;
   let service: RouterEvents;
   const events = new Subject<RouterEvent>();
   const emitRouterEvents = () => {
-    events.next(new RouterEvent(0, null));
-    events.next(new NavigationStart(1, null, null));
-    events.next(new ResolveStart(2, null, null, null));
-    events.next(new RouterEvent(3, null));
-    events.next(new NavigationError(4, null, null));
-    events.next(new NavigationEnd(5, null, null));
-    events.next(new ResolveEnd(6, null, null, null));
-    events.next(new NavigationCancel(7, null, null));
+    events.next(new MockRouterEvent(0));
+    events.next(new MockNavigationStart(1));
+    events.next(new MockResolveStart(2));
+    events.next(new MockRouterEvent(3));
+    events.next(new MockNavigationError(4));
+    events.next(new MockNavigationEnd(5));
+    events.next(new MockResolveEnd(6));
+    events.next(new MockNavigationCancel(7));
   };
 
   const createService = createServiceFactory({
@@ -56,7 +64,7 @@ describe('RouterEvents', () => {
         const stream = service.getNavigationEvents(...filtered);
         const collected: number[] = [];
 
-        stream.pipe(take(2)).subscribe(event => collected.push(event.id));
+        stream.pipe(take(2)).subscribe(event => collected.push((event as any).id));
 
         emitRouterEvents();
 
@@ -70,7 +78,7 @@ describe('RouterEvents', () => {
       const stream = service.getAllNavigationEvents();
       const collected: number[] = [];
 
-      stream.pipe(take(4)).subscribe(event => collected.push(event.id));
+      stream.pipe(take(4)).subscribe(event => collected.push((event as any).id));
 
       emitRouterEvents();
 
@@ -83,7 +91,7 @@ describe('RouterEvents', () => {
       const stream = service.getEvents(ResolveEnd, ResolveStart);
       const collected: number[] = [];
 
-      stream.pipe(take(2)).subscribe(event => collected.push(event.id));
+      stream.pipe(take(2)).subscribe(event => collected.push((event as any).id));
 
       emitRouterEvents();
 
@@ -96,7 +104,7 @@ describe('RouterEvents', () => {
       const stream = service.getAllEvents();
       const collected: number[] = [];
 
-      stream.pipe(take(8)).subscribe((event: RouterEvent) => collected.push(event.id));
+      stream.pipe(take(8)).subscribe((event: any) => collected.push((event as any).id));
 
       emitRouterEvents();
 

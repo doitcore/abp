@@ -79,6 +79,7 @@ On that screen, you can decide on your database provider by selecting one of the
 Here, you can select the database management systems (DBMS){{ if DB == "EF" }} and the connection string{{ end }}. Then, click the *Next* button for additional *Multi-Tenancy* selection:
 
 ![abp-studio-no-layers-new-solution-dialog-multi-tenancy](images/abp-studio-no-layers-new-solution-dialog-multi-tenancy_dark.png)
+
 Here, you can enable or disable multi-tenancy for your solution. You can further configure the options or leave them as default and click the *Next* button for the *UI Theme* selection screen:
 
 ![abp-studio-new-solution-dialog-ui-theme](images/abp-studio-nolayers-new-solution-dialog-ui-theme_dark.png)

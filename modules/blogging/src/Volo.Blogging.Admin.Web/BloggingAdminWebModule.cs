@@ -2,7 +2,7 @@
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Http.ProxyScripting.Generators.JQuery;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
@@ -15,7 +15,7 @@ namespace Volo.Blogging.Admin
         typeof(BloggingAdminApplicationContractsModule),
         typeof(AbpAspNetCoreMvcUiBootstrapModule),
         typeof(AbpAspNetCoreMvcUiBundlingModule),
-        typeof(AbpAutoMapperModule)
+        typeof(AbpMapperlyModule)
     )]
     public class BloggingAdminWebModule : AbpModule
     {
@@ -42,12 +42,6 @@ namespace Volo.Blogging.Admin
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
                 options.FileSets.AddEmbedded<BloggingAdminWebModule>();
-            });
-
-            context.Services.AddAutoMapperObjectMapper<BloggingAdminWebModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddProfile<AbpBloggingAdminWebAutoMapperProfile>(validate: true);
             });
 
             Configure<DynamicJavaScriptProxyOptions>(options =>

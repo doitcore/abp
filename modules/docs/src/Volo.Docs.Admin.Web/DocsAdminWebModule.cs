@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Http.ProxyScripting.Generators.JQuery;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
@@ -40,12 +40,6 @@ namespace Volo.Docs.Admin
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
                 options.FileSets.AddEmbedded<DocsAdminWebModule>();
-            });
-
-            context.Services.AddAutoMapperObjectMapper<DocsAdminWebModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddProfile<DocsAdminWebAutoMapperProfile>(validate: true);
             });
 
             Configure<DynamicJavaScriptProxyOptions>(options =>

@@ -1,20 +1,49 @@
-﻿using AutoMapper;
+﻿using Riok.Mapperly.Abstractions;
 using Volo.Docs.Documents;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Docs.Common.Projects;
 using Volo.Docs.Projects;
 
-namespace Volo.Docs
+namespace Volo.Docs;
+
+[Mapper]
+public partial class DocumentResourceToDocumentResourceDtoMapper : MapperBase<DocumentResource, DocumentResourceDto>
 {
-    public class DocsApplicationAutoMapperProfile : Profile
-    {
-        public DocsApplicationAutoMapperProfile()
-        {
-            CreateMap<Project, ProjectDto>();
-            CreateMap<VersionInfo, VersionInfoDto>();
-            CreateMap<Document, DocumentWithDetailsDto>().Ignore(x => x.Project).Ignore(x => x.Contributors);
-            CreateMap<DocumentContributor, DocumentContributorDto>();
-            CreateMap<DocumentResource, DocumentResourceDto>();
-        }
-    }
+    public override partial DocumentResourceDto Map(DocumentResource source);
+
+    public override partial void Map(DocumentResource source, DocumentResourceDto destination);
+}
+
+[Mapper]
+public partial class DocumentContributorToDocumentContributorDtoMapper : MapperBase<DocumentContributor, DocumentContributorDto>
+{
+    public override partial DocumentContributorDto Map(DocumentContributor source);
+
+    public override partial void Map(DocumentContributor source, DocumentContributorDto destination);
+}
+
+[Mapper]
+public partial class VersionInfoToVersionInfoDtoMapper : MapperBase<VersionInfo, VersionInfoDto>
+{
+    public override partial VersionInfoDto Map(VersionInfo source);
+
+    public override partial void Map(VersionInfo source, VersionInfoDto destination);
+}
+
+[Mapper]
+public partial class ProjectToProjectDtoMapper : MapperBase<Project, ProjectDto>
+{
+    public override partial ProjectDto Map(Project source);
+
+    public override partial void Map(Project source, ProjectDto destination);
+}
+
+[Mapper]
+public partial class DocumentToDocumentWithDetailsDtoMapper : MapperBase<Document, DocumentWithDetailsDto>
+{
+    [MapperIgnoreTarget(nameof(DocumentWithDetailsDto.Project))]
+    [MapperIgnoreTarget(nameof(DocumentWithDetailsDto.Contributors))]
+    public override partial DocumentWithDetailsDto Map(Document source);
+
+    public override partial void Map(Document source, DocumentWithDetailsDto destination);
 }

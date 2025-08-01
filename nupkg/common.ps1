@@ -93,6 +93,8 @@ $solutions = (
 $projects = (
 
     # framework
+    "framework/src/Volo.Abp.AI.Abstractions",
+    "framework/src/Volo.Abp.AI",
     "framework/src/Volo.Abp.ApiVersioning.Abstractions",
     "framework/src/Volo.Abp.AspNetCore.Authentication.JwtBearer",
     "framework/src/Volo.Abp.AspNetCore.Authentication.OAuth",

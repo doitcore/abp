@@ -22,6 +22,8 @@ namespace Volo.Blogging
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddMapperlyObjectMapper<BloggingApplicationModule>();
+            
             Configure<AuthorizationOptions>(options =>
             {
                 //TODO: Rename UpdatePolicy/DeletePolicy since it's candidate to conflicts with other modules!

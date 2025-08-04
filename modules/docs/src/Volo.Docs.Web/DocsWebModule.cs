@@ -45,6 +45,8 @@ namespace Volo.Docs
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddMapperlyObjectMapper<DocsWebModule>();
+            
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
                 options.FileSets.AddEmbedded<DocsWebModule>();

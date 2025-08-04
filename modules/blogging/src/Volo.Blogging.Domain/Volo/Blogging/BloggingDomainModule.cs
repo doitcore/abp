@@ -21,6 +21,8 @@ namespace Volo.Blogging
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddMapperlyObjectMapper<BloggingDomainModule>();
+            
             Configure<AbpDistributedEntityEventOptions>(options =>
             {
                 options.EtoMappings.Add<Blog, BlogEto>(typeof(BloggingDomainModule));

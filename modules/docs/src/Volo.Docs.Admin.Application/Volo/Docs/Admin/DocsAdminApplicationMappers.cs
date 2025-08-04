@@ -45,6 +45,7 @@ public partial class DocumentToDocumentDtoMapper : MapperBase<Document, Document
     [MapperIgnoreTarget(nameof(DocumentDto.ProjectName))]
     public override partial DocumentDto Map(Document source);
 
+    [MapperIgnoreTarget(nameof(DocumentDto.ProjectName))]
     public override partial void Map(Document source, DocumentDto destination);
 }
 

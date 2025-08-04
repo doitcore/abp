@@ -19,6 +19,9 @@ namespace Volo.Docs.Admin
     )]
     public class DocsAdminApplicationModule : AbpModule
     {
-        
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            context.Services.AddMapperlyObjectMapper<DocsAdminApplicationModule>();
+        }
     }
 }

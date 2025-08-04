@@ -18,5 +18,9 @@ namespace Volo.Blogging.Admin
         )]
     public class BloggingAdminApplicationModule : AbpModule
     {
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            context.Services.AddMapperlyObjectMapper<BloggingAdminApplicationModule>();
+        }
     }
 }

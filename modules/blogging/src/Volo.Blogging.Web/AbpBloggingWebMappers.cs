@@ -11,6 +11,7 @@ public partial class PostWithDetailsDtoToEditPostViewModelMapper : MapperBase<Po
     [MapperIgnoreTarget(nameof(EditPostViewModel.Tags))]
     public override partial EditPostViewModel Map(PostWithDetailsDto source);
 
+    [MapperIgnoreTarget(nameof(EditPostViewModel.Tags))]
     public override partial void Map(PostWithDetailsDto source, EditPostViewModel destination);
 }
 

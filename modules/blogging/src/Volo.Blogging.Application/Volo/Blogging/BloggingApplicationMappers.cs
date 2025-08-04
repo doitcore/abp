@@ -25,6 +25,15 @@ public partial class PostCacheItemToPostWithDetailsDtoMapper : MapperBase<PostCa
     [MapperIgnoreTarget(nameof(PostWithDetailsDto.Tags))]
     public override partial PostWithDetailsDto Map(PostCacheItem source);
 
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.LastModificationTime))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.LastModifierId))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.IsDeleted))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.DeletionTime))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.DeleterId))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.ConcurrencyStamp))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.Writer))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.CommentCount))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.Tags))]
     public override partial void Map(PostCacheItem source, PostWithDetailsDto destination);
 }
     
@@ -35,6 +44,8 @@ public partial class PostToPostCacheItemMapper : MapperBase<Post, PostCacheItem>
     [MapperIgnoreTarget(nameof(PostCacheItem.Tags))]
     public override partial PostCacheItem Map(Post source);
 
+    [MapperIgnoreTarget(nameof(PostCacheItem.CommentCount))]
+    [MapperIgnoreTarget(nameof(PostCacheItem.Tags))]
     public override partial void Map(Post source, PostCacheItem destination);
 }
     
@@ -44,6 +55,7 @@ public partial class CommentToCommentWithDetailsDtoMapper : MapperBase<Comment, 
     [MapperIgnoreTarget(nameof(CommentWithDetailsDto.Writer))]
     public override partial CommentWithDetailsDto Map(Comment source);
 
+    [MapperIgnoreTarget(nameof(CommentWithDetailsDto.Writer))]
     public override partial void Map(Comment source, CommentWithDetailsDto destination);
 }
     
@@ -55,6 +67,9 @@ public partial class PostToPostWithDetailsDtoMapper : MapperBase<Post, PostWithD
     [MapperIgnoreTarget(nameof(PostWithDetailsDto.Writer))]
     public override partial PostWithDetailsDto Map(Post source);
 
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.Tags))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.CommentCount))]
+    [MapperIgnoreTarget(nameof(PostWithDetailsDto.Writer))]
     public override partial void Map(Post source, PostWithDetailsDto destination);
 }
     

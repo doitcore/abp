@@ -13,4 +13,8 @@ namespace Volo.Docs.Common;
 )]
 public class DocsCommonApplicationModule : AbpModule
 {
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddMapperlyObjectMapper<DocsCommonApplicationModule>();
+    }
 }

@@ -32,13 +32,18 @@ public partial class ProjectDtoToEditGithubProjectViewModelMapper : MapperBase<P
     [MapperIgnoreTarget(nameof(EditModel.EditGithubProjectViewModel.VersionBranchPrefix))]
     public override partial EditModel.EditGithubProjectViewModel Map(ProjectDto source);
 
+    [MapperIgnoreTarget(nameof(EditModel.EditGithubProjectViewModel.GitHubAccessToken))]
+    [MapperIgnoreTarget(nameof(EditModel.EditGithubProjectViewModel.GitHubRootUrl))]
+    [MapperIgnoreTarget(nameof(EditModel.EditGithubProjectViewModel.GitHubUserAgent))]
+    [MapperIgnoreTarget(nameof(EditModel.EditGithubProjectViewModel.GithubVersionProviderSource))]
+    [MapperIgnoreTarget(nameof(EditModel.EditGithubProjectViewModel.VersionBranchPrefix))]
     public override partial void Map(ProjectDto source, EditModel.EditGithubProjectViewModel destination);
 }
 
 [Mapper]
+[MapExtraProperties]
 public partial class CreateGithubProjectViewModelToCreateProjectDtoMapper : MapperBase<CreateModel.CreateGithubProjectViewModel, CreateProjectDto>
 {
-    [MapperIgnoreTarget(nameof(CreateProjectDto.ExtraProperties))]
     public override partial CreateProjectDto Map(CreateModel.CreateGithubProjectViewModel source);
 
     public override partial void Map(CreateModel.CreateGithubProjectViewModel source, CreateProjectDto destination);
@@ -46,9 +51,9 @@ public partial class CreateGithubProjectViewModelToCreateProjectDtoMapper : Mapp
 
 
 [Mapper]
+[MapExtraProperties]
 public partial class EditGithubProjectViewModelToUpdateProjectDtoMyClassMapper : MapperBase<EditModel.EditGithubProjectViewModel, UpdateProjectDto>
 {
-    [MapperIgnoreTarget(nameof(UpdateProjectDto.ExtraProperties))]
     public override partial UpdateProjectDto Map(EditModel.EditGithubProjectViewModel source);
 
     public override partial void Map(EditModel.EditGithubProjectViewModel source, UpdateProjectDto destination);

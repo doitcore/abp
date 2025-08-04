@@ -35,6 +35,8 @@ namespace Volo.Docs
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddMapperlyObjectMapper<DocsDomainModule>();
+            
             Configure<AbpDistributedEntityEventOptions>(options =>
             {
                 options.EtoMappings.Add<Document, DocumentEto>(typeof(DocsDomainModule));

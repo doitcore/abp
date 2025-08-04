@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp.Application;
 using Volo.Abp.Mapperly;
 using Volo.Abp.Caching;
@@ -20,6 +21,8 @@ namespace Volo.Docs
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddMapperlyObjectMapper<DocsApplicationModule>();
+            
             context.Services.TryAddSingleton<INavigationTreePostProcessor>(NullNavigationTreePostProcessor.Instance);
         }
     }

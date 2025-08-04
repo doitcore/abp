@@ -34,6 +34,8 @@ namespace Volo.Blogging.Admin
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddMapperlyObjectMapper<BloggingAdminWebModule>();
+            
             Configure<AbpNavigationOptions>(options =>
             {
                 options.MenuContributors.Add(new BloggingAdminMenuContributor());

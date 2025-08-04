@@ -2,7 +2,7 @@
 
 public static class ActivityPropertyNames
 {
-     public const string SessionId = "SessionId";
+    public const string SessionId = "SessionId";
     public const string ActivityName = "ActivityName";
     public const string Error = "Error";
     public const string ErrorDetail = "ErrorDetail";

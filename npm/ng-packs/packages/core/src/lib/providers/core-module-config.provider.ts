@@ -1,4 +1,4 @@
-import { makeEnvironmentProviders, Provider, inject, provideAppInitializer } from '@angular/core';
+import { makeEnvironmentProviders, Provider, provideAppInitializer, inject } from '@angular/core';
 import { TitleStrategy } from '@angular/router';
 import {
   HTTP_INTERCEPTORS,
@@ -23,7 +23,7 @@ import { ABP, SortableItem } from '../models';
 import { AuthErrorFilterService } from '../abstracts';
 import { DEFAULT_DYNAMIC_LAYOUTS } from '../constants';
 import { LocalizationService, LocalStorageListenerService, AbpTitleStrategy } from '../services';
-import { DefaultQueueManager, getInitialData, localeInitializer } from '../utils';
+import { DefaultQueueManager, getInitialData } from '../utils';
 import { CookieLanguageProvider, IncludeLocalizationResourcesProvider, LocaleProvider } from './';
 import { TimezoneInterceptor } from '../interceptors';
 
@@ -106,14 +106,12 @@ export function provideAbpCore(...features: CoreFeature<CoreFeatureKind>[]) {
         headerName: 'RequestVerificationToken',
       }),
     ),
-    provideAppInitializer(() => {
-      getInitialData();
-      localeInitializer();
+    provideAppInitializer(async () => {
       inject(LocalizationService);
       inject(LocalStorageListenerService);
       inject(RoutesHandler);
+      await getInitialData();
     }),
-
     LocaleProvider,
     CookieLanguageProvider,
     {

@@ -15,7 +15,7 @@ namespace Volo.Blogging.Tagging
 
         public virtual int UsageCount { get; protected internal set; }
 
-        public Tag()
+        protected Tag()
         {
 
         }

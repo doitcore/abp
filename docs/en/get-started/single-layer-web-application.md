@@ -51,7 +51,6 @@ Once your configuration is done, click the *Next* button to navigate to the *UI 
 ![abp-studio-new-solution-dialog-ui-framework-blazor-wasm](images/abp-studio-no-layers-new-solution-dialog-ui-framework-blazor-wasm_dark.png)
 {{ else if UI == "BlazorServer" }}
 ![abp-studio-new-solution-dialog-ui-framework-blazor-server](images/abp-studio-no-layers-new-solution-dialog-ui-framework-blazor-server_dark.png)
-![alt text](image.png)
 {{ else if UI == "BlazorWebApp" }}
 ![abp-studio-new-solution-dialog-ui-framework-blazor-webapp](images/abp-studio-no-layers-new-solution-dialog-ui-framework-blazor-webapp_dark.png)
 {{ else if UI == "NG" }}
@@ -87,8 +86,6 @@ Here, you can enable or disable multi-tenancy for your solution. You can further
 LeptonX is the suggested UI theme that is proper for production usage. Select one of the themes, configure the additional options, and click the *Next* button for the *Optional Modules* selection:
 
 Then, you can select optional modules according to your preferences.
-
-![alt text](image.png)
 
 ![abp-studio-no-layers-new-solution-additional-options](images/abp-studio-no-layers-new-solution-optional-modules_dark.png)
 

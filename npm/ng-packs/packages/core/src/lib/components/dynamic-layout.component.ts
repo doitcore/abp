@@ -13,6 +13,7 @@ import { TreeNode } from '../utils/tree-utils';
 import { DYNAMIC_LAYOUTS_TOKEN } from '../tokens/dynamic-layout.token';
 import { EnvironmentService } from '../services';
 import { NgComponentOutlet } from '@angular/common';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'abp-dynamic-layout',
@@ -24,7 +25,7 @@ import { NgComponentOutlet } from '@angular/common';
   providers: [SubscriptionService],
   imports: [NgComponentOutlet],
 })
-export class DynamicLayoutComponent implements OnInit {
+export class DynamicLayoutComponent {
   layout?: Type<any>;
   layoutKey?: eLayoutType;
   readonly layouts = inject(DYNAMIC_LAYOUTS_TOKEN);
@@ -48,17 +49,7 @@ export class DynamicLayoutComponent implements OnInit {
     }
     this.checkLayoutOnNavigationEnd();
     this.listenToLanguageChange();
-  }
-
-  ngOnInit(): void {
-    if (this.layout) {
-      return;
-    }
-
-    const { oAuthConfig } = this.environment.getEnvironment();
-    if (oAuthConfig.responseType === 'code') {
-      this.getLayout();
-    }
+    this.listenToEnvironmentChange();
   }
 
   private checkLayoutOnNavigationEnd() {
@@ -119,5 +110,20 @@ export class DynamicLayoutComponent implements OnInit {
 
   private getComponent(key: string): ReplaceableComponents.ReplaceableComponent | undefined {
     return this.replaceableComponents.get(key);
+  }
+
+  private listenToEnvironmentChange() {
+    this.environment
+      .createOnUpdateStream(x => x.oAuthConfig)
+      .pipe(
+        take(1),
+        filter(config => config.responseType === 'code'),
+      )
+      .subscribe(() => {
+        if (this.layout) {
+          return;
+        }
+        this.getLayout();
+      });
   }
 }

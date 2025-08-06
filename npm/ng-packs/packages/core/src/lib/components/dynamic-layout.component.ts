@@ -1,4 +1,4 @@
-import { Component, inject, isDevMode, OnInit, Type } from '@angular/core';
+import { Component, inject, isDevMode, Type } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { eLayoutType } from '../enums/common';
 import { ABP } from '../models';

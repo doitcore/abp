@@ -14,7 +14,7 @@ Add theme-specific styles into the `styles` array of the file. Check the [Theme 
 
 
 ```ts
-import { provideThemeLeptonX, withThemeLeptonXOptions } from '@volosoft/abp.ng.theme.lepton-x';
+import { provideThemeLeptonX } from '@volosoft/abp.ng.theme.lepton-x';
 import { provideSideMenuLayout } from '@volosoft/abp.ng.theme.lepton-x/layouts';
 // import { provideThemeLepton } from '@volo/abp.ng.theme.lepton'; 
 
@@ -22,19 +22,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     // provideThemeLepton() delete this
     provideSideMenuLayout(), // depends on which layout you choose
-    provideThemeLeptonX(
-      withThemeLeptonXOptions({
-        styleFactory: styles => {
-          return styles;
-        },
-        themeOptions: {
-          localStorageKey: 'lpx-theme',
-          styleFactory: styles => {
-            return styles;
-          },
-        },
-      })
-    ),
+    provideThemeLeptonX(),
   ],
 };
 ```
@@ -42,25 +30,13 @@ export const appConfig: ApplicationConfig = {
 If you want to use the **`Top Menu`** instead of the **`Side Menu`**, add `provideTopMenuLayout` as below,and [this style imports](https://docs.abp.io/en/abp/7.4/UI/Angular/Theme-Configurations#lepton-x-commercial)
 
 ```ts
-import { provideThemeLeptonX, withThemeLeptonXOptions } from '@volosoft/abp.ng.theme.lepton-x';
+import { provideThemeLeptonX } from '@volosoft/abp.ng.theme.lepton-x';
 import { provideTopMenuLayout } from '@volosoft/abp.ng.theme.lepton-x/layouts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideTopMenuLayout(),
-    provideThemeLeptonX(
-      withThemeLeptonXOptions({
-        styleFactory: styles => {
-          return styles;
-        },
-        themeOptions: {
-          localStorageKey: 'lpx-theme',
-          styleFactory: styles => {
-            return styles;
-          },
-        },
-      })
-    ),
+    provideThemeLeptonX(),
   ],
 };
 ```

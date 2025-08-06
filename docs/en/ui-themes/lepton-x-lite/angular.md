@@ -34,20 +34,14 @@ Look at the [Theme Configurations](../../framework/ui/angular/theme-configuratio
 - Finally, remove `provideThemeBasicConfig` from `app.config.ts`, and import the related providers in `app.config.ts`
 
 ```js
-import { provideThemeLeptonX, withThemeLeptonXOptions } from "@abp/ng.theme.lepton-x";
+import { provideThemeLeptonX } from "@abp/ng.theme.lepton-x";
 import { provideSideMenuLayout } from "@abp/ng.theme.lepton-x/layouts";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     // ...
     provideSideMenuLayout(),
-    provideThemeLeptonX(
-      withThemeLeptonXOptions({
-        styleFactory: (styles) => {
-          return styles;
-        },
-      })
-    ),
+    provideThemeLeptonX(),
   ],
 };
 ```

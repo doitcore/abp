@@ -12,15 +12,6 @@ export const appConfig: ApplicationConfig = {
     // ...
     provideThemeLeptonX(
       withThemeLeptonXOptions({
-        styleFactory: styles => {
-          return styles;
-        },
-        themeOptions: {
-          localStorageKey: 'lpx-theme',
-          styleFactory: styles => {
-            return styles;
-          },
-        },
         defaultTheme: 'light'
       })
     ),
@@ -28,7 +19,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-In the example above, we've imported the `provideThemeLeptonX` and `withThemeLeptonXOptions`, then configured it using the option parameters. By providing the `defaultTheme` parameter and setting its value to 'light',
+In the example above, we've imported the `provideThemeLeptonX` and `withThemeLeptonXOptions`, then configured it using the option parameters. By providing the `defaultTheme` parameter and setting its value to 'light'.
 
 If you delete the defaultTheme parameter in the configuration object, the LeptonX theme will use the default value of "System" as the default theme appearance.
 

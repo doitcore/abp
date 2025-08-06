@@ -4,7 +4,6 @@ import { Tree, readProjectConfiguration } from '@nx/devkit';
 import { changeThemeGenerator } from './generator';
 import { ChangeThemeGeneratorSchema } from './schema';
 
-// Mock the wrapAngularDevkitSchematic function
 jest.mock('@nx/devkit/ngcli-adapter', () => ({
   wrapAngularDevkitSchematic: jest.fn(() => jest.fn()),
 }));

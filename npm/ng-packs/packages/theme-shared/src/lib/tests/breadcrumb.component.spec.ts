@@ -4,18 +4,26 @@ import {
   LocalizationPipe,
   RouterOutletComponent,
   RoutesService,
+  LocalizationService,
 } from '@abp/ng.core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { createRoutingFactory, SpectatorRouting } from '@ngneat/spectator/jest';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { mockRoutesService } from '../../../../core/src/lib/tests/routes.service.spec';
 import { BreadcrumbComponent, BreadcrumbItemsComponent } from '../components';
+import { OTHERS_GROUP } from '@abp/ng.core';
+import { SORT_COMPARE_FUNC } from '@abp/ng.core';
 
 const mockRoutes: ABP.Route[] = [
   { name: 'Identity', path: '/identity' },
   { name: 'Users', path: '/identity/users', parentName: 'Identity' },
 ];
+
+// Simple compare function that doesn't use inject()
+const simpleCompareFunc = (a: any, b: any) => {
+  const aNumber = a.order || 0;
+  const bNumber = b.order || 0;
+  return aNumber - bNumber;
+};
 
 describe('BreadcrumbComponent', () => {
   let spectator: SpectatorRouting<RouterOutletComponent>;
@@ -27,10 +35,27 @@ describe('BreadcrumbComponent', () => {
     detectChanges: false,
     mocks: [HttpClient],
     providers: [
-      { provide: CORE_OPTIONS, useValue: {} },
+      { 
+        provide: CORE_OPTIONS, 
+        useValue: {
+          environment: {
+            apis: {
+              default: {
+                url: 'http://localhost:4200',
+              },
+            },
+          },
+        } 
+      },
+      RoutesService,
+      LocalizationService,
       {
-        provide: RoutesService,
-        useFactory: () => mockRoutesService(),
+        provide: OTHERS_GROUP,
+        useValue: 'AbpUi::OthersGroup',
+      },
+      {
+        provide: SORT_COMPARE_FUNC,
+        useValue: simpleCompareFunc,
       },
     ],
     declarations: [],

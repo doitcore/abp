@@ -41,7 +41,7 @@ export class DynamicLayoutComponent {
   protected readonly environment = inject(EnvironmentService);
 
   constructor() {
-    const dynamicLayoutComponent = inject(DynamicLayoutComponent, { optional: true, skipSelf: true })!;
+    const dynamicLayoutComponent = inject(DynamicLayoutComponent, { optional: true, skipSelf: true });
 
     if (dynamicLayoutComponent) {
       if (isDevMode()) console.warn('DynamicLayoutComponent must be used only in AppComponent.');

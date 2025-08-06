@@ -178,7 +178,9 @@ public class TelemetryActivityStorage : ITelemetryActivityStorage, ISingletonDep
 
             var json = Cryptography.Decrypt(fileContent);
 
-            return JsonSerializer.Deserialize<TelemetryActivityStorageState>(json, JsonSerializerOptions)!;
+            var state = JsonSerializer.Deserialize<TelemetryActivityStorageState>(json, JsonSerializerOptions)!;
+            state.Activities = state.Activities.Where(x => x != null).ToList();
+            return state;
         }
         catch
         {

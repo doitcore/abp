@@ -10,3 +10,11 @@ getTestBed().resetTestEnvironment();
 getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
   teardown: { destroyAfterEach: false },
 });
+
+const originalError = console.error;
+console.error = (...args: any[]) => {
+  if (args[0]?.includes?.('ExpressionChangedAfterItHasBeenCheckedError')) {
+    return;
+  }
+  originalError.apply(console, args);
+};

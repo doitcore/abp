@@ -66,7 +66,7 @@ describe('ValidationUtils', () => {
       const capitalValidator = validatePassword('capital');
       const specialValidator = validatePassword('special');
 
-      expect(numberValidator({ value: 'abc123' } as any)).toBeNull();
+        expect(numberValidator({ value: 'abc123' } as any)).toBeNull();
       expect(smallValidator({ value: 'abc123' } as any)).toBeNull();
       expect(capitalValidator({ value: 'ABC123' } as any)).toBeNull();
       expect(specialValidator({ value: 'abc@123' } as any)).toBeNull();

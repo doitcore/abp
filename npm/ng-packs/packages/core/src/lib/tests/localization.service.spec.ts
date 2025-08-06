@@ -1,284 +1,282 @@
-import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { LocalizationService } from '../services/localization.service';
+import { Injector } from '@angular/core';
+import { Router } from '@angular/router';
+import { createServiceFactory, SpectatorService, SpyObject } from '@ngneat/spectator/jest';
+import { BehaviorSubject } from 'rxjs';
+import { AbpApplicationConfigurationService } from '../proxy/volo/abp/asp-net-core/mvc/application-configurations/abp-application-configuration.service';
 import { ConfigStateService } from '../services/config-state.service';
 import { SessionStateService } from '../services/session-state.service';
+import { LocalizationService } from '../services/localization.service';
 import { CORE_OPTIONS } from '../tokens/options.token';
-import { ABP } from '../models/common';
+import { CONFIG_STATE_DATA } from './config-state.service.spec';
+import { AbpApplicationLocalizationService } from '../proxy/volo/abp/asp-net-core/mvc/application-configurations/abp-application-localization.service';
+import { APPLICATION_LOCALIZATION_DATA } from './application-localization.service.spec';
+import { IncludeLocalizationResourcesProvider } from '../providers';
+
+const appConfigData$ = new BehaviorSubject(CONFIG_STATE_DATA);
+const appLocalizationData$ = new BehaviorSubject(APPLICATION_LOCALIZATION_DATA);
 
 describe('LocalizationService', () => {
+  let spectator: SpectatorService<LocalizationService>;
+  let sessionState: SpyObject<SessionStateService>;
+  let configState: SpyObject<ConfigStateService>;
   let service: LocalizationService;
-  let sessionState: SessionStateService;
-  let configState: ConfigStateService;
 
-  const mockLocalizationData = {
-    defaultResourceName: 'MyProjectName',
-    values: {
-      MyProjectName: {
-        'Welcome': 'Welcome',
-        'Hello {0}': 'Hello {0}',
+  const createService = createServiceFactory({
+    service: LocalizationService,
+    entryComponents: [],
+    mocks: [Router],
+    providers: [
+      IncludeLocalizationResourcesProvider,
+      {
+        provide: CORE_OPTIONS,
+        useValue: { registerLocaleFn: () => Promise.resolve(), cultureNameLocaleFileMap: {} },
       },
-      AbpIdentity: {
-        'Identity': 'Identity',
-        'User': 'User',
+      {
+        provide: AbpApplicationConfigurationService,
+        useValue: { get: () => appConfigData$ },
       },
-    },
-  };
-
-  const mockLocalizationsMap = new Map<string, Record<string, string>>();
-  mockLocalizationsMap.set('AbpIdentity', { 'Identity': 'Identity', 'User': 'User' });
-  mockLocalizationsMap.set('MyProjectName', { 'Welcome': 'Welcome', 'Hello {0}': 'Hello {0}' });
+      {
+        provide: AbpApplicationLocalizationService,
+        useValue: { get: () => appLocalizationData$ },
+      },
+    ],
+  });
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        LocalizationService,
-        {
-          provide: CORE_OPTIONS,
-          useValue: { 
-            registerLocaleFn: () => Promise.resolve(), 
-            cultureNameLocaleFileMap: {} 
-          },
-        },
-        {
-          provide: ConfigStateService,
-          useValue: {
-            refreshAppState: jest.fn(),
-            getDeep: jest.fn().mockReturnValue({
-              localization: {
-                currentCulture: { cultureName: 'tr' },
-                defaultResourceName: 'MyProjectName',
-                values: mockLocalizationData.values,
-              },
-            }),
-            getDeep$: jest.fn().mockReturnValue(of({
-              localization: {
-                currentCulture: { cultureName: 'tr' },
-                defaultResourceName: 'MyProjectName',
-                values: mockLocalizationData.values,
-              },
-            })),
-            getOne: jest.fn().mockReturnValue(mockLocalizationData),
-            getOne$: jest.fn().mockReturnValue(of(mockLocalizationData)),
-            getAll: jest.fn().mockReturnValue({
-              localization: mockLocalizationData,
-            }),
-            getAll$: jest.fn().mockReturnValue(of({
-              localization: mockLocalizationData,
-            })),
-            refreshLocalization: jest.fn().mockReturnValue(of({})),
-          },
-        },
-        {
-          provide: SessionStateService,
-          useValue: {
-            setLanguage: jest.fn(),
-            setTenant: jest.fn(),
-            setInitialLanguage: jest.fn(),
-            getLanguage: jest.fn().mockReturnValue('tr'),
-            getTenant: jest.fn().mockReturnValue(null),
-            getInitialLanguage: jest.fn().mockReturnValue('tr'),
-            onLanguageChange$: jest.fn().mockReturnValue(of('tr')),
-            getLanguage$: jest.fn().mockReturnValue(of('tr')),
-          },
-        },
-      ],
-    });
-    service = TestBed.inject(LocalizationService);
-    sessionState = TestBed.inject(SessionStateService);
-    configState = TestBed.inject(ConfigStateService);
+    spectator = createService();
+    sessionState = spectator.inject(SessionStateService);
+    configState = spectator.inject(ConfigStateService);
+    service = spectator.service;
 
-    (service as any).localizations$.next(mockLocalizationsMap);
+    configState.refreshAppState();
+    sessionState.setLanguage('tr');
+    appConfigData$.next(CONFIG_STATE_DATA);
   });
 
   describe('#currentLang', () => {
-    it('should return current language', () => {
-      expect(service.currentLang).toBe('tr');
-    });
-
-    it('should return observable of current language', (done) => {
-      service.currentLang$.subscribe(lang => {
-        expect(lang).toBe('tr');
+    it('should be tr', done => {
+      setTimeout(() => {
+        expect(service.currentLang).toBe('tr');
         done();
-      });
-    });
-  });
-
-  describe('#languageChange$', () => {
-    it('should emit language changes', (done) => {
-      service.languageChange$.subscribe(lang => {
-        expect(lang).toBe('tr');
-        done();
-      });
-      
-      (service as any)._languageChange$.next('tr');
+      }, 0);
     });
   });
 
   describe('#get', () => {
-    it('should return observable localization for valid key', (done) => {
-      service.get('AbpIdentity::Identity').subscribe(result => {
-        expect(result).toBe('Identity');
-        done();
-      });
-    });
-
-    it('should return key when localization not found', (done) => {
-      service.get('AbpIdentity::NonExistent').subscribe(result => {
-        expect(result).toBe('NonExistent');
-        done();
-      });
-    });
-
-    it('should handle interpolation', (done) => {
-      service.get('MyProjectName::Hello {0}', 'John').subscribe(result => {
-        expect(result).toBe('Hello John');
+    it('should be return an observable localization', done => {
+      service.get('AbpIdentity::Identity').subscribe(localization => {
+        expect(localization).toBe(CONFIG_STATE_DATA.localization.values.AbpIdentity.Identity);
         done();
       });
     });
   });
 
   describe('#instant', () => {
-    it('should return localization for valid key', () => {
-      const result = service.instant('AbpIdentity::Identity');
-      expect(result).toBe('Identity');
-    });
+    it('should be return a localization', () => {
+      const localization = service.instant('AbpIdentity::Identity');
 
-    it('should return key when localization not found', () => {
-      const result = service.instant('AbpIdentity::NonExistent');
-      expect(result).toBe('NonExistent');
-    });
-
-    it('should handle interpolation', () => {
-      const result = service.instant('MyProjectName::Hello {0}', 'John');
-      expect(result).toBe('Hello John');
-    });
-  });
-
-  describe('#localize', () => {
-    it('should return observable localization for valid resource and key', (done) => {
-      service.localize('AbpIdentity', 'Identity', 'Default').subscribe(result => {
-        expect(result).toBe('Identity');
-        done();
-      });
-    });
-
-    it('should return default value when key not found', (done) => {
-      service.localize('AbpIdentity', 'NonExistent', 'Default').subscribe(result => {
-        expect(result).toBe('Default');
-        done();
-      });
-    });
-
-    it('should return default value when resource not found', (done) => {
-      service.localize('NonExistent', 'Identity', 'Default').subscribe(result => {
-        expect(result).toBe('Default');
-        done();
-      });
-    });
-  });
-
-  describe('#localizeSync', () => {
-    it('should return localization for valid resource and key', () => {
-      const result = service.localizeSync('AbpIdentity', 'Identity', 'Default');
-      expect(result).toBe('Identity');
-    });
-
-    it('should return default value when key not found', () => {
-      const result = service.localizeSync('AbpIdentity', 'NonExistent', 'Default');
-      expect(result).toBe('Default');
-    });
-
-    it('should return default value when resource not found', () => {
-      const result = service.localizeSync('NonExistent', 'Identity', 'Default');
-      expect(result).toBe('Default');
-    });
-  });
-
-  describe('#localizeWithFallback', () => {
-    it('should return observable localization from first available resource', (done) => {
-      service.localizeWithFallback(['AbpIdentity', 'MyProjectName'], ['Identity'], 'Default').subscribe(result => {
-        expect(result).toBe('Identity');
-        done();
-      });
-    });
-
-    it('should return default value when no resource has the key', (done) => {
-      service.localizeWithFallback(['AbpIdentity', 'MyProjectName'], ['NonExistent'], 'Default').subscribe(result => {
-        expect(result).toBe('Default');
-        done();
-      });
-    });
-  });
-
-  describe('#localizeWithFallbackSync', () => {
-    it('should return localization from first available resource', () => {
-      const result = service.localizeWithFallbackSync(['AbpIdentity', 'MyProjectName'], ['Identity'], 'Default');
-      expect(result).toBe('Identity');
-    });
-
-    it('should return default value when no resource has the key', () => {
-      const result = service.localizeWithFallbackSync(['AbpIdentity', 'MyProjectName'], ['NonExistent'], 'Default');
-      expect(result).toBe('Default');
-    });
-  });
-
-  describe('#getResource', () => {
-    it('should return resource for valid resource name', () => {
-      const resource = service.getResource('AbpIdentity');
-      expect(resource).toBeDefined();
-      expect(resource?.['Identity']).toBe('Identity');
-    });
-
-    it('should return undefined for non-existent resource', () => {
-      const resource = service.getResource('NonExistent');
-      expect(resource).toBeUndefined();
-    });
-  });
-
-  describe('#getResource$', () => {
-    it('should return observable resource for valid resource name', (done) => {
-      service.getResource$('AbpIdentity').subscribe(resource => {
-        expect(resource).toBeDefined();
-        expect(resource?.['Identity']).toBe('Identity');
-        done();
-      });
-    });
-
-    it('should return observable undefined for non-existent resource', (done) => {
-      service.getResource$('NonExistent').subscribe(resource => {
-        expect(resource).toBeUndefined();
-        done();
-      });
-    });
-  });
-
-  describe('#addLocalization', () => {
-    it('should add localization data', () => {
-      const localizations: ABP.Localization[] = [
-        {
-          culture: 'en',
-          resources: [
-            {
-              resourceName: 'TestResource',
-              texts: {
-                'TestKey': 'TestValue',
-              },
-            },
-          ],
-        },
-      ];
-
-      service.addLocalization(localizations);
-      
-      expect(() => service.addLocalization(localizations)).not.toThrow();
+      expect(localization).toBe(CONFIG_STATE_DATA.localization.values.AbpIdentity.Identity);
     });
   });
 
   describe('#registerLocale', () => {
-    it('should register locale successfully', async () => {
-      const result = await service.registerLocale('en');
-      expect(result).toBeUndefined();
+    it('should throw an error message when service have an otherInstance', async () => {
+      try {
+        const instance = new LocalizationService(
+          sessionState,
+          spectator.inject(Injector),
+          null,
+          configState,
+        );
+      } catch (error) {
+        expect((error as Error).message).toBe('LocalizationService should have only one instance.');
+      }
+    });
+  });
+
+  describe('#localize', () => {
+    test.each`
+      resource     | key          | defaultValue | expected
+      ${'_'}       | ${'TEST'}    | ${'DEFAULT'} | ${'TEST'}
+      ${'foo'}     | ${'bar'}     | ${'DEFAULT'} | ${'baz'}
+      ${'x'}       | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'a'}       | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'foo'}     | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'x'}       | ${'y'}       | ${'DEFAULT'} | ${'z'}
+      ${'a'}       | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'foo'}     | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'x'}       | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'a'}       | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'foo'}     | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'x'}       | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'a'}       | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+    `(
+      'should return observable $expected when resource name is $resource and key is $key',
+      async ({ resource, key, defaultValue, expected }) => {
+        appConfigData$.next({
+          localization: {
+            values: { foo: { bar: 'baz' }, x: { y: 'z' } },
+            defaultResourceName: 'x',
+          },
+        } as any);
+        configState.refreshAppState();
+
+        service.localize(resource, key, defaultValue).subscribe(result => {
+          expect(result).toBe(expected);
+        });
+      },
+    );
+  });
+
+  describe('#localizeSync', () => {
+    test.each`
+      resource     | key          | defaultValue | expected
+      ${'_'}       | ${'TEST'}    | ${'DEFAULT'} | ${'TEST'}
+      ${'foo'}     | ${'bar'}     | ${'DEFAULT'} | ${'baz'}
+      ${'x'}       | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'a'}       | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${'bar'}     | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'foo'}     | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'x'}       | ${'y'}       | ${'DEFAULT'} | ${'z'}
+      ${'a'}       | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${'y'}       | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'foo'}     | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'x'}       | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'a'}       | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${''}        | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'foo'}     | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'x'}       | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${'a'}       | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${''}        | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+      ${undefined} | ${undefined} | ${'DEFAULT'} | ${'DEFAULT'}
+    `(
+      'should return $expected when resource name is $resource and key is $key',
+      ({ resource, key, defaultValue, expected }) => {
+        appConfigData$.next({
+          localization: {
+            values: { foo: { bar: 'baz' }, x: { y: 'z' } },
+            defaultResourceName: 'x',
+          },
+        } as any);
+        configState.refreshAppState();
+
+        const result = service.localizeSync(resource, key, defaultValue);
+
+        expect(result).toBe(expected);
+      },
+    );
+  });
+
+  describe('#localizeWithFallback', () => {
+    test.each`
+      resources          | keys                 | defaultValue | expected
+      ${['', '_']}       | ${['TEST', 'OTHER']} | ${'DEFAULT'} | ${'TEST'}
+      ${['foo']}         | ${['bar']}           | ${'DEFAULT'} | ${'baz'}
+      ${['x']}           | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['a', 'b', 'c']} | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['']}            | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${[]}              | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['foo']}         | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['x']}           | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['a', 'b', 'c']} | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['']}            | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${[]}              | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['foo']}         | ${['bar', 'y']}      | ${'DEFAULT'} | ${'baz'}
+      ${['x']}           | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${['a', 'b', 'c']} | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${['']}            | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${[]}              | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${['foo']}         | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['x']}           | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['a', 'b', 'c']} | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['']}            | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${[]}              | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['foo']}         | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['x']}           | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['a', 'b', 'c']} | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['']}            | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${[]}              | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+    `(
+      'should return observable $expected when resource names are $resources and keys are $keys',
+      async ({ resources, keys, defaultValue, expected }) => {
+        appConfigData$.next({
+          localization: {
+            values: { foo: { bar: 'baz' }, x: { y: 'z' } },
+            defaultResourceName: 'x',
+          },
+        } as any);
+        configState.refreshAppState();
+
+        service.localizeWithFallback(resources, keys, defaultValue).subscribe(result => {
+          expect(result).toBe(expected);
+        });
+      },
+    );
+  });
+
+  describe('#localizeWithFallbackSync', () => {
+    test.each`
+      resources          | keys                 | defaultValue | expected
+      ${['', '_']}       | ${['TEST', 'OTHER']} | ${'DEFAULT'} | ${'TEST'}
+      ${['foo']}         | ${['bar']}           | ${'DEFAULT'} | ${'baz'}
+      ${['x']}           | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['a', 'b', 'c']} | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['']}            | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${[]}              | ${['bar']}           | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['foo']}         | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['x']}           | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['a', 'b', 'c']} | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['']}            | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${[]}              | ${['y']}             | ${'DEFAULT'} | ${'z'}
+      ${['foo']}         | ${['bar', 'y']}      | ${'DEFAULT'} | ${'baz'}
+      ${['x']}           | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${['a', 'b', 'c']} | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${['']}            | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${[]}              | ${['bar', 'y']}      | ${'DEFAULT'} | ${'z'}
+      ${['foo']}         | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['x']}           | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['a', 'b', 'c']} | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['']}            | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${[]}              | ${['']}              | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['foo']}         | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['x']}           | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['a', 'b', 'c']} | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${['']}            | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+      ${[]}              | ${[]}                | ${'DEFAULT'} | ${'DEFAULT'}
+    `(
+      'should return $expected when resource names are $resources and keys are $keys',
+      ({ resources, keys, defaultValue, expected }) => {
+        appConfigData$.next({
+          localization: {
+            values: { foo: { bar: 'baz' }, x: { y: 'z' } },
+            defaultResourceName: 'x',
+          },
+        } as any);
+        configState.refreshAppState();
+
+        const result = service.localizeWithFallbackSync(resources, keys, defaultValue);
+
+        expect(result).toBe(expected);
+      },
+    );
+  });
+
+  describe('#getLocalization', () => {
+    it('should return a localization', () => {
+      expect(
+        service.instant("MyProjectName::'{0}' and '{1}' do not match.", 'first', 'second'),
+      ).toBe('first and second do not match.');
     });
   });
 });

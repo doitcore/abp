@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { AbpApplicationConfigurationService } from '../proxy/volo/abp/asp-net-core/mvc/application-configurations/abp-application-configuration.service';
 import { ApplicationConfigurationDto } from '../proxy/volo/abp/asp-net-core/mvc/application-configurations/models';
 import { SessionStateService } from '../services/session-state.service';
@@ -13,8 +13,6 @@ import * as environmentUtils from '../utils/environment-utils';
 import * as multiTenancyUtils from '../utils/multi-tenancy-utils';
 import { RestService } from '../services/rest.service';
 import { CHECK_AUTHENTICATION_STATE_FN_KEY } from '../tokens/check-authentication-state';
-import { APP_INIT_ERROR_HANDLERS } from '../tokens/app-config.token';
-import { TestBed } from '@angular/core/testing';
 
 const environment = { oAuthConfig: { issuer: 'test' } };
 
@@ -42,17 +40,11 @@ describe('InitialUtils', () => {
         useValue: {
           environment,
           registerLocaleFn: () => Promise.resolve(),
-          skipInitAuthService: false,
-          skipGetAppConfiguration: false,
         },
       },
       {
         provide: CHECK_AUTHENTICATION_STATE_FN_KEY,
         useValue: () => {},
-      },
-      {
-        provide: APP_INIT_ERROR_HANDLERS,
-        useValue: [],
       },
     ],
   });
@@ -64,6 +56,8 @@ describe('InitialUtils', () => {
       const environmentService = spectator.inject(EnvironmentService);
       const configStateService = spectator.inject(ConfigStateService);
       const sessionStateService = spectator.inject(SessionStateService);
+      //const checkAuthenticationState = spectator.inject(CHECK_AUTHENTICATION_STATE_FN_KEY);
+
       const authService = spectator.inject(AuthService);
 
       const parseTenantFromUrlSpy = jest.spyOn(multiTenancyUtils, 'parseTenantFromUrl');
@@ -83,60 +77,29 @@ describe('InitialUtils', () => {
       const configStateGetOneSpy = jest.spyOn(configStateService, 'getOne');
       configStateGetOneSpy.mockReturnValue(appConfigRes.currentTenant);
 
-      await TestBed.runInInjectionContext(() => getInitialData());
+      const mockInjector = {
+        get: spectator.inject,
+      };
 
-      expect(typeof getInitialData).toBe('function');
+      await getInitialData(mockInjector)();
+
+      expect(typeof getInitialData(mockInjector)).toBe('function');
       expect(configRefreshAppStateSpy).toHaveBeenCalled();
       expect(environmentSetStateSpy).toHaveBeenCalledWith(environment);
       expect(sessionSetTenantSpy).toHaveBeenCalledWith(appConfigRes.currentTenant);
       expect(authServiceInitSpy).toHaveBeenCalled();
     });
-
-    test('should handle errors when refreshAppState fails', async () => {
-      const configStateService = spectator.inject(ConfigStateService);
-      const errorHandlers = spectator.inject(APP_INIT_ERROR_HANDLERS);
-      
-      const mockError = new Error('Configuration failed');
-      const configRefreshAppStateSpy = jest.spyOn(configStateService, 'refreshAppState');
-      configRefreshAppStateSpy.mockReturnValue(throwError(() => mockError));
-
-      const errorHandlerSpy = jest.fn();
-      errorHandlers.push(errorHandlerSpy);
-
-      await expect(TestBed.runInInjectionContext(() => getInitialData())).rejects.toThrow('Configuration failed');
-      expect(errorHandlerSpy).toHaveBeenCalledWith(mockError);
-    });
-
-    test('should skip auth service initialization when skipInitAuthService is true', async () => {
-      const authService = spectator.inject(AuthService);
-      const authServiceInitSpy = jest.spyOn(authService, 'init');
-
-      const originalOptions = spectator.inject(CORE_OPTIONS);
-      const modifiedOptions = { ...originalOptions, skipInitAuthService: true };
-      
-      expect(authServiceInitSpy).not.toHaveBeenCalled();
-    });
   });
 
   describe('#localeInitializer', () => {
     test('should resolve registerLocale', async () => {
-      expect(typeof localeInitializer).toBe('function');
-      
-      const sessionStateService = spectator.inject(SessionStateService);
-      const getLanguageSpy = jest.spyOn(sessionStateService, 'getLanguage');
-      getLanguageSpy.mockReturnValue('en');
-
-      const result = await TestBed.runInInjectionContext(() => localeInitializer());
-      expect(result).toBe('resolved');
-    });
-
-    test('should use default language when session language is not set', async () => {
-      const sessionStateService = spectator.inject(SessionStateService);
-      const getLanguageSpy = jest.spyOn(sessionStateService, 'getLanguage');
-      getLanguageSpy.mockReturnValue(null);
-
-      const result = await TestBed.runInInjectionContext(() => localeInitializer());
-      expect(result).toBe('resolved');
+      const injector = spectator.inject(Injector);
+      const injectorSpy = jest.spyOn(injector, 'get');
+      const sessionState = spectator.inject(SessionStateService);
+      injectorSpy.mockReturnValueOnce(sessionState);
+      injectorSpy.mockReturnValueOnce({ registerLocaleFn: () => Promise.resolve() });
+      expect(typeof localeInitializer(injector)).toBe('function');
+      expect(await localeInitializer(injector)()).toBe('resolved');
     });
   });
 });

@@ -10,7 +10,6 @@ import { ReplaceableComponentsService } from '../services/replaceable-components
   selector: 'abp-default-component',
   template: ' <p>default</p> ',
   exportAs: 'abpDefaultComponent',
-  standalone: true,
 })
 class DefaultComponent {
   @Input()
@@ -34,10 +33,8 @@ class DefaultComponent {
 @Component({
   selector: 'abp-external-component',
   template: ' <p>external</p> ',
-  standalone: true,
 })
-class ExternalComponent {
-  data = inject<ReplaceableComponents.ReplaceableTemplateData<any, any>>('REPLACEABLE_DATA' as any, { optional: true })!;
+class ExternalComponent {  data = inject<ReplaceableComponents.ReplaceableTemplateData<any, any>>('REPLACEABLE_DATA' as any, { optional: true })!;
 
 }
 
@@ -47,7 +44,8 @@ describe('ReplaceableTemplateDirective', () => {
 
   const createDirective = createDirectiveFactory({
     directive: ReplaceableTemplateDirective,
-    imports: [DefaultComponent, ExternalComponent],
+    declarations: [DefaultComponent, ExternalComponent],
+    entryComponents: [ExternalComponent],
     mocks: [Router],
     providers: [{ provide: ReplaceableComponentsService, useValue: { get$: () => get$Res } }],
   });

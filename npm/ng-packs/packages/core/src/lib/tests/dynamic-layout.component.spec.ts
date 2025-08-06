@@ -1,68 +1,29 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject as inject_1 } from '@angular/core';
-import { ActivatedRoute, RouterModule, RouterOutlet } from '@angular/router';
-import { of, BehaviorSubject } from 'rxjs';
+import { Component, NgModule, inject as inject_1 } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { createRoutingFactory, SpectatorRouting } from '@ngneat/spectator/jest';
 import { DynamicLayoutComponent, RouterOutletComponent } from '../components';
 import { eLayoutType } from '../enums/common';
 import { ABP } from '../models';
 import { AbpApplicationConfigurationService } from '../proxy/volo/abp/asp-net-core/mvc/application-configurations/abp-application-configuration.service';
-import { ReplaceableComponentsService, RoutesService, RouterEvents, EnvironmentService, LocalizationService } from '../services';
-import { DYNAMIC_LAYOUTS_TOKEN } from '../tokens/dynamic-layout.token';
-
-const mockRoutesService = () => ({
-  add: jest.fn(),
-  find: jest.fn((predicate) => {
-
-    if (predicate && typeof predicate === 'function') {
-      if (predicate({ path: '/parentWithLayout/childWithoutLayout' })) {
-        return { layout: eLayoutType.application };
-      }
-      if (predicate({ path: '/parentWithLayout/childWithLayout' })) {
-        return { layout: eLayoutType.account };
-      }
-      if (predicate({ path: '/withData' })) {
-        return { layout: eLayoutType.empty };
-      }
-      if (predicate({ path: '/withoutLayout' })) {
-        return { layout: null };
-      }
-    }
-    return null;
-  }),
-  search: jest.fn((query) => {
-
-    if (query && query.invisible) {
-      return { layout: eLayoutType.account };
-    }
-    return null;
-  }),
-  flat$: of([]),
-  tree$: of([]),
-  visible$: of([]),
-});
+import { ReplaceableComponentsService, RoutesService } from '../services';
+import { mockRoutesService } from './routes.service.spec';
 
 @Component({
   selector: 'abp-layout-application',
   template: '<router-outlet></router-outlet>',
-  standalone: true,
-  imports: [RouterOutlet],
 })
 class DummyApplicationLayoutComponent {}
 
 @Component({
   selector: 'abp-layout-account',
   template: '<router-outlet></router-outlet>',
-  standalone: true,
-  imports: [RouterOutlet],
 })
 class DummyAccountLayoutComponent {}
 
 @Component({
   selector: 'abp-layout-empty',
   template: '<router-outlet></router-outlet>',
-  standalone: true,
-  imports: [RouterOutlet],
 })
 class DummyEmptyLayoutComponent {}
 
@@ -72,13 +33,18 @@ const LAYOUTS = [
   DummyEmptyLayoutComponent,
 ];
 
+@NgModule({
+  imports: [RouterModule],
+  declarations: [...LAYOUTS],
+})
+class DummyLayoutModule {}
+
 @Component({
   selector: 'abp-dummy',
   template: '{{route.snapshot.data?.name}} works!',
-  standalone: true,
 })
-class DummyComponent {
-  route = inject_1(ActivatedRoute);
+class DummyComponent {  route = inject_1(ActivatedRoute);
+
 }
 
 const routes: ABP.Route[] = [
@@ -112,63 +78,18 @@ const routes: ABP.Route[] = [
 
 describe('DynamicLayoutComponent', () => {
   const createComponent = createRoutingFactory({
-    component: DynamicLayoutComponent,
+    component: RouterOutletComponent,
     stubsEnabled: false,
-    declarations: [],
+    declarations: [DummyComponent, DynamicLayoutComponent],
     mocks: [AbpApplicationConfigurationService, HttpClient],
     providers: [
       {
         provide: RoutesService,
-        useValue: mockRoutesService(),
+        useFactory: () => mockRoutesService(),
       },
-      {
-        provide: RouterEvents,
-        useValue: {
-          getNavigationEvents: jest.fn().mockReturnValue(of({})),
-        },
-      },
-      {
-        provide: EnvironmentService,
-        useValue: {
-          getEnvironment: jest.fn().mockReturnValue({
-            oAuthConfig: { responseType: 'code' },
-          }),
-        },
-      },
-      {
-        provide: LocalizationService,
-        useValue: {
-          languageChange$: new BehaviorSubject('en'),
-        },
-      },
-      {
-        provide: DYNAMIC_LAYOUTS_TOKEN,
-        useValue: new Map([
-          [eLayoutType.application, 'Theme.ApplicationLayoutComponent'],
-          [eLayoutType.account, 'Theme.AccountLayoutComponent'],
-          [eLayoutType.empty, 'Theme.EmptyLayoutComponent'],
-        ]),
-      },
-      {
-        provide: ReplaceableComponentsService,
-        useValue: {
-          add: jest.fn(),
-          get: jest.fn((key) => {
-            if (key === 'Theme.ApplicationLayoutComponent') {
-              return { component: DummyApplicationLayoutComponent };
-            }
-            if (key === 'Theme.AccountLayoutComponent') {
-              return { component: DummyAccountLayoutComponent };
-            }
-            if (key === 'Theme.EmptyLayoutComponent') {
-              return { component: DummyEmptyLayoutComponent };
-            }
-            return null;
-          }),
-        },
-      },
+      ReplaceableComponentsService,
     ],
-    imports: [RouterModule, DummyComponent, DynamicLayoutComponent, ...LAYOUTS],
+    imports: [RouterModule, DummyLayoutModule],
     routes: [
       { path: '', component: RouterOutletComponent },
       {
@@ -214,7 +135,7 @@ describe('DynamicLayoutComponent', () => {
     ],
   });
 
-  let spectator: SpectatorRouting<DynamicLayoutComponent>;
+  let spectator: SpectatorRouting<RouterOutletComponent>;
   let replaceableComponents: ReplaceableComponentsService;
 
   beforeEach(async () => {
@@ -240,7 +161,6 @@ describe('DynamicLayoutComponent', () => {
   it('should handle application layout from parent abp route and display it', async () => {
     spectator.router.navigateByUrl('/parentWithLayout/childWithoutLayout');
     await spectator.fixture.whenStable();
-    await new Promise(resolve => setTimeout(resolve, 100));
     spectator.detectComponentChanges();
     expect(spectator.query('abp-dynamic-layout')).toBeTruthy();
     expect(spectator.query('abp-layout-application')).toBeTruthy();
@@ -249,7 +169,6 @@ describe('DynamicLayoutComponent', () => {
   it('should handle account layout from own property and display it', async () => {
     spectator.router.navigateByUrl('/parentWithLayout/childWithLayout');
     await spectator.fixture.whenStable();
-    await new Promise(resolve => setTimeout(resolve, 100));
     spectator.detectComponentChanges();
     expect(spectator.query('abp-layout-account')).toBeTruthy();
   });
@@ -257,7 +176,6 @@ describe('DynamicLayoutComponent', () => {
   it('should handle empty layout from route data and display it', async () => {
     spectator.router.navigateByUrl('/withData');
     await spectator.fixture.whenStable();
-    await new Promise(resolve => setTimeout(resolve, 100));
     spectator.detectComponentChanges();
     expect(spectator.query('abp-layout-empty')).toBeTruthy();
   });
@@ -265,17 +183,19 @@ describe('DynamicLayoutComponent', () => {
   it('should display empty layout when layout is null', async () => {
     spectator.router.navigateByUrl('/withoutLayout');
     await spectator.fixture.whenStable();
-    await new Promise(resolve => setTimeout(resolve, 100));
     spectator.detectComponentChanges();
     expect(spectator.query('abp-layout-empty')).toBeTruthy();
   });
 
-  it('should handle layout not found scenario', async () => {
+  it('should not display any layout when layouts are empty', async () => {
+    const spy = jest.spyOn(replaceableComponents, 'get');
+    spy.mockReturnValue(null);
+    spectator.detectChanges();
+
     spectator.router.navigateByUrl('/withoutLayout');
     await spectator.fixture.whenStable();
-    await new Promise(resolve => setTimeout(resolve, 100));
     spectator.detectComponentChanges();
 
-    expect(spectator.query('abp-dynamic-layout')).toBeTruthy();
+    expect(spectator.query('abp-layout-empty')).toBeFalsy();
   });
 });

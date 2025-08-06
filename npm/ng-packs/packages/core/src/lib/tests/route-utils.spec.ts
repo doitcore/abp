@@ -5,7 +5,7 @@ import { RouterOutletComponent } from '../components/router-outlet.component';
 import { RoutesService } from '../services/routes.service';
 import { findRoute, getRoutePath } from '../utils/route-utils';
 
-@Component({ template: '', standalone: true })
+@Component({ template: '' })
 class DummyComponent {}
 
 describe('Route Utils', () => {
@@ -35,7 +35,8 @@ describe('Route Utils', () => {
     const createRouting = createRoutingFactory({
       component: RouterOutletComponent,
       stubsEnabled: false,
-      imports: [RouterModule, DummyComponent],
+      declarations: [DummyComponent],
+      imports: [RouterModule],
       routes: [
         {
           path: '',

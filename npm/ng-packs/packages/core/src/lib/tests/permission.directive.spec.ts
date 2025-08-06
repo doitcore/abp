@@ -3,7 +3,6 @@ import { Subject } from 'rxjs';
 import { PermissionDirective } from '../directives/permission.directive';
 import { PermissionService } from '../services/permission.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { QUEUE_MANAGER } from '../tokens/queue.token';
 
 describe('PermissionDirective', () => {
   let spectator: SpectatorDirective<PermissionDirective>;
@@ -14,7 +13,6 @@ describe('PermissionDirective', () => {
     directive: PermissionDirective,
     providers: [
       { provide: PermissionService, useValue: { getGrantedPolicy$: () => grantedPolicy$ } },
-      { provide: QUEUE_MANAGER, useValue: { add: jest.fn(), remove: jest.fn() } },
     ],
   });
 
@@ -84,7 +82,7 @@ describe('PermissionDirective', () => {
       const detectChanges = jest.spyOn(cdr, 'detectChanges');
       spectator.setHostInput({ condition: 'test' });
       grantedPolicy$.next(true);
-
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       directive.onInit = () => {
         expect(detectChanges).not.toHaveBeenCalled();

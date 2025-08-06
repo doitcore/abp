@@ -14,6 +14,7 @@ import { HttpErrorReporterService } from '../services/http-error-reporter.servic
 import { PermissionService } from '../services/permission.service';
 import { RoutesService } from '../services/routes.service';
 import { CORE_OPTIONS } from '../tokens/options.token';
+import { IncludeLocalizationResourcesProvider, provideAbpCore, withOptions } from '../providers';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { OTHERS_GROUP } from '../tokens';
@@ -21,10 +22,6 @@ import { SORT_COMPARE_FUNC, compareFuncFactory } from '../tokens/compare-func.to
 import { AuthService } from '../abstracts';
 
 describe('PermissionGuard', () => {
-  beforeAll(() => {
-    jest.setTimeout(60000);
-  });
-
   let spectator: SpectatorService<PermissionGuard>;
   let guard: PermissionGuard;
   let routes: SpyObject<RoutesService>;
@@ -35,12 +32,13 @@ describe('PermissionGuard', () => {
     isAuthenticated: true,
   };
 
-  @Component({ template: '', standalone: true })
+  @Component({ template: '' })
   class DummyComponent {}
 
   const createService = createServiceFactory({
     service: PermissionGuard,
     mocks: [PermissionService],
+    declarations: [DummyComponent],
     imports: [
       HttpClientTestingModule,
       RouterModule.forRoot([
@@ -52,7 +50,6 @@ describe('PermissionGuard', () => {
           },
         },
       ]),
-      DummyComponent,
     ],
     providers: [
       {
@@ -60,15 +57,10 @@ describe('PermissionGuard', () => {
         useValue: '/',
       },
       { provide: AuthService, useValue: mockOAuthService },
-      { 
-        provide: CORE_OPTIONS, 
-        useValue: { 
-          skipGetAppConfiguration: true,
-          environment: { remoteEnv: {} }
-        } 
-      },
+      { provide: CORE_OPTIONS, useValue: { skipGetAppConfiguration: true } },
       { provide: OTHERS_GROUP, useValue: 'AbpUi::OthersGroup' },
       { provide: SORT_COMPARE_FUNC, useValue: compareFuncFactory },
+      IncludeLocalizationResourcesProvider,
     ],
   });
 
@@ -90,24 +82,17 @@ describe('PermissionGuard', () => {
     });
   });
 
-  it('should not emit value when the grantedPolicy is false', done => {
+  it('should return false and report an error when the grantedPolicy is false', done => {
     permissionService.getGrantedPolicy$.andReturn(of(false));
     const spy = jest.spyOn(httpErrorReporter, 'reportError');
-    
-    guard.canActivate({ data: { requiredPolicy: 'test' } } as any, null).subscribe({
-      next: res => {
-        done.fail('Should not emit value when policy is false');
-      },
-      error: err => {
-        console.error('Test error:', err);
-        done.fail(err);
-      },
-      complete: () => {
-        expect(spy).not.toHaveBeenCalled();
-        done();
-      }
+    guard.canActivate({ data: { requiredPolicy: 'test' } } as any, null).subscribe(res => {
+      expect(res).toBe(false);
+      expect(spy.mock.calls[0][0]).toEqual({
+        status: 403,
+      });
+      done();
     });
-  }, 30000);
+  });
 
   it('should check the requiredPolicy from RoutesService', done => {
     routes.add([
@@ -133,34 +118,6 @@ describe('PermissionGuard', () => {
     ]);
     guard.canActivate({ data: {} } as any, { url: 'test' } as any).subscribe(result => {
       expect(result).toBe(true);
-      done();
-    });
-  });
-
-  it('should not report error when user is not authenticated', done => {
-    permissionService.getGrantedPolicy$.andReturn(of(false));
-    const spy = jest.spyOn(httpErrorReporter, 'reportError');
-    
-    const mockAuthService = { isAuthenticated: false };
-    (guard as any).authService = mockAuthService;
-    
-    guard.canActivate({ data: { requiredPolicy: 'test' } } as any, null).subscribe({
-      next: res => {
-        done.fail('Should not emit value when policy is false');
-      },
-      complete: () => {
-        expect(spy).not.toHaveBeenCalled();
-        done();
-      }
-    });
-  });
-
-  it('should handle route data with requiredPolicy', done => {
-    permissionService.getGrantedPolicy$.andReturn(of(true));
-    
-    guard.canActivate({ data: { requiredPolicy: 'CustomPolicy' } } as any, null).subscribe(result => {
-      expect(result).toBe(true);
-      expect(permissionService.getGrantedPolicy$).toHaveBeenCalledWith('CustomPolicy');
       done();
     });
   });
@@ -202,16 +159,8 @@ describe('authGuard', () => {
         { provide: AuthService, useValue: mockOAuthService },
         { provide: PermissionService, useValue: permissionService },
         { provide: HttpErrorReporterService, useValue: httpErrorReporter },
-        { 
-          provide: CORE_OPTIONS, 
-          useValue: { 
-            skipGetAppConfiguration: true,
-            environment: { remoteEnv: {} }
-          } 
-        },
-        { provide: OTHERS_GROUP, useValue: 'AbpUi::OthersGroup' },
-        { provide: SORT_COMPARE_FUNC, useValue: compareFuncFactory },
         provideRouter(routes),
+        provideAbpCore(withOptions()),
       ],
     });
   });
@@ -224,20 +173,13 @@ describe('authGuard', () => {
     expect(httpErrorReporter.reportError).not.toHaveBeenCalled();
   });
 
-  it('should not emit value and report an error when the grantedPolicy is false', async () => {
+  it('should return false and report an error when the grantedPolicy is false', async () => {
     permissionService.getGrantedPolicy$.andReturn(of(false));
-    
-    const guard = TestBed.inject(PermissionGuard);
-    const spy = jest.spyOn(httpErrorReporter, 'reportError');
-    
-    guard.canActivate({ data: { requiredPolicy: 'test' } } as any, null).subscribe({
-      next: res => {
-        fail('Should not emit value when policy is false');
-      },
-      complete: () => {
-        expect(spy).toHaveBeenCalledWith({ status: 403 });
-      }
-    });
+    await RouterTestingHarness.create('/dummy');
+
+    expect(TestBed.inject(Router).url).not.toEqual('/dummy');
+    expect(httpErrorReporter.reportError).toHaveBeenCalled();
+    expect(httpErrorReporter.reportError).toBeCalledWith({ status: 403 });
   });
 
   it('should check the requiredPolicy from RoutesService', async () => {

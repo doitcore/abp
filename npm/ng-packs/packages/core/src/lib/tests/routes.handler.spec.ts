@@ -1,28 +1,9 @@
-import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RoutesHandler } from '../handlers/routes.handler';
 import { RoutesService } from '../services/routes.service';
 
 describe('Routes Handler', () => {
-  let handler: RoutesHandler;
-  let mockRoutesService: RoutesService;
-  let mockRouter: Router;
-
-  beforeEach(() => {
-    mockRoutesService = { add: jest.fn() } as unknown as RoutesService;
-    mockRouter = { config: [] } as unknown as Router;
-
-    TestBed.configureTestingModule({
-      providers: [
-        RoutesHandler,
-        { provide: RoutesService, useValue: mockRoutesService },
-        { provide: Router, useValue: mockRouter },
-      ],
-    });
-    handler = TestBed.inject(RoutesHandler);
-  });
-
-  describe('#addRoutes', () => {
+  describe('#add', () => {
     it('should add routes from router config', () => {
       const config = [
         { path: 'x' },
@@ -35,34 +16,23 @@ describe('Routes Handler', () => {
       const bar = [{ path: '/bar', name: 'Bar' }];
       const baz = [{ path: '/baz', name: 'Baz' }];
 
-      const routes: any[] = [];
-      const add = jest.fn((items: any[]) => {
-        routes.push(...items);
-        return items;
-      });
-      mockRoutesService.add = add;
-      mockRouter.config = config;
+      const routes = [];
+      const add = jest.fn(routes.push.bind(routes));
+      const mockRoutesService = { add } as unknown as RoutesService;
+      const mockRouter = { config } as unknown as Router;
 
-      handler.addRoutes();
+      const handler = new RoutesHandler(mockRoutesService, mockRouter);
 
       expect(add).toHaveBeenCalledTimes(3);
-      expect(routes).toEqual([
-        { name: 'Foo', parentName: undefined, path: '/' },
-        { name: 'Bar', parentName: undefined, path: '/bar' },
-        { name: 'Baz', path: '/baz' },
-      ]);
+      expect(routes).toEqual([foo, bar, baz]);
     });
 
     it('should not add routes when there is no router', () => {
-      const routes: any[] = [];
-      const add = jest.fn((items: any[]) => {
-        routes.push(...items);
-        return items;
-      });
-      mockRoutesService.add = add;
-      mockRouter.config = null;
+      const routes = [];
+      const add = jest.fn(routes.push.bind(routes));
+      const mockRoutesService = { add } as unknown as RoutesService;
 
-      handler.addRoutes();
+      const handler = new RoutesHandler(mockRoutesService, null);
 
       expect(add).not.toHaveBeenCalled();
     });

@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { LazyLoadService } from '../services/lazy-load.service';
@@ -6,27 +5,9 @@ import { ScriptLoadingStrategy } from '../strategies/loading.strategy';
 import { ResourceWaitService } from '../services/resource-wait.service';
 
 describe('LazyLoadService', () => {
-  let service: LazyLoadService;
-  let resourceWaitService: ResourceWaitService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        LazyLoadService,
-        {
-          provide: ResourceWaitService,
-          useValue: {
-            addResource: jest.fn(),
-            deleteResource: jest.fn(),
-          },
-        },
-      ],
-    });
-    service = TestBed.inject(LazyLoadService);
-    resourceWaitService = TestBed.inject(ResourceWaitService);
-  });
-
   describe('#load', () => {
+    const resourceWaitService = new ResourceWaitService();
+    const service = new LazyLoadService(resourceWaitService);
     const strategy = new ScriptLoadingStrategy('http://example.com/');
 
     afterEach(() => {
@@ -47,10 +28,8 @@ describe('LazyLoadService', () => {
       service.load(strategy, 5, 0).subscribe({
         error: errorEvent => {
           expect(errorEvent).toEqual(new CustomEvent('error'));
-          expect(counter).toHaveBeenCalledTimes(5);
+          expect(counter).toHaveBeenCalledTimes(6);
           expect(service.loaded.has(strategy.path)).toBe(false);
-          expect(resourceWaitService.addResource).toHaveBeenCalledWith(strategy.path);
-          expect(resourceWaitService.deleteResource).not.toHaveBeenCalled();
           done();
         },
       });
@@ -64,8 +43,6 @@ describe('LazyLoadService', () => {
         next: event => {
           expect(event).toBe(loadEvent);
           expect(service.loaded.has(strategy.path)).toBe(true);
-          expect(resourceWaitService.addResource).toHaveBeenCalledWith(strategy.path);
-          expect(resourceWaitService.deleteResource).toHaveBeenCalledWith(strategy.path);
           done();
         },
       });
@@ -77,39 +54,14 @@ describe('LazyLoadService', () => {
 
       service.load(strategy).subscribe(event => {
         expect(event).toEqual(loadEvent);
-        expect(resourceWaitService.addResource).not.toHaveBeenCalled();
-        expect(resourceWaitService.deleteResource).not.toHaveBeenCalled();
         done();
-      });
-    });
-
-    it('should call ResourceWaitService methods correctly', done => {
-      const loadEvent = new CustomEvent('load');
-      jest.spyOn(strategy, 'createStream').mockReturnValue(of(loadEvent));
-
-      service.load(strategy).subscribe({
-        next: event => {
-          expect(resourceWaitService.addResource).toHaveBeenCalledWith(strategy.path);
-          expect(resourceWaitService.deleteResource).toHaveBeenCalledWith(strategy.path);
-          done();
-        },
-      });
-    });
-
-    it('should store strategy element in loaded map', done => {
-      const loadEvent = new CustomEvent('load');
-      jest.spyOn(strategy, 'createStream').mockReturnValue(of(loadEvent));
-
-      service.load(strategy).subscribe({
-        next: event => {
-          expect(service.loaded.get(strategy.path)).toBe(strategy.element);
-          done();
-        },
       });
     });
   });
 
   describe('#remove', () => {
+    const resourceWaitService = new ResourceWaitService();
+    const service = new LazyLoadService(resourceWaitService);
 
     it('should remove an already lazy loaded element and return true', () => {
       const script = document.createElement('script');
@@ -131,24 +83,6 @@ describe('LazyLoadService', () => {
       const result = service.remove('bar');
 
       expect(result).toBe(false);
-    });
-
-    it('should return false when element is null', () => {
-      service.loaded.set('foo', null);
-
-      const result = service.remove('foo');
-
-      expect(result).toBe(false);
-    });
-
-    it('should handle element without parent node', () => {
-      const script = document.createElement('script');
-      service.loaded.set('x', script);
-
-      const result = service.remove('x');
-
-      expect(service.loaded.has('x')).toBe(false);
-      expect(result).toBe(true);
     });
   });
 });

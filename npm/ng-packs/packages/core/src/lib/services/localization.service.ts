@@ -273,11 +273,7 @@ function recursivelyMergeBaseResources(
 ): ApplicationLocalizationResourceDto {
   const item = source[baseResourceName];
 
-  if (!item) {
-    return { texts: {}, baseResources: [] };
-  }
-
-  if (!item.baseResources || item.baseResources.length === 0) {
+  if (item.baseResources.length === 0) {
     return item;
   }
 

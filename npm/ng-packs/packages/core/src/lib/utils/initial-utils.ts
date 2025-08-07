@@ -50,12 +50,13 @@ export async function getInitialData() {
     }),
   );
   await lastValueFrom(result$);
+  await localeInitializer(injector);
 }
 
-export function localeInitializer() {
-  const injector = inject(Injector);
-  const sessionState = injector.get(SessionStateService);
-  const { registerLocaleFn }: ABP.Root = injector.get(CORE_OPTIONS);
+export function localeInitializer(injector?: Injector) {
+  const currentInjector = injector || inject(Injector);
+  const sessionState = currentInjector.get(SessionStateService);
+  const { registerLocaleFn }: ABP.Root = currentInjector.get(CORE_OPTIONS);
 
   const lang = sessionState.getLanguage() || 'en';
 

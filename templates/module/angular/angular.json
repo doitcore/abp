@@ -58,12 +58,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/dev-app",
             "index": "projects/dev-app/src/index.html",
-            "main": "projects/dev-app/src/main.ts",
-            "polyfills": "projects/dev-app/src/polyfills.ts",
+            "browser": "projects/dev-app/src/main.ts",
+            "polyfills": ["projects/dev-app/src/polyfills.ts"],
             "tsConfig": "projects/dev-app/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": ["chart.js", "js-sha256"],
@@ -131,12 +131,9 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -162,8 +159,8 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/dev-app/src/test.ts",
-            "polyfills": "projects/dev-app/src/polyfills.ts",
+            "browser": "projects/dev-app/src/test.ts",
+            "polyfills": ["projects/dev-app/src/polyfills.ts"],
             "tsConfig": "projects/dev-app/tsconfig.spec.json",
             "karmaConfig": "projects/dev-app/karma.conf.js",
             "inlineStyleLanguage": "scss",

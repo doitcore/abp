@@ -6,25 +6,17 @@
   "prefix": "app",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/dev-app/browser",
+        "outputPath": "dist/apps/dev-app",
         "index": "apps/dev-app/src/index.html",
-        "main": "apps/dev-app/src/main.ts",
-        "polyfills": "apps/dev-app/src/polyfills.ts",
+        "browser": "apps/dev-app/src/main.ts",
+        "polyfills": ["apps/dev-app/src/polyfills.ts"],
         "tsConfig": "apps/dev-app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "allowedCommonJsDependencies": [
-          "chart.js",
-          "js-sha256"
-        ],
-        "assets": [
-          "apps/dev-app/src/favicon.ico",
-          "apps/dev-app/src/assets"
-        ],
+        "allowedCommonJsDependencies": ["chart.js", "js-sha256"],
+        "assets": ["apps/dev-app/src/favicon.ico", "apps/dev-app/src/assets"],
         "styles": [
           {
             "input": "node_modules/bootstrap/dist/css/bootstrap.rtl.min.css",
@@ -149,12 +141,9 @@
           "outputHashing": "all"
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
+          "sourceMap": true
         }
       },
       "defaultConfiguration": "production"

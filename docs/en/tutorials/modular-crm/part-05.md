@@ -167,7 +167,7 @@ The `ReplaceDbContext` attribute allows the use of the `ModularCrmDbContext` cla
 ````csharp
 public class ModularCrmDbContext :
     AbpDbContext<ModularCrmDbContext>,
-    IProductsDbContext,
+    ICatalogDbContext,
     IOrderingDbContext //NEW: IMPLEMENT THE INTERFACE
 {
     public DbSet<Product> Products { get; set; }

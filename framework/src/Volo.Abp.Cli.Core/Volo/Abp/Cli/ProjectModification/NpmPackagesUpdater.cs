@@ -210,7 +210,7 @@ public class NpmPackagesUpdater : ITransientDependency
 
         if (!specifiedVersion.IsNullOrWhiteSpace())
         {
-            if (package.Name.IndexOf("leptonx", StringComparison.InvariantCultureIgnoreCase) > 0 && !specifiedLeptonXVersion.IsNullOrWhiteSpace())
+            if (IsLeptonXPackage(package) && !specifiedLeptonXVersion.IsNullOrWhiteSpace())
             {
                 if (!SpecifiedVersionExists(specifiedLeptonXVersion, package))
                 {
@@ -287,6 +287,12 @@ public class NpmPackagesUpdater : ITransientDependency
         Logger.LogInformation(
             $"Updated {package.Name} to {version} in {filePath.Replace(Directory.GetCurrentDirectory(), "")}.");
         return true;
+    }
+
+    private static bool IsLeptonXPackage(JProperty package)
+    {
+        return package.Name.IndexOf("leptonx", StringComparison.InvariantCultureIgnoreCase) > 0
+            || package.Name.IndexOf("lepton-x", StringComparison.InvariantCultureIgnoreCase) > 0;
     }
 
     protected virtual bool IsPrerelease(string version)

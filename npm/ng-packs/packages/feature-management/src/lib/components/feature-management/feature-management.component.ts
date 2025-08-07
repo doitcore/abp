@@ -184,6 +184,22 @@ export class FeatureManagementComponent
     }
   }
 
+  isParentDisabled(parentName: string, groupName: string, provider: string): boolean {
+    const children = this.features[groupName]?.filter(f => f.parentName === parentName);
+
+    if (children?.length) {
+      return children.some(child => {
+        const childProvider = child.provider?.name;
+        return (
+          (childProvider !== this.providerName && childProvider !== this.defaultProviderName) ||
+          (provider !== this.providerName && provider !== this.defaultProviderName)
+        );
+      });
+    } else {
+      return provider !== this.providerName && provider !== this.defaultProviderName;
+    }
+  }
+
   private uncheckToggleDescendants(feature: FeatureDto) {
     this.findAllDescendantsOfByType(feature, ValueTypes.ToggleStringValueType).forEach(node =>
       this.setFeatureValue(node, false),

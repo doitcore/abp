@@ -8,10 +8,12 @@ import { NavItemsComponent } from '../nav-items/nav-items.component';
 import { AuthWrapperComponent } from './auth-wrapper/auth-wrapper.component';
 import { PageAlertContainerComponent } from '../page-alert-container/page-alert-container.component';
 import { RouterModule } from '@angular/router';
+import { collapseWithMargin } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'abp-layout-account',
   templateUrl: './account-layout.component.html',
+  animations: [collapseWithMargin],
   providers: [LayoutService, SubscriptionService],
   imports: [
     CommonModule,

@@ -2127,11 +2127,11 @@
         {
           "text": "Microservice Solution",
           "isLazyExpandable": true,
-          "path": "solution-templates/microservice",
+          "path": "solution-templates/microservice/index.md",
           "items":[
             {
               "text": "Overview",
-              "path": "solution-templates/microservice"
+              "path": "solution-templates/microservice/overview.md"
             },
             {
               "text": "Solution Structure",
@@ -2187,7 +2187,7 @@
                 },
                 {
                   "text": "Swagger integration",
-                  "path": "solution-templates/microservice/swagger.md"
+                  "path": "solution-templates/microservice/swagger-integration.md"
                 },
                 {
                   "text": "Permission management",

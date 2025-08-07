@@ -30,6 +30,9 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
 
     public DbSet<AppEntityWithNavigationsForeign> AppEntityWithNavigationsForeign { get; set; }
 
+    public DbSet<Blog> Blogs { get; set; }
+    public DbSet<BlogPost> BlogPosts { get; set; }
+
     public TestMigrationsDbContext(DbContextOptions<TestMigrationsDbContext> options)
         : base(options)
     {
@@ -94,6 +97,19 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
         });
 
         modelBuilder.Entity<AppEntityWithNavigationsForeign>(b =>
+        {
+            b.ConfigureByConvention();
+        });
+
+        modelBuilder.Entity<Blog>(b =>
+        {
+            b.ConfigureByConvention();
+            b.HasMany(bp => bp.BlogPosts)
+                .WithOne(bp => bp.Blog)
+                .HasForeignKey(bp => bp.BlogId);
+        });
+
+        modelBuilder.Entity<BlogPost>(b =>
         {
             b.ConfigureByConvention();
         });

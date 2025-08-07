@@ -75,7 +75,15 @@ Installing a module after creating the solution may require manual steps. So, it
 
 Once you select the desired modules, click the *Next* button for the *Solution Structure* screen:
 
+{{ if Tiered == "Yes" }}
+
+![abp-studio-new-solution-dialog-solution-structure-tiered](images/abp-studio-new-solution-dialog-solution-structure-tiered.png)
+
+{{ else }}
+
 ![abp-studio-new-solution-dialog-solution-structure](images/abp-studio-new-solution-dialog-solution-structure.png)
+
+{{ end }}
 
 It creates a separate host application that only serves the HTTP (REST) APIs. The web application then performs remote HTTP calls to that application for every operation. If the *Tiered* option is not selected, then the web and HTTP APIs are hosted in a single application, and the calls from the UI layer to the API layer are performed in-process.
 

@@ -150,9 +150,9 @@ In the *Solution Runner* section (on the left side) you can see all the runnable
 
 ![abp-studio-microservice-solution-runner-applications](images/abp-studio-microservice-solution-runner-applications.png)
 
-> A leaf item in the *Solution Runner* is called as an *Application* as it is an executable application.
+> A leaf item in the *Solution Runner* is called as an *Application* as it is an executable application, excluding items under `Containers`.
 
-As shown in the figure above, the executable applications are grouped into folders like `apps`, `gateways`, `infrastructure`, and `services`. You can start/stop them all, a group (folder) of them, or one by one.
+As shown in the figure above, the executable applications are grouped into folders like `apps`, `gateways`, and `services`. You can start/stop them all, a group (folder) of them, or one by one. The `Containers` branch contains the needed docker containers for the applications. 
 
 Before running the applications, you can run the all application by right-clicking the root item in the *Solution Runner* and select *Build* -> *Build All* action. However, you don't need to do that, because ABP Studio builds the applications before running them by default.
 

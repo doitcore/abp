@@ -1,14 +1,14 @@
 {
-  "name": "Volo.Docs.Application.Contracts",
+  "name": "Volo.Docs.Common.Application",
   "hash": "",
   "contents": [
     {
-      "namespace": "Volo.Docs",
+      "namespace": "Volo.Docs.Common",
       "dependsOnModules": [
         {
-          "declaringAssemblyName": "Volo.Docs.Domain.Shared",
+          "declaringAssemblyName": "Volo.Docs.Domain",
           "namespace": "Volo.Docs",
-          "name": "DocsDomainSharedModule"
+          "name": "DocsDomainModule"
         },
         {
           "declaringAssemblyName": "Volo.Docs.Common.Application.Contracts",
@@ -16,9 +16,14 @@
           "name": "DocsCommonApplicationContractsModule"
         },
         {
-          "declaringAssemblyName": "Volo.Abp.Ddd.Application.Contracts",
+          "declaringAssemblyName": "Volo.Abp.AutoMapper",
+          "namespace": "Volo.Abp.AutoMapper",
+          "name": "AbpAutoMapperModule"
+        },
+        {
+          "declaringAssemblyName": "Volo.Abp.Ddd.Application",
           "namespace": "Volo.Abp.Application",
-          "name": "AbpDddApplicationContractsModule"
+          "name": "AbpDddApplicationModule"
         }
       ],
       "implementingInterfaces": [
@@ -66,7 +71,7 @@
         }
       ],
       "contentType": "abpModule",
-      "name": "DocsApplicationContractsModule",
+      "name": "DocsCommonApplicationModule",
       "summary": null
     }
   ]

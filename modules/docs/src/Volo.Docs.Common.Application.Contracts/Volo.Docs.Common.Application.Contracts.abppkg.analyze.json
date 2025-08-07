@@ -1,9 +1,9 @@
 {
-  "name": "Volo.Docs.Application.Contracts",
+  "name": "Volo.Docs.Common.Application.Contracts",
   "hash": "",
   "contents": [
     {
-      "namespace": "Volo.Docs",
+      "namespace": "Volo.Docs.Common",
       "dependsOnModules": [
         {
           "declaringAssemblyName": "Volo.Docs.Domain.Shared",
@@ -11,14 +11,14 @@
           "name": "DocsDomainSharedModule"
         },
         {
-          "declaringAssemblyName": "Volo.Docs.Common.Application.Contracts",
-          "namespace": "Volo.Docs.Common",
-          "name": "DocsCommonApplicationContractsModule"
-        },
-        {
           "declaringAssemblyName": "Volo.Abp.Ddd.Application.Contracts",
           "namespace": "Volo.Abp.Application",
           "name": "AbpDddApplicationContractsModule"
+        },
+        {
+          "declaringAssemblyName": "Volo.Abp.Authorization.Abstractions",
+          "namespace": "Volo.Abp.Authorization",
+          "name": "AbpAuthorizationAbstractionsModule"
         }
       ],
       "implementingInterfaces": [
@@ -66,7 +66,14 @@
         }
       ],
       "contentType": "abpModule",
-      "name": "DocsApplicationContractsModule",
+      "name": "DocsCommonApplicationContractsModule",
+      "summary": null
+    },
+    {
+      "displayName": "PDF Download",
+      "isEnabled": true,
+      "contentType": "permission",
+      "name": "Docs.Common.PdfDownload",
       "summary": null
     }
   ]

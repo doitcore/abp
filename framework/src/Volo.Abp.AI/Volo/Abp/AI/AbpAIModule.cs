@@ -5,6 +5,9 @@ using Volo.Abp.Modularity;
 
 namespace Volo.Abp.AI;
 
+[DependsOn(
+    typeof(AbpAIAbstractionsModule)
+)]
 public class AbpAIModule : AbpModule
 {
     public override void PostConfigureServices(ServiceConfigurationContext context)

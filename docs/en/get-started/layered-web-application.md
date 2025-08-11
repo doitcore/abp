@@ -57,7 +57,6 @@ Once your configuration is done, click the *Next* button to navigate to the *UI 
 ![abp-studio-new-solution-dialog-ui-framework-blazor-webapp](images/abp-studio-new-solution-dialog-ui-framework-blazor-webapp_dark.png)
 {{ else if UI == "NG" }}
 ![abp-studio-new-solution-dialog-ui-framework-ng](images/abp-studio-new-solution-dialog-ui-framework-ng_dark.png)
-![alt text](image.png)
 {{ end }}
 
 Here, you see all the possible UI options supported by that startup solution template. Pick the **{{ UI_Value }}**.
@@ -66,7 +65,6 @@ Notice that; Once you select a UI type, some additional options will be availabl
 
 {{ if DB == "EF" }}
 ![abp-studio-new-solution-dialog-database-provider](images/abp-studio-new-solution-dialog-database-provider-efcore_dark.png)
-![alt text](image.png)
 {{ else }}
 ![abp-studio-new-solution-dialog-database-provider](images/abp-studio-new-solution-dialog-database-provider-mongo_dark.png)
 {{ end }}
@@ -77,7 +75,6 @@ On that screen, you can decide on your database provider by selecting one of the
 ![abp-studio-new-solution-dialog-database-configurations](images/abp-studio-new-solution-dialog-database-configurations-efcore_dark.png)
 {{ else }}
 ![abp-studio-new-solution-dialog-database-configurations](images/abp-studio-new-solution-dialog-database-configurations-mongo_dark.png)
-![alt text](image.png)
 {{ end }}
 
 Here, you can select the database management systems (DBMS){{ if DB == "EF" }} and the connection string{{ end }}. Then, click the *Next* button for additional *Multi-Tenancy* selection:

@@ -5,11 +5,11 @@ using System.Collections.Concurrent;
 namespace Volo.Abp.AI;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct)]
-public class ChatClientNameAttribute : Attribute
+public class WorkspaceNameAttribute : Attribute
 {
     public string Name { get; }
 
-    public ChatClientNameAttribute(string name)
+    public WorkspaceNameAttribute(string name)
     {
         Check.NotNull(name, nameof(name));
 
@@ -18,21 +18,21 @@ public class ChatClientNameAttribute : Attribute
 
     private static readonly ConcurrentDictionary<Type, string> _nameCache = new();
 
-    public static string GetChatClientName<TChatClient>()
+    public static string GetWorkspaceName<TWorkspace>()
     {
-        return GetChatClientName(typeof(TChatClient));
+        return GetWorkspaceName(typeof(TWorkspace));
     }
     
-    public static string GetChatClientName(Type chatClientType)
+    public static string GetWorkspaceName(Type workspaceType)
     {
-        return _nameCache.GetOrAdd(chatClientType, type =>
+        return _nameCache.GetOrAdd(workspaceType, type =>
         {
-            var chatClientNameAttribute = type
+            var workspaceNameAttribute = type
                 .GetCustomAttributes(true)
-                .OfType<ChatClientNameAttribute>()
+                .OfType<WorkspaceNameAttribute>()
                 .FirstOrDefault();
 
-            return chatClientNameAttribute?.Name ?? type.FullName!;
+            return workspaceNameAttribute?.Name ?? type.FullName!;
         });
     }
 }

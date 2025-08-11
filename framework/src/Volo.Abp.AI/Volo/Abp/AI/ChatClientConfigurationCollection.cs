@@ -19,7 +19,7 @@ public class ChatClientConfigurationDictionary : Dictionary<string, ChatClientCo
     public void Configure(Type chatClientType, Action<ChatClientConfiguration> configureAction)
     {
         Configure(
-            ChatClientNameAttribute.GetChatClientName(chatClientType),
+            WorkspaceNameAttribute.GetWorkspaceName(chatClientType),
             configureAction
         );
     }

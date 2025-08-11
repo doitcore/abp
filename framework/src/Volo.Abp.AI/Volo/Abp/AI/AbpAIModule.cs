@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.SemanticKernel;
 using Volo.Abp.Modularity;
 
 namespace Volo.Abp.AI;
@@ -39,7 +40,34 @@ public class AbpAIModule : AbpModule
                 );
             }
         }
-        
+
         context.Services.TryAddTransient(typeof(IChatClient<>), typeof(TypedChatClient<>));
+
+        foreach (var kernelConfig in options.Kernels.Values)
+        {
+            if (kernelConfig.Builder == null)
+            {
+                throw new AbpException("KernelBuilder is not properly configured. Set the Builder property.");
+            }
+
+            foreach (var builderConfigurer in kernelConfig.BuilderConfigurers)
+            {
+                builderConfigurer.Action(kernelConfig.Builder);
+            }
+
+            context.Services.AddKeyedSingleton<Kernel>(
+                AbpAIOptions.GetKernelServiceKeyName(kernelConfig.Name),
+                (provider, _) => kernelConfig.Builder.Build());
+
+            if (kernelConfig.Name == KernelConfigurationDictionary.DefaultKernelName)
+            {
+                context.Services.AddSingleton<Kernel>(sp => sp.GetRequiredKeyedService<Kernel>(
+                        AbpAIOptions.GetKernelServiceKeyName(kernelConfig.Name)
+                    )
+                );
+            }
+        }
+
+        context.Services.TryAddTransient(typeof(IKernel<>), typeof(TypedKernel<>));
     }
 }

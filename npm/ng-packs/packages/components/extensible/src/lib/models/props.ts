@@ -1,5 +1,5 @@
-import { LinkedList } from '@abp/utils/dist';
 import { InjectionToken, InjectOptions, Type } from '@angular/core';
+import { LinkedList } from '../utils/linked-list';
 import { ePropType } from '../enums/props.enum';
 import { FormPropTooltip } from './form-props';
 

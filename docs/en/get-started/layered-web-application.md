@@ -274,5 +274,3 @@ Before starting the mobile application, ensure that you configure it for [react-
 > For example in non-tiered MVC with public website application: 
 
 ![solution-runner-public-website](images/solution-runner-public-website.png)
-
-![alt text](image.png)

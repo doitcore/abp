@@ -84,7 +84,7 @@ public class UserAppService : ApplicationService
 }
 ````
 
-You should have defined the mappings before to be able to map objects. See the AutoMapper integration section to learn how to define mappings.
+You should have defined the mappings before to be able to map objects. See the AutoMapper/Mapperly integration section to learn how to define mappings.
 
 ## AutoMapper Integration
 
@@ -217,13 +217,120 @@ public class MyProfile : Profile
 }
 ````
 
+## Mapperly Integration
+
+[Mapperly](https://github.com/riok/mapperly) is a .NET source generator for generating object mappings. [Volo.Abp.Mapperly](https://www.nuget.org/packages/Volo.Abp.Mapperly) package defines the Mapperly integration for the `IObjectMapper`.
+
+Once you define mappings class as below, you can use the `IObjectMapper` interface just like explained before.
+
+### Define Mapping Classes
+
+You can define a mapper class by using the `Mapper` attribute. The class and methods must be `partial` to allow the Mapperly to generate the implementation during the build process:
+
+````csharp
+[Mapper]
+public partial class UserToUserDtoMapper : MapperBase<User, UserDto>
+{
+    public override partial UserDto Map(User source);
+    public override partial void Map(User source, UserDto destination);
+}
+````
+
+If you also want to map `UserDto` to `User`, you can inherit from the `TwoWayMapperBase<User, UserDto>` class:
+
+````csharp
+[Mapper]
+public partial class UserToUserDtoMapper : TwoWayMapperBase<User, UserDto>
+{
+    public override partial UserDto Map(User source);
+    public override partial void Map(User source, UserDto destination);
+
+    public override partial User ReverseMap(UserDto destination);
+    public override partial void ReverseMap(UserDto destination, User source);
+}
+````
+
+### Before and After Mapping Methods
+
+The base class provides `BeforeMap` and `AfterMap` methods that can be overridden to perform actions before and after the mapping:
+
+````csharp
+[Mapper]
+public partial class UserToUserDtoMapper : TwoWayMapperBase<User, UserDto>
+{
+    public override partial UserDto Map(User source);
+    public override partial void Map(User source, UserDto destination);
+
+    public override partial void BeforeMap(User source)
+    {
+        //TODO: Perform actions before the mapping
+    }
+
+    public override partial void AfterMap(User source, UserDto destination)
+    {
+        //TODO: Perform actions after the mapping
+    }
+
+    public override partial User ReverseMap(UserDto destination);
+    public override partial void ReverseMap(UserDto destination, User source);
+
+    public override partial void BeforeReverseMap(UserDto destination)
+    {
+        //TODO: Perform actions before the reverse mapping
+    }
+
+    public override partial void AfterReverseMap(UserDto destination, User source)
+    {
+        //TODO: Perform actions after the reverse mapping
+    }
+}
+````
+
+### Mapping the Object Extensions
+
+[Object extension system](../fundamentals/object-extensions.md) allows to define extra properties for existing classes. ABP provides a mapping definition extension to properly map extra properties of two objects:
+
+````csharp
+[Mapper]
+[MapExtraProperties]
+public partial class UserToUserDtoMapper : MapperBase<User, UserDto>
+{
+    public override partial UserDto Map(User source);
+    public override partial void Map(User source, UserDto destination);
+}
+````
+
+It is suggested to use the `MapExtraPropertiesAttribute` attribute if both classes are extensible objects (implement the `IHasExtraProperties` interface). See the [object extension document](../fundamentals/object-extensions.md) for more.
+
+### Lists and Arrays Support
+
+ABP Mapperly integration also supports mapping lists and arrays as explained in the [IObjectMapper<TSource, TDestination> Interface](#iobjectmappertsource-tdestination-interface) section. 
+
+**Example**:
+
+````csharp
+[Mapper]
+public partial class UserToUserDtoMapper : MapperBase<User, UserDto>
+{
+    public override partial UserDto Map(User source);
+    public override partial void Map(User source, UserDto destination);
+}
+
+var users = await _userRepository.GetListAsync(); // returns List<User>
+var dtos = ObjectMapper.Map<List<User>, List<UserDto>>(users); // creates List<UserDto>
+````
+
+### More Mapperly Features
+
+Most of Mapperly's features such as `Ignore` can be configured through its attributes. See the [Mapperly documentation](https://mapperly.riok.app/docs/intro/) for more details.
+
 ## Advanced Topics
 
 ### IObjectMapper<TContext> Interface
 
-Assume that you have created a **reusable module** which defines AutoMapper profiles and uses `IObjectMapper` when it needs to map objects. Your module then can be used in different applications, by nature of the [modularity](../architecture/modularity/basics.md).
+Assume that you have created a **reusable module** which defines AutoMapper/Mapperly profiles and uses `IObjectMapper` when it needs to map objects. Your module then can be used in different applications, by nature of the [modularity](../architecture/modularity/basics.md).
 
-`IObjectMapper` is an abstraction and can be replaced by the final application to use another mapping library. The problem here that your reusable module is designed to use the AutoMapper library, because it only defines mappings for it. In such a case, you will want to guarantee that your module always uses AutoMapper even if the final application uses another default object mapping library.
+`IObjectMapper` is an abstraction and can be replaced by the final application to use another mapping library. The problem here that your reusable module is designed to use the AutoMapper/Mapperly library, because it only defines mappings for it. In such a case, you will want to guarantee that your module always uses AutoMapper/Mapperly even if the final application uses another default object mapping library.
 
 `IObjectMapper<TContext>` is used to contextualize the object mapper, so you can use different libraries for different modules/contexts.
 
@@ -281,6 +388,8 @@ public class UserAppService : ApplicationService
 
 While using the contextualized object mapper is same as the normal object mapper, you should register the contextualized mapper in your module's `ConfigureServices` method:
 
+When using AutoMapper:
+
 ````csharp
 [DependsOn(typeof(AbpAutoMapperModule))]
 public class MyModule : AbpModule
@@ -294,6 +403,20 @@ public class MyModule : AbpModule
         {
             options.AddMaps<MyModule>(validate: true);
         });
+    }
+}
+````
+
+When using Mapperly:
+
+````csharp
+[DependsOn(typeof(AbpMapperlyModule))]
+public class MyModule : AbpModule
+{
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        //Use Mapperly for MyModule
+        context.Services.AddMapperlyObjectMapper<MyModule>();
     }
 }
 ````

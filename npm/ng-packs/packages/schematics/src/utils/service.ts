@@ -46,7 +46,7 @@ export function createControllerToServiceMapper({
       [],
     );
     imports.push(new Import({ path: '@abp/ng.core', specifiers: ['RestService', 'Rest'] }));
-    imports.push(new Import({ path: '@angular/core', specifiers: ['Injectable'] }));
+    imports.push(new Import({ path: '@angular/core', specifiers: ['Injectable', 'inject'] }));
     sortImports(imports);
     const methods = actions.map(mapActionToMethod);
     sortMethods(methods);

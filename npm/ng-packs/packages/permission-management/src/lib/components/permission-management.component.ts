@@ -30,7 +30,7 @@ import {
 import { concat, of } from 'rxjs';
 import { finalize, switchMap, take, tap } from 'rxjs/operators';
 import { PermissionManagement } from '../models';
-import { CommonModule } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 type PermissionWithStyle = PermissionGrantInfoDto & {
@@ -94,7 +94,7 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
   ],
   imports: [
     FormsModule,
-    CommonModule,
+    NgStyle,
     ModalComponent,
     LocalizationPipe,
     ButtonComponent,

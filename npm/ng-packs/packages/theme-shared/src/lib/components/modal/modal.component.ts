@@ -12,7 +12,7 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SubscriptionService, uuid } from '@abp/ng.core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -31,7 +31,7 @@ export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   providers: [SubscriptionService],
-  imports: [CommonModule],
+  imports: [NgTemplateOutlet],
 })
 export class ModalComponent implements OnInit, OnDestroy, DismissableModal {
   protected readonly confirmationService = inject(ConfirmationService);

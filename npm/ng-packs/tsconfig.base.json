@@ -47,8 +47,7 @@
       "@abp/ng.theme.basic/testing": ["packages/theme-basic/testing/src/public-api.ts"],
       "@abp/ng.theme.shared": ["packages/theme-shared/src/public-api.ts"],
       "@abp/ng.theme.shared/testing": ["packages/theme-shared/testing/src/public-api.ts"],
-      "@abp/nx.generators": ["packages/generators/src/index.ts"],
-      "@abp/utils/*": ["node_modules/@abp/utils/dist/*", "../packs/utils/projects/utils/src/*"]
+      "@abp/nx.generators": ["packages/generators/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

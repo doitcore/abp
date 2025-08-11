@@ -7,11 +7,11 @@ namespace Volo.Abp.AI;
 public class TypedKernel<TWorkSpace> : IKernel<TWorkSpace>
     where TWorkSpace : class
 {
-    public Kernel InnerKernel { get; }
+    public Kernel Kernel { get; }
 
     public TypedKernel(IServiceProvider serviceProvider)
     {
-        InnerKernel = serviceProvider.GetRequiredKeyedService<Kernel>(
+        Kernel = serviceProvider.GetRequiredKeyedService<Kernel>(
             AbpAIOptions.GetKernelServiceKeyName(
                 WorkspaceNameAttribute.GetWorkspaceName<TWorkSpace>()));
     }

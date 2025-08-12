@@ -32,7 +32,7 @@ export function provideAbpOAuth({ ssr = false }: { ssr?: boolean }) {
     {
       provide: authGuard,
       useValue: abpOAuthGuard,
-    },  
+    },
     {
       provide: asyncAuthGuard,
       useValue: asyncAbpOAuthGuard,
@@ -59,18 +59,14 @@ export function provideAbpOAuth({ ssr = false }: { ssr?: boolean }) {
       inject(OAuthConfigurationHandler);
     }),
     OAuthModule.forRoot().providers as Provider[],
+    ServerTokenStorageService,
+    BrowserTokenStorageService,
     {
       provide: OAuthStorage,
       useFactory: oAuthStorageFactory,
     },
     { provide: AuthErrorFilterService, useExisting: OAuthErrorFilterService },
   ];
-  console.log('ssr --->>>>', ssr);
-  if (ssr) {
-    providers.push(ServerTokenStorageService);
-  } else {
-    providers.push(BrowserTokenStorageService);
-  }
 
   return makeEnvironmentProviders(providers);
 }

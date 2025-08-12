@@ -39,7 +39,6 @@ import {
   OnInit,
   TemplateRef,
   TrackByFunction,
-  TransferState,
   ViewChild,
 } from '@angular/core';
 import {

@@ -182,3 +182,30 @@ Please refer to the [Mapperly documentation](https://mapperly.riok.app/docs/intr
 - [Mapperly Configuration](https://mapperly.riok.app/docs/configuration/mapper/)
 - [Mapperly Enums](https://mapperly.riok.app/docs/configuration/enum/)
 - [Mapperly Flattening and unflattening](https://mapperly.riok.app/docs/configuration/flattening/)
+
+
+## Set Default Mapping Provider
+
+When your project contains modules using both AutoMapper and Mapperly, you may need to explicitly set the default `IAutoObjectMappingProvider` to ensure consistent behavior across your application.
+
+If your application uses `AutoMapper`:
+
+```csharp
+public override void ConfigureServices(ServiceConfigurationContext context)
+{
+    context.Services.AddAutoMapperObjectMapper();
+}
+```
+
+If your application uses `Mapperly`:
+
+```csharp
+public override void ConfigureServices(ServiceConfigurationContext context)
+{
+    context.Services.AddMapperlyObjectMapper();
+}
+```
+
+### Why Set Default Mapping Provider?
+
+When your project contains modules using both AutoMapper and Mapperly, both `AbpAutoMapperModule` and `AbpMapperlyModule` will be loaded. Their dependency order may vary based on your project's module structure, and the last loaded module will override the `IAutoObjectMappingProvider` implementation. This could lead to unexpected behavior. Setting an explicit default ensures predictable mapping behavior throughout your application.

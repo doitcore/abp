@@ -25,7 +25,7 @@ If you want to manually install;
 1. Add the [Volo.Abp.BackgroundJobs.HangFire](https://www.nuget.org/packages/Volo.Abp.BackgroundJobs.HangFire) NuGet package to your project:
 
    ````
-   Install-Package Volo.Abp.BackgroundJobs.HangFire
+   dotnet add package Volo.Abp.BackgroundJobs.HangFire
    ````
 
 2. Add the `AbpBackgroundJobsHangfireModule` to the dependency list of your module:

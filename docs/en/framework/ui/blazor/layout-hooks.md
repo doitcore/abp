@@ -2,7 +2,7 @@
 
 ABP theming system places the page layout into the [theme](theming.md) NuGet packages. That means the final application doesn't include a layout, so you can't directly change the layout code to customize it.
 
-> If you create a Blazor WASM project, the `index.html` file will be included within the template. You can also customize it to your needs.
+> There will be a `App.razor` file in your project. You can customize it to your needs.
 
 You can copy the theme code into your solution. In this case, you are completely free to customize it. However, then you won't be able to get automatic updates of the theme (by upgrading the theme NuGet package).
 
@@ -101,10 +101,38 @@ See the *Layouts* section below to learn more about the layout system.
 
 There are some pre-defined layout hook points. The standard hook points are:
 
+* `LayoutHooks.Head.First`: Used to add a component as the first item in the HTML head tag.
+* `LayoutHooks.Head.Last`: Used to add a component as the last item in the HTML head tag.
 * `LayoutHooks.Body.First`: Used to add a component as the first item in the HTML body tag.
 * `LayoutHooks.Body.Last`: Used to add a component as the last item in the HTML body tag.
 
 > You (or the modules you are using) can add **multiple items to the same hook point**. All of them will be added to the layout in the order they were added.
+
+### Render LayoutHooks.Head in App.razor
+
+Your Blazor project will have a `App.razor` file, It is the root component of your application. Because of this, you need to add the `LayoutHook` component to this file manually to render the `LayoutHooks.Head` hook components. 
+
+```csharp
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Components.LayoutHooks;
+@using Volo.Abp.Ui.LayoutHooks;
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <LayoutHook Name="@LayoutHooks.Head.First" Layout="@StandardLayouts.Application" />
+
+    // Your head content
+    // ...
+
+    <LayoutHook Name="@LayoutHooks.Head.Last" Layout="@StandardLayouts.Application" />
+</head>
+<body>
+    // Your body content
+    // ...
+</body>
+</html>
+```
 
 ## Layouts
 

@@ -4,7 +4,6 @@ import {
   LocalizationPipe,
   PagedResultDto,
   ReplaceableTemplateDirective,
-  SSRService,
 } from '@abp/ng.core';
 import {
   GetIdentityUsersInput,
@@ -37,7 +36,6 @@ import {
   Component,
   inject,
   Injector,
-  makeStateKey,
   OnInit,
   TemplateRef,
   TrackByFunction,
@@ -94,7 +92,6 @@ export class UsersComponent implements OnInit {
   protected readonly toasterService = inject(ToasterService);
   private readonly fb = inject(UntypedFormBuilder);
   private readonly injector = inject(Injector);
-  USERS_KEY = makeStateKey<any>('users');
 
   data: PagedResultDto<IdentityUserDto> = { items: [], totalCount: 0 };
 
@@ -125,9 +122,7 @@ export class UsersComponent implements OnInit {
 
   trackByFn: TrackByFunction<AbstractControl> = (index, item) => Object.keys(item)[0] || index;
 
-  public ssrService = inject(SSRService);
-
-  constructor(private transferState: TransferState) {}
+  constructor() {}
 
   onVisiblePermissionChange = (event: boolean) => {
     this.visiblePermissions = event;
@@ -240,19 +235,11 @@ export class UsersComponent implements OnInit {
   }
 
   private hookToQuery() {
-    if (this.transferState.hasKey(this.USERS_KEY)) {
-      this.data = this.transferState.get(this.USERS_KEY, { items: [], totalCount: 0 });
-      this.transferState.remove(this.USERS_KEY);
-    } else {
-      this.list
-        .hookToQuery(query => this.service.getList(query))
-        .subscribe(res => {
-          this.data = res;
-          if (this.ssrService.isServer) {
-            this.transferState.set(this.USERS_KEY, res);
-          }
-        });
-    }
+    this.list
+      .hookToQuery(query => this.service.getList(query))
+      .subscribe(res => {
+        this.data = res;
+      });
   }
 
   openPermissionsModal(providerKey: string, entityDisplayName?: string) {

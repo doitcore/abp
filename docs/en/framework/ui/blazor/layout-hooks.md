@@ -2,7 +2,7 @@
 
 ABP theming system places the page layout into the [theme](theming.md) NuGet packages. That means the final application doesn't include a layout, so you can't directly change the layout code to customize it.
 
-> There will be a `App.razor` file in your project. You can customize it to your needs.
+> If you created your Blazor application with ABP templates, then you'll have an `App.razor` file in your project. You can customize it to your needs and even extend it with layout hooks.
 
 You can copy the theme code into your solution. In this case, you are completely free to customize it. However, then you won't be able to get automatic updates of the theme (by upgrading the theme NuGet package).
 
@@ -110,7 +110,7 @@ There are some pre-defined layout hook points. The standard hook points are:
 
 ### Render LayoutHooks.Head in App.razor
 
-Your Blazor project will have a `App.razor` file, It is the root component of your application. Because of this, you need to add the `LayoutHook` component to this file manually to render the `LayoutHooks.Head` hook components. 
+In your Blazor application, there is an `App.razor` file, which acts as the entry point of your application. If you need to render layout hooks between the **head** tags, then you should manually register the layout hooks as below: 
 
 ```csharp
 @using Volo.Abp.AspNetCore.Components.Web.Theming.Components.LayoutHooks;
@@ -133,6 +133,8 @@ Your Blazor project will have a `App.razor` file, It is the root component of yo
 </body>
 </html>
 ```
+
+After registering the related layout hooks, you can define components to render in the specific place accordingly as mentioned above.
 
 ## Layouts
 

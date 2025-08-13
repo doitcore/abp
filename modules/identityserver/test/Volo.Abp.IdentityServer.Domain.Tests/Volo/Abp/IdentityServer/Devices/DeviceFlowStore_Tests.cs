@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Duende.IdentityModel;
+using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Shouldly;

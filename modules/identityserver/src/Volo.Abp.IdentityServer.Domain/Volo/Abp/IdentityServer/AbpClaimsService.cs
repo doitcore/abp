@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Duende.IdentityModel;
+using IdentityModel;
 using IdentityServer4.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

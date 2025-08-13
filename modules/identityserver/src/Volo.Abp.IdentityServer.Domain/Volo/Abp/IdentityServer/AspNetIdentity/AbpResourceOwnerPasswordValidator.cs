@@ -4,7 +4,7 @@ using System.Linq;
 using System.Resources;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Duende.IdentityModel;
+using IdentityModel;
 using IdentityServer4.AspNetIdentity;
 using IdentityServer4.Events;
 using IdentityServer4.Models;

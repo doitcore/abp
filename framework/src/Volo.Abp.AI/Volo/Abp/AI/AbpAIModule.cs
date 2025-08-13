@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.SemanticKernel;
 using Volo.Abp.Modularity;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Volo.Abp.AI;
 
@@ -11,31 +12,34 @@ namespace Volo.Abp.AI;
 )]
 public class AbpAIModule : AbpModule
 {
+
+    public const string DefaultWorkspaceName = "Default";
+
     public override void PostConfigureServices(ServiceConfigurationContext context)
     {
         var options = context.Services.ExecutePreConfiguredActions<AbpAIOptions>();
 
-        foreach (var chatClientConfig in options.ChatClients.Values)
+        foreach (var workspaceConfig in options.Workspaces.Values)
         {
-            if (chatClientConfig.Builder == null)
+            if (workspaceConfig.ChatClient?.Builder is null)
             {
-                throw new AbpException("ChatClientBuilder is not properly configured. Set the Builder property.");
+                continue;
             }
 
-            foreach (var builderConfigurer in chatClientConfig.BuilderConfigurers)
+            foreach (var builderConfigurer in workspaceConfig.ChatClient.BuilderConfigurers)
             {
-                builderConfigurer.Action(chatClientConfig.Builder);
+                builderConfigurer.Action(workspaceConfig.ChatClient.Builder!);
             }
 
             context.Services.AddKeyedChatClient(
-                AbpAIOptions.GetChatClientServiceKeyName(chatClientConfig.Name),
-                provider => chatClientConfig.Builder.Build(provider)
+                AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.ChatClient.Name),
+                provider => workspaceConfig.ChatClient.Builder!.Build(provider)
             );
 
-            if (chatClientConfig.Name == ChatClientConfigurationDictionary.DefaultChatClientName)
+            if (workspaceConfig.ChatClient.Name == DefaultWorkspaceName)
             {
                 context.Services.AddTransient<IChatClient>(sp => sp.GetRequiredKeyedService<IChatClient>(
-                        AbpAIOptions.GetChatClientServiceKeyName(chatClientConfig.Name)
+                        AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.ChatClient.Name)
                     )
                 );
             }
@@ -43,31 +47,31 @@ public class AbpAIModule : AbpModule
 
         context.Services.TryAddTransient(typeof(IChatClient<>), typeof(TypedChatClient<>));
 
-        foreach (var kernelConfig in options.Kernels.Values)
+        foreach (var workspaceConfig in options.Workspaces.Values)
         {
-            if (kernelConfig.Builder == null)
+            if (workspaceConfig.Kernel?.Builder is null)
             {
-                throw new AbpException("KernelBuilder is not properly configured. Set the Builder property.");
+                continue;
             }
 
-            foreach (var builderConfigurer in kernelConfig.BuilderConfigurers)
+            foreach (var builderConfigurer in workspaceConfig.Kernel.BuilderConfigurers)
             {
-                builderConfigurer.Action(kernelConfig.Builder);
+                builderConfigurer.Action(workspaceConfig.Kernel.Builder!);
             }
 
             context.Services.AddKeyedSingleton<Kernel>(
-                AbpAIOptions.GetKernelServiceKeyName(kernelConfig.Name),
-                (provider, _) => kernelConfig.Builder.Build());
+                AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Kernel.Name),
+                (provider, _) => workspaceConfig.Kernel.Builder!.Build());
 
-            if (kernelConfig.Name == KernelConfigurationDictionary.DefaultKernelName)
+            if (workspaceConfig.Kernel.Name == DefaultWorkspaceName)
             {
                 context.Services.AddSingleton<Kernel>(sp => sp.GetRequiredKeyedService<Kernel>(
-                        AbpAIOptions.GetKernelServiceKeyName(kernelConfig.Name)
+                        AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Kernel.Name)
                     )
                 );
             }
         }
 
-        context.Services.TryAddTransient(typeof(IKernel<>), typeof(TypedKernel<>));
+        context.Services.TryAddTransient(typeof(IKernelAccessor<>), typeof(TypedKernelAccessor<>));
     }
 }

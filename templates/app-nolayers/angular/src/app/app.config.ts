@@ -28,7 +28,7 @@ export const appConfig: ApplicationConfig = {
         registerLocaleFn: registerLocale(),
       })
     ),
-    provideAbpOAuth({ ssr: false }),
+    provideAbpOAuth(),
     provideAbpThemeShared(),
     provideSettingManagementConfig(),
     provideAccountConfig(),

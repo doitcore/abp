@@ -6,7 +6,7 @@ import {serverRoutes} from "./app.routes.server";
 
 const serverConfig: ApplicationConfig = {
   providers: [
-    provideAbpOAuth({ ssr: true }),
+    provideAbpOAuth(),
     provideServerRendering(withRoutes(serverRoutes))
   ]
 };

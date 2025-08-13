@@ -8,11 +8,7 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint",
-    "dev:ssr": "ng run MyProjectName:serve-ssr",
-    "serve:ssr": "node dist/MyProjectName/server/main.js",
-    "build:ssr": "ng build && ng run MyProjectName:server",
-    "prerender": "ng run MyProjectName:prerender"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {

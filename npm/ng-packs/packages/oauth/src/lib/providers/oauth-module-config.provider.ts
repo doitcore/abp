@@ -19,7 +19,7 @@ import { pipeToLogin, checkAccessToken, oAuthStorageFactory } from '../utils';
 import { NavigateToManageProfileProvider } from './navigate-to-manage-profile.provider';
 import { ServerTokenStorageService } from '../services/server-token-storage.service';
 
-export function provideAbpOAuth({ ssr = false }: { ssr?: boolean }) {
+export function provideAbpOAuth() {
   const providers = [
     {
       provide: AuthService,

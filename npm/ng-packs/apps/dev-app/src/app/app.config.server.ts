@@ -5,7 +5,7 @@ import { withRoutes, provideServerRendering } from '@angular/ssr';
 import { appServerRoutes } from './app.routes.server';
 
 const serverConfig: ApplicationConfig = {
-  providers: [provideAbpOAuth({ ssr: true }), provideServerRendering(withRoutes(appServerRoutes))],
+  providers: [provideAbpOAuth(), provideServerRendering(withRoutes(appServerRoutes))],
 };
 
 export const config = mergeApplicationConfig(appConfig, serverConfig);

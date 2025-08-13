@@ -21,12 +21,6 @@ public class AbpAIOptions
     }
 }
 
-public class WorkspaceConfiguration
-{
-    public ChatClientConfiguration? ChatClient { get; set; }
-    public KernelConfiguration? Kernel { get; set; }
-}
-
 public class WorkspaceConfigurationDictionary : Dictionary<string, WorkspaceConfiguration>
 {
     public void Configure<TWorkSpace>(Action<WorkspaceConfiguration> configureAction)
@@ -39,10 +33,45 @@ public class WorkspaceConfigurationDictionary : Dictionary<string, WorkspaceConf
     {
         if (!TryGetValue(name, out var configuration))
         {
-            configuration = new WorkspaceConfiguration();
+            configuration = new WorkspaceConfiguration(name);
             this[name] = configuration;
         }
 
         configureAction(configuration);
+    }
+}
+
+public class WorkspaceConfiguration
+{
+    public string Name { get; }
+    public ChatClientConfiguration? ChatClient { get; set; }
+    public KernelConfiguration? Kernel { get; set; }
+
+    public WorkspaceConfiguration(string name)
+    {
+        Name = name;
+    }
+
+    public WorkspaceConfiguration ConfigureChatClient(Action<ChatClientConfiguration> configureAction)
+    {
+        if (ChatClient is null)
+        {
+            ChatClient = new ChatClientConfiguration();
+        }
+
+        configureAction(ChatClient);
+        return this;
+    }
+    
+
+    public WorkspaceConfiguration ConfigureKernel(Action<KernelConfiguration> configureAction)
+    {
+        if (Kernel is null)
+        {
+            Kernel = new KernelConfiguration();
+        }
+
+        configureAction(Kernel);
+        return this;
     }
 }

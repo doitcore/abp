@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.SemanticKernel;
 using Volo.Abp.Modularity;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Volo.Abp.AI;
 
@@ -32,14 +31,15 @@ public class AbpAIModule : AbpModule
             }
 
             context.Services.AddKeyedChatClient(
-                AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.ChatClient.Name),
-                provider => workspaceConfig.ChatClient.Builder!.Build(provider)
+                AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.Name),
+                provider => workspaceConfig.ChatClient.Builder!.Build(provider),
+                ServiceLifetime.Transient
             );
 
-            if (workspaceConfig.ChatClient.Name == DefaultWorkspaceName)
+            if (workspaceConfig.Name == DefaultWorkspaceName)
             {
                 context.Services.AddTransient<IChatClient>(sp => sp.GetRequiredKeyedService<IChatClient>(
-                        AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.ChatClient.Name)
+                        AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.Name)
                     )
                 );
             }
@@ -60,13 +60,13 @@ public class AbpAIModule : AbpModule
             }
 
             context.Services.AddKeyedSingleton<Kernel>(
-                AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Kernel.Name),
+                AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Name),
                 (provider, _) => workspaceConfig.Kernel.Builder!.Build());
 
-            if (workspaceConfig.Kernel.Name == DefaultWorkspaceName)
+            if (workspaceConfig.Name == DefaultWorkspaceName)
             {
                 context.Services.AddSingleton<Kernel>(sp => sp.GetRequiredKeyedService<Kernel>(
-                        AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Kernel.Name)
+                        AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Name)
                     )
                 );
             }

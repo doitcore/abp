@@ -5,17 +5,9 @@ namespace Volo.Abp.AI;
 
 public class KernelConfiguration
 {
-    public string Name { get; }
-
     public IKernelBuilder? Builder { get; set; }
 
-    public KernelBuilderConfigurerList BuilderConfigurers { get; }
-
-    public KernelConfiguration(string name)
-    {
-        Name = name;
-        BuilderConfigurers = new KernelBuilderConfigurerList();
-    }
+    public KernelBuilderConfigurerList BuilderConfigurers { get; } = new();
 
     public void ConfigureBuilder(Action<IKernelBuilder> configureAction)
     {

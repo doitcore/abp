@@ -3,8 +3,40 @@
   [rows]="data"
   [count]="recordsTotal"
   [list]="list"
+  [selectionType]="selectable ? _selectionType : undefined"
   (activate)="tableActivate.emit($event)"
+  (select)="onSelect($event)"
+  [selected]="selected"
 >
+@if(selectable) {
+  <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
+  
+    <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
+      let-selectFn="selectFn">
+      @if (_selectionType !== 'single') {
+      <div class="form-check">
+        <input class="form-check-input table-check" type="checkbox" [checked]="allRowsSelected"
+          (change)="selectFn(!allRowsSelected)" />
+      </div>
+      }
+    </ng-template>
+  
+    <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-isSelected="isSelected"
+      let-onCheckboxChangeFn="onCheckboxChangeFn">
+      @if(_selectionType === 'single') {
+      <div class="h-100 form-check form-check-sm form-check-custom form-check-solid">
+        <input class="form-check-input" type="radio" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+      </div>
+      }
+      @if (_selectionType !== 'single') {
+      <div class="h-100 form-check form-check-sm form-check-custom form-check-solid">
+        <input class="form-check-input" type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+      </div>
+      }
+    </ng-template>
+  
+  </ngx-datatable-column>
+  }
   @if (actionsTemplate || (actionList.length && hasAtLeastOnePermittedAction)) {
     <ngx-datatable-column
       [name]="actionsText | abpLocalization"

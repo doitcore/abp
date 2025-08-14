@@ -12,6 +12,8 @@ All the new features were explained in detail in the [9.3 RC Announcement Post](
 
 You can check the [Get Started page](https://abp.io/get-started) to see how to get started with ABP. You can either download [ABP Studio](https://abp.io/get-started#abp-studio-tab) (**recommended**, if you prefer a user-friendly GUI application - desktop application) or use the [ABP CLI](https://abp.io/docs/latest/cli) to create new solutions.
 
+> **Note**: ABP Studio **v1.2.1** has been released with support for **ABP 9.3**. If you already have ABP Studio installed, update it to v1.2.1 (or later, if available) to create new applications targeting 9.3. ABP Studio checks for updates automatically and will prompt you in-app modal to update to the latest version, or you can download the latest installer from the [Studio](https://abp.io/studio) page. See the [upgrading guide](https://abp.io/docs/latest/studio/installation#upgrading) for details. After updating, the New Solution wizard will create applications with ABP 9.3 by default. You can check the [ABP Studio and ABP Startup Template Version Mappings](https://abp.io/docs/latest/studio/version-mapping) documentation to see the corresponding ABP versions for other versions of Studio.
+
 ### How to Upgrade an Existing Solution
 
 You can upgrade your existing solutions with either ABP Studio or ABP CLI. In the following sections, both approaches are explained:

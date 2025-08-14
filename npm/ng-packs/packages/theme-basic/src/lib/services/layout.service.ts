@@ -1,11 +1,14 @@
 import {RouterEvents, SubscriptionService} from '@abp/ng.core';
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable, inject } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { eThemeBasicComponents } from '../enums';
 
 @Injectable()
 export class LayoutService {
+  private subscription = inject(SubscriptionService);
+  private cdRef = inject(ChangeDetectorRef);
+
   isCollapsed = true;
 
   smallScreen!: boolean; // do not set true or false
@@ -16,9 +19,10 @@ export class LayoutService {
 
   navItemsComponentKey = eThemeBasicComponents.NavItems;
 
-  constructor(private subscription: SubscriptionService,
-              private cdRef: ChangeDetectorRef,
-              routerEvents:RouterEvents) {
+  constructor() {
+    const subscription = this.subscription;
+    const routerEvents = inject(RouterEvents);
+
     subscription.addOne(routerEvents.getNavigationEvents("End"),() => {
       this.isCollapsed = true;
     })

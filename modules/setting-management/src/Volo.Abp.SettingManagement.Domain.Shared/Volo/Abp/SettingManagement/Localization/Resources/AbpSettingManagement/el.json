@@ -17,6 +17,7 @@
     "SentSuccessfully": "Στάλθηκε με επιτυχία",
     "MailSendingFailed": "Αποτυχία αποστολής email. Ελέγξτε τη διαμόρφωση του email σας και δοκιμάστε ξανά.",
     "Send": "Αποστολή",
+    "Menu:Settings": "Ρυθμίσεις",
     "Menu:Emailing": "Αποστολή email",
     "SmtpHost": "Διακομιστής",
     "SmtpPort": "Πόρτα",

@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { Params } from '@angular/router';
 import { from, Observable, lastValueFrom, EMPTY } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
@@ -13,6 +13,8 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class AbpOAuthService implements IAuthService {
+  protected injector = inject(Injector);
+
   private strategy!: AuthFlowStrategy;
   private readonly oAuthService: OAuthService;
 
@@ -28,7 +30,7 @@ export class AbpOAuthService implements IAuthService {
     return this.strategy.isInternalAuth;
   }
 
-  constructor(protected injector: Injector) {
+  constructor() {
     this.oAuthService = this.injector.get(OAuthService);
   }
 

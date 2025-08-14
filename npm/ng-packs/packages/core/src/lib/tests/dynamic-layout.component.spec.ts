@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, inject as inject_1 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { createRoutingFactory, SpectatorRouting } from '@ngneat/spectator/jest';
 import { DynamicLayoutComponent, RouterOutletComponent } from '../components';
@@ -43,8 +43,8 @@ class DummyLayoutModule {}
   selector: 'abp-dummy',
   template: '{{route.snapshot.data?.name}} works!',
 })
-class DummyComponent {
-  constructor(public route: ActivatedRoute) {}
+class DummyComponent {  route = inject_1(ActivatedRoute);
+
 }
 
 const routes: ABP.Route[] = [

@@ -19,7 +19,7 @@ You have created two modules so far: the **Catalog** module to store and manage 
 In this part and next two pars, you will learn to implement three common patterns for integrating these modules:
 
 1. The Order module will make a request to the Catalog module to get product information when needed.
-2. The Product module will listen to events from the Ordering module, so it can decrease a product's stock count when an order is placed.
+2. The Catalog module will listen to events from the Ordering module, so it can decrease a product's stock count when an order is placed.
 3. Finally, you will execute a database query that includes product and order data.
 
 Let's begin from the first one: The Integration Services.

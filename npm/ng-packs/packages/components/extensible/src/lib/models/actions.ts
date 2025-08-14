@@ -1,5 +1,5 @@
-import { LinkedList } from '@abp/utils';
 import { InjectionToken, InjectOptions, Type } from '@angular/core';
+import { LinkedList } from '../utils/linked-list';
 
 export abstract class ActionList<R = any, A = Action<R>> extends LinkedList<A> {}
 

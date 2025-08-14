@@ -44,3 +44,18 @@ The main changes include:
 - Updated schematics to support both module-based and standalone templates
 
 For detailed migration steps and best practices, please refer to our upcoming documentation and/or blog post. The migration is optional, and you can continue using the module-based approach if you prefer.
+
+## Angular UI: Migrating Version to v20
+
+In this version, we've updated our Angular version to v20. This update brings our Angular user interface to the latest and most powerful version
+
+Key Updates:
+- Updated Angular packages (core, common, forms, router, etc.) to ~20.0.0
+- Updated @angular/cli and @angular-devkit/* to ~20.0.0
+- Updated Typescript to ~5.8.0
+- Updated RxJS to ~7.8.0
+- Updated third-party libraries to their latest versions compatible with Angular v20
+
+Breaking Changes:
+- Minimum required Node.js version is now v20.19.0
+- @angular/platform-browser no longer includes deprecated APIs like DOCUMENT token globally; ensure you're importing from @angular/common

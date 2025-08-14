@@ -75,6 +75,7 @@ public partial class UserManagement
 
     protected override ValueTask SetBreadcrumbItemsAsync()
     {
+        BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(LUiNavigation["Menu:Administration"].Value));
         BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Menu:IdentityManagement"].Value));
         BreadcrumbItems.Add(new BlazoriseUI.BreadcrumbItem(L["Users"].Value));
         return base.SetBreadcrumbItemsAsync();

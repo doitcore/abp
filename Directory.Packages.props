@@ -46,7 +46,7 @@
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.18" />
     <PackageVersion Include="Hangfire.SqlServer" Version="1.8.18" />
     <PackageVersion Include="HtmlSanitizer" Version="9.0.884" />
-    <PackageVersion Include="IdentityModel" Version="7.0.0" />
+    <PackageVersion Include="Duende.IdentityModel" Version="7.1.0" />
     <PackageVersion Include="IdentityServer4" Version="4.1.2" />
     <PackageVersion Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
@@ -140,7 +140,8 @@
     <PackageVersion Include="Oracle.EntityFrameworkCore" Version="9.23.80" />
     <PackageVersion Include="Polly" Version="8.5.2" />
     <PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
-    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
+    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-rc.1.efcore.9.0.0" />
+    <PackageVersion Include="MySql.EntityFrameworkCore" Version="9.0.6" />
     <PackageVersion Include="Quartz" Version="3.14.0" />
     <PackageVersion Include="Quartz.Extensions.DependencyInjection" Version="3.14.0" />
     <PackageVersion Include="Quartz.Plugins.TimeZoneConverter" Version="3.14.0" />
@@ -148,6 +149,7 @@
     <PackageVersion Include="RabbitMQ.Client" Version="7.1.2" />
     <PackageVersion Include="Rebus" Version="8.8.0" />
     <PackageVersion Include="Rebus.ServiceProvider" Version="10.3.0" />
+    <PackageVersion Include="Riok.Mapperly" Version="4.2.1" />
     <PackageVersion Include="Scriban" Version="6.2.1" />
     <PackageVersion Include="Serilog" Version="4.2.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
@@ -158,8 +160,8 @@
     <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageVersion Include="SharpZipLib" Version="1.4.2" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.8" />
-    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.6" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.1" />
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
     <PackageVersion Include="SkiaSharp" Version="2.88.8" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="2.88.8" />
     <PackageVersion Include="SkiaSharp.NativeAssets.macOS" Version="2.88.8" />

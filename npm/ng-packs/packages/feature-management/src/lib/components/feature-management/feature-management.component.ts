@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfigStateService, LocalizationPipe, TrackByService } from '@abp/ng.core';
 import {
@@ -35,14 +35,13 @@ const DEFAULT_PROVIDER_NAME = 'D';
   templateUrl: './feature-management.component.html',
   exportAs: 'abpFeatureManagement',
   imports: [
-    CommonModule,
+    NgTemplateOutlet,
     ButtonComponent,
     ModalComponent,
     LocalizationPipe,
     FormsModule,
     NgbNavModule,
     FreeTextInputDirective,
-    NgTemplateOutlet,
     ModalCloseDirective,
   ],
 })
@@ -181,6 +180,22 @@ export class FeatureManagementComponent
       this.checkToggleAncestors(feature);
     } else {
       this.uncheckToggleDescendants(feature);
+    }
+  }
+
+  isParentDisabled(parentName: string, groupName: string, provider: string): boolean {
+    const children = this.features[groupName]?.filter(f => f.parentName === parentName);
+
+    if (children?.length) {
+      return children.some(child => {
+        const childProvider = child.provider?.name;
+        return (
+          (childProvider !== this.providerName && childProvider !== this.defaultProviderName) ||
+          (provider !== this.providerName && provider !== this.defaultProviderName)
+        );
+      });
+    } else {
+      return provider !== this.providerName && provider !== this.defaultProviderName;
     }
   }
 

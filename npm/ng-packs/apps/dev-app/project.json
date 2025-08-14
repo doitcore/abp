@@ -19,7 +19,7 @@
         "styles": [
           {
             "input": "node_modules/bootstrap/dist/css/bootstrap.rtl.min.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "bootstrap-rtl.min"
           },
           {
@@ -29,52 +29,52 @@
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/bootstrap-dim.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "bootstrap-dim"
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/ng-bundle.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "ng-bundle"
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/side-menu/layout-bundle.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "layout-bundle"
           },
           {
             "input": "node_modules/@abp/ng.theme.lepton-x/assets/css/abp-bundle.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "abp-bundle"
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/bootstrap-dim.rtl.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "bootstrap-dim.rtl"
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/ng-bundle.rtl.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "ng-bundle.rtl"
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/side-menu/layout-bundle.rtl.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "layout-bundle.rtl"
           },
           {
             "input": "node_modules/@abp/ng.theme.lepton-x/assets/css/abp-bundle.rtl.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "abp-bundle.rtl"
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/font-bundle.rtl.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "font-bundle.rtl"
           },
           {
             "input": "node_modules/@volo/ngx-lepton-x.lite/assets/css/font-bundle.css",
-            "inject": false,
+            "inject": true,
             "bundleName": "font-bundle"
           },
           {
@@ -89,17 +89,17 @@
           },
           {
             "input": "node_modules/@swimlane/ngx-datatable/index.css",
-            "inject": true,
+            "inject": false,
             "bundleName": "ngx-datatable-index"
           },
           {
             "input": "node_modules/@swimlane/ngx-datatable/assets/icons.css",
-            "inject": true,
+            "inject": false,
             "bundleName": "ngx-datatable-icons"
           },
           {
             "input": "node_modules/@swimlane/ngx-datatable/themes/material.css",
-            "inject": true,
+            "inject": false,
             "bundleName": "ngx-datatable-material"
           },
           {

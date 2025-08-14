@@ -44,8 +44,8 @@ public class WorkspaceConfigurationDictionary : Dictionary<string, WorkspaceConf
 public class WorkspaceConfiguration
 {
     public string Name { get; }
-    public ChatClientConfiguration? ChatClient { get; set; }
-    public KernelConfiguration? Kernel { get; set; }
+    public ChatClientConfiguration ChatClient { get; } = new();
+    public KernelConfiguration Kernel { get; } = new();
 
     public WorkspaceConfiguration(string name)
     {
@@ -54,11 +54,6 @@ public class WorkspaceConfiguration
 
     public WorkspaceConfiguration ConfigureChatClient(Action<ChatClientConfiguration> configureAction)
     {
-        if (ChatClient is null)
-        {
-            ChatClient = new ChatClientConfiguration();
-        }
-
         configureAction(ChatClient);
         return this;
     }
@@ -66,11 +61,6 @@ public class WorkspaceConfiguration
 
     public WorkspaceConfiguration ConfigureKernel(Action<KernelConfiguration> configureAction)
     {
-        if (Kernel is null)
-        {
-            Kernel = new KernelConfiguration();
-        }
-
         configureAction(Kernel);
         return this;
     }

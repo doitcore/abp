@@ -320,6 +320,165 @@ var users = await _userRepository.GetListAsync(); // returns List<User>
 var dtos = ObjectMapper.Map<List<User>, List<UserDto>>(users); // creates List<UserDto>
 ````
 
+### Nested Mapping
+
+When working with nested object mapping, there's an important limitation to be aware of. If you have separate mappers for nested types like in the example below, the parent mapper (`SourceTypeToDestinationTypeMapper`) will not automatically use the nested mapper (`SourceNestedTypeToDestinationNestedTypeMapper`) to handle the mapping of nested properties. This means that configurations like the `MapperIgnoreTarget` attribute on the nested mapper will be ignored during the parent mapping operation.
+
+````csharp
+public class SourceNestedType
+{
+    public string Name { get; set; }
+
+    public string Ignored { get; set; }
+}
+
+public class SourceType
+{
+    public string Name { get; set; }
+
+    public SourceNestedType Nested { get; set; }
+}
+
+public class DestinationNestedType
+{
+    public string Name { get; set; }
+
+    public string Ignored { get; set; }
+}
+
+public class DestinationType
+{
+    public string Name { get; set; }
+
+    public DestinationNestedType Nested { get; set; }
+}
+
+[Mapper]
+public partial class SourceTypeToDestinationTypeMapper : MapperBase<SourceType, DestinationType>
+{
+    public override partial DestinationType Map(SourceType source);
+    public override partial void Map(SourceType source, DestinationType destination);
+}
+
+[Mapper]
+public partial class SourceNestedTypeToDestinationNestedTypeMapper : MapperBase<SourceNestedType, DestinationNestedType>
+{
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public override partial DestinationNestedType Map(SourceNestedType source);
+
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public override partial void Map(SourceNestedType source, DestinationNestedType destination);
+}
+````
+
+There are several ways to solve this nested mapping issue. Choose the approach that best fits your specific requirements:
+
+#### Solution 1: Multi-Interface Implementation
+
+Implement both mapping interfaces (`IAbpMapperlyMapper<SourceType, DestinationType>` and `IAbpMapperlyMapper<SourceNestedType, DestinationNestedType>`) in a single mapper class. This approach consolidates all related mapping logic into one class.
+
+**Important:** Remember to implement `ITransientDependency` to register the mapper class with the dependency injection container.
+
+````csharp
+[Mapper]
+public partial class SourceTypeToDestinationTypeMapper : IAbpMapperlyMapper<SourceType, DestinationType>, IAbpMapperlyMapper<SourceNestedType, DestinationNestedType>, ITransientDependency
+{
+    public partial DestinationType Map(SourceType source);
+    public partial void Map(SourceType source, DestinationType destination);
+    public void BeforeMap(SourceType source)
+    {
+    }
+
+    public void AfterMap(SourceType source, DestinationType destination)
+    {
+    }
+
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public partial DestinationNestedType Map(SourceNestedType source);
+
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public partial void Map(SourceNestedType source, DestinationNestedType destination);
+
+    public void BeforeMap(SourceNestedType source)
+    {
+    }
+
+    public void AfterMap(SourceNestedType source, DestinationNestedType destination)
+    {
+    }
+}
+````
+
+#### Solution 2: Consolidate Mapping Methods
+
+Copy the nested mapping methods from `SourceNestedTypeToDestinationNestedTypeMapper` to the parent `SourceTypeToDestinationTypeMapper` class. This ensures all mapping logic is contained within a single mapper.
+
+Example:
+
+````csharp
+[Mapper]
+public partial class SourceTypeToDestinationTypeMapper : MapperBase<SourceType, DestinationType>
+{
+    public override partial DestinationType Map(SourceType source);
+    public override partial void Map(SourceType source, DestinationType destination);
+
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public override partial DestinationNestedType Map(SourceNestedType source);
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public override partial void Map(SourceNestedType source, DestinationNestedType destination);
+}
+
+[Mapper]
+public partial class SourceNestedTypeToDestinationNestedTypeMapper : MapperBase<SourceNestedType, DestinationNestedType>
+{
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public override partial DestinationNestedType Map(SourceNestedType source);
+
+    [MapperIgnoreTarget(nameof(SourceNestedType.Ignored))]
+    public override partial void Map(SourceNestedType source, DestinationNestedType destination);
+}
+````
+
+#### Solution 3: Dependency Injection Approach
+
+Inject the nested mapper as a dependency into the parent mapper and use it in the `AfterMap` method to handle nested object mapping manually.
+
+Example:
+
+````csharp
+[Mapper]
+public partial class SourceTypeToDestinationTypeMapper : MapperBase<SourceType, DestinationType>
+{
+    private readonly SourceNestedTypeToDestinationNestedTypeMapper _sourceNestedTypeToDestinationNestedTypeMapper;
+
+    public SourceTypeToDestinationTypeMapper(SourceNestedTypeToDestinationNestedTypeMapper sourceNestedTypeToDestinationNestedTypeMapper)
+    {
+        _sourceNestedTypeToDestinationNestedTypeMapper = sourceNestedTypeToDestinationNestedTypeMapper;
+    }
+
+    public override partial DestinationType Map(SourceType source);
+    public override partial void Map(SourceType source, DestinationType destination);
+
+    public override void AfterMap(SourceType source, DestinationType destination)
+    {
+        if (source.Nested != null)
+        {
+            destination.Nested = _sourceNestedTypeToDestinationNestedTypeMapper.Map(source.Nested);
+        }
+    }
+}
+````
+
+#### Choosing the Right Solution
+
+Each solution has its own advantages:
+
+- **Solution 1** consolidates all mapping logic in one place and works well when mappings are tightly related.
+- **Solution 2** is simple but can lead to code duplication if you need the nested mapper elsewhere.
+- **Solution 3** maintains separation of concerns and reusability but requires manual mapping in the `AfterMap` method.
+
+Choose the approach that best aligns with your application's architecture and maintainability requirements.
+
 ### More Mapperly Features
 
 Most of Mapperly's features such as `Ignore` can be configured through its attributes. See the [Mapperly documentation](https://mapperly.riok.app/docs/intro/) for more details.

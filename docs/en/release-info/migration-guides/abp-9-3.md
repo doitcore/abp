@@ -2,7 +2,13 @@
 
 This document is a guide for upgrading ABP v9.2 solutions to ABP v9.3. There are some changes in this version that may affect your applications, please read it carefully and apply the necessary changes to your application.
 
-## Updated `RabbitMQ.Client` to `7.x`
+## EF Core MySQL provider is switched to `MySql.EntityFrameworkCore`
+
+In this version, we switched the EF Core MySQL provider from `Pomelo.EntityFrameworkCore.MySql` to `MySql.EntityFrameworkCore`. 
+
+If you want to use the `Pomelo.EntityFrameworkCore.MySql` provider, You can follow the [Use Pomelo provider documentation](https://abp.io/docs/latest/framework/data/entity-framework-core/mysql#use-pomelo-provider) to migrate your application.
+
+See the internal changes we made in [#23392](https://github.com/abpframework/abp/pull/23392)
 
 In this version, we updated `RabbitMQ.Client` to `7.1.2`. [This is a major version update](https://github.com/rabbitmq/rabbitmq-dotnet-client/blob/main/v7-MIGRATION.md) that brings significant improvements to the library:
 

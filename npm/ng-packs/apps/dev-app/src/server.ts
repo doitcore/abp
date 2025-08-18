@@ -73,9 +73,7 @@ app.get('/', async (req, res, next) => {
     const sess = sid && sessions.get(sid);
     if (!sess || state !== sess.state) return res.status(400).send('invalid state');
 
-    // 👈 v6.6.4: metadata'ya böyle erişilir
     const tokenEndpoint = config.serverMetadata().token_endpoint!;
-    // 👈 redirect_uri'yi SLASHSIZ gönderiyoruz (IdP kaydıyla birebir)
     const body = new URLSearchParams({
       grant_type: 'authorization_code',
       code: String(code),
@@ -99,6 +97,7 @@ app.get('/', async (req, res, next) => {
     const tokens = await resp.json();
     console.log(tokens);
     sessions.set(sid, { ...sess, at: tokens.access_token, refresh: tokens.refresh_token });
+    res.cookie('access_token', tokens.access_token, baseCookie);
     return res.redirect('/');
   } catch (e) {
     console.error('OIDC error:', e);

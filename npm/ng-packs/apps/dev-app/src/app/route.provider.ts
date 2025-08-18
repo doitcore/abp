@@ -16,22 +16,6 @@ function configureRoutes() {
       iconClass: 'fas fa-home',
       order: 1,
       layout: eLayoutType.application,
-    },
-    {
-      path: '/identity/users',
-      name: '::Users:Server',
-      iconClass: 'fas fa-home',
-      order: 2,
-      layout: eLayoutType.application,
-      requiredPolicy: 'AbpIdentity.Users'
-    },
-    {
-      path: '/identity/roles',
-      name: '::Roles:Server',
-      iconClass: 'fas fa-home',
-      order: 3,
-      layout: eLayoutType.application,
-      requiredPolicy: 'AbpIdentity.Roles'
-    },
+    }
   ]);
 }

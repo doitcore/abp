@@ -131,7 +131,12 @@ To see `AbpAuditingOptions` properties, please see its [documentation](../framew
 Configure<ExpiredAuditLogDeleterOptions>(options =>
 {
     options.Period = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-    options.CronExpression = "0 23 * * *"; // This Cron expression only works if Hangfire or Quartz is used for background workers.
+
+    // This Cron expression only works if Hangfire or Quartz is used for background workers.
+    // The Hangfire Cron expression is different from the Quartz Cron expression, Please refer to the following links:
+    // https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/crontriggers.html#cron-expressions
+    // https://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html
+    options.ExcelFileCleanupOptions.CronExpression = "0 23 * * *"; // Quartz Cron expression is "0 23 * * * ?"
 });
 ```
 
@@ -147,7 +152,12 @@ Configure<AuditLogExcelFileOptions>(options =>
     options.FileRetentionHours = 24; // How long to keep files before cleanup (default: 24 hours)
     options.DownloadBaseUrl = "https://yourdomain.com"; // Base URL for download links in emails
     options.ExcelFileCleanupOptions.Period = (int)TimeSpan.FromHours(24).TotalMilliseconds; // Interval of the cleanup worker (default: 24 hours)
-    options.ExcelFileCleanupOptions.CronExpression = "0 23 * * *"; // This Cron expression only works if Hangfire or Quartz is used for background workers. 
+
+    // This Cron expression only works if Hangfire or Quartz is used for background workers.
+    // The Hangfire Cron expression is different from the Quartz Cron expression, Please refer to the following links:
+    // https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/crontriggers.html#cron-expressions
+    // https://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html
+    options.ExcelFileCleanupOptions.CronExpression = "0 23 * * *"; // Quartz Cron expression is "0 23 * * * ?"
 });
 ```
 

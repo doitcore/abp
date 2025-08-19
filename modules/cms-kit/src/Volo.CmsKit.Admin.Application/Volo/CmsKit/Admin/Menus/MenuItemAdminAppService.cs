@@ -163,7 +163,7 @@ public class MenuItemAdminAppService : CmsKitAdminAppServiceBase, IMenuItemAdmin
         );
     }
 
-    public async Task<int> GetAvailableMenuOrderAsync(Guid? parentId = null)
+    public virtual async Task<int> GetAvailableMenuOrderAsync(Guid? parentId = null)
     {
         var highestOrder = await MenuItemRepository.GetHighestMenuOrderAsync(parentId);
         return highestOrder + 1;

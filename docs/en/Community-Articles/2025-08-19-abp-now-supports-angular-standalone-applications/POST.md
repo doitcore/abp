@@ -1,3 +1,5 @@
+# ABP Now Supports Angular Standalone Applications
+
 We are excited to announce that **ABP now supports Angular’s standalone component structure** in the latest Studio update. This article walks you through how to generate a standalone application, outlines the migration steps, and highlights the benefits of this shift over traditional module-based architecture.
 
 ---
@@ -358,6 +360,32 @@ export const appConfig: ApplicationConfig = {
 ### 🧼 Removed: `shared.module.ts`
 
 This file has been removed to reduce unnecessary shared imports. Components now explicitly import what they need—leading to better encapsulation and less coupling.
+
+---
+
+## Common Problems
+
+You may encounter these common problems that you would need to manage.
+
+### 1. Missing Imports
+
+In standalone structure, components must declare all their dependencies in `imports`. Forgetting this often causes template errors.
+
+### 2. Mixed Structures
+
+Combining modules and standalone in the same feature leads to confusion. Migrate features fully or keep them module-based.
+
+### 3. Routing Errors
+
+Incorrect migration from `forLazy()` to `createRoutes()` or `loadComponent` can break navigation. Double-check route configs.
+
+### 4. Service Injection
+
+Services provided in old modules may be missing. Add them in the component’s `providers` or `app.config.ts`.
+
+### 5. Shared Module Habit
+
+Reintroducing a shared module reduces the benefits of standalone. Import dependencies directly where needed.
 
 ---
 

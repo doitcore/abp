@@ -103,18 +103,25 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
 
                     foreach (var waitingEvent in waitingEvents)
                     {
-                        using (var uow = UnitOfWorkManager.Begin(isTransactional: true, requiresNew: true))
+                        try
                         {
-                            await DistributedEventBus
-                                .AsSupportsEventBoxes()
-                                .ProcessFromInboxAsync(waitingEvent, InboxConfig);
+                            using (var uow = UnitOfWorkManager.Begin(isTransactional: true, requiresNew: true))
+                            {
+                                await DistributedEventBus
+                                    .AsSupportsEventBoxes()
+                                    .ProcessFromInboxAsync(waitingEvent, InboxConfig);
 
-                            await Inbox.MarkAsProcessedAsync(waitingEvent.Id);
+                                await Inbox.MarkAsProcessedAsync(waitingEvent.Id);
 
-                            await uow.CompleteAsync(StoppingToken);
+                                await uow.CompleteAsync(StoppingToken);
+                            }
+
+                            Logger.LogInformation($"Processed the incoming event with id = {waitingEvent.Id:N}");
                         }
-
-                        Logger.LogInformation($"Processed the incoming event with id = {waitingEvent.Id:N}");
+                        catch (Exception e)
+                        {
+                            Logger.LogError(e, $"An error occurred while processing the incoming event with id = {waitingEvent.Id:N}");
+                        }
                     }
                 }
             }

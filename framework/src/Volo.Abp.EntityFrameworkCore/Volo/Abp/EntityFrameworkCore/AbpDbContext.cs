@@ -124,7 +124,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
 
         TrySetDatabaseProvider(modelBuilder);
 
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes().ToArray())
         {
             ConfigureBasePropertiesMethodInfo
                 .MakeGenericMethod(entityType.ClrType)
@@ -796,29 +796,31 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
     protected virtual void ConfigureValueConverter<TEntity>(ModelBuilder modelBuilder, IMutableEntityType mutableEntityType)
         where TEntity : class
     {
-        if (mutableEntityType.BaseType == null &&
-            !typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true) &&
-            !typeof(TEntity).IsDefined(typeof(OwnedAttribute), true) &&
-            !mutableEntityType.IsOwned())
+        if (mutableEntityType.BaseType != null ||
+            typeof(TEntity).IsDefined(typeof(DisableDateTimeNormalizationAttribute), true) ||
+            typeof(TEntity).IsDefined(typeof(OwnedAttribute), true) ||
+            mutableEntityType.IsOwned())
         {
-            if (LazyServiceProvider == null || Clock == null)
-            {
-                return;
-            }
+            return;
+        }
 
-            foreach (var property in mutableEntityType.GetProperties().
-                         Where(property => property.PropertyInfo != null &&
-                                           (property.PropertyInfo.PropertyType == typeof(DateTime) || property.PropertyInfo.PropertyType == typeof(DateTime?)) &&
-                                           property.PropertyInfo.CanWrite &&
-                                           ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(property.PropertyInfo) == null))
-            {
-                modelBuilder
-                    .Entity<TEntity>()
-                    .Property(property.Name)
-                    .HasConversion(property.ClrType == typeof(DateTime)
-                        ? new AbpDateTimeValueConverter(Clock)
-                        : new AbpNullableDateTimeValueConverter(Clock));
-            }
+        if (LazyServiceProvider == null || Clock == null)
+        {
+            return;
+        }
+
+        foreach (var property in mutableEntityType.GetProperties().
+                     Where(property => property.PropertyInfo != null &&
+                                       (property.PropertyInfo.PropertyType == typeof(DateTime) || property.PropertyInfo.PropertyType == typeof(DateTime?)) &&
+                                       property.PropertyInfo.CanWrite &&
+                                       ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(property.PropertyInfo) == null))
+        {
+            modelBuilder
+                .Entity<TEntity>()
+                .Property(property.Name)
+                .HasConversion(property.ClrType == typeof(DateTime)
+                    ? new AbpDateTimeValueConverter(Clock)
+                    : new AbpNullableDateTimeValueConverter(Clock));
         }
     }
 

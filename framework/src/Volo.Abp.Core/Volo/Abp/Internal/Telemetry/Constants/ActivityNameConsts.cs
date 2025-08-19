@@ -47,7 +47,6 @@ public static class ActivityNameConsts
     public const string AbpStudioMonitoringExceptions = "AbpStudio.Monitoring.Exceptions";
     public const string AbpStudioMonitoringExceptionsDetail = "AbpStudio.Monitoring.Exceptions.Detail";
     public const string AbpStudioMonitoringLogs = "AbpStudio.Monitoring.Logs";
-    public const string AbpStudioMonitoringLogsFiltered = "AbpStudio.Monitoring.Logs.Filtered";
     public const string AbpStudioKubernetesAddProfile = "AbpStudio.Kubernetes.Add.Profile";
     public const string AbpStudioKubernetesConnect = "AbpStudio.Kubernetes.Connect";
     public const string AbpStudioKubernetesIntercept = "AbpStudio.Kubernetes.Intercept";

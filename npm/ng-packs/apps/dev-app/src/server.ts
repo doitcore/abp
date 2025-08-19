@@ -8,6 +8,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {environment} from './environments/environment';
 
 // ESM import
 import * as oidc from 'openid-client';
@@ -21,38 +22,27 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/**', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
-
 const ISSUER = new URL('https://localhost:44305/');  // OIDC issuer
 const CLIENT_ID = 'MyProjectName_App';
-const REDIRECT_URI = 'http://localhost:4200'; // IdP'ye aynen kaydet
+const REDIRECT_URI = 'http://localhost:4200';
 const SCOPE = 'offline_access MyProjectName';
 
 const config = await oidc.discovery(ISSUER, CLIENT_ID, /* client_secret */ undefined);
-const baseCookie = { httpOnly: false, sameSite: 'lax' as const, secure: false, path: '/' };
+const secureCookie = { httpOnly: false, sameSite: 'lax' as const, secure: environment.production, path: '/' };
+const tokenCookie = { ...secureCookie, httpOnly: false, maxAge: 60 * 60 * 24 * 1 }; // 30 days
 
 app.use(cookieParser());
 
 const sessions = new Map<string, { pkce?: string; state?: string; refresh?: string; at?: string }>();
 
-app.get('/login', async (_req, res) => {
+app.get('/authorize', async (_req, res) => {
   const code_verifier  = oidc.randomPKCECodeVerifier();
   const code_challenge = await oidc.calculatePKCECodeChallenge(code_verifier);
-  const state          = oidc.randomState();
+  const state = oidc.randomState();
 
   const sid = crypto.randomUUID();
   sessions.set(sid, { pkce: code_verifier, state });
-  res.cookie('sid', sid, baseCookie);
+  res.cookie('sid', sid, secureCookie);
 
   const url = oidc.buildAuthorizationUrl(config, {
     redirect_uri: REDIRECT_URI,
@@ -96,8 +86,18 @@ app.get('/', async (req, res, next) => {
 
     const tokens = await resp.json();
     console.log(tokens);
+
+    const expiresInSec =
+      Number(tokens.expires_in ?? tokens.expiresIn ?? 3600);
+    const skewSec = 60;
+    const accessExpiresAt = new Date(
+      Date.now() + Math.max(0, expiresInSec - skewSec) * 1000
+    );
+
     sessions.set(sid, { ...sess, at: tokens.access_token, refresh: tokens.refresh_token });
-    res.cookie('access_token', tokens.access_token, baseCookie);
+    res.cookie('access_token', tokens.access_token, tokenCookie);
+    res.cookie('refresh_token', tokens.refresh_token, secureCookie);
+    res.cookie('expires_at', String(accessExpiresAt.getTime()), tokenCookie);
     return res.redirect('/');
   } catch (e) {
     console.error('OIDC error:', e);

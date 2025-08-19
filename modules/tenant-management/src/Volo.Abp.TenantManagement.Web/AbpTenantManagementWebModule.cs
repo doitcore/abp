@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.PageToolbars;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Http.ProxyScripting.Generators.JQuery;
 using Volo.Abp.Localization;
@@ -21,7 +21,7 @@ namespace Volo.Abp.TenantManagement.Web;
 [DependsOn(typeof(AbpTenantManagementApplicationContractsModule))]
 [DependsOn(typeof(AbpAspNetCoreMvcUiBootstrapModule))]
 [DependsOn(typeof(AbpFeatureManagementWebModule))]
-[DependsOn(typeof(AbpAutoMapperModule))]
+[DependsOn(typeof(AbpMapperlyModule))]
 public class AbpTenantManagementWebModule : AbpModule
 {
     private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
@@ -51,11 +51,7 @@ public class AbpTenantManagementWebModule : AbpModule
             options.FileSets.AddEmbedded<AbpTenantManagementWebModule>();
         });
 
-        context.Services.AddAutoMapperObjectMapper<AbpTenantManagementWebModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddProfile<AbpTenantManagementWebAutoMapperProfile>(validate: true);
-        });
+        context.Services.AddMapperlyObjectMapper<AbpTenantManagementWebModule>();
 
         Configure<RazorPagesOptions>(options =>
         {

@@ -1,36 +1,36 @@
-﻿using AutoMapper;
+﻿// using AutoMapper;
 using Volo.Abp.Data;
 using Volo.Abp.MultiTenancy;
 
 namespace Volo.Abp.TenantManagement;
 
-public class AbpTenantManagementDomainMappingProfile : Profile
+public class AbpTenantManagementDomainMappingProfile //: Profile
 {
     public AbpTenantManagementDomainMappingProfile()
     {
-        CreateMap<Tenant, TenantConfiguration>()
-            .ForMember(ti => ti.ConnectionStrings, opts =>
-            {
-                opts.MapFrom((tenant, ti) =>
-                {
-                    var connStrings = new ConnectionStrings();
+        // CreateMap<Tenant, TenantConfiguration>()
+        //     .ForMember(ti => ti.ConnectionStrings, opts =>
+        //     {
+        //         opts.MapFrom((tenant, ti) =>
+        //         {
+        //             var connStrings = new ConnectionStrings();
 
-                    if (tenant.ConnectionStrings == null)
-                    {
-                        return connStrings;
-                    }
+        //             if (tenant.ConnectionStrings == null)
+        //             {
+        //                 return connStrings;
+        //             }
 
-                    foreach (var connectionString in tenant.ConnectionStrings)
-                    {
-                        connStrings[connectionString.Name] = connectionString.Value;
-                    }
+        //             foreach (var connectionString in tenant.ConnectionStrings)
+        //             {
+        //                 connStrings[connectionString.Name] = connectionString.Value;
+        //             }
 
-                    return connStrings;
-                });
-            })
-            .ForMember(x => x.IsActive, x => x.Ignore())
-            .ForMember(x => x.EditionId, x => x.Ignore());
+        //             return connStrings;
+        //         });
+        //     })
+        //     .ForMember(x => x.IsActive, x => x.Ignore())
+        //     .ForMember(x => x.EditionId, x => x.Ignore());
 
-        CreateMap<Tenant, TenantEto>();
+        // CreateMap<Tenant, TenantEto>();
     }
 }

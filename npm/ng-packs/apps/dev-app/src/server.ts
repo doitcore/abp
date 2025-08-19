@@ -28,17 +28,20 @@ const REDIRECT_URI = 'http://localhost:4200';
 const SCOPE = 'offline_access MyProjectName';
 
 const config = await oidc.discovery(ISSUER, CLIENT_ID, /* client_secret */ undefined);
-const secureCookie = { httpOnly: false, sameSite: 'lax' as const, secure: environment.production, path: '/' };
+const secureCookie = { httpOnly: true, sameSite: 'lax' as const, secure: environment.production, path: '/' };
 const tokenCookie = { ...secureCookie, httpOnly: false, maxAge: 60 * 60 * 24 * 1 }; // 30 days
 
 app.use(cookieParser());
 
-const sessions = new Map<string, { pkce?: string; state?: string; refresh?: string; at?: string }>();
+const sessions = new Map<string, { pkce?: string; state?: string; refresh?: string; at?: string, returnUrl?: string }>();
 
 app.get('/authorize', async (_req, res) => {
   const code_verifier  = oidc.randomPKCECodeVerifier();
   const code_challenge = await oidc.calculatePKCECodeChallenge(code_verifier);
   const state = oidc.randomState();
+
+  const returnUrl = String(_req.query.returnUrl || null);
+  res.cookie('returnUrl', returnUrl, { ...secureCookie, maxAge: 5 * 60 * 1000 });
 
   const sid = crypto.randomUUID();
   sessions.set(sid, { pkce: code_verifier, state });
@@ -52,6 +55,36 @@ app.get('/authorize', async (_req, res) => {
     state,
   });
   res.redirect(url.toString());
+});
+
+app.get('/logout', async (req, res) => {
+  try {
+    const sid = req.cookies.sid;
+
+    if (sid && sessions.has(sid)) {
+      sessions.delete(sid);
+    }
+
+    res.clearCookie('sid', secureCookie);
+    res.clearCookie('access_token', tokenCookie);
+    res.clearCookie('refresh_token', secureCookie);
+    res.clearCookie('expires_at', tokenCookie);
+    res.clearCookie('returnUrl', secureCookie);
+
+    const endSessionEndpoint = config.serverMetadata().end_session_endpoint;
+    if (endSessionEndpoint) {
+      const logoutUrl = new URL(endSessionEndpoint);
+      logoutUrl.searchParams.set('post_logout_redirect_uri', REDIRECT_URI);
+      logoutUrl.searchParams.set('client_id', CLIENT_ID);
+
+      return res.redirect(logoutUrl.toString());
+    }
+    res.redirect('/');
+
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).send('Logout error');
+  }
 });
 
 app.get('/', async (req, res, next) => {
@@ -98,6 +131,10 @@ app.get('/', async (req, res, next) => {
     res.cookie('access_token', tokens.access_token, tokenCookie);
     res.cookie('refresh_token', tokens.refresh_token, secureCookie);
     res.cookie('expires_at', String(accessExpiresAt.getTime()), tokenCookie);
+
+    const returnUrl = req.cookies.returnUrl || '/';
+    res.clearCookie('returnUrl', secureCookie);
+
     return res.redirect('/');
   } catch (e) {
     console.error('OIDC error:', e);

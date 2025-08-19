@@ -118,4 +118,20 @@ public class MenuItemAdminAppService_Tests : CmsKitApplicationTestBase
 
         menu.ShouldBeNull();
     }
+
+    [Fact]
+    public async Task GetAvailableMenuOrderAsync_ShouldWorkProperly_WithParentId()
+    {
+        var order = await MenuAdminAppService.GetAvailableMenuOrderAsync(TestData.MenuItem_1_Id);
+
+        order.ShouldBe(2); //has two items with order 0 and 1, so the next available order is 2
+    }
+
+    [Fact]
+    public async Task GetAvailableMenuOrderAsync_ShouldWorkProperly_WithoutParentId()
+    {
+        var order = await MenuAdminAppService.GetAvailableMenuOrderAsync();
+
+        order.ShouldBe(TestData.HighestMenuItemOrder + 1);
+    }
 }

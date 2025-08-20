@@ -126,17 +126,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes().ToArray())
         {
-            ConfigureBasePropertiesMethodInfo
-                .MakeGenericMethod(entityType.ClrType)
-                .Invoke(this, new object[] { modelBuilder, entityType });
-
-            ConfigureValueConverterMethodInfo
-                .MakeGenericMethod(entityType.ClrType)
-                .Invoke(this, new object[] { modelBuilder, entityType });
-
-            ConfigureValueGeneratedMethodInfo
-                .MakeGenericMethod(entityType.ClrType)
-                .Invoke(this, new object[] { modelBuilder, entityType });
+            AutoConfigureEntityTypeProperties(modelBuilder, entityType);
         }
 
         if (LazyServiceProvider == null || Options == null)
@@ -150,6 +140,24 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             onModelCreatingAction.As<Action<DbContext, ModelBuilder>>().Invoke(this, modelBuilder);
         }
     }
+    
+    protected virtual void AutoConfigureEntityTypeProperties(
+            ModelBuilder modelBuilder,
+            IMutableEntityType entityType)
+        {
+            ConfigureBasePropertiesMethodInfo
+                .MakeGenericMethod(entityType.ClrType)
+                .Invoke(this, new object[] { modelBuilder, entityType });
+    
+            ConfigureValueConverterMethodInfo
+                .MakeGenericMethod(entityType.ClrType)
+                .Invoke(this, new object[] { modelBuilder, entityType });
+    
+            ConfigureValueGeneratedMethodInfo
+                .MakeGenericMethod(entityType.ClrType)
+                .Invoke(this, new object[] { modelBuilder, entityType });
+        }
+
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

@@ -43,6 +43,13 @@ public abstract class BasicRepositoryBase<TEntity> :
     public IEntityChangeTrackingProvider EntityChangeTrackingProvider => LazyServiceProvider.LazyGetRequiredService<IEntityChangeTrackingProvider>();
 
     public bool? IsChangeTrackingEnabled { get; protected set; }
+    
+    protected string? CustomEntityName { get; private set; }
+    
+    public void SetCustomEntityName(string? name)
+    {
+        CustomEntityName = name;
+    }
 
     protected BasicRepositoryBase()
     {

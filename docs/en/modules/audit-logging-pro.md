@@ -244,45 +244,39 @@ See the `AbpAuditLoggingPermissions` class members for all permissions defined f
 
 #### Installation
 
-In order to configure the application to use the `AuditLoggingModule`, you first need to import `AuditLoggingConfigModule` from `@volo/abp.ng.audit-logging/config` to root module. `AuditLoggingConfigModule` has a static `forRoot` method which you should call for a proper configuration.
+In order to configure the application to use the audit logging module, you first need to import `provideAuditLoggingConfig` from `@volo/abp.ng.audit-logging/config` to root configuration. Then, you will need to append it to the `appConfig` array.
 
 ```js
-// app.module.ts
-import { AuditLoggingConfigModule } from '@volo/abp.ng.audit-logging/config';
+// app.config.ts
+import { provideAuditLoggingConfig } from '@volo/abp.ng.audit-logging/config';
 
-@NgModule({
-  imports: [
-    // other imports
-    AuditLoggingConfigModule.forRoot(),
-    // other imports
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...
+    provideAuditLoggingConfig(),
   ],
-  // ...
-})
-export class AppModule {}
+};
 ```
 
-The `AuditLoggingModule` should be imported and lazy-loaded in your routing module. It has a static `forLazy` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.audit-logging`.
+The audit logging module should be imported and lazy-loaded in your routing array. It has a static `createRoutes` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.audit-logging`.
 
 ```js
-// app-routing.module.ts
-const routes: Routes = [
-  // other route definitions
+// app.routes.ts
+export const APP_ROUTES: Routes = [
+  // ...
   {
     path: 'audit-logs',
-    loadChildren: () =>
-      import('@volo/abp.ng.audit-logging').then(m => m.AuditLoggingModule.forLazy(/* options here */)),
+    loadChildren: () => import('@volo/abp.ng.audit-logging').then(c => c.createRoutes(/* options here */)),
   },
 ];
 
-@NgModule(/* AppRoutingModule metadata */)
-export class AppRoutingModule {}
 ```
 
-> If you have generated your project via the startup template, you do not have to do anything, because it already has both `AuditLoggingConfigModule` and `AuditLoggingModule`.
+> If you have generated your project via the startup template, you do not have to do anything, because it already has both files configured.
 
 <h4 id="h-audit-logging-module-options">Options</h4>
 
-You can modify the look and behavior of the module pages by passing the following options to `AuditLoggingModule.forLazy` static method:
+You can modify the look and behavior of the module pages by passing the following options to `createRoutes` static method:
 
 - **entityActionContributors:** Changes grid actions. Please check [Entity Action Extensions for Angular](../framework/ui/angular/entity-action-extensions.md) for details.
 - **toolbarActionContributors:** Changes page toolbar. Please check [Page Toolbar Extensions for Angular](../framework/ui/angular/page-toolbar-extensions.md) for details.

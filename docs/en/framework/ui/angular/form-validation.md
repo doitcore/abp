@@ -6,31 +6,31 @@ Reactive forms in ABP Angular UI are validated by [ngx-validate](https://www.npm
 
 ## How to Add New Error Messages
 
-You can add a new error message by passing validation options to the `withValidationBluePrint` method of `provideAbpThemeShared` function in your root module.
+You can add a new error message by passing validation options to the `withValidationBluePrint` method inside `provideAbpThemeShared` function in your root application configuration.
 
 ```ts
 import { provideAbpThemeShared, withValidationBluePrint } from '@abp/ng.theme.shared';
 
-@NgModule({
+export const appConfig: ApplicationConfig = {
   providers: [
+    // ...
     provideAbpThemeShared(
       withValidationBluePrint({
         uniqueUsername: "::AlreadyExists[{%{{{ username }}}%}]"
       })
     ),
-    ...
+    // ...
   ],
-})
-export class AppModule {}
+};
 ```
 
-Alternatively, you may provide the `VALIDATION_BLUEPRINTS` token directly in your root module. Please do not forget to spread `DEFAULT_VALIDATION_BLUEPRINTS`. Otherwise, built-in ABP validation messages will not work.
+Alternatively, you may provide the `VALIDATION_BLUEPRINTS` token directly in your root configuration. Please do not forget to spread `DEFAULT_VALIDATION_BLUEPRINTS`. Otherwise, built-in ABP validation messages will not work.
 
 ```js
 import { VALIDATION_BLUEPRINTS } from "@ngx-validate/core";
 import { DEFAULT_VALIDATION_BLUEPRINTS } from "@abp/ng.theme.shared";
 
-@NgModule({
+export const appConfig: ApplicationConfig = {
   providers: [
     {
       provide: VALIDATION_BLUEPRINTS,
@@ -42,10 +42,7 @@ import { DEFAULT_VALIDATION_BLUEPRINTS } from "@abp/ng.theme.shared";
 
     // other providers
   ],
-
-  // rest of the module metadata
-})
-export class AppModule {}
+};
 ```
 
 When a [validator](https://angular.io/guide/form-validation#defining-custom-validators) or an [async validator](https://angular.io/guide/form-validation#creating-asynchronous-validators) returns an error with the key given to the error blueprints (`uniqueUsername` here), the validation library will be able to display an error message after localizing according to the given key and interpolation params. The result will look like this:
@@ -61,7 +58,7 @@ In this example;
 
 ## How to Change Existing Error Messages
 
-You can overwrite an existing error message by passing validation options to the `ThemeSharedModule` in your root module. Let's imagine you have a custom localization resource for required inputs.
+You can overwrite an existing error message by passing validation options to the `provideAbpThemeShared` in your root application configuration. Let's imagine you have a custom localization resource for required inputs.
 
 ```json
 "RequiredInput": "Oops! We need this input."
@@ -72,24 +69,26 @@ To use this instead of the built-in required input message, all you need to do i
 ```ts
 import { provideAbpThemeShared, withValidationBluePrint } from '@abp/ng.theme.shared';
 
-@NgModule({
+export const appConfig: ApplicationConfig = {
   providers: [
-    provideAbpThemeShared(withValidationBluePrint({
-      required: "::RequiredInput",
-    })),
-    ...
+     // ...
+    provideAbpThemeShared(
+      withValidationBluePrint({
+        required: "::RequiredInput",
+      })
+    ),
+    // ...
   ],
-})
-export class AppModule {}
+};
 ```
 
-Alternatively, you may provide the `VALIDATION_BLUEPRINTS` token directly in your root module. Please do not forget to spread `DEFAULT_VALIDATION_BLUEPRINTS`. Otherwise, built-in ABP validation messages will not work.
+Alternatively, you may provide the `VALIDATION_BLUEPRINTS` token directly in your root app configuration. Please do not forget to spread `DEFAULT_VALIDATION_BLUEPRINTS`. Otherwise, built-in ABP validation messages will not work.
 
 ```js
 import { VALIDATION_BLUEPRINTS } from "@ngx-validate/core";
 import { DEFAULT_VALIDATION_BLUEPRINTS } from "@abp/ng.theme.shared";
 
-@NgModule({
+export const appConfig: ApplicationConfig = {
   providers: [
     {
       provide: VALIDATION_BLUEPRINTS,
@@ -101,10 +100,7 @@ import { DEFAULT_VALIDATION_BLUEPRINTS } from "@abp/ng.theme.shared";
 
     // other providers
   ],
-
-  // rest of the module metadata
-})
-export class AppModule {}
+};
 ```
 
 The error message will look like this:
@@ -134,17 +130,20 @@ Validation works on any element or component with a `formControl` or `formContro
 First, build a custom error component. Extending the existing `ValidationErrorComponent` would make it easier.
 
 ```js
+import { LocalizationPipe } from "@abp/ng.core";
 import { ValidationErrorComponent } from "@abp/ng.theme.basic";
+import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
   selector: "app-validation-error",
+  imports:[CommonModule, LocalizationPipe],
   template: `
     <div
       class="font-weight-bold font-italic px-1 invalid-feedback"
       *ngFor="let error of abpErrors; trackBy: trackByFn"
     >
-      {%{{{ error.message | abpLocalization: error.interpoliteParams }}}%}
+      {{ error.message | abpLocalization: error.interpoliteParams }}
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -152,18 +151,12 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 export class ErrorComponent extends ValidationErrorComponent {}
 ```
 
-Then, declare and provide it in your root module.
+Then, provide it in your root configuration.
 
 ```js
 import { VALIDATION_ERROR_TEMPLATE } from "@ngx-validate/core";
 
-@NgModule({
-  // rest of the module metadata
-
-  declarations: [
-    // other declarables
-    ErrorComponent,
-  ],
+export const appConfig: ApplicationConfig = {
   providers: [
     // other providers
     {
@@ -171,8 +164,7 @@ import { VALIDATION_ERROR_TEMPLATE } from "@ngx-validate/core";
       useValue: ErrorComponent,
     },
   ],
-})
-export class AppModule {}
+};
 ```
 
 The error message will be bold and italic now:

@@ -22,10 +22,10 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-const ISSUER = new URL('https://localhost:44305/');  // OIDC issuer
-const CLIENT_ID = 'MyProjectName_App';
-const REDIRECT_URI = 'http://localhost:4200';
-const SCOPE = 'offline_access MyProjectName';
+const ISSUER = new URL(environment.oAuthConfig.issuer);  // OIDC issuer
+const CLIENT_ID = environment.oAuthConfig.clientId;
+const REDIRECT_URI = environment.oAuthConfig.redirectUri;
+const SCOPE = environment.oAuthConfig.scope;
 
 const config = await oidc.discovery(ISSUER, CLIENT_ID, /* client_secret */ undefined);
 const secureCookie = { httpOnly: true, sameSite: 'lax' as const, secure: environment.production, path: '/' };

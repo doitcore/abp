@@ -16,7 +16,7 @@ Don't use the manual setup method that's hard to track. Azure DevOps lets you us
 
 This stops the common problem where something works on one computer but not another.  
 
->  Example YAML snippet or comparison diagram (manual setup vs. pipeline-as-code).
+![1-pipeline-yaml](1-pipeline-yaml.png)
 
 ---
 
@@ -27,8 +27,7 @@ Each environment should have its own settings, and keep sensitive information in
 
 You'll avoid security problems later.  
 
->  Lock/key icon or Key Vault architecture diagram.
-
+<!-- ![2-azure-key](2-azure-key.png) -->
 ---
 
 ## 3. 🏗️ Keep Building and Releasing Separate
@@ -41,7 +40,7 @@ Keeping these as separate steps means:
 - You create your package once, then send it to multiple places  
 - You save time and resources by not rebuilding the same thing over and over  
 
->  Build → Artifact → Release flow diagram.
+![3-release](3-release.png)
 
 ---
 
@@ -55,8 +54,6 @@ Set up **different types of tests** to run automatically. When tests run every t
 
 Azure DevOps has tools to help you see test results easily without searching through technical logs.  
 
->  Azure DevOps test results dashboard screenshot.
-
 ---
 
 ## 5. 🛡️ Add Safety Checks
@@ -66,20 +63,8 @@ For important environments, add **human approval steps** or **automatic checks**
 
 This helps you avoid emergency problems in the middle of the night.  
 
->  Pipeline diagram with approval gates/security checks.
+![4-safe-deploy](4-safe-deploy.png)
 
----
-
-## 6. 📊 Watch How Your App Performs
-
-Just because your app was deployed successfully doesn't mean users are happy.  
-Set up tools like **Application Insights** or **Log Analytics** to monitor:
-
-- How well your app is working in real-world use  
-- Where users are having trouble  
-- Which parts of your app need improvement  
-
->  Monitoring dashboard (charts, metrics, logs).
 
 ---
 
@@ -92,9 +77,7 @@ Remember these main points:
 ✔ Keep passwords and sensitive data in secure storage (not in your code)  
 ✔ Build once, deploy to many places  
 ✔ Let automatic tests find problems before users do  
-✔ Add safety checks for important systems  
-✔ Monitor your app after it's live  
+✔ Add safety checks for important systems
 
-> 🎨 *Final visual suggestion*: Infographic summarizing the CI/CD best practices lifecycle.
-
+![5-summarizing](5-summarizing.png)
 ---

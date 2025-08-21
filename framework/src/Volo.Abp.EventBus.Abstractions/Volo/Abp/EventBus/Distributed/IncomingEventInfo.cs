@@ -20,6 +20,14 @@ public class IncomingEventInfo : IIncomingEventInfo
 
     public DateTime CreationTime { get; }
 
+    public IncomingEventStatus Status { get; set; } = IncomingEventStatus.Pending;
+
+    public DateTime? DiscardedOrProcessedTime { get; set; }
+
+    public int RetryCount { get; set; } = 0;
+
+    public DateTime? NextRetryTime { get; set; } = null;
+
     protected IncomingEventInfo()
     {
         ExtraProperties = new ExtraPropertyDictionary();
@@ -38,6 +46,7 @@ public class IncomingEventInfo : IIncomingEventInfo
         EventName = Check.NotNullOrWhiteSpace(eventName, nameof(eventName), MaxEventNameLength);
         EventData = eventData;
         CreationTime = creationTime;
+
         ExtraProperties = new ExtraPropertyDictionary();
         this.SetDefaultsForExtraProperties();
     }

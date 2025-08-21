@@ -23,12 +23,17 @@ public class IncomingEventRecord :
 
     public DateTime CreationTime { get; private set; }
 
-    public bool Processed { get; set; }
+    public IncomingEventStatus Status { get; set; }
 
-    public DateTime? ProcessedTime { get; set; }
+    public DateTime? DiscardedOrProcessedTime { get; set; }
+
+    public int RetryCount { get; set; } = 0;
+
+    public DateTime? NextRetryTime { get; set; } = null;
 
     protected IncomingEventRecord()
     {
+        Status = IncomingEventStatus.Pending;
         ExtraProperties = new ExtraPropertyDictionary();
         this.SetDefaultsForExtraProperties();
     }
@@ -41,7 +46,7 @@ public class IncomingEventRecord :
         EventName = eventInfo.EventName;
         EventData = eventInfo.EventData;
         CreationTime = eventInfo.CreationTime;
-
+        Status = IncomingEventStatus.Pending;
         ExtraProperties = new ExtraPropertyDictionary();
         this.SetDefaultsForExtraProperties();
         foreach (var property in eventInfo.ExtraProperties)
@@ -70,7 +75,20 @@ public class IncomingEventRecord :
 
     public void MarkAsProcessed(DateTime processedTime)
     {
-        Processed = true;
-        ProcessedTime = processedTime;
+        Status = IncomingEventStatus.Processed;
+        DiscardedOrProcessedTime = processedTime;
+    }
+
+    public void MarkAsDiscarded(DateTime discardedTime)
+    {
+        Status = IncomingEventStatus.Discarded;
+        DiscardedOrProcessedTime = discardedTime;
+    }
+
+    public void RetryLater(int retryCount, DateTime nextRetryTime)
+    {
+        Status = IncomingEventStatus.Pending;
+        NextRetryTime = nextRetryTime;
+        RetryCount = retryCount;
     }
 }

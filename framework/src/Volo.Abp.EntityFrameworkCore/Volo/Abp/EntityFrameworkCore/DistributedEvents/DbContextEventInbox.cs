@@ -50,7 +50,7 @@ public class DbContextEventInbox<TDbContext> : IDbContextEventInbox<TDbContext>
         var outgoingEventRecords = await dbContext
             .IncomingEvents
             .AsNoTracking()
-            .Where(x => !x.Processed)
+            .Where(x => x.Status == IncomingEventStatus.Pending)
             .WhereIf(transformedFilter != null, transformedFilter!)
             .OrderBy(x => x.CreationTime)
             .Take(maxCount)
@@ -66,7 +66,25 @@ public class DbContextEventInbox<TDbContext> : IDbContextEventInbox<TDbContext>
     {
         var dbContext = await DbContextProvider.GetDbContextAsync();
         await dbContext.IncomingEvents.Where(x => x.Id == id).ExecuteUpdateAsync(x =>
-            x.SetProperty(p => p.Processed, _ => true).SetProperty(p => p.ProcessedTime, _ => Clock.Now));
+            x.SetProperty(p => p.Status, _ => IncomingEventStatus.Processed).SetProperty(p => p.DiscardedOrProcessedTime, _ => Clock.Now));
+    }
+
+    [UnitOfWork]
+    public virtual async Task RetryLaterAsync(Guid id, int retryCount, DateTime? nextRetryTime)
+    {
+        var dbContext = await DbContextProvider.GetDbContextAsync();
+        await dbContext.IncomingEvents.Where(x => x.Id == id).ExecuteUpdateAsync(x =>
+            x.SetProperty(p => p.RetryCount, _ => retryCount)
+                .SetProperty(p => p.NextRetryTime, _ => nextRetryTime)
+                .SetProperty(p => p.Status, _ => IncomingEventStatus.Pending));
+    }
+
+    [UnitOfWork]
+    public virtual async Task MarkAsDiscardAsync(Guid id)
+    {
+        var dbContext = await DbContextProvider.GetDbContextAsync();
+        await dbContext.IncomingEvents.Where(x => x.Id == id).ExecuteUpdateAsync(x =>
+            x.SetProperty(p => p.Status, _ => IncomingEventStatus.Discarded).SetProperty(p => p.DiscardedOrProcessedTime, _ => Clock.Now));
     }
 
     [UnitOfWork]
@@ -82,7 +100,7 @@ public class DbContextEventInbox<TDbContext> : IDbContextEventInbox<TDbContext>
         var dbContext = await DbContextProvider.GetDbContextAsync();
         var timeToKeepEvents = Clock.Now - EventBusBoxesOptions.WaitTimeToDeleteProcessedInboxEvents;
         await dbContext.IncomingEvents
-            .Where(x => x.Processed && x.CreationTime < timeToKeepEvents)
+            .Where(x => (x.Status == IncomingEventStatus.Processed || x.Status == IncomingEventStatus.Discarded) && x.CreationTime < timeToKeepEvents)
             .ExecuteDeleteAsync();
     }
 }

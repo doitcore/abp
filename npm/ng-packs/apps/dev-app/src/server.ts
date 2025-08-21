@@ -29,7 +29,7 @@ const SCOPE = environment.oAuthConfig.scope;
 
 const config = await oidc.discovery(ISSUER, CLIENT_ID, /* client_secret */ undefined);
 const secureCookie = { httpOnly: true, sameSite: 'lax' as const, secure: environment.production, path: '/' };
-const tokenCookie = { ...secureCookie, httpOnly: false, maxAge: 60 * 60 * 24 * 1 }; // 30 days
+const tokenCookie = { ...secureCookie, httpOnly: false };
 
 app.use(cookieParser());
 
@@ -100,9 +100,9 @@ app.get('/', async (req, res, next) => {
     const body = new URLSearchParams({
       grant_type: 'authorization_code',
       code: String(code),
-      redirect_uri: 'http://localhost:4200',
+      redirect_uri: environment.oAuthConfig.redirectUri,
       code_verifier: sess.pkce!,
-      client_id: CLIENT_ID, // public client
+      client_id: CLIENT_ID
     });
 
     const resp = await fetch(tokenEndpoint, {
@@ -128,7 +128,7 @@ app.get('/', async (req, res, next) => {
     );
 
     sessions.set(sid, { ...sess, at: tokens.access_token, refresh: tokens.refresh_token });
-    res.cookie('access_token', tokens.access_token, tokenCookie);
+    res.cookie('access_token', tokens.access_token, {...tokenCookie, maxAge: accessExpiresAt.getTime()});
     res.cookie('refresh_token', tokens.refresh_token, secureCookie);
     res.cookie('expires_at', String(accessExpiresAt.getTime()), tokenCookie);
 

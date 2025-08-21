@@ -52,12 +52,14 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
         Action<EntityTypeBuilder<TestSharedEntity>> sharedEntityBuildAction = b =>
         {
             b.ConfigureByConvention();
-            b.Property<Guid>("Id");
-            b.Property<Guid?>("TenantId");
-            b.Property<bool>("IsDeleted");
-            b.Property<string>("Name");
-            b.Property<int>("Age");
-            b.Property<DateTime?>("Birthday");
+            b.Property(x => x.Id);
+            b.Property(x => x.TenantId);
+            b.Property(x => x.IsDeleted);
+            b.Property(x => x.Name);
+            b.Property(x => x.Age);
+            b.Property(x => x.Birthday);
+
+            b.Property<string>("DynamicProperty");
         };
         modelBuilder.SharedTypeEntity("TestSharedEntity1", sharedEntityBuildAction);
         modelBuilder.SharedTypeEntity("TestSharedEntity2", sharedEntityBuildAction);

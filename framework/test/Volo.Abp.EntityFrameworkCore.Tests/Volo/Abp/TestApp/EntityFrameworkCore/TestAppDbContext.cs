@@ -2,7 +2,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.Logging;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
@@ -65,12 +64,14 @@ public class TestAppDbContext : AbpDbContext<TestAppDbContext>, IThirdDbContext,
         Action<EntityTypeBuilder<TestSharedEntity>> sharedEntityBuildAction = b =>
         {
             b.ConfigureByConvention();
-            b.Property<Guid>("Id");
-            b.Property<Guid?>("TenantId");
-            b.Property<bool>("IsDeleted");
-            b.Property<string>("Name");
-            b.Property<int>("Age");
-            b.Property<DateTime?>("Birthday");
+            b.Property(x => x.Id);
+            b.Property(x => x.TenantId);
+            b.Property(x => x.IsDeleted);
+            b.Property(x => x.Name);
+            b.Property(x => x.Age);
+            b.Property(x => x.Birthday);
+
+            b.Property<string>("DynamicProperty");
         };
         modelBuilder.SharedTypeEntity("TestSharedEntity1", sharedEntityBuildAction);
         modelBuilder.SharedTypeEntity("TestSharedEntity2", sharedEntityBuildAction);

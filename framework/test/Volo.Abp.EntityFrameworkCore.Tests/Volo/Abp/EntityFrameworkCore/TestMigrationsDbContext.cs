@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.EntityFrameworkCore.TestApp.SecondContext;
 using Volo.Abp.EntityFrameworkCore.TestApp.ThirdDbContext;
@@ -33,6 +34,9 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
     public DbSet<Blog> Blogs { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
 
+    public DbSet<TestSharedEntity> TestSharedEntity => Set<TestSharedEntity>("TestSharedEntity1");
+    public DbSet<TestSharedEntity> TestSharedEntity2 => Set<TestSharedEntity>("TestSharedEntity2");
+
     public TestMigrationsDbContext(DbContextOptions<TestMigrationsDbContext> options)
         : base(options)
     {
@@ -41,7 +45,22 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Owned and SharedTypeEntity should be configured before the base OnModelCreating call
+
         modelBuilder.Owned<District>();
+
+        Action<EntityTypeBuilder<TestSharedEntity>> sharedEntityBuildAction = b =>
+        {
+            b.ConfigureByConvention();
+            b.Property<Guid>("Id");
+            b.Property<Guid?>("TenantId");
+            b.Property<bool>("IsDeleted");
+            b.Property<string>("Name");
+            b.Property<int>("Age");
+            b.Property<DateTime?>("Birthday");
+        };
+        modelBuilder.SharedTypeEntity("TestSharedEntity1", sharedEntityBuildAction);
+        modelBuilder.SharedTypeEntity("TestSharedEntity2", sharedEntityBuildAction);
 
         base.OnModelCreating(modelBuilder);
 

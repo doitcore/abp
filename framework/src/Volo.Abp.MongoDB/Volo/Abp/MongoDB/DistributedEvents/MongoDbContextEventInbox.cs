@@ -65,6 +65,7 @@ public class MongoDbContextEventInbox<TMongoDbContext> : IMongoDbContextEventInb
             .IncomingEvents
             .AsQueryable()
             .Where(x => x.Status == IncomingEventStatus.Pending)
+            .Where(x => x.NextRetryTime == null || x.NextRetryTime <= Clock.Now)
             .WhereIf(transformedFilter != null, transformedFilter!)
             .OrderBy(x => x.CreationTime)
             .Take(maxCount)

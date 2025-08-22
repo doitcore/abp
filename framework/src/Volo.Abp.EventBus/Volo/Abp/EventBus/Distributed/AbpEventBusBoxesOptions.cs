@@ -37,6 +37,16 @@ public class AbpEventBusBoxesOptions
     public TimeSpan PeriodTimeSpan { get; set; }
 
     /// <summary>
+    /// Default: <see cref="InboxProcessorFailurePolicy.Retry"/>
+    /// </summary>
+    public InboxProcessorFailurePolicy InboxProcessorFailurePolicy { get; set; } = InboxProcessorFailurePolicy.Retry;
+
+    /// <summary>
+    /// Default: 10
+    /// </summary>
+    public int InboxProcessorMaxRetryCount { get; set; } = 10;
+
+    /// <summary>
     /// Default: 15 seconds
     /// </summary>
     public TimeSpan DistributedLockWaitDuration { get; set; }

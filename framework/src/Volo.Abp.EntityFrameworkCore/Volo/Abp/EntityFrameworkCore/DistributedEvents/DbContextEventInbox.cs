@@ -51,6 +51,7 @@ public class DbContextEventInbox<TDbContext> : IDbContextEventInbox<TDbContext>
             .IncomingEvents
             .AsNoTracking()
             .Where(x => x.Status == IncomingEventStatus.Pending)
+            .Where(x => x.NextRetryTime == null || x.NextRetryTime <= Clock.Now)
             .WhereIf(transformedFilter != null, transformedFilter!)
             .OrderBy(x => x.CreationTime)
             .Take(maxCount)

@@ -18,10 +18,10 @@
     <PackageVersion Include="BunnyCDN.Net.Storage" Version="1.0.4" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.19.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.24.0" />
-    <PackageVersion Include="Blazorise" Version="1.8.0" />
-    <PackageVersion Include="Blazorise.Components" Version="1.8.0" />
-    <PackageVersion Include="Blazorise.DataGrid" Version="1.8.0" />
-    <PackageVersion Include="Blazorise.Snackbar" Version="1.8.0" />
+    <PackageVersion Include="Blazorise" Version="1.8.1" />
+    <PackageVersion Include="Blazorise.Components" Version="1.8.1" />
+    <PackageVersion Include="Blazorise.DataGrid" Version="1.8.1" />
+    <PackageVersion Include="Blazorise.Snackbar" Version="1.8.1" />
     <PackageVersion Include="Castle.Core" Version="5.1.1" />
     <PackageVersion Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
     <PackageVersion Include="CommonMark.NET" Version="0.15.1" />
@@ -46,7 +46,7 @@
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.18" />
     <PackageVersion Include="Hangfire.SqlServer" Version="1.8.18" />
     <PackageVersion Include="HtmlSanitizer" Version="9.0.884" />
-    <PackageVersion Include="IdentityModel" Version="7.0.0" />
+    <PackageVersion Include="Duende.IdentityModel" Version="7.1.0" />
     <PackageVersion Include="IdentityServer4" Version="4.1.2" />
     <PackageVersion Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
@@ -136,7 +136,7 @@
     <PackageVersion Include="Oracle.EntityFrameworkCore" Version="9.23.80" />
     <PackageVersion Include="Polly" Version="8.5.2" />
     <PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
-    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-rc.1.efcore.9.0.0" />
+    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageVersion Include="MySql.EntityFrameworkCore" Version="9.0.6" />
     <PackageVersion Include="Quartz" Version="3.14.0" />
     <PackageVersion Include="Quartz.Extensions.DependencyInjection" Version="3.14.0" />

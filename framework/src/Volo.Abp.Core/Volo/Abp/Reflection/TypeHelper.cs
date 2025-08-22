@@ -176,6 +176,10 @@ public static class TypeHelper
                type == typeof(decimal) ||
                type == typeof(DateTime) ||
                type == typeof(DateTimeOffset) ||
+#if NETCOREAPP
+               type == typeof(DateOnly) ||
+               type == typeof(TimeOnly) ||
+#endif
                type == typeof(TimeSpan) ||
                type == typeof(Guid);
     }

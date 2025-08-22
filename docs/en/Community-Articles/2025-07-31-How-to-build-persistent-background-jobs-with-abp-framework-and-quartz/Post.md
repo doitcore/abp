@@ -543,4 +543,6 @@ Complex background processing doesn't have to be complicated to implement. ABP's
 
 Whether you're building subscription management, financial reporting, or data synchronization, these patterns provide a solid foundation for reliable, maintainable solutions.
 
+You can reach sample project's source code from [here](https://github.com/MansurBesleney/MySaaSApplication)
+
 **Happy coding, and may your background jobs never miss a beat!** 🚀

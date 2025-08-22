@@ -89,7 +89,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   }
 
   get actionsText(): string {
-    return this._actionsText ?? (this.actionList.length > 1 ? 'AbpUi::Actions' : '');
+    return this._actionsText ?? (this.actionList.length >= 1 ? 'AbpUi::Actions' : '');
   }
 
   @Input() data!: R[];

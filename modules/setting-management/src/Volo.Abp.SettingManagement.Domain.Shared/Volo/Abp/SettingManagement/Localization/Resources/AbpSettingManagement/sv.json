@@ -16,6 +16,7 @@
     "TestEmailBody": "Testa e-postmeddelandets brödtext här",
     "SentSuccessfully": "Skickat framgångsrikt",
     "Send": "Skicka",
+    "Menu:Settings": "Inställningar",
     "Menu:Emailing": "E-post",
     "Menu:TimeZone": "Tidszon",
     "DisplayName:Timezone": "Tidszon",

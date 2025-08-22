@@ -126,7 +126,8 @@ public static class AbpRegistrationBuilderExtensions
         }
         else
         {
-            if (serviceRegistrationActionList.IsClassInterceptorsDisabled)
+            if (serviceRegistrationActionList.IsClassInterceptorsDisabled ||
+                serviceRegistrationActionList.DisabledClassInterceptorsSelectors.Any(selector => selector.Predicate(serviceType)))
             {
                 return registrationBuilder;
             }

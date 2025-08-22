@@ -1,16 +1,16 @@
-import {
-  ComponentFactoryResolver,
-  ComponentRef,
-  Directive,
-  ElementRef,
-  EmbeddedViewRef,
-  HostBinding,
-  Injector,
-  Input,
-  OnDestroy,
-  OnInit,
-  Renderer2,
-  ViewContainerRef,
+import { 
+  ComponentFactoryResolver, 
+  ComponentRef, 
+  Directive, 
+  ElementRef, 
+  EmbeddedViewRef, 
+  HostBinding, 
+  Injector, 
+  Input, 
+  OnDestroy, 
+  OnInit, 
+  Renderer2, 
+  inject 
 } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -20,6 +20,11 @@ import { LoadingComponent } from '../components';
   selector: '[abpLoading]',
 })
 export class LoadingDirective implements OnInit, OnDestroy {
+  private elRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private cdRes = inject(ComponentFactoryResolver);
+  private injector = inject(Injector);
+  private renderer = inject(Renderer2);
+
   private _loading!: boolean;
 
   @HostBinding('style.position')
@@ -77,18 +82,10 @@ export class LoadingDirective implements OnInit, OnDestroy {
   rootNode: HTMLDivElement | null = null;
   timerSubscription: Subscription | null = null;
 
-  constructor(
-    private elRef: ElementRef<HTMLElement>,
-    private vcRef: ViewContainerRef,
-    private cdRes: ComponentFactoryResolver,
-    private injector: Injector,
-    private renderer: Renderer2,
-  ) {}
-
   ngOnInit() {
     if (!this.targetElement) {
       const { offsetHeight, offsetWidth } = this.elRef.nativeElement;
-      if (!offsetHeight && !offsetWidth && this.elRef.nativeElement.children.length) {
+      if (!offsetHeight && !offsetWidth && this.elRef.nativeElement.children?.length) {
         this.targetElement = this.elRef.nativeElement.children[0] as HTMLElement;
       } else {
         this.targetElement = this.elRef.nativeElement;

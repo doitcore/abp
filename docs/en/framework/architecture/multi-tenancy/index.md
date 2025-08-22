@@ -231,18 +231,20 @@ services.Configure<AbpAspNetCoreMultiTenancyOptions>(options =>
 If you change the `TenantKey`, make sure to pass it to `provideAbpCore` via `withOptions` method in the Angular client as follows:
 
 ```js
-@NgModule({
+// app.config.ts
+// ...
+export const appConfig: ApplicationConfig = {
   providers: [
+    // ...
     provideAbpCore(
       withOptions({
         // ...
         tenantKey: "MyTenantKey",
       })
     ),
+    // ...
   ],
-  // ...
-})
-export class AppModule {}
+};
 ```
 
 If you need to access it, you can inject it as follows:
@@ -381,6 +383,19 @@ namespace MultiTenancyDemo.Web
 
 * A tenant resolver should set `context.TenantIdOrName` if it can determine it. If not, just leave it as is to allow the next resolver to determine it.
 * `context.ServiceProvider` can be used if you need to additional services to resolve from the [dependency injection](../../fundamentals/dependency-injection.md) system.
+
+##### The Fallback Tenant
+
+If you want to always fallback to a tenant (in case of no tenant was found by the tenant resolution logic), you can set the `AbpTenantResolveOptions.FallbackTenant` option:
+
+```csharp
+Configure<AbpTenantResolveOptions>(options =>
+{
+    options.FallbackTenant = "acme";
+});
+```
+
+The `FallbackTenant` value can be a tenant name or tenant's Id. This option can be helpful on development time or some specific scenarios to set a constant tenant for the application. It is a simple and consistent way to ensure that a tenant context is always available when needed. However, when you do that, no way to switch to the host side. It is not something you will need it most of the time, but here if you need such a resolution logic.
 
 #### Multi-Tenancy Middleware
 

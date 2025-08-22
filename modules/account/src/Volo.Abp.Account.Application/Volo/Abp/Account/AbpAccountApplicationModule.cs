@@ -1,4 +1,4 @@
-﻿using Volo.Abp.AutoMapper;
+﻿using Volo.Abp.Mapperly;
 using Volo.Abp.Emailing;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -12,7 +12,8 @@ namespace Volo.Abp.Account;
     typeof(AbpAccountApplicationContractsModule),
     typeof(AbpIdentityApplicationModule),
     typeof(AbpUiNavigationModule),
-    typeof(AbpEmailingModule)
+    typeof(AbpEmailingModule),
+    typeof(AbpMapperlyModule)
 )]
 public class AbpAccountApplicationModule : AbpModule
 {
@@ -21,11 +22,6 @@ public class AbpAccountApplicationModule : AbpModule
         Configure<AbpVirtualFileSystemOptions>(options =>
         {
             options.FileSets.AddEmbedded<AbpAccountApplicationModule>();
-        });
-
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddProfile<AbpAccountApplicationModuleAutoMapperProfile>(validate: true);
         });
 
         Configure<AppUrlOptions>(options =>

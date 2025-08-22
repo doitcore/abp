@@ -133,21 +133,29 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
                             {
                                 using (var uow = UnitOfWorkManager.Begin(isTransactional: true, requiresNew: true))
                                 {
-                                    if (waitingEvent.RetryCount > EventBusBoxesOptions.InboxProcessorMaxRetryCount)
+                                    if (waitingEvent.NextRetryTime != null)
+                                    {
+                                        waitingEvent.RetryCount++;
+                                    }
+
+                                    if (waitingEvent.RetryCount >= EventBusBoxesOptions.InboxProcessorMaxRetryCount)
                                     {
                                         Logger.LogWarning($"Event with id = {waitingEvent.Id:N} has exceeded the maximum retry count. Marking it as discarded.");
 
+                                        await Inbox.RetryLaterAsync(waitingEvent.Id, waitingEvent.RetryCount, null);
                                         await Inbox.MarkAsDiscardAsync(waitingEvent.Id);
                                         await uow.CompleteAsync(StoppingToken);
                                         continue;
                                     }
 
+                                    waitingEvent.NextRetryTime = GetNextRetryTime(waitingEvent.RetryCount);
+
                                     Logger.LogInformation($"Event with id = {waitingEvent.Id:N} will retry later. " +
                                                           $"Current retry count: {waitingEvent.RetryCount}, " +
-                                                          $"Next retry time: {GetNextRetryTime(waitingEvent.RetryCount)}, " +
+                                                          $"Next retry time: {waitingEvent.NextRetryTime}, " +
                                                           $"Max retry count: {EventBusBoxesOptions.InboxProcessorMaxRetryCount}.");
 
-                                    await Inbox.RetryLaterAsync(waitingEvent.Id, ++waitingEvent.RetryCount, GetNextRetryTime(waitingEvent.RetryCount));
+                                    await Inbox.RetryLaterAsync(waitingEvent.Id, waitingEvent.RetryCount, GetNextRetryTime(waitingEvent.RetryCount));
                                     await uow.CompleteAsync(StoppingToken);
                                 }
                                 continue;
@@ -182,7 +190,7 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
 
     protected virtual DateTime? GetNextRetryTime(int retryCount)
     {
-        var delaySeconds = 1 * (int)Math.Pow(2, retryCount - 1);
+        var delaySeconds = (int)Math.Pow(2, retryCount);
         return DateTime.Now.AddSeconds(delaySeconds);
     }
 

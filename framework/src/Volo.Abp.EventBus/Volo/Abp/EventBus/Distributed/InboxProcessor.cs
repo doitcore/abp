@@ -105,6 +105,8 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
 
                     foreach (var waitingEvent in waitingEvents)
                     {
+                        Logger.LogInformation($"Start processing the incoming event with id = {waitingEvent.Id:N}");
+
                         if (waitingEvent.NextRetryTime.HasValue && waitingEvent.NextRetryTime.Value > Clock.Now)
                         {
                             Logger.LogInformation($"Event with id = {waitingEvent.Id:N} is not ready to be processed yet. Next retry time: {waitingEvent.NextRetryTime.Value}");
@@ -139,7 +141,7 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
                             {
                                 using (var uow = UnitOfWorkManager.Begin(isTransactional: true, requiresNew: true))
                                 {
-                                    if (waitingEvent.RetryCount >= InboxProcessorOptions.MaxRetryCount)
+                                    if (waitingEvent.RetryCount > InboxProcessorOptions.MaxRetryCount)
                                     {
                                         Logger.LogWarning($"Max retry count reached for event with id = {waitingEvent.Id:N}. Discarding the event.");
 
@@ -163,6 +165,7 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
                                 using (var uow = UnitOfWorkManager.Begin(isTransactional: true, requiresNew: true))
                                 {
                                     Logger.LogInformation($"Discarding event with id = {waitingEvent.Id:N} due to an error.");
+
                                     await Inbox.MarkAsDiscardAsync(waitingEvent.Id);
                                     await uow.CompleteAsync(StoppingToken);
                                 }

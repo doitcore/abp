@@ -26,7 +26,7 @@ public class IncomingEventRecord :
 
     public IncomingEventStatus Status { get; set; } = IncomingEventStatus.Pending;
 
-    public DateTime? DiscardedOrProcessedTime { get; set; }
+    public DateTime? HandledTime { get; set; }
 
     public int RetryCount { get; set; } = 0;
 
@@ -62,7 +62,11 @@ public class IncomingEventRecord :
             MessageId,
             EventName,
             EventData,
-            CreationTime
+            CreationTime,
+            Status,
+            HandledTime,
+            RetryCount,
+            NextRetryTime
         );
 
         foreach (var property in ExtraProperties)
@@ -76,13 +80,13 @@ public class IncomingEventRecord :
     public void MarkAsProcessed(DateTime processedTime)
     {
         Status = IncomingEventStatus.Processed;
-        DiscardedOrProcessedTime = processedTime;
+        HandledTime = processedTime;
     }
 
     public void MarkAsDiscarded(DateTime discardedTime)
     {
         Status = IncomingEventStatus.Discarded;
-        DiscardedOrProcessedTime = discardedTime;
+        HandledTime = discardedTime;
     }
 
     public void RetryLater(int retryCount, DateTime nextRetryTime)

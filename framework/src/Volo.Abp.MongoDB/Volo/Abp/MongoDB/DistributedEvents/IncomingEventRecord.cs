@@ -23,9 +23,9 @@ public class IncomingEventRecord :
 
     public DateTime CreationTime { get; private set; }
 
-    public IncomingEventStatus Status { get; set; }
+    public IncomingEventStatus Status { get; set; } = IncomingEventStatus.Pending;
 
-    public DateTime? DiscardedOrProcessedTime { get; set; }
+    public DateTime? HandledTime { get; set; }
 
     public int RetryCount { get; set; } = 0;
 
@@ -33,7 +33,6 @@ public class IncomingEventRecord :
 
     protected IncomingEventRecord()
     {
-        Status = IncomingEventStatus.Pending;
         ExtraProperties = new ExtraPropertyDictionary();
         this.SetDefaultsForExtraProperties();
     }
@@ -46,7 +45,10 @@ public class IncomingEventRecord :
         EventName = eventInfo.EventName;
         EventData = eventInfo.EventData;
         CreationTime = eventInfo.CreationTime;
-        Status = IncomingEventStatus.Pending;
+        Status = eventInfo.Status;
+        HandledTime = eventInfo.HandledTime;
+        RetryCount = eventInfo.RetryCount;
+        NextRetryTime = eventInfo.NextRetryTime;
         ExtraProperties = new ExtraPropertyDictionary();
         this.SetDefaultsForExtraProperties();
         foreach (var property in eventInfo.ExtraProperties)
@@ -62,7 +64,11 @@ public class IncomingEventRecord :
             MessageId,
             EventName,
             EventData,
-            CreationTime
+            CreationTime,
+            Status,
+            HandledTime,
+            RetryCount,
+            NextRetryTime
         );
 
         foreach (var property in ExtraProperties)
@@ -76,13 +82,13 @@ public class IncomingEventRecord :
     public void MarkAsProcessed(DateTime processedTime)
     {
         Status = IncomingEventStatus.Processed;
-        DiscardedOrProcessedTime = processedTime;
+        HandledTime = processedTime;
     }
 
     public void MarkAsDiscarded(DateTime discardedTime)
     {
         Status = IncomingEventStatus.Discarded;
-        DiscardedOrProcessedTime = discardedTime;
+        HandledTime = discardedTime;
     }
 
     public void RetryLater(int retryCount, DateTime nextRetryTime)

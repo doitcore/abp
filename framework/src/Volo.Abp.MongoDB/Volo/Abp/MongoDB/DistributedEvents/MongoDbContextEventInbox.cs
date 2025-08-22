@@ -81,7 +81,7 @@ public class MongoDbContextEventInbox<TMongoDbContext> : IMongoDbContextEventInb
         var dbContext = await DbContextProvider.GetDbContextAsync();
 
         var filter = Builders<IncomingEventRecord>.Filter.Eq(x => x.Id, id);
-        var update = Builders<IncomingEventRecord>.Update.Set(x => x.Status == IncomingEventStatus.Processed, true).Set(x => x.DiscardedOrProcessedTime, Clock.Now);
+        var update = Builders<IncomingEventRecord>.Update.Set(x => x.Status, IncomingEventStatus.Processed).Set(x => x.HandledTime, Clock.Now);
 
         if (dbContext.SessionHandle != null)
         {
@@ -117,7 +117,7 @@ public class MongoDbContextEventInbox<TMongoDbContext> : IMongoDbContextEventInb
         var dbContext = await DbContextProvider.GetDbContextAsync();
 
         var filter = Builders<IncomingEventRecord>.Filter.Eq(x => x.Id, id);
-        var update = Builders<IncomingEventRecord>.Update.Set(x => x.Status == IncomingEventStatus.Discarded, true).Set(x => x.DiscardedOrProcessedTime, Clock.Now);
+        var update = Builders<IncomingEventRecord>.Update.Set(x => x.Status, IncomingEventStatus.Discarded).Set(x => x.HandledTime, Clock.Now);
 
         if (dbContext.SessionHandle != null)
         {

@@ -66,7 +66,7 @@ public class DbContextEventInbox<TDbContext> : IDbContextEventInbox<TDbContext>
     {
         var dbContext = await DbContextProvider.GetDbContextAsync();
         await dbContext.IncomingEvents.Where(x => x.Id == id).ExecuteUpdateAsync(x =>
-            x.SetProperty(p => p.Status, _ => IncomingEventStatus.Processed).SetProperty(p => p.DiscardedOrProcessedTime, _ => Clock.Now));
+            x.SetProperty(p => p.Status, _ => IncomingEventStatus.Processed).SetProperty(p => p.HandledTime, _ => Clock.Now));
     }
 
     [UnitOfWork]
@@ -84,7 +84,7 @@ public class DbContextEventInbox<TDbContext> : IDbContextEventInbox<TDbContext>
     {
         var dbContext = await DbContextProvider.GetDbContextAsync();
         await dbContext.IncomingEvents.Where(x => x.Id == id).ExecuteUpdateAsync(x =>
-            x.SetProperty(p => p.Status, _ => IncomingEventStatus.Discarded).SetProperty(p => p.DiscardedOrProcessedTime, _ => Clock.Now));
+            x.SetProperty(p => p.Status, _ => IncomingEventStatus.Discarded).SetProperty(p => p.HandledTime, _ => Clock.Now));
     }
 
     [UnitOfWork]

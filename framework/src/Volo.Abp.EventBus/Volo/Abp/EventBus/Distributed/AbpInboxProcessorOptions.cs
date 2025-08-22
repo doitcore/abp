@@ -1,6 +1,6 @@
 namespace Volo.Abp.EventBus.Distributed;
 
-public class InboxProcessorOptions
+public class AbpInboxProcessorOptions
 {
     public InboxProcessorFailurePolicy FailurePolicy { get; set; } = InboxProcessorFailurePolicy.Retry;
 

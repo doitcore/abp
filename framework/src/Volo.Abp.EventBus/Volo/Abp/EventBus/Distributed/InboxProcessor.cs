@@ -25,7 +25,7 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
     protected IEventInbox Inbox { get; private set; } = default!;
     protected InboxConfig InboxConfig { get; private set; } = default!;
     protected AbpEventBusBoxesOptions EventBusBoxesOptions { get; }
-    protected InboxProcessorOptions InboxProcessorOptions { get; set; }
+    protected AbpInboxProcessorOptions AbpInboxProcessorOptions { get; set; }
     protected DateTime? LastCleanTime { get; set; }
 
     protected string DistributedLockName { get; set; } = default!;
@@ -41,7 +41,7 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
         IUnitOfWorkManager unitOfWorkManager,
         IClock clock,
         IOptions<AbpEventBusBoxesOptions> eventBusBoxesOptions,
-        IOptions<InboxProcessorOptions> inboxProcessorOptions)
+        IOptions<AbpInboxProcessorOptions> inboxProcessorOptions)
     {
         ServiceProvider = serviceProvider;
         Timer = timer;
@@ -50,7 +50,7 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
         UnitOfWorkManager = unitOfWorkManager;
         Clock = clock;
         EventBusBoxesOptions = eventBusBoxesOptions.Value;
-        InboxProcessorOptions = inboxProcessorOptions.Value;
+        AbpInboxProcessorOptions = inboxProcessorOptions.Value;
         Timer.Period = Convert.ToInt32(EventBusBoxesOptions.PeriodTimeSpan.TotalMilliseconds);
         Timer.Elapsed += TimerOnElapsed;
         Logger = NullLogger<InboxProcessor>.Instance;
@@ -132,16 +132,16 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
                         {
                             Logger.LogError(e, $"An error occurred while processing the incoming event with id = {waitingEvent.Id:N}");
 
-                            if (InboxProcessorOptions.FailurePolicy == InboxProcessorFailurePolicy.Retry)
+                            if (AbpInboxProcessorOptions.FailurePolicy == InboxProcessorFailurePolicy.Retry)
                             {
                                 throw;
                             }
 
-                            if (InboxProcessorOptions.FailurePolicy == InboxProcessorFailurePolicy.RetryLater)
+                            if (AbpInboxProcessorOptions.FailurePolicy == InboxProcessorFailurePolicy.RetryLater)
                             {
                                 using (var uow = UnitOfWorkManager.Begin(isTransactional: true, requiresNew: true))
                                 {
-                                    if (waitingEvent.RetryCount > InboxProcessorOptions.MaxRetryCount)
+                                    if (waitingEvent.RetryCount > AbpInboxProcessorOptions.MaxRetryCount)
                                     {
                                         Logger.LogWarning($"Max retry count reached for event with id = {waitingEvent.Id:N}. Discarding the event.");
 
@@ -152,15 +152,15 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
 
                                     Logger.LogInformation($"Retrying event with id = {waitingEvent.Id:N}. " +
                                                           $"Retry count: {waitingEvent.RetryCount}, " +
-                                                          $"Next retry time: {GetNextRetryTime(waitingEvent.RetryCount, InboxProcessorOptions.MaxRetryCount)}");
+                                                          $"Next retry time: {GetNextRetryTime(waitingEvent.RetryCount, AbpInboxProcessorOptions.MaxRetryCount)}");
 
-                                    await Inbox.RetryLaterAsync(waitingEvent.Id, waitingEvent.RetryCount++, GetNextRetryTime(waitingEvent.RetryCount, InboxProcessorOptions.MaxRetryCount));
+                                    await Inbox.RetryLaterAsync(waitingEvent.Id, ++waitingEvent.RetryCount, GetNextRetryTime(waitingEvent.RetryCount, AbpInboxProcessorOptions.MaxRetryCount));
                                     await uow.CompleteAsync(StoppingToken);
                                 }
                                 continue;
                             }
 
-                            if (InboxProcessorOptions.FailurePolicy == InboxProcessorFailurePolicy.Discard)
+                            if (AbpInboxProcessorOptions.FailurePolicy == InboxProcessorFailurePolicy.Discard)
                             {
                                 using (var uow = UnitOfWorkManager.Begin(isTransactional: true, requiresNew: true))
                                 {

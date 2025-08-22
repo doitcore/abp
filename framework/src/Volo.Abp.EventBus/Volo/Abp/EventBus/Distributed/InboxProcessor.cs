@@ -144,7 +144,7 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
 
                                     Logger.LogInformation($"Event with id = {waitingEvent.Id:N} will retry later. " +
                                                           $"Current retry count: {waitingEvent.RetryCount}, " +
-                                                          $"Next retry time: {GetNextRetryTime(waitingEvent.RetryCount)}" +
+                                                          $"Next retry time: {GetNextRetryTime(waitingEvent.RetryCount)}, " +
                                                           $"Max retry count: {EventBusBoxesOptions.InboxProcessorMaxRetryCount}.");
 
                                     await Inbox.RetryLaterAsync(waitingEvent.Id, ++waitingEvent.RetryCount, GetNextRetryTime(waitingEvent.RetryCount));

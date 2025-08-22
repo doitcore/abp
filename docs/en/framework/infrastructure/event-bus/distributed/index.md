@@ -643,6 +643,11 @@ Configure<AbpEventBusBoxesOptions>(options =>
 * `InboxWaitingEventMaxCount`: The maximum number of events to query at once from the inbox in the database. Default value is 1000.
 * `OutboxWaitingEventMaxCount`: The maximum number of events to query at once from the outbox in the database. Default value is 1000.
 * `DistributedLockWaitDuration`: ABP uses [distributed locking](../../distributed-locking.md) to prevent concurrent access to the inbox and outbox messages in the database, when running multiple instance of the same application. If an instance of the application can not obtain the lock, it tries after a duration. This is the configuration of that duration. Default value is 15 seconds (`TimeSpan.FromSeconds(15)`).
+* `InboxProcessorFailurePolicy`: The policy to handle the failure of the inbox processor. Default value is `Retry`. Possible values are:
+    * `Retry`: The current exception and subsequent events will continue to be processed in order in the next cycle.
+    * `RetryLater`: Skip the event that caused the exception and continue with the following events. The failed event will be retried after a delay that doubles each time (1, 2, 4, 8, 16 seconds). The default maximum retry count is 10 (configurable).
+    * `Discard`: The event that caused the exception will be discarded and will not be retried.
+* `InboxProcessorMaxRetryCount`: The maximum number of retries for the inbox processor. Default value is 10. Only used when `InboxProcessorFailurePolicy` is `RetryLater`.
 
 ### Skipping Outbox
 

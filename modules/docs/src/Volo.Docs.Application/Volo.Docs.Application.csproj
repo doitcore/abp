@@ -4,7 +4,7 @@
   <Import Project="..\..\..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <AssemblyName>Volo.Docs.Application</AssemblyName>
     <PackageId>Volo.Docs.Application</PackageId>
     <RootNamespace />
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Volo.Docs.Application.Contracts\Volo.Docs.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Volo.Docs.Common.Application\Volo.Docs.Common.Application.csproj" />
     <ProjectReference Include="..\Volo.Docs.Domain\Volo.Docs.Domain.csproj" />
     <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.AutoMapper\Volo.Abp.AutoMapper.csproj" />
     <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.Caching\Volo.Abp.Caching.csproj" />

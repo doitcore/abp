@@ -19,17 +19,26 @@ If you need to manually this theme, follow the steps below:
 
 {{if UI == "Blazor"}}
 
-* Install the [Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme](https://www.nuget.org/packages/Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme) NuGet package to your web project.
-* Add `AbpAspNetCoreComponentsWebAssemblyBasicThemeModule` into the `[DependsOn(...)]` attribute for your [module class](../../architecture/modularity/basics.md) in the your Blazor UI project.
-* Use `Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme.Themes.Basic.App` as the root component of your application in the `ConfigureServices` method of your module:
+* Install the [Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme.Bundling](https://www.nuget.org/packages/Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme.Bundling) NuGet package to your `Blazor` project.
+* Add `AbpAspNetCoreComponentsWebAssemblyBasicThemeBundlingModule` into the `[DependsOn(...)]` attribute for your [module class](../../architecture/modularity/basics.md) in the your `Blazor` project.
+* Install the [Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme](https://www.nuget.org/packages/Volo.Abp.AspNetCore.Components.WebAssembly.BasicTheme) NuGet package to your `Blazor.Client` project.
+* Add `AbpAspNetCoreComponentsWebAssemblyBasicThemeModule` into the `[DependsOn(...)]` attribute for your [module class](../../architecture/modularity/basics.md) in the your `Blazor.Client` project.
 
-    ```csharp
-    var builder = context.Services.GetSingletonInstance<WebAssemblyHostBuilder>();
-    builder.RootComponents.Add<App>("#ApplicationContainer");
-    ```
-    `#ApplicationContainer` is a selector (like `<div id="ApplicationContainer">Loading...</div>`) in the `index.html`.
+Update `Routes.razor` file in `Blazor.Client` project as below:
 
-* Execute `abp bundle` command under blazor project once.
+````csharp
+@using Volo.Abp.AspNetCore.Components.Web.BasicTheme.Themes.Basic
+@using Volo.Abp.AspNetCore.Components.WebAssembly.WebApp
+<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="WebAppAdditionalAssembliesHelper.GetAssemblies<YourBlazorClientModule>()">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
+    </Found>
+</Router>
+````
 
 {{end}}
 
@@ -41,20 +50,37 @@ If you need to manually this theme, follow the steps below:
 
 * Add `AbpAspNetCoreComponentsServerBasicThemeModule` into the `[DependsOn(...)]` attribute for your [module class](../../architecture/modularity/basics.md) in the your Blazor UI project.
 
-* Perform following changes in `Pages/_Host.cshtml` file
+* Perform following changes in `App.razor` file
   * Add usings at the top of the page.
     ```html
     @using Volo.Abp.AspNetCore.Components.Server.BasicTheme.Bundling
-    @using Volo.Abp.AspNetCore.Components.Web.BasicTheme.Themes.Basic
     ```
-  * Add Basic theme style bundles between `<head>` tags.
-    ```html
-    <abp-style-bundle name="@BlazorBasicThemeBundles.Styles.Global" />
+  * Then replace script & style bunles as following
     ```
-  * Add `App` component of Basic Theme in the body section of page.
-    ```html
-    <component type="typeof(App)" render-mode="Server" />
+    <AbpStyles BundleName="@BlazorBasicThemeBundles.Styles.Global" />
     ```
+
+    ```
+    <AbpScripts BundleName="@BlazorBasicThemeBundles.Scripts.Global" />
+    ```
+
+Update `Routes.razor` file as below:
+
+````csharp
+@using Volo.Abp.AspNetCore.Components.Web.BasicTheme.Themes.Basic
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Routing
+@using Microsoft.Extensions.Options
+@inject IOptions<AbpRouterOptions> RouterOptions
+<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="RouterOptions.Value.AdditionalAssemblies">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
+    </Found>
+</Router>
+````
 
 {{end}}
 

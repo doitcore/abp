@@ -18,6 +18,7 @@ on:
       - 'templates/**/*.razor'
       - 'Directory.Build.props'
       - 'Directory.Packages.props'
+      - '.github/workflows/build-and-test.yml'
 
   pull_request:
     paths:
@@ -35,6 +36,7 @@ on:
       - 'templates/**/*.razor'
       - 'Directory.Build.props'
       - 'Directory.Packages.props'
+      - '.github/workflows/build-and-test.yml'
     types:
       - opened
       - synchronize
@@ -45,17 +47,14 @@ permissions:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 50
     if: ${{ !github.event.pull_request.draft }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-dotnet@master
       with:
-        dotnet-version: 8.0.100
-
-    - name: chown
-      run: |
-        sudo chown -R $USER:$USER /home/runneradmin
+        dotnet-version: 9.0.100
 
     - name: Build All
       run: ./build-all.ps1

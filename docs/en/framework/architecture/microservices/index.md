@@ -25,6 +25,8 @@ However, developing such a well-modular application can be a problem since it is
 
 ABP can help you in that point by offering a **microservice-compatible, strict module architecture** where your module is split into multiple layers/projects and developed in its own VS solution completely isolated and independent from other modules. Such a developed module is a natural microservice yet it can be easily plugged-in a monolithic application. See the [module development best practice guide](../best-practices) that offers a **microservice-first module design**. All [standard ABP modules](https://github.com/abpframework/abp/tree/master/modules) are developed based on this guide. So, you can use these modules by embedding into your monolithic solution or deploy them separately and use via remote APIs. They can share a single database or can have their own database based on your simple configuration.
 
-## Microservice Demo Solution: eShopOnAbp
+## Microservice Solution Template
 
-The [eShopOnAbp project](https://github.com/abpframework/eShopOnAbp) demonstrates a complete microservice solution based on the ABP.
+ABP provides a pre-architected and production-ready microservice solution template that includes multiple services, API gateways and applications well integrated with each other. This template helps you quickly start building distributed systems with common microservice patterns.
+
+See the [Microservice Solution Template](../../../solution-templates/microservice/index.md) documentation for details.

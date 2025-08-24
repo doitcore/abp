@@ -24,7 +24,9 @@ export interface PageRenderStrategy {
 
 export const PAGE_RENDER_STRATEGY = new InjectionToken<PageRenderStrategy>('PAGE_RENDER_STRATEGY');
 
-@Directive({ selector: '[abpPagePart]' })
+@Directive({
+  selector: '[abpPagePart]',
+})
 export class PagePartDirective implements OnInit, OnDestroy, OnChanges {
   hasRendered = false;
   type!: string;

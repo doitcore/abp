@@ -151,6 +151,17 @@ property =>
 
 > Tip: Use `DefaultValueFactory` option only if the default value may change over the time (like `DateTime.Now` in this example). If it is a constant value, then use the `DefaultValue` option.
 
+### DataTypeAttribute
+
+`DataTypeAttribute` is used to specify the type of the property. It is used to determine how to render the property on the user interface:
+
+```csharp
+property =>
+{
+    property.Attributes.Add(new DataTypeAttribute(DataType.Date));
+}
+```
+
 ### Validation
 
 Entity extension system allows you to define validation for extension properties in a few ways.

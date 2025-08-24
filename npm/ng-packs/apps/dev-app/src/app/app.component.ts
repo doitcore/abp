@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { InternetConnectionStatusComponent, LoaderBarComponent } from '@abp/ng.theme.shared';
+import { DynamicLayoutComponent } from '@abp/ng.core';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +9,6 @@ import { Component } from '@angular/core';
     <abp-dynamic-layout></abp-dynamic-layout>
     <abp-internet-status></abp-internet-status>
   `,
+  imports: [LoaderBarComponent, DynamicLayoutComponent, InternetConnectionStatusComponent],
 })
 export class AppComponent {}

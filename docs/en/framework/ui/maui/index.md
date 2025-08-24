@@ -13,6 +13,8 @@ ABP Commercial platform provides a basic [MAUI](https://docs.microsoft.com/en-us
 
 Run the backend application described in the [getting started document](../../../get-started/index.md).
 
+## Run the Mobile Application
+
 Open the `appsettings.json` in the `MAUI` project:
 
 {{ if Tiered == "Yes" }}
@@ -24,6 +26,12 @@ Open the `appsettings.json` in the `MAUI` project:
 * Make sure that `Authority` and `BaseUrl` match the running address of the `.HttpApi.Host`, `.Web` or `.Blazor`(BlazorServer UI) projects.
 
 {{ end }}
+
+After ensuring the backend application is running and the `appsettings.json` is properly configured in the mobile application, you can proceed to run the mobile application. You can run the application either by using the `dotnet build` command (e.g. `dotnet build -t:Run -f net9.0-android` for Android or `dotnet build -t:Run -f net9.0-ios` for iOS) or by running it through Visual Studio or any other IDE that supports MAUI.
+
+> For more information about running the mobile application, please refer to the [Microsoft's documentation](https://learn.microsoft.com/en-us/dotnet/maui/?view=net-maui-9.0).
+
+You can examine the [Users Page](#users-page) or any other pre-defined page to see how to use CSharp Client Proxy to request backend API and consume the backend API in the same way in your application. Also, if you encounter any errors on specific platforms, you can refer to the following sections for each platform to find common issues and their solutions.
 
 ### Android
 
@@ -37,8 +45,16 @@ Open a command line terminal and run the `adb reverse` command to expose a port 
 
 `adb reverse tcp:44305 tcp:44305`
 
-> You should replace "44305" with the real port.
-> You should run the command after starting the emulator.
+> Replace `44305` with the port number your backend application is running on.
+>
+> Run this command **after** the Android emulator has started.
+
+> [!IMPORTANT]
+> If your project uses a **tiered** or **microservice** architecture, ensure that both the **auth server** and all **remote service ports** are properly proxied using the `adb reverse` command. You can find all the required remote service ports and AuthServer configurations in your `YourProjectName.Maui/appsettings.json` file.
+
+> [!NOTE]
+> If you don't have a separate installation of **Android Debug Bridge** _(adb)_, you can open it from **Visual Studio** by following toolbar menu `Tools` > `Android` > `Android Adb Command Prompt`. Android emulator has to be running for this operation.
+
 
 ### iOS
 
@@ -57,10 +73,11 @@ If you run the MAUI on a Mac agent, the remote iOS Simulator can't access the ba
 ## User Interface
 
 The MAUI template consists of four pages: 
-* **Homepage**: This is the welcome page of the application.
-* **Users**: Management page for your application users. You can search, add, update, or delete users of your application.
-* **Tenants**: Management page for your tenants. 
-* **Settings**: Management page for your application settings. On this page, you can change **the current language**, **the profile picture**, **the current password**, or/and **the current theme**.
+
+- **Homepage**: This is the welcome page of the application.
+- **Users**: Management page for your application users. You can search, add, update, or delete users of your application.
+- **Tenants**: Management page for your tenants. 
+- **Settings**: Management page for your application settings. On this page, you can change **the current language**, **the profile picture**, **the current password**, or/and **the current theme**.
 
 ### Homepage
 
@@ -77,12 +94,6 @@ The MAUI template consists of four pages:
 ### Settings Page
 
 ![Maui Settings Page](../../../images/maui-settings-page.png)
-
-## Run the Mobile Application
-
-You can run the MAUI application through Visual Studio or any other IDE that supports MAUI. After the application is up and running, you can continue to develop your application based on this startup template.
-
-You can examine the [Users Page](#users-page) or any other pre-defined page to see how to use CSharp Client Proxy to request backend API and consume the backend API in the same way in your application.
 
 ### Advanced
 

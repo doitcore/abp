@@ -22,6 +22,7 @@ public static class BackgroundJobsDbContextModelCreatingExtensions
 
             b.ConfigureByConvention();
 
+            b.Property(x => x.ApplicationName).IsRequired(false).HasMaxLength(BackgroundJobRecordConsts.MaxApplicationNameLength);
             b.Property(x => x.JobName).IsRequired().HasMaxLength(BackgroundJobRecordConsts.MaxJobNameLength);
             b.Property(x => x.JobArgs).IsRequired().HasMaxLength(BackgroundJobRecordConsts.MaxJobArgsLength);
             b.Property(x => x.TryCount).HasDefaultValue(0);

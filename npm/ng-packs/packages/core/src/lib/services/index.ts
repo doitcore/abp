@@ -23,3 +23,5 @@ export * from './window.service';
 export * from './internet-connection-service';
 export * from './local-storage-listener.service';
 export * from './title-strategy.service';
+export * from './timezone.service';
+export * from './time.service';

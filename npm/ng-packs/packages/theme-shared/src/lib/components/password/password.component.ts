@@ -1,16 +1,16 @@
 import { Component, forwardRef, Input } from '@angular/core';
-import { AbstractNgModelComponent } from '@abp/ng.core';
-import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AbstractNgModelComponent } from '@abp/ng.core';
+import { NgxValidateCoreModule } from '@ngx-validate/core';
 
 /**
- * @deprecated use ShowPasswordDirective directive 
+ * @deprecated use ShowPasswordDirective directive
  * https://abp.io/docs/latest/framework/ui/angular/show-password-directive
  */
 @Component({
   selector: 'abp-password',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxValidateCoreModule],
   templateUrl: `./password.component.html`,
   providers: [
     {

@@ -47,16 +47,16 @@ import { eExtensibleComponents } from '../../enums/components';
 import { ExtensibleDateTimePickerComponent } from '../date-time-picker/extensible-date-time-picker.component';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { ExtensibleFormPropService } from '../../services/extensible-form-prop.service';
-import { CreateInjectorPipe } from '../../pipes/create-injector.pipe';
 import { CommonModule } from '@angular/common';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-form-multiselect.component';
 
 @Component({
   selector: 'abp-extensible-form-prop',
   templateUrl: './extensible-form-prop.component.html',
-  standalone: true,
   imports: [
     ExtensibleDateTimePickerComponent,
+    ExtensibleFormMultiselectComponent,
     NgbDatepickerModule,
     NgbTimepickerModule,
     ReactiveFormsModule,
@@ -64,7 +64,6 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
     NgxValidateCoreModule,
     NgbTooltip,
     NgbTypeaheadModule,
-    CreateInjectorPipe,
     ShowPasswordDirective,
     PermissionDirective,
     LocalizationModule,

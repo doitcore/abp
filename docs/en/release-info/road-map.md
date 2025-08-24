@@ -4,44 +4,36 @@ This document provides a road map, release schedule, and planned features for th
 
 ## Next Versions
 
-### v9.0
+### v10.0
 
-The next version will be 9.0 and planned to release the stable 9.0 version in November 2024. We will be mostly working on the following topics:
+The next version will be 10.0 and planned to release the stable 10.0 version in December 2025. We will be mostly working on the following topics:
 
 * Framework
-  * Upgrading to .NET 9.0
-  * Google Cloud Storage BLOB Provider
-  * Better handling localization resources in a microservice scenario
-  * SSR support for the Angular UI
+  * Upgrading to .NET 10
   * Upgrading 3rd-party dependencies
+  * Enhancements in the core points
 
 * ABP Suite
-  * Multiple navigation properties to the same target entity
   * Define navigation properties without target string property dependency
   * Improvements one-to-many scenarios
-  * Access to default code generation templates for customized templates
+  * File Upload Modal enhancements
+
 
 * ABP Studio
-  * Blazor WebApp UI option for the new startup templates
-  * Execution order (dependency management) for Solution Runner
+  * Allow to directly create new solutions with ABP's RC (Release Candidate) versions
   * Automate more details on new service creation for a microservice solution
   * Support multiple concurrent Kubernetes deployment/integration scenarios
-  * Show the README file when you create a new solution or open an existing solution
-  * Improve ABP Suite code-generation possibilities for microservice solutions
-  * Improve the module installation experience
-  * Auto-install 3rd-party dependencies
-  * Better handle long log files
-  * Allow to directly create new solutions with ABP's RC (Release Candidate) versions
-  * Support Intel processors for Mac computers, support ARM chipset for Windows and support Linux OS
+  * Improve the module installation experience / installation guides
   * Improve client proxy generation experience
+  * Modular Monolith Application Startup Template
 
 * Application modules
-  * Account module: Support mixed social/local login scenarios
+  * Account module: Support mixed social/local login scenarios & adding security related features
   * UI/UX improvements on existing application modules
 
-* New tutorials
-  * Modular monolith development
+* Updating existing tutorials & documents (with other UI & DB options)
   * Microservice development
+  * Modular monolith development
 
 ## Backlog Items
 
@@ -61,6 +53,8 @@ The ABP framework is [open source](https://github.com/abpframework/abp) and free
 * [#15932](https://github.com/abpframework/abp/issues/15932) / Introduce ABP Diagnostics Module
 * [#16744](https://github.com/abpframework/abp/issues/16744) / State Management API
 * [#17815](https://github.com/abpframework/abp/issues/17815) / Operation Rate Limiting
+* [#119](https://github.com/abpframework/abp/issues/119) / REST API Versioning Improvements
+* [#2087](https://github.com/abpframework/abp/issues/2087) / RavenDB Database Support
 
 ### Application Modules / UI Themes
 
@@ -68,7 +62,6 @@ ABP Platform provides many (free and commercial) [pre-built application modules]
 
 * LeptonX theme: New layouts, styles and components
 * CMS Kit module: Meta information for SEO, media gallery, RSS feed, content versioning, social media streams
-* Identity module: Idle session warning
 * Payment module: Invoice system
 * New module: User notification
 * New module: Dynamic dashboard
@@ -83,7 +76,6 @@ Here, are some of the important planned features for next ABP Studio versions:
 
 * Theme builder for the LeptonX theme
 * Analyze user solutions to explore entities, domain services, application services, pages and other fundamental objects.
-* Add status bar to the built-in browser to easily see errors
 * Swagger authentication support for the built-in browser
 * Show related requests/events (traces) together in the solution runner panel
 * Integrate common tool dashboards into ABP Studio (such a Garana, Redis, RabbitMQ, Kibana, etc)
@@ -94,8 +86,8 @@ Here, are some of the important planned features for next ABP Studio versions:
 * Downloading samples in ABP studio
 * Built-in ABP documentation experience
 * Auto-execute terminal commands in markdown files
-* Compare changed on the startup templates when a new ABP version is published
-* Remove unused projects while downloading source code of an existing module
+* Compare changes on the startup templates when a new ABP version is published
+* Remove unused projects while downloading the source code of an existing module
 * Testing/hosting applications for module templates
 * Easily explore all module and package dependencies of a large solution
 * Built-in deployment options
@@ -106,21 +98,20 @@ Here, are some of the important planned features for next ABP Studio versions:
 
 [ABP Suite](../suite/index.md) is a GUI application that is mainly used to generate CRUD style pages in your application. You define your entity and it can generate all the code from the database layer to the UI layer. The generated code is clean and a perfect starting point to implement your custom requirements on top of it.
 
-Here, are some of the important planned features for next ABP Suite versions:
+Here, are some of the important planned features for the next ABP Suite versions:
 
-* Handle image properties for entities
+* Handle image properties for entities (in addition to file properties, which is already supported)
 * Allow to define extra properties for DTOs those are not a part of the entity
 * Allow to create pages instead of modals for CRUD page generation
 * View-only (detail view) modal/page for an entity
 * Export child/detail entity records as a part of export operation for a main (master) entity
-* Allow to accept attachments (files) for an entity
 * Allow to add custom entity actions for an entity
 * Allow to inherit from an existing entity class
 * Custom form layouts on CRUD page generation
 
 ## Feature Requests
 
-Vote for your favorite feature on the related GitHub issues (and write your thoughts). You can create an issue on [the GitHub repository](https://github.com/abpframework/abp) for your feature requests, but first search in the existing issues please. You can also contact info@abp.io for your feature requests and other suggestions.
+Vote for your favorite feature on the related GitHub issues (and write your thoughts). You can create an issue on [the GitHub repository](https://github.com/abpframework/abp) for your feature requests, but please first search the existing issues. You can also contact [info@abp.io](mailto:info@abp.io) for your feature requests and other suggestions.
 
 ## See Also
 

@@ -12,6 +12,7 @@ import { findRoute, getRoutePath } from '../utils/route-utils';
 import { TreeNode } from '../utils/tree-utils';
 import { DYNAMIC_LAYOUTS_TOKEN } from '../tokens/dynamic-layout.token';
 import { EnvironmentService } from '../services';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'abp-dynamic-layout',
@@ -21,13 +22,13 @@ import { EnvironmentService } from '../services';
     }
   `,
   providers: [SubscriptionService],
+  imports: [CommonModule],
 })
 export class DynamicLayoutComponent implements OnInit {
   layout?: Type<any>;
   layoutKey?: eLayoutType;
   readonly layouts = inject(DYNAMIC_LAYOUTS_TOKEN);
   isLayoutVisible = true;
-
 
   protected readonly router = inject(Router);
   protected readonly route = inject(ActivatedRoute);
@@ -46,7 +47,7 @@ export class DynamicLayoutComponent implements OnInit {
     this.checkLayoutOnNavigationEnd();
     this.listenToLanguageChange();
   }
-  
+
   ngOnInit(): void {
     if (this.layout) {
       return;
@@ -102,7 +103,7 @@ export class DynamicLayoutComponent implements OnInit {
     let message = `Layout ${layoutName} not found.`;
     if (layoutName === 'account') {
       message =
-        'Account layout not found. Please check your configuration. If you are using LeptonX, please make sure you have added "AccountLayoutModule.forRoot()" to your app.module configuration.';
+        'Account layout not found. Please check your configuration. If you are using LeptonX, please make sure you have added "provideAccountLayout()" to your app configuration.';
     }
     console.warn(message);
   }

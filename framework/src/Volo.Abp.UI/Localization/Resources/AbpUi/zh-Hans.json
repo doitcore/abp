@@ -38,6 +38,7 @@
     "PagerInfoEmpty": "显示0个条目中的0到0",
     "PagerInfoFiltered": "(从 _MAX_ 总条目中过滤掉)",
     "NoDataAvailableInDatatable": "表中没有数据",
+    "ErrorLoadingDatatable": " 请求过程中发生错误。检查消息以获取详细信息",
     "Total": "总计",
     "Selected": "已选",
     "PagerShowMenuEntries": "显示 _MENU_ 条数据",
@@ -59,6 +60,7 @@
     "AddNew": "添新",
     "ProfilePicture": "个人资料图片",
     "Theme": "主题",
-    "NotAssigned": "未分配"
+    "NotAssigned": "未分配",
+    "EntityActionsDisabledTooltip": "您没有权限执行任何操作。"
   }
 }

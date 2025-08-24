@@ -1,13 +1,31 @@
 import { NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { collapse, ToasterService } from '@abp/ng.theme.shared';
+import {
+  ButtonComponent,
+  collapse,
+  ModalCloseDirective,
+  ModalComponent,
+  ToasterService,
+} from '@abp/ng.theme.shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { SettingManagementPolicyNames } from '../../enums/policy-names';
 import { EmailSettingsService } from '@abp/ng.setting-management/proxy';
 import { EmailSettingsDto } from '../../proxy/models';
-import { ConfigStateService, LocalizationService } from '@abp/ng.core';
+import {
+  ConfigStateService,
+  LocalizationPipe,
+  LocalizationService,
+  PermissionDirective,
+} from '@abp/ng.core';
+import { NgxValidateCoreModule } from '@ngx-validate/core';
+import { CommonModule } from '@angular/common';
 
 const { required, email } = Validators;
 
@@ -15,6 +33,16 @@ const { required, email } = Validators;
   selector: 'abp-email-setting-group',
   templateUrl: 'email-setting-group.component.html',
   animations: [collapse],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    LocalizationPipe,
+    ButtonComponent,
+    ModalComponent,
+    ModalCloseDirective,
+    NgxValidateCoreModule,
+    PermissionDirective,
+  ],
 })
 export class EmailSettingGroupComponent implements OnInit {
   protected readonly localizationService = inject(LocalizationService);
@@ -100,7 +128,7 @@ export class EmailSettingGroupComponent implements OnInit {
     }
 
     this.emailSettingsService.sendTestEmail(this.emailTestForm.value).subscribe(res => {
-      this.toasterService.success('AbpSettingManagement::SuccessfullySent');
+      this.toasterService.success('AbpSettingManagement::SentSuccessfully');
       this.isEmailTestModalOpen = false;
     });
   }

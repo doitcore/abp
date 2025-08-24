@@ -15,7 +15,6 @@ using Volo.Abp.Cli.Commands;
 using Volo.Abp.Cli.Commands.Services;
 using Volo.Abp.Cli.Http;
 using Volo.Abp.Cli.ProjectBuilding;
-using Volo.Abp.Cli.ProjectBuilding.Files;
 using Volo.Abp.Cli.ProjectBuilding.Templates.MvcModule;
 using Volo.Abp.Cli.ProjectModification.Events;
 using Volo.Abp.Cli.Utils;
@@ -391,7 +390,7 @@ public class SolutionModuleAdder : ITransientDependency
                 continue;
             }
 
-            RemoveProjectFromSolutionAsync(moduleSolutionFile, projectToRemove);
+            await RemoveProjectFromSolutionAsync(moduleSolutionFile, projectToRemove);
         }
     }
 
@@ -514,7 +513,7 @@ public class SolutionModuleAdder : ITransientDependency
 
             foreach (var npmPackage in angularPackages)
             {
-                await ProjectNpmPackageAdder.AddAngularPackageAsync(angularPath, npmPackage);
+                await ProjectNpmPackageAdder.AddNpmPackageAsync(angularPath, npmPackage);
             }
         }
     }

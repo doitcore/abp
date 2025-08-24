@@ -40,7 +40,7 @@
         })
         
         _sendTestEmailModal.onResult(function () {
-            abp.notify.success(l('SuccessfullySent'));
+            abp.notify.success(l('SentSuccessfully'));
         });
 
         $("#SendTestEmailButton").click(function (e) {

@@ -4,7 +4,7 @@
   <Import Project="..\..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <AssemblyName>Volo.Abp.AspNetCore</AssemblyName>
@@ -31,7 +31,7 @@
     <ProjectReference Include="..\Volo.Abp.VirtualFileSystem\Volo.Abp.VirtualFileSystem.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
     <PackageReference Include="IdentityModel" />
-    <PackageReference Include="DeviceDetector.NET" />
+    <PackageReference Include="MyCSharp.HttpUserAgentParser" />
   </ItemGroup>
 
 </Project>

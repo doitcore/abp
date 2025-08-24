@@ -3,8 +3,7 @@
     <ng-container
       [ngTemplateOutlet]="isDropdown(route) ? dropdownLink : defaultLink"
       [ngTemplateOutletContext]="{ $implicit: route }"
-    >
-    </ng-container>
+    />
   }
 
   <ng-template #defaultLink let-route>
@@ -13,7 +12,7 @@
         @if (route.iconClass) {
           <i [ngClass]="route.iconClass"></i>
         }
-        {{ route.name | abpLocalization }}
+        {{ route.name | abpLazyLocalization | async }}
       </a>
     </li>
   </ng-template>
@@ -40,7 +39,7 @@
           @if (route.iconClass) {
             <i [ngClass]="route.iconClass"></i>
           }
-          {{ route.name | abpLocalization }}
+          {{ route.name | abpLazyLocalization | async }}
         </a>
         <div
           #routeContainer
@@ -48,9 +47,7 @@
           (click)="$event.preventDefault(); $event.stopPropagation()"
           [class.d-block]="smallScreen && rootDropdownExpand[route.name]"
         >
-          <ng-container
-            *ngTemplateOutlet="forTemplate; context: { $implicit: route }"
-          ></ng-container>
+          <ng-container *ngTemplateOutlet="forTemplate; context: { $implicit: route }" />
         </div>
       </li>
     }
@@ -61,7 +58,7 @@
       <ng-template
         [ngTemplateOutlet]="child.children?.length ? dropdownChild : defaultChild"
         [ngTemplateOutletContext]="{ $implicit: child }"
-      ></ng-template>
+      />
     }
   </ng-template>
 
@@ -105,7 +102,7 @@
         class="dropdown-menu dropdown-menu-start border-0 shadow-sm"
         [class.d-block]="smallScreen && dropdownSubmenu.isOpen()"
       >
-        <ng-container *ngTemplateOutlet="forTemplate; context: { $implicit: child }"></ng-container>
+        <ng-container *ngTemplateOutlet="forTemplate; context: { $implicit: child }" />
       </div>
     </div>
   </ng-template>

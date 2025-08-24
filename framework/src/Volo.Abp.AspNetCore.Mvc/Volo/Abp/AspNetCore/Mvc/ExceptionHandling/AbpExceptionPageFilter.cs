@@ -81,6 +81,7 @@ public class AbpExceptionPageFilter : IAsyncPageFilter, IAbpFilter, ITransientDe
        {
            options.SendExceptionsDetailsToClients = exceptionHandlingOptions.SendExceptionsDetailsToClients;
            options.SendStackTraceToClients = exceptionHandlingOptions.SendStackTraceToClients;
+           options.SendExceptionDataToClientTypes = exceptionHandlingOptions.SendExceptionDataToClientTypes;
        });
 
         var logLevel = context.Exception!.GetLogLevel();
@@ -89,10 +90,12 @@ public class AbpExceptionPageFilter : IAsyncPageFilter, IAbpFilter, ITransientDe
         remoteServiceErrorInfoBuilder.AppendLine($"---------- {nameof(RemoteServiceErrorInfo)} ----------");
         remoteServiceErrorInfoBuilder.AppendLine(context.GetRequiredService<IJsonSerializer>().Serialize(remoteServiceErrorInfo, indented: true));
 
-        var logger = context.GetService<ILogger<AbpExceptionPageFilter>>(NullLogger<AbpExceptionPageFilter>.Instance)!;
-        logger.LogWithLevel(logLevel, remoteServiceErrorInfoBuilder.ToString());
-
-        logger.LogException(context.Exception!, logLevel);
+        if (context.Exception != null && exceptionHandlingOptions.ShouldLogException(context.Exception))
+        {
+            var logger = context.GetService<ILogger<AbpExceptionPageFilter>>(NullLogger<AbpExceptionPageFilter>.Instance)!;
+            logger.LogWithLevel(logLevel, remoteServiceErrorInfoBuilder.ToString());
+            logger.LogException(context.Exception!, logLevel);
+        }
 
         await context.GetRequiredService<IExceptionNotifier>().NotifyAsync(new ExceptionNotificationContext(context.Exception!));
 
@@ -105,13 +108,14 @@ public class AbpExceptionPageFilter : IAsyncPageFilter, IAbpFilter, ITransientDe
         {
             if (!context.HttpContext.Response.HasStarted)
             {
-                context.HttpContext.Response.Headers.Add(AbpHttpConsts.AbpErrorFormat, "true");
+                context.HttpContext.Response.Headers.Append(AbpHttpConsts.AbpErrorFormat, "true");
                 context.HttpContext.Response.StatusCode = (int)context
                     .GetRequiredService<IHttpExceptionStatusCodeFinder>()
                     .GetStatusCode(context.HttpContext, context.Exception!);
             }
             else
             {
+                var logger = context.GetService<ILogger<AbpExceptionPageFilter>>(NullLogger<AbpExceptionPageFilter>.Instance)!;
                 logger.LogWarning("HTTP response has already started, cannot set headers and status code!");
             }
 

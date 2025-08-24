@@ -62,7 +62,7 @@ This module adds some initial data (see [the data seed system](../framework/infr
 
 * Creates language records configured using `AbpLocalizationOptions`.
 
-If you want to change the seeded language list, see the next section.
+If you want to change the seeded language list, see the [Localization](../framework/fundamentals/localization.md#Supported-Languages) document.
 
 ## Internals
 
@@ -77,6 +77,11 @@ This module follows the [Entity Best Practices & Conventions](../framework/archi
 * `Language` (aggregate root): Represents a language in the system.
 * `LanguageText` (aggregate root): Represents a language text in the system.
 
+##### Dynamic Localization
+
+* `LocalizationResourceRecord` (aggregate root): Represents a localization resource in the system.
+* `LocalizationTextRecord` (aggregate root): Represents all texts of a localization resource in the system.
+
 #### Repositories
 
 This module follows the [Repository Best Practices & Conventions](../framework/architecture/best-practices/repositories.md) guide.
@@ -85,6 +90,8 @@ Following custom repositories are defined for this module:
 
 * `ILanguageRepository`
 * `ILanguageTextRepository`
+* `ILocalizationResourceRecordRepository`
+* `ILocalizationTextRecordRepository`
 
 #### Domain Services
 
@@ -121,6 +128,8 @@ See the [connection strings](../framework/fundamentals/connection-strings.md) do
 
 * **AbpLanguages**
 * **AbpLanguageTexts**
+* **AbpLocalizationResources**
+* **AbpLocalizationTexts**
 
 #### MongoDB
 
@@ -128,6 +137,8 @@ See the [connection strings](../framework/fundamentals/connection-strings.md) do
 
 * **AbpLanguages**
 * **AbpLanguageTexts**
+* **AbpLocalizationResources**
+* **AbpLocalizationTexts**
 
 ### Permissions
 
@@ -138,45 +149,41 @@ See the `LanguageManagementPermissions` class members for all permissions define
 
 #### Installation
 
-To configure the application to use the `LanguageManagementModule`, you first need to import `LanguageManagementConfigModule` from `@volo/abp.ng.language-management/config` to root module. `LanguageManagementConfigModule` has a static `forRoot` method which you should call for a proper configuration.
+To configure the application to use the language management module, you first need to import `provideLanguageManagementConfig` from `@volo/abp.ng.language-management/config` to root configuration. Then, you will need to append it to the `appConfig` array.
 
 ```js
-// app.module.ts
-import { LanguageManagementConfigModule } from '@volo/abp.ng.language-management/config';
+// app.config.ts
+import { provideLanguageManagementConfig } from '@volo/abp.ng.language-management/config';
 
-@NgModule({
-  imports: [
-    // other imports
-    LanguageManagementConfigModule.forRoot(),
-    // other imports
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...
+    provideLanguageManagementConfig()
   ],
-  // ...
-})
-export class AppModule {}
+};
+
 ```
 
-The `LanguageManagementModule` should be imported and lazy-loaded in your routing module. It has a static `forLazy` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.language-management`.
+The language management module should be imported and lazy-loaded in your routing array. It has a static `createRoutes` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.language-management`.
 
 ```js
-// app-routing.module.ts
-const routes: Routes = [
-  // other route definitions
+// app.routes.ts
+
+const APP_ROUTES: Routes = [
+  // ...
   {
     path: 'language-management',
     loadChildren: () =>
-      import('@volo/abp.ng.language-management').then(m => m.LanguageManagementModule.forLazy(/* options here */)),
+      import('@volo/abp.ng.language-management').then(c => c.createRoutes(/* options here */)),
   },
 ];
-
-@NgModule(/* AppRoutingModule metadata */)
-export class AppRoutingModule {}
 ```
 
-> If you have generated your project via the startup template, you do not have to do anything because it already has both `LanguageManagementConfigModule` and `LanguageManagementModule`.
+> If you have generated your project via the startup template, you do not have to do anything because it already has both configurations implemented.
 
 <h4 id="h-language-management-module-options">Options</h4>
 
-You can modify the look and behavior of the module pages by passing the following options to `LanguageManagementModule.forLazy` static method:
+You can modify the look and behavior of the module pages by passing the following options to `createRoutes` static method:
 
 - **entityActionContributors:** Changes grid actions. Please check [Entity Action Extensions for Angular](../framework/ui/angular/entity-action-extensions.md) for details.
 - **toolbarActionContributors:** Changes page toolbar. Please check [Page Toolbar Extensions for Angular](../framework/ui/angular/page-toolbar-extensions.md) for details.

@@ -45,10 +45,10 @@ public class EditModalModel : IdentityPageModel
         }
         IsEditCurrentUser = CurrentUser.Id == id;
 
-        var userRoleNames = (await IdentityUserAppService.GetRolesAsync(UserInfo.Id)).Items.Select(r => r.Name).ToList();
+        var userRoleIds = (await IdentityUserAppService.GetRolesAsync(UserInfo.Id)).Items.Select(r => r.Id).ToList();
         foreach (var role in Roles)
         {
-            if (userRoleNames.Contains(role.Name))
+            if (userRoleIds.Contains(role.Id))
             {
                 role.IsAssigned = true;
             }
@@ -122,6 +122,8 @@ public class EditModalModel : IdentityPageModel
 
     public class AssignedRoleViewModel
     {
+        public Guid Id { get; set; }
+
         [Required]
         [HiddenInput]
         public string Name { get; set; }

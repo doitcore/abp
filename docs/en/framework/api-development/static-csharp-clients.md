@@ -47,7 +47,7 @@ Implement this class in your service application. You can use [auto API controll
 First, add [Volo.Abp.Http.Client](https://www.nuget.org/packages/Volo.Abp.Http.Client) nuget package to your client project:
 
 ````
-Install-Package Volo.Abp.Http.Client
+dotnet add package Volo.Abp.Http.Client
 ````
 
 Then add `AbpHttpClientModule` dependency to your module:
@@ -243,6 +243,30 @@ context.Services.AddStaticHttpClientProxies(
 ````
 
 `remoteServiceConfigurationName` parameter matches the service endpoint configured via `AbpRemoteServiceOptions`. If the `BookStore` endpoint is not defined then it fallbacks to the `Default` endpoint.
+
+#### Remote Service Configuration Provider
+
+You may need to get the remote service configuration for a specific remote service in some cases. For this, you can use the `IRemoteServiceConfigurationProvider` interface.
+
+**Example: Get the remote service configuration for the "BookStore" remote service**
+
+````csharp
+public class MyService : ITransientDependency
+{
+    private readonly IRemoteServiceConfigurationProvider _remoteServiceConfigurationProvider;
+
+    public MyService(IRemoteServiceConfigurationProvider remoteServiceConfigurationProvider)
+    {
+        _remoteServiceConfigurationProvider = remoteServiceConfigurationProvider;
+    }
+
+    public async Task GetRemoteServiceConfiguration()
+    {
+        var configuration = await _remoteServiceConfigurationProvider.GetConfigurationOrDefaultAsync("BookStore");
+        Console.WriteLine(configuration.BaseUrl);
+    }
+}
+````
 
 ### Retry/Failure Logic & Polly Integration
 

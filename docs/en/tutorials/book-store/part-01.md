@@ -2,7 +2,7 @@
 ````json
 //[doc-params]
 {
-    "UI": ["MVC","Blazor","BlazorServer", "BlazorWebApp","NG"],
+    "UI": ["MVC","Blazor","BlazorServer", "BlazorWebApp","NG","MAUIBlazor"],
     "DB": ["EF","Mongo"]
 }
 ````
@@ -33,24 +33,6 @@ For such cases, run the `abp install-libs` command on the root directory of your
 ```bash
 abp install-libs
 ```
-
-> We suggest you install [Yarn](https://classic.yarnpkg.com/) to prevent possible package inconsistencies, if you haven't installed it yet.
-
-{{if UI=="Blazor" || UI=="BlazorWebApp"}}
-
-### Bundling and Minification
-
-`abp bundle` command offers bundling and minification support for client-side resources (JavaScript and CSS files) for Blazor projects. This command automatically run when you create a new solution with the [ABP CLI](../../cli).
-
-However, sometimes you might need to run this command manually. To update script & style references without worrying about dependencies, ordering, etc. in a project, you can run this command in the directory of your `*.Blazor.Client` project:
-
-```bash
-abp bundle
-```
-
-> For more details about managing style and script references in Blazor or MAUI Blazor apps, see [Managing Global Scripts & Styles](../../framework/ui/blazor/global-scripts-styles.md).
-
-{{end}}
 
 ## Create the Book Entity
 
@@ -119,6 +101,8 @@ The final folder/file structure should be as shown below:
 EF Core requires that you relate the entities with your `DbContext`. The easiest way to do so is adding a `DbSet` property to the `BookStoreDbContext` class in the `Acme.BookStore.EntityFrameworkCore` project, as shown below:
 
 ````csharp
+using Acme.BookStore.Books;
+
 public class BookStoreDbContext : AbpDbContext<BookStoreDbContext>
 {
     public DbSet<Book> Books { get; set; }
@@ -130,9 +114,11 @@ public class BookStoreDbContext : AbpDbContext<BookStoreDbContext>
 
 {{if DB == "Mongo"}}
 
-Add a `IMongoCollection<Book> Books` property to the `BookStoreMongoDbContext` inside the `Acme.BookStore.MongoDB` project:
+Add an `IMongoCollection<Book> Books` property to the `BookStoreMongoDbContext` inside the `Acme.BookStore.MongoDB` project:
 
 ```csharp
+using Acme.BookStore.Books;
+
 public class BookStoreMongoDbContext : AbpMongoDbContext
 {
     public IMongoCollection<Book> Books => Collection<Book>();

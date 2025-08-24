@@ -4,6 +4,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { ReplaceableComponents } from '../models/replaceable-components';
 import { ReplaceableComponentsService } from '../services/replaceable-components.service';
 import { SubscriptionService } from '../services/subscription.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'abp-replaceable-route-container',
@@ -11,6 +12,7 @@ import { SubscriptionService } from '../services/subscription.service';
     <ng-container *ngComponentOutlet="externalComponent || defaultComponent"></ng-container>
   `,
   providers: [SubscriptionService],
+  imports: [CommonModule],
 })
 export class ReplaceableRouteContainerComponent implements OnInit {
   defaultComponent!: Type<any>;

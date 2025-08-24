@@ -1,5 +1,7 @@
 # Mobile Application Development Tutorial - React Native
 
+React Native mobile option is *available for* ***Team*** *or higher licenses*. Therefore, if you don't have a commercial license, it's suggested to follow the article by downloading the source code of the sample application as described in the next chapter.
+
 ## About This Tutorial
 
 > You must have an ABP Team or a higher license to be able to create a mobile application.

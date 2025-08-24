@@ -62,7 +62,7 @@ This module doesn't seed any data.
 
 ## Options
 
-### AbpIdentityAspNetCoreOptions
+### AbpAccountOptions
 
 `AbpAccountOptions` can be configured in the UI layer in the `ConfigureServices` method of your [module](../framework/architecture/modularity/basics.md). Example:
 
@@ -76,6 +76,10 @@ Configure<AbpAccountOptions>(options =>
 `AbpAccountOptions` properties:
 
 * `WindowsAuthenticationSchemeName` (default: Windows): Name of the Windows authentication scheme.
+* `TenantAdminUserName` (default: admin): The tenant admin user name.
+* `ImpersonationTenantPermission`: The permission name for tenant impersonation.
+* `ImpersonationUserPermission`: The permission name for user impersonation.
+* `ExternalProviderIconMap`: A dictionary of external provider names and their corresponding font-awesome icon classes. You can add new mapping to this dictionary to change the icon of an external provider.(Popular external provider icons are already defined, such as `Facebook`, `Google`, `Microsoft`, `Twitter`, etc.)
 
 ### AbpProfilePictureOptions
 
@@ -100,6 +104,48 @@ If you use `Social / External Logins`, It is automatically called for authentica
 
 ![account-pro-module-local-login-setting](../images/account-pro-module-local-login-setting.png)
 
+### Switching users during OAuth login
+
+If you have an OAuth/Auth Server application using the Account Pro module, you can pass the `prompt=select_account` parameter to force the user to select an account.
+
+Example to pass `prompt=select_account` parameter in OpenIdConnect:
+
+```csharp
+.AddAbpOpenIdConnect("oidc", options =>
+{
+    // ...
+    options.Events = new OpenIdConnectEvents
+    {
+        OnRedirectToIdentityProvider = redirectContext =>
+        {
+            redirectContext.ProtocolMessage.Prompt = "select_account";
+            return Task.CompletedTask;
+        }
+    };
+    // ...
+});
+```
+
+![account-pro-secect-account](../images/account-pro-select-account-parameter.png)
+
+You have three options:
+
+- Continue: The login process will continue with the current account.
+- Switch to another account: Will be redirected to the login page to log in with another account.
+- Create a new account: Will be redirected to the register page to create a new account.
+
+> The OAuth login process will continue after the user selects one of the options.
+
+![account-pro-secect-account](../images/account-pro-select-account.png)
+
+All available prompt parameters:
+
+| **Parameter**    | **Description**                                                                                             |
+|------------------|-------------------------------------------------------------------------------------------------------------|
+| `login`          | Forces the user to re-authenticate, even if they are already logged in.                                      |
+| `consent`        | Forces the user to re-consent to the requested permissions, even if they have consented before.             |
+| `select_account` | Forces the user to select an account, even if they are already logged in (especially relevant if multiple accounts are available). |
+| `none`           | Does not trigger any prompt. If the user is not logged in, or their consent is not granted, it will return an error or redirect accordingly. |
 
 ## Social / External Logins
 
@@ -109,7 +155,7 @@ The application startup template comes with **Twitter**, **Google** and **Micros
 
 ![account-pro-external-login-settings](../images/account-pro-external-login-settings.png)
 
-The social/External login system is compatible with the multi-tenancy. Each tenant can configure their own provider settings if your application is multi-tenant.
+The social/External login system is compatible with the multi-tenancy. Each tenant can enable or disable the external login provider and configure their own provider settings if your application is multi-tenant.
 
 ### Install a new External Login
 
@@ -119,7 +165,7 @@ Follow the steps below to install a new external/social login. We will show Face
 
 #### Add the NuGet Package
 
-Add the [Microsoft.AspNetCore.Authentication.Facebook](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.Facebook) package to your project. Based on your architecture, this can be `.Web`, `.IdentityServer` (for tiered setup) or `.Host` project.
+Add the [Microsoft.AspNetCore.Authentication.Facebook](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.Facebook) package to your project. Based on your architecture, this can be `.Web`, `.AuthServer` (for tiered setup) or `.Host` project.
 
 #### Configure the Provider
 
@@ -133,7 +179,7 @@ context.Services.AddAuthentication()
         facebook.Scope.Add("public_profile");
     })
     .WithDynamicOptions<FacebookOptions>(
-        FacebookDefaults.AuthenticationScheme,
+        FacebookDefaults.AuthenticationScheme, // Facebook
         options =>
         {
             options.WithProperty(x => x.AppId);
@@ -144,6 +190,18 @@ context.Services.AddAuthentication()
 
 * `AddFacebook()` is the standard method that you can set hard-coded configuration.
 * `WithDynamicOptions<FacebookOptions>` is provided by the Account Module which makes possible to configure the provided properties on the UI.
+
+#### Localize Provider Properties
+
+You can add following translation to localize the properties of the external login providers:
+
+`en.json`:
+
+````json
+"ExternalProvider:Facebook": "Facebook",
+"ExternalProvider:Facebook:AppId": "App ID",
+"ExternalProvider:Facebook:AppSecret": "App Secret",
+````
 
 ### IPostConfigureAccountExternalProviderOptions
 
@@ -194,12 +252,32 @@ context.Services.AddAuthentication()
 context.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureAccountExternalProviderOptions<OpenIdConnectOptions>, OpenIdConnectPostConfigureAccountExternalProviderOptions>());
 ````
 
-#### For Tiered / Separate IdentityServer Solutions
+#### For Tiered / Separate AuthServer Solutions
 
-If your `.IdentityServer` is separated from the `.Host` project, then the `.Host` project should also be configured.
+If your `.AuthServer` is separated from the `.Host` project, then the `.Host` project should also be configured.
 
 * Add the [Microsoft.AspNetCore.Authentication.Facebook](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.Facebook) package to your `.Host` project.
-* Add `WithDynamicOptions<FacebookOptions>()` configuration into the `ConfigureServices` method of your module (just copy the all code above and remove the `.AddFacebook(...)` part since it is only needed in the IdentityServer side).
+* Add `WithDynamicOptions<FacebookOptions>()` configuration into the `ConfigureServices` method of your module (just copy the all code above and remove the `.AddFacebook(...)` part since it is only needed in the AuthServer side).
+
+## Manage External Logins
+
+You can link an external login in `Account/ExternalLogins` page of `Account` module.
+
+![my-externa-logins](../images/my-externa-logins.png)
+
+![new-external-login](../images/new-external-login.png)
+
+### Social Account Security Setting
+
+Users who register via both local registration and external/social login using the same email address will be required to enter their local password on the first external/social login.
+
+![require-local-password-on-social-account-linking](../images/require-local-password-on-social-account-linking.png)
+
+### Time Zone Setting
+
+Users can to set their own time zone in the account settings page if application is [supports multiple timezones](../framework/infrastructure/timing.md#clock-options).
+
+![account-pro-time-zone-setting](../images/account-pro-time-zone-setting.png)
 
 ## Internals
 
@@ -223,47 +301,41 @@ See the `AccountPermissions` class members for all permissions defined for this 
 
 #### Installation
 
-In order to configure the application to use the `AccountPublicModule` and the `AccountAdminModule`, you first need to import `AccountPublicConfigModule` from `@volo/abp.ng.account/public/config` and `AccountAdminConfigModule` from `@volo/abp.ng.account/admin/config` to root module. Config modules has a static `forRoot` method which you should call for a proper configuration.
+In order to configure the application to use the public account module and the admin account module, you first need to import `provideAccountPublicConfig` from `@volo/abp.ng.account/public/config` and `provideAccountAdminConfig` from `@volo/abp.ng.account/admin/config`. Then, you will need to append them to the `appConfig` array.
 
 ```js
-// app.module.ts
-import { AccountAdminConfigModule } from '@volo/abp.ng.account/admin/config';
-import { AccountPublicConfigModule } from '@volo/abp.ng.account/public/config';
+// app.config.ts
+import { provideAccountPublicConfig } from '@volo/abp.ng.account/public/config';
+import { provideAccountAdminConfig } from '@volo/abp.ng.account/admin/config';
 
-@NgModule({
-  imports: [
-    // other imports
-    AccountPublicConfigModule.forRoot(),
-    AccountAdminConfigModule.forRoot(),
-    // other imports
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...
+    provideAccountAdminConfig(),
+    provideAccountPublicConfig(),
   ],
-  // ...
-})
-export class AppModule {}
+};
 ```
 
-The `AccountPublicModule` should be imported and lazy-loaded in your routing module. It has a static `forLazy` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.account/public`.
+The account public package should be imported and lazy-loaded in your routing array. It has a static `createRoutes` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.account/public`.
 
 ```js
-// app-routing.module.ts
-const routes: Routes = [
-  // other route definitions
+// app.routes.ts
+export const APP_ROUTES: Routes = [
+  // ...
   {
     path: 'account',
-    loadChildren: () =>
-      import('@volo/abp.ng.account/public').then(m => m.AccountPublicModule.forLazy(/* options here */)),
+    loadChildren: () => import('@volo/abp.ng.account/public').then(c => c.createRoutes(/* options here */)),
   },
 ];
 
-@NgModule(/* AppRoutingModule metadata */)
-export class AppRoutingModule {}
 ```
 
-> If you have generated your project via the startup template, you do not have to do anything, because it already has the modules.
+> If you have generated your project via the startup template, you do not have to do anything, because it already has the necessary configurations.
 
 <h4 id="h-account-module-options">Options</h4>
 
-You can modify the look and behavior of the module pages by passing the following options to `AccountModule.forLazy` static method:
+You can modify the look and behavior of the module pages by passing the following options to `createRoutes` static method:
 
 - **redirectUrl**: Default redirect URL after logging in.
 - **entityActionContributors:** Changes grid actions. Please check [Entity Action Extensions for Angular](../framework/ui/angular/entity-action-extensions.md) for details.
@@ -344,3 +416,4 @@ This module doesn't define any additional distributed event. See the [standard d
 * [Impersonation](./account/impersonation.md)
 * [Linked Accounts](./account/linkedaccounts.md)
 * [Session Management](./account/session-management.md)
+* [Idle Session Timeout](./account/idle-session-timeout.md)

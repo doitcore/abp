@@ -1,6 +1,3 @@
-import { inject } from '@angular/core';
-import { map, tap } from 'rxjs';
-import { ConfigStateService } from '@abp/ng.core';
 import {
   ExtensionsService,
   getObjectExtensionEntitiesFromStore,
@@ -8,6 +5,9 @@ import {
   mergeWithDefaultActions,
   mergeWithDefaultProps,
 } from '@abp/ng.components/extensible';
+import { inject, Injector } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { map, tap } from 'rxjs';
 import { eIdentityComponents } from '../enums';
 import {
   IDENTITY_ENTITY_ACTION_CONTRIBUTORS,
@@ -21,10 +21,8 @@ import {
   DEFAULT_IDENTITY_CREATE_FORM_PROPS,
   DEFAULT_IDENTITY_EDIT_FORM_PROPS,
 } from '../tokens';
-import { ResolveFn } from '@angular/router';
 
 export const identityExtensionsResolver: ResolveFn<any> = () => {
-  const configState = inject(ConfigStateService);
   const extensions = inject(ExtensionsService);
 
   const config = { optional: true };
@@ -35,12 +33,13 @@ export const identityExtensionsResolver: ResolveFn<any> = () => {
   const createFormContributors = inject(IDENTITY_CREATE_FORM_PROP_CONTRIBUTORS, config) || {};
   const editFormContributors = inject(IDENTITY_EDIT_FORM_PROP_CONTRIBUTORS, config) || {};
 
-  return getObjectExtensionEntitiesFromStore(configState, 'Identity').pipe(
+  const injector = inject(Injector);
+  return getObjectExtensionEntitiesFromStore(injector, 'Identity').pipe(
     map(entities => ({
       [eIdentityComponents.Roles]: entities.Role,
       [eIdentityComponents.Users]: entities.User,
     })),
-    mapEntitiesToContributors(configState, 'AbpIdentity'),
+    mapEntitiesToContributors(injector, 'AbpIdentity'),
     tap(objectExtensionContributors => {
       mergeWithDefaultActions(
         extensions.entityActions,

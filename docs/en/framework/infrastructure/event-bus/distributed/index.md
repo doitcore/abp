@@ -297,10 +297,14 @@ Configure<AbpDistributedEntityEventOptions>(options =>
     options.AutoEventSelectors.Add(
         type => type.Namespace.StartsWith("MyProject.")
     );
+
+    //Ignore for a single entity
+    options.IgnoredEventSelectors.Add<IgnoredProductEntity>();
 });
 ````
 
-* The last one provides flexibility to decide if the events should be published for the given entity type. Returns `true` to accept a `Type`.
+* The `type.Namespace.StartsWith("MyProject.")` provides flexibility to decide if the events should be published for the given entity type. Returns `true` to accept a `Type`.
+* The `IgnoredEventSelectors` is used to ignore the events for the specified entity types. It is useful if you enabled for all entities and want to ignore for some entities.
 
 You can add more than one selector. If one of the selectors match for an entity type, then it is selected.
 

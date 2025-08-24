@@ -19,9 +19,10 @@ Use the *Solution Runner* to easily run your application(s) and set up infrastru
 The solution runner contains 4 different types to define tree structure.
 
 - **Profile**: We can create different profiles to manage the tree as our needs. For example we can create 2 different profile for `team-1` and `team-2`. `team-1` want to see the only *Administration* and *Identity* service, `team-2` see the *Saas* and *AuditLogging* services. With that way each team see the only services they need to run. In this example `Default` profile *Acme.BookStore (Default)* comes out of the box when we create the project.
-- **Folder**: We can organize the applications with *Folder* type. In this example for docker set up we use `Docker-Dependencies` CLI application and keep it in `infrastructure`, similarly in `services` folder for our microservice projects. We can also use nested folder if we want `apps`, `gateways`, `infrastructure` and `services` is the folders in current(`Default`) profile. 
+- **Folder**: We can organize the applications with *Folder* type. In this example, we keep services in `services` folder for our microservice projects. We can also use nested folder if we want `apps`, `gateways`` and `services` is the folders in current(`Default`) profile. 
 - **C# Application**: We can add any C# application from our [Solution Explorer](./solution-explorer.md). If the application is not in our solution, we can add it externally by providing the *.csproj* file path. The .NET icon indicates that the application is a C# project. For example, `Acme.BookStore.AuthServer`, `Acme.BookStore.Web`, `Acme.BookStore.WebGateway`, etc., are C# applications.
-- **CLI Application**: We can add [powershell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core) commands to prepare some environments or run other application types than C# such as angular. In this example `Docker-Dependencies` is the CLI application for docker environment.
+- **CLI Application**: We can add [powershell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core) commands to prepare some environments or run other application types than C# such as angular.
+- **Docker Container**: We can add Docker container files to control them on UI, start/stop containers individually.
 
 ## Profile
 
@@ -41,27 +42,22 @@ When you click *Add New Profile*, it opens the *Create New Profile* window. You 
 
 ## Using the Profile
 
-After selecting the current profile, which is the *Default* profile that comes pre-configured, we can utilize the tree items. This allows us to execute collective commands and create various tree structures based on our specific needs. You can navigate through the root of the tree and right-click to view the context menu, which includes 3 options: `Run`, `Build` and `Add`.
+After selecting the current profile, which is the *Default* profile that comes pre-configured, we can utilize the tree items. This allows us to execute collective commands and create various tree structures based on our specific needs. You can navigate through the root of the tree and right-click to view the context menu, which includes the following options: `Start All`, `Stop All`, `Build`, `Add`, and `Manage Start Actions`.
 
 ![profile-root-context-menu](images/solution-runner/profile-root-context-menu.png)
 
-### Run
+### Start/Stop All
 
-We can start/stop the applications with this option. Go to root of the tree and right-click to view the context menu, in this example *Acme.Bookstore(Default)* -> *Run*.
-
-![profile-root-context-menu-run](images/solution-runner/profile-root-context-menu-run.png)
+We can start/stop the applications with these options. Go to the root of the tree and right-click to view the context menu:
 
 - `Start All`: Start all(CLI, C#) applications.
 - `Stop All`: Stop all(CLI, C#) applications.
-- `Build & Start All`: Builds each C# application in the [Background Tasks](./overview#background-tasks) and starts all (CLI, C#) applications after the build tasks are completed.
 
-> `Start All` doesn't build the C# applications before running. If you're running it for the first time or if you've made changes, you should build the applications. You can simply use the `Build & Start All`.
-
-> You can change the current profile while applications are running in the previous profile. The applications continue to run under the previous profile. For example if we start the `Acme.BookStore.AdministrationService`, `Acme.BookStore.IdentityService` applications when current profile is *team-1* and after change the current profile to *team-2* the applications continue to run under *team-1*.
+> You can change the current profile while applications are running in the previous profile. The applications continue to run under the previous profile. For example, if we start the `Acme.BookStore.AdministrationService`, `Acme.BookStore.IdentityService` applications when the current profile is *team-1* and after changing the current profile to *team-2* the applications continue to run under *team-1*.
 
 ### Build
 
-We can use common [dotnet](https://learn.microsoft.com/en-us/dotnet/core/tools) commands in this option. Go to root of the tree and right-click to view the context menu, in this example *Acme.Bookstore(Default)* -> *Build*, there are 4 options available:
+We can use common [dotnet](https://learn.microsoft.com/en-us/dotnet/core/tools) commands in this option. Go to the root of the tree and right-click to view the context menu, in this example *Acme.Bookstore(Default)* -> *Build*, there are 4 options available:
 
 ![profile-root-context-menu-build](images/solution-runner/profile-root-context-menu-build.png)
 
@@ -80,7 +76,7 @@ We can add 3 different item type to *Profile* for defining the tree structure. T
 
 #### C# Application
 
-When we go to root of the tree and right-click, in this example *Acme.BookStore(Default)* -> *Add* -> *C# Application* it opens the *Add Application* window. There are two methods to add applications: *This solution* and *External*. To add via the *This solution* tab, follow these steps:
+When we go to the root of the tree and right-click, in this example *Acme.BookStore(Default)* -> *Add* -> *C# Application* it opens the *Add Application* window. There are two methods to add applications: *This solution* and *External*. To add via the *This solution* tab, follow these steps:
 
 ![profile-root-add-csharp-application](images/solution-runner/profile-root-add-csharp-application.png)
 
@@ -98,7 +94,7 @@ The C# project doesn't have to be within the current [Solution Explorer](./solut
 
 - `Path`: Provide the path to the .csproj file you wish to add. The path will be [normalized](https://learn.microsoft.com/en-us/dotnet/standard/io/file-path-formats#path-normalization), allowing the project location to be flexible, as long as it's accessible from the current [ABP Solution](./concepts.md#solution).
 - `Name`: Give an arbitrary name to see in solution runner. This name should be unique for each profile.
-- `Launch url`: Is the url when we want to browse. But if added project doesn't have launch url we can leave it empty.
+- `Launch url`: This is the url when we want to browse. But if the added project doesn't have launch url we can leave it empty.
 - `Kubernetes service`: If you're not using the *Kubernetes* panel leave it empty. But if there is a helm chart for added application we should give the correct regex pattern. It's necessary for browse, when we connect the kubernetes cluster we should browse the services instead *Launch url*. Give the matching regex pattern for your helm chart kubernetes service name.
 
 You can click the `OK` button to add the C# application to the profile.
@@ -137,17 +133,27 @@ You can click the `OK` button to add the folder to the profile.
 - To remove a folder from the tree, open the context menu by right-clicking the folder and selecting *Delete*.
 - When starting applications, they continue to restart until the application starts gracefully. To stop the restarting process when attempting to restart the application, click the icon on the left. Additionally, you can review the *Logs* to understand why the application isn't starting gracefully.
 
+### Manage Start Actions
+
+This command will open a dialog where you can set start actions and start orders of sub-applications and sub-folders.
+
+![manage-start-actions](images/solution-runner/manage-start-actions.png)
+
+You can order the applications by dragging the icon in the first column. In the screenshot above, applications & folders are ordered like this: *Applications under infrastructure* > *Applications under services* > *Applications under gateways* > *AuthServer* > *Angular*. You can also set starting order and other actions for each folder by performing `right click > Manage Start Actions` on them.
+
+- **Action**: There are two options: `Start` and `Don't start`. This is usefull if you want to exclude applications from batch start.
+- **Build**: This option allows to disable/enable build before starting the application. If you are working on a single application, you can exclude the other applications from build to save time. This option can also be set by performing `right click > properties` on applications.
+- **Watch**: When enabled, changes in your code are watched and dotnet hot-reloads the application or restarts it if needed. This option also can be set by performing `right click > properties` on applications.
+
 ## Folder
 
-We already now why we need folder in the [previous](./running-applications.md#folder) section, we can use collective commands within this folder items. To do that go to folder and open the context menu by right-clicking, which includes 5 options `Start`, `Build`, `Add`, `Rename` and `Delete`.
+We already now why we need folder in the [previous](./running-applications.md#folder) section, we can use collective commands within this folder items. To do that go to folder and open the context menu by right-clicking, which includes 5 options `Start`, `Stop`, `Build`, `Add`, `Manage Start Actions`, `Rename` and `Delete`.
 
 ![folder-context-menu](images/solution-runner/folder-context-menu.png)
 
-### Start
+### Start/Stop
 
-You can see the context menu by right-clicking *Folder* -> *Start*, it's [similar](#run) like *Acme.BookStore(Default)* -> *Run* options, there are 3 options available. The only difference with root of the tree and folder is gonna be execute in selected folder.
-
-![folder-context-menu-start](images/solution-runner/folder-context-menu-start.png)
+You can see the context menu by right-clicking *Folder*. It will start/stop all the applications under the folder.
 
 ### Build
 
@@ -157,7 +163,7 @@ You can see the context menu by right-clicking *Folder* -> *Start*, it's [simila
 
 ### Add
 
-*Folder* -> *Add* context menu, it's the [same](#add) options like *Acme.BookStore(Default)* -> *Add* there are 3 options avaiable. The only difference, it's gonna add item to selected folder.
+*Folder* -> *Add* context menu, it's the [same](#add) options like *Acme.BookStore(Default)* -> *Add* there are 3 options avaiable. The only difference, it's gonna add item to the selected folder.
 
 ![folder-context-menu-add](images/solution-runner/folder-context-menu-add.png)
 
@@ -168,26 +174,15 @@ You can see the context menu by right-clicking *Folder* -> *Start*, it's [simila
 
 ## C# Application
 
-The .NET icon indicates that the application is a C# project. After we [add](#c-application) the C# applications to root of the tree or folder, we can go to any C# application and right-click to view the context menu; `Run`, `Build`, `Browse`, `Requests`, `Exceptions`, `Logs`, `Copy URL`, `Properties`, `Remove`.
+The .NET icon indicates that the application is a C# project. After we [add](#c-application) the C# applications to the root of the tree or folder, we can go to any C# application and right-click to view the context menu; `Start`, `Build`, `Browse`, `Requests`, `Exceptions`, `Logs`, `Copy URL`, `Properties`, `Remove`.
 
 ![csharp-application-context-menu](images/solution-runner/csharp-application-context-menu.png)
 
-### Run
+### Start
 
-We have several options in C# applications. Those options are `Start`(If the application started this option shown as `Stop`), `Build & Start`(If the application started this option shown as `Build & Restart`), `Enable Watch`(If the watch is enabled this option shown as `Disable Watch`), `Restart`(It's only shown when the application started)
-
-![csharp-application-context-menu-run](images/solution-runner/csharp-application-context-menu-run.png)
-
-- `Start`: Starts the selected application. This option doesn't build before run. If you're running it for the first time or if you've made changes, you should build the application. If the application is started this option changed as `Stop`.
-- `Build & Start`: We can simply use if we wanna build first and start. If the application is started this option changes to `Build & Restart`.
-- `Enable Watch`: When this option is enabled, there's no need to perform `Build & Start` after any change. ABP Studio watches for changes, re-builds, and re-runs your application automatically upon saving. If this option is enabled it changes to `Disable Watch`.
-- `Restart`: Restarts the application. This option visible only if the application started.
+Starts the selected application. Once it is started, *Stop* and *Restart* options will be available.
 
 > When you start the C# application, you should see a *chain* icon next to the application name, that means the started application connected to ABP Studio. C# applications can connect to ABP Studio even when running from outside the ABP Studio environment, for example debugging with Visual Studio. If the application is run from outside the ABP Studio environment, it will display *(external)* information next to the chain icon.
-
-> When *Watch* is enable you should see an *eye* icon next to the application name.
-
-![csharp-application-context-menu-run-connection](images/solution-runner/csharp-application-context-menu-run-connection.png)
 
 ### Build
 
@@ -202,17 +197,23 @@ When the C# application is connected to ABP Studio, it starts sending telemetry 
 ![csharp-application-context-menu-monitor](images/solution-runner/csharp-application-context-menu-monitor.png)
 
 - `Browse`: ABP Studio includes a browser tool for accessing websites and running applications. You can click this option to view the application in the ABP Studio browser. However, this option is only accessible if the application is started.
+- Health Status : If Health Check endpoints are defined, it allows you to browse Health UI and see the latest health check response.
 - `Requests`: It opens the *HTTP Requests* tab with adding the selected application filter. You can view all *HTTP Requests* received by your applications.
 - `Exceptions`: We can display all exceptions on this tab. It opens the *Exceptions* tab with selected application.
 - `Logs`: Clicking this option opens the *Logs* tab with adding the selected application filter.
 
 ### Properties
 
-We can open the *Application Properties* window to change *Launch url*, *Kubernetes service* and *run* information. To access the *Application Properties* window, navigate to a C# application, right-click to view the context menu, and select the Properties option.
+We can open the *Application Properties* window to change *Launch url*, *Health check endpoints*,  *Kubernetes service* and *run* information. To access the *Application Properties* window, navigate to a C# application, right-click to view the context menu, and select the Properties option.
 
 ![solutioın-runner-properties](images/solution-runner/solutioın-runner-properties.png)
 
-You can click the `OK` button to save the changes.
+- **Health check endpoint**: Endpoint for controlling the health status of the application periodically. If the application doesn't have a endpoint for health check, you can enter `/` to use the home page of the application as health check endpoint.
+- **Health UI endpoint**: Endpoint of the Health UI page of the application.
+- **Skip build before starting**: When enabled, application is started without build and it makes starting faster. This is useful when you are working on a single application out of multiple, so you don't need to build others everytime they start.
+- **Watch changes while running**: When enabled, you should see an *eye* icon next to the application name.
+
+![csharp-application-context-menu-run-connection](images/solution-runner/csharp-application-context-menu-run-connection.png)
 
 ### Miscellaneous
 
@@ -226,10 +227,80 @@ CLI applications uses the [powershell](https://learn.microsoft.com/en-us/powersh
 
 ![cli-application-context-menu](images/solution-runner/cli-application-context-menu.png)
 
-- `Run`: This option includes 3 actions: *Start*, *Stop*, and *Restart* for the CLI application.
+- `Start`: Starts the application. Once it is started, *Start* and *Restart* options will be available.
 - `Browse`: This option is available when a *Launch URL* is specified upon adding the CLI application. It opens the *Browse* tab, can be clicked while the application is running.
 - `Logs`: It opens the *Logs* tab, we can see the logs for *Start* and *Stop* commands.
 - `Copy URL`: This option copies the *Launch URL* of the selected application. It is visible if there is a specified *Launch URL*
 - `Remove`: This option allows you to delete the selected application.
 
 > When CLI applications start chain icon won't be visible, because only C# applications can connect the ABP Studio.
+
+## Docker Containers
+
+Each Docker container represents a `.yml` file. Each file can be run on UI individually. A file may contain one or more services. To start/stop each service individually, we recommend to keep services in separate files.
+
+An example `rabbitmq.yml` container file:
+
+```yml
+volumes:
+  bookstore_rabbitmq:
+networks:
+  bookstore:
+    external: true
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.12.7-management-alpine
+    volumes:
+      - bookstore_rabbitmq:/var/lib/rabbitmq
+    networks:
+      - bookstore
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+```
+
+> Note: We suggest to use `container_name` property in your services. Otherwise, tracking the container may not be possible in some cases.
+
+To add this file to `containers`, we can use `Add Docker Container` menu:
+
+![docker-container-example-add](images/solution-runner/docker-container-example-add.png)
+
+It will open a simple dialog with a file picker:
+
+![docker-container-example-add-dialog](images/solution-runner/docker-container-example-add-dialog.png)
+
+Then we have the `rabbitmq` on the Studio UI under containers:
+
+![docker-container-example-rabbitmq](images/solution-runner/docker-container-example-rabbitmq.png)
+
+Name of the `yml` file is used as label in the UI, so we recommend to create the file with the name of service inside.
+
+If the `yml` file contains multiple services, they will be represented as a single container with the file name. In this case, when we start/stop it, all services inside the file will be started/stopped.
+
+> If a service is shut down externally, it will be shown as `Stopped` in the UI. In this case you can start them again. If it is constantly stopping, there may be a problem in the `yml` file.
+
+> It may take stuck in `starting` state a while to download images if they don't exist.
+
+>  A warning icon is displayed when a service is stopped externally inside the container. In this case, yo can restart the application on Studio UI:
+>
+> ![docker-container-warning](images/solution-runner/docker-container-warning.png)
+
+
+
+### Properties
+
+![docker-container-properties](images/solution-runner/docker-container-properties.png)
+
+In properties dialog, you can set the name of docker compose stack name of the containers. In the example above, it is set as `BookStore-Containers`. In Docker Desktop UI the containers are stacked under that name. Exmple:
+
+![docker-container-stack](images/solution-runner/docker-container-stack.png)
+
+## Docker Compose
+
+You can manually run applications using [Docker Compose](https://docs.docker.com/compose/). This allows for easy setup and management of multi-container Docker applications. To get started, ensure you have Docker and Docker Compose installed on your machine.
+
+Refer to the [Deployment with Docker Compose](../solution-templates/layered-web-application/deployment/deployment-docker-compose.md) documentation for detailed instructions on how to configure and run your applications using `docker-compose`.
+
+> Note: The **Docker Compose** is not available in the ABP Studio interface.

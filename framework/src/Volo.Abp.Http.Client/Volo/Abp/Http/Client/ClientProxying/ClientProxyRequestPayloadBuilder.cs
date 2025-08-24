@@ -7,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Content;
@@ -16,6 +15,7 @@ using Volo.Abp.Http.Client.Proxying;
 using Volo.Abp.Http.Modeling;
 using Volo.Abp.Http.ProxyScripting.Generators;
 using Volo.Abp.Json;
+using Volo.Abp.Timing;
 
 namespace Volo.Abp.Http.Client.ClientProxying;
 
@@ -34,9 +34,15 @@ public class ClientProxyRequestPayloadBuilder : ITransientDependency
 
     protected AbpHttpClientProxyingOptions HttpClientProxyingOptions { get; }
 
-    public ClientProxyRequestPayloadBuilder(IServiceScopeFactory serviceScopeFactory, IOptions<AbpHttpClientProxyingOptions> httpClientProxyingOptions)
+    protected IClock Clock { get; }
+
+    public ClientProxyRequestPayloadBuilder(
+        IServiceScopeFactory serviceScopeFactory,
+        IOptions<AbpHttpClientProxyingOptions> httpClientProxyingOptions,
+        IClock clock)
     {
         ServiceScopeFactory = serviceScopeFactory;
+        Clock = clock;
         HttpClientProxyingOptions = httpClientProxyingOptions.Value;
     }
 
@@ -157,12 +163,12 @@ public class ClientProxyRequestPayloadBuilder : ITransientDependency
             {
                 foreach (var item in (IEnumerable) value)
                 {
-                    formData.Add(new StringContent(item.ToString()!, Encoding.UTF8), parameter.Name);
+                    formData.Add(new StringContent(await ConvertValueToStringAsync(item), Encoding.UTF8), parameter.Name);
                 }
             }
             else
             {
-                formData.Add(new StringContent(value.ToString()!, Encoding.UTF8), parameter.Name);
+                formData.Add(new StringContent(await ConvertValueToStringAsync(value), Encoding.UTF8), parameter.Name);
             }
         }
 
@@ -172,5 +178,20 @@ public class ClientProxyRequestPayloadBuilder : ITransientDependency
     protected virtual async Task<List<KeyValuePair<string, HttpContent>>> ObjectToFormDataAsync<T>(IObjectToFormData<T> converter, ActionApiDescriptionModel actionApiDescription, ParameterApiDescriptionModel parameterApiDescription, T value)
     {
         return await converter.ConvertAsync(actionApiDescription, parameterApiDescription, value);
+    }
+
+    protected virtual Task<string> ConvertValueToStringAsync(object value)
+    {
+        if (value is DateTime dateTimeValue)
+        {
+            if (Clock.SupportsMultipleTimezone || dateTimeValue.Kind == DateTimeKind.Utc)
+            {
+                return Task.FromResult(dateTimeValue.ToUniversalTime().ToString("O"));
+            }
+
+            return Task.FromResult(dateTimeValue.ToString("yyyy-MM-ddTHH:mm:ss.fffffff").TrimEnd('0').TrimEnd('.'));
+        }
+
+        return Task.FromResult(value.ToString()!);
     }
 }

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -62,35 +63,35 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
     {
         var dbContext = await GetDbContextAsync();
         var userRoles = await (from userRole in dbContext.Set<IdentityUserRole>()
-            join role in dbContext.Roles on userRole.RoleId equals role.Id
-            where userIds.Contains(userRole.UserId)
-            group new
-            {
-                userRole.UserId,
-                role.Name
-            } by userRole.UserId
+                               join role in dbContext.Roles on userRole.RoleId equals role.Id
+                               where userIds.Contains(userRole.UserId)
+                               group new {
+                                   userRole.UserId,
+                                   role.Name
+                               } by userRole.UserId
             into gp
-            select new IdentityUserIdWithRoleNames
-            {
-                Id = gp.Key, RoleNames = gp.Select(x => x.Name).ToArray()
-            }).ToListAsync(cancellationToken: cancellationToken);
+                               select new IdentityUserIdWithRoleNames
+                               {
+                                   Id = gp.Key,
+                                   RoleNames = gp.Select(x => x.Name).ToArray()
+                               }).ToListAsync(cancellationToken: cancellationToken);
 
         var orgUnitRoles = await (from userOu in dbContext.Set<IdentityUserOrganizationUnit>()
-            join roleOu in dbContext.Set<OrganizationUnitRole>() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
-            join role in dbContext.Roles on roleOu.RoleId equals role.Id
-            where userIds.Contains(userOu.UserId)
-            group new
-            {
-                userOu.UserId,
-                role.Name
-            } by userOu.UserId
+                                  join roleOu in dbContext.Set<OrganizationUnitRole>() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
+                                  join role in dbContext.Roles on roleOu.RoleId equals role.Id
+                                  where userIds.Contains(userOu.UserId)
+                                  group new {
+                                      userOu.UserId,
+                                      role.Name
+                                  } by userOu.UserId
             into gp
-            select new IdentityUserIdWithRoleNames
-            {
-                Id = gp.Key, RoleNames = gp.Select(x => x.Name).ToArray()
-            }).ToListAsync(cancellationToken: cancellationToken);
+                                  select new IdentityUserIdWithRoleNames
+                                  {
+                                      Id = gp.Key,
+                                      RoleNames = gp.Select(x => x.Name).ToArray()
+                                  }).ToListAsync(cancellationToken: cancellationToken);
 
-        return userRoles.Concat(orgUnitRoles).GroupBy(x => x.Id).Select(x => new IdentityUserIdWithRoleNames {Id = x.Key, RoleNames = x.SelectMany(y => y.RoleNames).Distinct().ToArray()}).ToList();
+        return userRoles.Concat(orgUnitRoles).GroupBy(x => x.Id).Select(x => new IdentityUserIdWithRoleNames { Id = x.Key, RoleNames = x.SelectMany(y => y.RoleNames).Distinct().ToArray() }).ToList();
     }
 
     public virtual async Task<List<string>> GetRoleNamesInOrganizationUnitAsync(
@@ -196,6 +197,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
         bool includeDetails = false,
         Guid? roleId = null,
         Guid? organizationUnitId = null,
+        Guid? id = null,
         string userName = null,
         string phoneNumber = null,
         string emailAddress = null,
@@ -215,6 +217,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
             filter,
             roleId,
             organizationUnitId,
+            id,
             userName,
             phoneNumber,
             emailAddress,
@@ -232,7 +235,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
         );
 
         return await query.IncludeDetails(includeDetails)
-            .OrderBy(sorting.IsNullOrWhiteSpace() ? nameof(IdentityUser.UserName) : sorting)
+            .OrderBy(sorting.IsNullOrWhiteSpace() ? nameof(IdentityUser.CreationTime) + " desc" : sorting)
             .PageBy(skipCount, maxResultCount)
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
@@ -272,6 +275,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
         string filter = null,
         Guid? roleId = null,
         Guid? organizationUnitId = null,
+        Guid? id = null,
         string userName = null,
         string phoneNumber = null,
         string emailAddress = null,
@@ -291,6 +295,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
             filter,
             roleId,
             organizationUnitId,
+            id,
             userName,
             phoneNumber,
             emailAddress,
@@ -420,9 +425,20 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
     {
         if (targetOrganizationId != null)
         {
+            var sourceOrganization = await (await GetDbContextAsync()).Set<OrganizationUnit>().FirstOrDefaultAsync(x => x.Id == sourceOrganizationId, cancellationToken: cancellationToken);
+            if (sourceOrganization == null)
+            {
+                throw new EntityNotFoundException(typeof(OrganizationUnit), sourceOrganizationId);
+            }
+
+            var allSourceOrganizationIds = await (await GetDbContextAsync()).Set<OrganizationUnit>()
+                .Where(x => x.Code.StartsWith(sourceOrganization.Code))
+                .Select(x => x.Id).ToArrayAsync(cancellationToken: cancellationToken);
+
             var users = await (await GetDbContextAsync()).Set<IdentityUserOrganizationUnit>().Where(x => x.OrganizationUnitId == targetOrganizationId).Select(x => x.UserId).ToArrayAsync(cancellationToken: cancellationToken);
-            await (await GetDbContextAsync()).Set<IdentityUserOrganizationUnit>().Where(x => x.OrganizationUnitId == sourceOrganizationId && !users.Contains(x.UserId)).ExecuteUpdateAsync(t => t.SetProperty(e => e.OrganizationUnitId, targetOrganizationId), GetCancellationToken(cancellationToken));
-            await (await GetDbContextAsync()).Set<IdentityUserOrganizationUnit>().Where(x => x.OrganizationUnitId == sourceOrganizationId).ExecuteDeleteAsync(GetCancellationToken(cancellationToken));
+
+            await (await GetDbContextAsync()).Set<IdentityUserOrganizationUnit>().Where(x => allSourceOrganizationIds.Contains(x.OrganizationUnitId) && !users.Contains(x.UserId)).ExecuteUpdateAsync(t => t.SetProperty(e => e.OrganizationUnitId, targetOrganizationId), GetCancellationToken(cancellationToken));
+            await (await GetDbContextAsync()).Set<IdentityUserOrganizationUnit>().Where(x => allSourceOrganizationIds.Contains(x.OrganizationUnitId)).ExecuteDeleteAsync(GetCancellationToken(cancellationToken));
         }
         else
         {
@@ -434,6 +450,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
         string filter = null,
         Guid? roleId = null,
         Guid? organizationUnitId = null,
+        Guid? id = null,
         string userName = null,
         string phoneNumber = null,
         string emailAddress = null,
@@ -451,6 +468,11 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
     {
         var upperFilter = filter?.ToUpperInvariant();
         var query = await GetQueryableAsync();
+        
+        if (id.HasValue)
+        {
+            return query.Where(x => x.Id == id);
+        }        
 
         if (roleId.HasValue)
         {

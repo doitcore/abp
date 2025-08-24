@@ -25,7 +25,7 @@ If you want to manually install;
 1. Add the [Volo.Abp.BackgroundJobs.HangFire](https://www.nuget.org/packages/Volo.Abp.BackgroundJobs.HangFire) NuGet package to your project:
 
    ````
-   Install-Package Volo.Abp.BackgroundJobs.HangFire
+   dotnet add package Volo.Abp.BackgroundJobs.HangFire
    ````
 
 2. Add the `AbpBackgroundJobsHangfireModule` to the dependency list of your module:
@@ -83,6 +83,24 @@ After you have installed these NuGet packages, you need to configure your projec
     app.UseConfiguredEndpoints();
  }
 ````
+
+### AbpHangfireOptions
+
+You can configure the [BackgroundJobServerOptions](https://api.hangfire.io/html/T_Hangfire_BackgroundJobServerOptions.htm) of `AbpHangfireOptions` to customize the server.
+
+````csharp
+Configure<AbpHangfireOptions>(options =>
+{
+    // If no ServerOptions is set, ABP will use the default BackgroundJobServerOptions instance.
+    options.ServerOptions = new BackgroundJobServerOptions
+    {
+        Queues = ["default", "alpha"],
+        //... other properties
+    };
+});
+````
+
+> You don't need to call `AddHangfireServer` method, ABP will use AbpHangfireOptions's `ServerOptions` to create a server.
 
 ### Specifying Queue
 
@@ -154,3 +172,72 @@ app.UseAbpHangfireDashboard("/hangfire", options =>
 
 **Important**: `UseAbpHangfireDashboard` should be called after the authentication and authorization middlewares in your `Startup` class (probably at the last line). Otherwise,
 authorization will always fail!
+
+#### Dashboard Authorization In API Projects
+
+If you use the hangfire dashboard in an API project that uses non-cookie authentication (like JWT Bearers), The `/hangfire` page can't authenticate the user.
+
+In this case, you can add a cookies authorization scheme to authenticate the user. The best way to do this is to use the `Cookie` and `OpenIdConnect` authentication schemes. This requires creating a new OAuth2 client and adding the `ClientId`, and `ClientSecret` properties to the `AuthServer` section in the `appsettings.json` file.
+
+The final code should look like below:
+
+```csharp
+private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
+{
+    context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddAbpJwtBearer(options =>
+        {
+            options.Authority = configuration["AuthServer:Authority"];
+            options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
+            options.Audience = "MyProjectName";
+        });
+
+    context.Services.AddAuthentication()
+        .AddCookie("Cookies")
+        .AddOpenIdConnect("oidc", options =>
+        {
+            options.Authority = configuration["AuthServer:Authority"];
+            options.RequireHttpsMetadata = configuration.GetValue<bool>("AuthServer:RequireHttpsMetadata");
+            options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+
+            options.ClientId = configuration["AuthServer:ClientId"];
+            options.ClientSecret = configuration["AuthServer:ClientSecret"];
+
+            options.UsePkce = true;
+            options.SaveTokens = true;
+            options.GetClaimsFromUserInfoEndpoint = true;
+
+            options.Scope.Add("roles");
+            options.Scope.Add("email");
+            options.Scope.Add("phone");
+            options.Scope.Add("MyProjectName");
+        });
+}
+```
+
+```csharp
+app.Use(async (httpContext, next) =>
+{
+    if (httpContext.Request.Path.StartsWithSegments("/hangfire"))
+    {
+        var result = await httpContext.AuthenticateAsync("Cookies");
+        if (result.Succeeded)
+        {
+            httpContext.User = result.Principal;
+            await next(httpContext);
+            return;
+        }
+
+        await httpContext.ChallengeAsync("oidc");
+    }
+    else
+    {
+        await next(httpContext);
+    }
+});
+
+app.UseAbpHangfireDashboard("/hangfire", options =>
+{
+    options.AsyncAuthorization = new[] {new AbpHangfireAuthorizationFilter()};
+});
+```

@@ -21,6 +21,15 @@ Find `UseSqlServer()` call in *YourProjectName*DbContextFactory.cs inside the `.
 
 > Depending on your solution structure, you may find more `UseSqlServer()` calls that needs to be changed.
 
+
+## EnableLegacyTimestampBehavior
+
+Please enable the `Npgsql.EnableLegacyTimestampBehavior` in `PreConfigureServices` method of your EF Core module and `DbContextFactory(IDesignTimeDbContextFactory)` class.
+
+`AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);`
+
+See https://www.npgsql.org/efcore/release-notes/6.0.html#opting-out-of-the-new-timestamp-mapping-logic
+
 ## Change the Connection Strings
 
 PostgreSql connection strings are different than SQL Server connection strings. So, check all `appsettings.json` files in your solution and replace the connection strings inside them. See the [connectionstrings.com](https://www.connectionstrings.com/postgresql/) for details of PostgreSql connection string options.

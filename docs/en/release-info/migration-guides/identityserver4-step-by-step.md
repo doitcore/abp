@@ -76,7 +76,7 @@ typeof(AbpPermissionManagementDomainIdentityServerModule),
 
 DataSeeder is the most important part for starting the application since it seeds the initial data for both OpenID providers. 
 
-- Create a folder named *IdentityServer* under the Domain project and copy the [IdentityServerDataSeedContributor.cs](https://github.com/abpframework/abp-samples/blob/master/Ids2OpenId/src/Ids2OpenId.Domain/IdentityServer/IdentityServerDataSeedContributor.cs) under this folder. **Rename** all the `OpenId2Ids` with your project name.
+- Create a folder named *IdentityServer* under the Domain project and copy the [IdentityServerDataSeedContributor.cs](https://github.com/abpframework/abp-samples/blob/1dc297255ca22af02ef6d71092dbc1b394f9260a/Ids2OpenId/src/Ids2OpenId.Domain/IdentityServer/IdentityServerDataSeedContributor.cs) under this folder. **Rename** all the `OpenId2Ids` with your project name.
 - Delete *OpenIddict* folder that contains `OpenIddictDataSeedContributor.cs` which is no longer needed.
 
 ### EntityFrameworkCore Layer

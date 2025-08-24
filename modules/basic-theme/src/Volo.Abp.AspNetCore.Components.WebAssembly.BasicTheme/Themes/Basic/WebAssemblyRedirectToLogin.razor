@@ -15,7 +15,7 @@
     {
         if (AbpAspNetCoreComponentsWebOptions.Value.IsBlazorWebApp)
         {
-            Navigation.NavigateTo(AuthenticationOptions.Value.LogoutUrl, forceLoad: true);
+            Navigation.NavigateTo(AuthenticationOptions.Value.LoginUrl, forceLoad: true);
         }
         else
         {

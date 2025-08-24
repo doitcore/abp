@@ -7,8 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Collections;
+using Volo.Abp.DynamicProxy;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.Reflection;
 using Volo.Abp.Uow;
 
 namespace Volo.Abp.EventBus;
@@ -135,9 +137,9 @@ public abstract class EventBusBase : IEventBus
     {
         await new SynchronizationContextRemover();
 
-        foreach (var handlerFactories in GetHandlerFactories(eventType))
+        foreach (var handlerFactories in GetHandlerFactories(eventType).ToList())
         {
-            foreach (var handlerFactory in handlerFactories.EventHandlerFactories)
+            foreach (var handlerFactory in handlerFactories.EventHandlerFactories.ToList())
             {
                 await TriggerHandlerAsync(handlerFactory, handlerFactories.EventType, eventData, exceptions, inboxConfig);
             }
@@ -203,7 +205,7 @@ public abstract class EventBusBase : IEventBus
         {
             try
             {
-                var handlerType = eventHandlerWrapper.EventHandler.GetType();
+                var handlerType = ProxyHelper.GetUnProxiedType(eventHandlerWrapper.EventHandler);
 
                 if (inboxConfig?.HandlerSelector != null &&
                     !inboxConfig.HandlerSelector(handlerType))
@@ -240,19 +242,6 @@ public abstract class EventBusBase : IEventBus
             IEventDataMayHaveTenantId eventDataMayHaveTenantId when eventDataMayHaveTenantId.IsMultiTenant(out var tenantId) => tenantId,
             _ => CurrentTenant.Id
         };
-    }
-
-    protected class EventTypeWithEventHandlerFactories
-    {
-        public Type EventType { get; }
-
-        public List<IEventHandlerFactory> EventHandlerFactories { get; }
-
-        public EventTypeWithEventHandlerFactories(Type eventType, List<IEventHandlerFactory> eventHandlerFactories)
-        {
-            EventType = eventType;
-            EventHandlerFactories = eventHandlerFactories;
-        }
     }
 
     // Reference from

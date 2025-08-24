@@ -254,6 +254,127 @@ We can visit the websites from a browser.
 
 ![Tiered IIS deployment](../../../images/iis-sample-tiered-deployment.gif)
 
+{{ if UI == "NG" }}
+## Rewrite for getEnvConfig
+
+Please add the following rewrite rules to your `web.config` file to redirect requests for `getEnvConfig` to `dynamic-env.json`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+<system.webServer>
+ <rewrite>
+  <rules>
+    <rule name="Redirect" stopProcessing="true">
+      <match url="getEnvConfig" />
+      <action type="Redirect" url="dynamic-env.json" />
+    </rule>
+    <rule name="Angular Routes" stopProcessing="true">
+      <match url=".*" />
+      <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+      </conditions>
+      <action type="Rewrite" url="./index.html" />
+    </rule>
+  </rules>
+ </rewrite>
+</system.webServer>
+</configuration>
+```
+
+> See [Angular RemoteEnvironment](https://abp.io/docs/latest/framework/ui/angular/environment#remoteenvironment) for more details.
+
+{{ end }}
+
+## Fix 405 Method Not Allowed Error
+
+Remove `WebDAV` modules and handlers from the `Web.config` file.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <system.webServer>
+    <modules>
+      <remove name="WebDAVModule" />
+    </modules>
+    <handlers>
+      <remove name="WebDAV" />
+    </handlers>
+  </system.webServer>
+</configuration>
+```
+
+Also remove the `WebDAV Publishing` feature from your computer if it's not being used. To do so, follow these steps:
+
+1. Select Start, type Turn Windows features on or off in the Start Search box, and then select Turn Windows features on or off.
+2. In the Windows Features window, expand Internet Information Services -> World Wide Web Services -> Common HTTP Features.
+3. Uncheck the WebDAV Publishing feature.
+
+See:
+
+- https://learn.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/troubleshooting-http-405-errors-after-publishing-web-api-applications#resolve-http-405-errors
+- https://learn.microsoft.com/en-us/troubleshoot/developer/webapps/iis/site-behavior-performance/http-error-405-website#resolution-for-cause-3
+
+## Publish the Application(s) as IIS sub-application
+
+If your MVC application is a sub-application, you need to set the `BaseUrl` property of `AbpThemingOptions` to the sub-application’s path. The `BaseUrl` is used to configure the `base` element in the `head` section of the layout page.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    Configure<AbpThemingOptions>(options =>
+    {
+        options.BaseUrl = "/myapp/";
+    });
+}
+```
+
+```html
+<html>
+  <head>
+    <base href="/myapp/" />
+    ...
+  </head>
+  <body>
+    ...
+  </body>
+</html>
+```
+
+For Blazor applications, you can to set the `base` tag in the `App.razor` file instead of configure `AbpThemingOptions`.
+
+## How to get stdout-log
+
+If your application is running on IIS and getting errors like `502.5, 500.3x`, you can enable stdout logs to see the error details.
+
+To enable and view stdout logs:
+
+1. Navigate to the site's deployment folder on the hosting system.
+2. If the logs folder isn't present, create the folder. For instructions on how to enable MSBuild to create the logs folder in the deployment automatically, see the [Directory structure topic](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/directory-structure?view=aspnetcore-8.0).
+3. Edit the `web.config` file. Set `stdoutLogEnabled` to `true` and change the `stdoutLogFile` path to point to the logs folder (for example, `.\logs\stdout`). stdout in the path is the log file name prefix. A timestamp, process id, and file extension are added automatically when the log is created. Using stdout as the file name prefix, a typical log file is named `stdout_20180205184032_5412.log`.
+4. Ensure your application pool's identity has write permissions to the logs folder.
+5. Save the updated `web.config` file.
+6. Make a request to the app.
+7. Navigate to the logs folder. Find and open the most recent stdout log.
+
+> The following sample aspNetCore element configures stdout logging at the relative path `.\log\.` Confirm that the AppPool user identity has permission to write to the path provided.
+
+```xml
+<aspNetCore processPath="dotnet"
+    arguments=".\MyAbpApp.dll"
+    stdoutLogEnabled="true"
+    stdoutLogFile=".\logs\stdout"
+    hostingModel="inprocess">
+</aspNetCore>
+```
+
+Reference:
+
+[IIS log creation and redirection](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/logging-and-diagnostics)
+
+[Troubleshoot ASP.NET Core on Azure App Service and IIS](https://learn.microsoft.com/en-us/aspnet/core/test/troubleshoot-azure-iis)
+
 ## What's next?
 
 - [Docker Deployment using Docker Compose](deployment-docker-compose.md)

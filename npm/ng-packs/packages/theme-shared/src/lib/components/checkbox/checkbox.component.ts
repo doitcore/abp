@@ -1,6 +1,7 @@
-import { AbstractNgModelComponent } from '@abp/ng.core';
-import { Component, EventEmitter, forwardRef, Injector, Input, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-checkbox',
@@ -30,6 +31,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true,
     },
   ],
+  imports: [CommonModule, FormsModule, LocalizationPipe],
 })
 export class FormCheckboxComponent extends AbstractNgModelComponent {
   @Input() label?: string;

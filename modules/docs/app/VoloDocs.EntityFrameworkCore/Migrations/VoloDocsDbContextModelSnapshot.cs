@@ -19,10 +19,87 @@ namespace Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.SqlServer)
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Volo.Abp.BlobStoring.Database.DatabaseBlob", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<Guid>("ContainerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Content")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContainerId");
+
+                    b.HasIndex("TenantId", "ContainerId", "Name");
+
+                    b.ToTable("AbpBlobs", (string)null);
+                });
+
+            modelBuilder.Entity("Volo.Abp.BlobStoring.Database.DatabaseBlobContainer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "Name");
+
+                    b.ToTable("AbpBlobContainers", (string)null);
+                });
 
             modelBuilder.Entity("Volo.Abp.Identity.IdentityClaimType", b =>
                 {
@@ -36,6 +113,10 @@ namespace Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)")
                         .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
 
                     b.Property<string>("Description")
                         .HasMaxLength(256)
@@ -112,6 +193,10 @@ namespace Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)")
                         .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
 
                     b.Property<int>("EntityVersion")
                         .HasColumnType("int");
@@ -278,9 +363,13 @@ namespace Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
                     b.Property<string>("IpAddresses")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.Property<DateTime?>("LastAccessed")
                         .HasColumnType("datetime2");
@@ -1104,6 +1193,42 @@ namespace Migrations
                     b.ToTable("DocsProjects", (string)null);
                 });
 
+            modelBuilder.Entity("Volo.Docs.Projects.ProjectPdfFile", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<string>("LanguageCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<string>("Version")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProjectId", "FileName");
+
+                    b.ToTable("DocsProjectPdfFiles", (string)null);
+                });
+
+            modelBuilder.Entity("Volo.Abp.BlobStoring.Database.DatabaseBlob", b =>
+                {
+                    b.HasOne("Volo.Abp.BlobStoring.Database.DatabaseBlobContainer", null)
+                        .WithMany()
+                        .HasForeignKey("ContainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Volo.Abp.Identity.IdentityRoleClaim", b =>
                 {
                     b.HasOne("Volo.Abp.Identity.IdentityRole", null)
@@ -1201,6 +1326,15 @@ namespace Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Volo.Docs.Projects.ProjectPdfFile", b =>
+                {
+                    b.HasOne("Volo.Docs.Projects.Project", null)
+                        .WithMany("PdfFiles")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Volo.Abp.Identity.IdentityRole", b =>
                 {
                     b.Navigation("Claims");
@@ -1227,6 +1361,11 @@ namespace Migrations
             modelBuilder.Entity("Volo.Docs.Documents.Document", b =>
                 {
                     b.Navigation("Contributors");
+                });
+
+            modelBuilder.Entity("Volo.Docs.Projects.Project", b =>
+                {
+                    b.Navigation("PdfFiles");
                 });
 #pragma warning restore 612, 618
         }

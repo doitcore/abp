@@ -4,8 +4,8 @@
 //[doc-nav]
 {
   "Next": {
-    "Name": "Communication in the Microservice solution",
-    "Path": "solution-templates/microservice/communication"
+    "Name": "Health Check Configuration",
+    "Path": "solution-templates/microservice/health-check-configuration"
   }
 }
 ````

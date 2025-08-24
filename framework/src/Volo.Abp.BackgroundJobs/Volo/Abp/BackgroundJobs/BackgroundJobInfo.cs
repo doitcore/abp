@@ -10,6 +10,11 @@ public class BackgroundJobInfo
     public Guid Id { get; set; }
 
     /// <summary>
+    /// Application name.
+    /// </summary>
+    public virtual string? ApplicationName { get; set; }
+
+    /// <summary>
     /// Name of the job.
     /// </summary>
     public virtual string JobName { get; set; } = default!;

@@ -138,7 +138,7 @@ public class MyAppService : ApplicationService
                 {
                     new Claim(AbpClaimTypes.UserId, Guid.NewGuid().ToString()),
                     new Claim(AbpClaimTypes.UserName, "john"),
-                    new Claim("MyCustomCliam", "42")
+                    new Claim("Claim", "42")
                 }
             )
         );

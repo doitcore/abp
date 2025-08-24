@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
@@ -14,8 +15,6 @@ namespace Volo.Abp.TestApp.EntityFrameworkCore;
 [ReplaceDbContext(typeof(IFourthDbContext))]
 public class TestAppDbContext : AbpDbContext<TestAppDbContext>, IThirdDbContext, IFourthDbContext
 {
-    private DbSet<FourthDbContextDummyEntity> _dummyEntities;
-    private DbSet<FourthDbContextDummyEntity> _dummyEntities1;
     public DbSet<Person> People { get; set; }
 
     public DbSet<City> Cities { get; set; }
@@ -37,6 +36,9 @@ public class TestAppDbContext : AbpDbContext<TestAppDbContext>, IThirdDbContext,
     public DbSet<AppEntityWithNavigations> AppEntityWithNavigations { get; set; }
 
     public DbSet<AppEntityWithNavigationsForeign> AppEntityWithNavigationsForeign { get; set; }
+
+    public DbSet<Blog> Blogs { get; set; }
+    public DbSet<BlogPost> BlogPosts { get; set; }
 
     public TestAppDbContext(DbContextOptions<TestAppDbContext> options)
         : base(options)
@@ -121,6 +123,19 @@ public class TestAppDbContext : AbpDbContext<TestAppDbContext>, IThirdDbContext,
         });
 
         modelBuilder.Entity<AppEntityWithNavigationsForeign>(b =>
+        {
+            b.ConfigureByConvention();
+        });
+
+        modelBuilder.Entity<Blog>(b =>
+        {
+            b.ConfigureByConvention();
+            b.HasMany(bp => bp.BlogPosts)
+                .WithOne(bp => bp.Blog)
+                .HasForeignKey(bp => bp.BlogId);
+        });
+
+        modelBuilder.Entity<BlogPost>(b =>
         {
             b.ConfigureByConvention();
         });

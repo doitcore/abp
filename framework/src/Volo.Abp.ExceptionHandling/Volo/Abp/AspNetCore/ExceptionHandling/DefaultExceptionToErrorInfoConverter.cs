@@ -132,7 +132,10 @@ public class DefaultExceptionToErrorInfoConverter : IExceptionToErrorInfoConvert
             errorInfo.Message = L["InternalServerErrorMessage"];
         }
 
-        errorInfo.Data = exception.Data;
+        if (options.SendExceptionDataToClientTypes.Any(t => t.IsInstanceOfType(exception)))
+        {
+            errorInfo.Data = exception.Data;
+        }
 
         return errorInfo;
     }
@@ -232,6 +235,8 @@ public class DefaultExceptionToErrorInfoConverter : IExceptionToErrorInfoConvert
         {
             errorInfo.ValidationErrors = GetValidationErrorInfos((exception as AbpValidationException)!);
         }
+
+        TryToLocalizeExceptionMessage(exception, errorInfo);
 
         return errorInfo;
     }

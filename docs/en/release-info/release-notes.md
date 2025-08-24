@@ -1,8 +1,56 @@
 # Release Notes
 
-This document contains **brief release notes** for each release. Release notes only include **major features** and **visible enhancements**. They don't include all the development done in the related version. To see raw and detailed change logs for every release, please check <a href="https://github.com/abpframework/abp/milestones?state=closed" target="_blank">the related milestone</a> and [the change logs page](https://abp.io/pro-releases) (only for paid license holders).
+This document contains **brief release notes** for each release. Release notes only include **major features** and **visible enhancements**. They don't include all the development done in the related version.
 
-> If you want to read the release notes for each ABP Studio release, check it out from [here](../studio/release-notes.md).
+Also see the following notes about ABP releases:
+
+* [ABP Studio release notes](../studio/release-notes.md)
+* [Change logs for ABP pro packages](https://abp.io/pro-releases)
+
+## 9.3 (2025-06-17)
+
+This is currently a RC (release-candidate) and you can see the detailed **[blog post / announcement](https://abp.io/community/articles/announcing-abp-9-3-release-candidate-4dqgiryf)** for the v9.3 release.
+
+* Cron Expression Support for Background Workers
+* Docs Module: PDF Export
+* Angular UI: Standalone Package Structure
+* Upgraded to `Blazorise` **v1.7.7**
+* Audit Logging Module: Excel Export
+* Angular UI: Version Upgrade to **v20**
+
+## 9.2 (2025-06-02)
+
+See the detailed **[blog post / announcement](https://abp.io/community/articles/announcing-abp-9-2-stable-release-061qmtzb)** for the v9.2 release.
+
+* Added `ApplicationName` Property to Isolate Background Jobs & Background Workers
+* Docs Module: Added "Alternative Words" to Filter Items
+* Introducing the [Bunny BLOB Storage Provider](../framework/infrastructure/blob-storing/bunny.md)
+* Upgraded `MongoDB.Driver` to **v3.1.0**
+* Identity Pro Module: Require Email Verification to Register
+* Switching users during OAuth login
+
+## 9.1 (2025-03-05)
+
+See the detailed **[blog post / announcement](https://abp.io/community/articles/abp.io-platform-9.1-final-has-been-released-h96a56qa)** for the v9.1 release.
+
+* Upgraded to Angular 19
+* Upgraded to OpenIddict 6.0
+* New Blazor WASM Bundling System
+* Idle Session Warning
+* Lazy Expandable Feature for Documentation System
+
+## 9.0 (2024-11-19)
+
+See the detailed **[blog post / announcement](https://abp.io/blog/abp-9-0-stable-release-with-dotnet-9-0)** for the v9.0 release.
+
+> **Note**: ABP has upgraded to .NET 9.0, so if you plan to use ABP 9.0, you’ll need to migrate your solutions to .NET 9.0. You can refer to the [Migrate from ASP.NET Core 8.0 to 9.0](https://learn.microsoft.com/en-us/aspnet/core/migration/80-90) documentation for guidance. However, ABP’s NuGet packages are compatible with both .NET 8 and .NET 9, allowing developers to continue using .NET 8 while still enjoying the latest features and improvements of the ABP Framework without upgrading their SDK.
+
+* Upgraded to .NET 9.0
+* Introducing the `Extension Property Policy`
+* Google Cloud Storage BLOB Provider
+* Removed React Native mobile option from free templates
+* ABP Suite: Better naming for multiple navigation properties to the same entity
+* CMS Kit Pro: Feedback feature improvements
 
 ## 8.3 (2024-09-05)
 

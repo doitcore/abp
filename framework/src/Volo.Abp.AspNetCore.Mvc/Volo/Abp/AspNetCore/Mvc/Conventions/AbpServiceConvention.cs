@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -75,16 +74,29 @@ public class AbpServiceConvention : IAbpServiceConvention, ITransientDependency
 
     protected virtual void RemoveIntegrationControllersIfNotExposed(ApplicationModel application)
     {
-        if (Options.ExposeIntegrationServices)
+        if (!Options.ExposeIntegrationServices)
         {
-            return;
-        }
-        
-        var integrationControllers = GetControllers(application)
-            .Where(c => IntegrationServiceAttribute.IsDefinedOrInherited(c.ControllerType))
-            .ToArray();
+            var integrationControllers = GetControllers(application)
+                .Where(c => IntegrationServiceAttribute.IsDefinedOrInherited(c.ControllerType))
+                .ToArray();
 
-        application.Controllers.RemoveAll(integrationControllers);
+            application.Controllers.RemoveAll(integrationControllers);
+        }
+
+        if (!Options.ExposeClientProxyServices)
+        {
+            var clientProxyServiceControllers = GetControllers(application)
+                .Where(c => IsClientProxyService(c.ControllerType))
+                .ToArray();
+
+            application.Controllers.RemoveAll(clientProxyServiceControllers);
+        }
+    }
+
+    protected virtual bool IsClientProxyService(Type controllerType)
+    {
+        return typeof(IApplicationService).IsAssignableFrom(controllerType) &&
+               controllerType.GetBaseClasses().Any(x => x.IsGenericType && x.GetGenericTypeDefinition().FullName!.StartsWith("Volo.Abp.Http.Client.ClientProxying.ClientProxyBase"));
     }
 
     protected virtual IList<ControllerModel> GetControllers(ApplicationModel application)

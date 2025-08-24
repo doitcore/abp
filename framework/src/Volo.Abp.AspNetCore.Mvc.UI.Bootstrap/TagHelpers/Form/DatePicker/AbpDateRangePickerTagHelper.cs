@@ -1,6 +1,6 @@
-﻿using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Options;
 
 namespace Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form.DatePicker;
 
@@ -11,8 +11,10 @@ public class AbpDateRangePickerTagHelper : AbpDatePickerBaseTagHelper<AbpDateRan
 
     public ModelExpression? AspForEnd { get; set; }
 
-    public AbpDateRangePickerTagHelper(AbpDateRangePickerTagHelperService tagHelperService) :
-        base(tagHelperService)
+    public AbpDateRangePickerTagHelper(
+        AbpDateRangePickerTagHelperService service,
+        IOptionsFactory<AbpDatePickerOptions> optionsFactory)
+        : base(service, optionsFactory)
     {
     }
 }

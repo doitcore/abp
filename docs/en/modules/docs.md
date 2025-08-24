@@ -73,25 +73,25 @@ Or you can also manually install nuget package to each project:
 * Install [Volo.Docs.Domain](https://www.nuget.org/packages/Volo.Docs.Domain/) nuget package to `Acme.MyProject.Domain` project.
 
   ```bash
-  Install-Package Volo.Docs.Domain
+  dotnet add package Volo.Docs.Domain
   ```
 
 * Install [Volo.Docs.EntityFrameworkCore](https://www.nuget.org/packages/Volo.Docs.EntityFrameworkCore/) nuget package to `Acme.MyProject.EntityFrameworkCore` project.
 
   ```bash
-  Install-Package Volo.Docs.EntityFrameworkCore
+  dotnet add package Volo.Docs.EntityFrameworkCore
   ```
 
 * Install [Volo.Docs.Application](https://www.nuget.org/packages/Volo.Docs.Application/) nuget package to `Acme.MyProject.Application` project.
 
   ```bash
-  Install-Package Volo.Docs.Application
+  dotnet add package Volo.Docs.Application
   ```
 
 * Install [Volo.Docs.Web](https://www.nuget.org/packages/Volo.Docs.Domain/) nuget package to `Acme.MyProject.Web` project.
 
   ```bash
-  Install-Package Volo.Docs.Web
+  dotnet add package Volo.Docs.Web
   ```
 
 ##### 3.2.1- Adding Module Dependencies
@@ -490,9 +490,6 @@ Since not every single document in your projects may not have sections or may no
 
 For example [Getting-Started.md](https://github.com/abpio/abp-commercial-docs/blob/master/en/getting-started.md):
 
-```
-.....
-
 ​```json
 //[doc-params]
 {
@@ -502,9 +499,6 @@ For example [Getting-Started.md](https://github.com/abpio/abp-commercial-docs/bl
 }
 ​```
 
-........
-```
-
 This section will be automatically deleted during render. And f course, those key values must match with the ones in **Parameter document**.
 
 ![Interface](../images/docs-section-ui.png)
@@ -513,7 +507,7 @@ Now you can use **Scriban** syntax to create sections in your document.
 
 For example:
 
-````
+````text
 {{ if UI == "NG" }}
 
 * `-u` argument specifies the UI framework, `angular` in this case.
@@ -672,22 +666,18 @@ The **Docs Module** supports referencing previous and next documents. It's usefu
 
 To reference the previous and next documents from a document, you should specify the documentation titles and their paths as follows:
 
-```
-
-	  ````json
-	  //[doc-nav]
-	  {
-	    "Previous": {
-	      "Name": "Overall",
-	      "Path": "testing/overall"
-	    },
-	    "Next": {
-	      "Name": "Integration tests",
-	      "Path": "testing/integration-tests"
-	    }
-	  }
-	  ````
-
+```json
+//[doc-nav]
+{
+  "Previous": {
+    "Name": "Overall",
+    "Path": "testing/overall"
+  },
+  "Next": {
+    "Name": "Integration tests",
+    "Path": "testing/integration-tests"
+  }
+}
 ```
 
 After you specify the next & previous documents, they will appear at the end of the current documentation like in the following figure:

@@ -6,7 +6,7 @@ This document explains creating custom a payment gateway that's different than t
 
 ## Creating Core Operations
 
-- Create **MyPaymentGateway.cs** and implement `IPaymentGateway`
+- Create **MyPaymentGateway.cs** in the **Domain** layer of your project and implement `IPaymentGateway`.
 
   ```csharp
   public class MyPaymentGateway : IPaymentGateway, ITransientDependency
@@ -57,7 +57,7 @@ This document explains creating custom a payment gateway that's different than t
     }
   ```
 
-- You should configure your gateway in `PaymentOptions`
+- You should also configure `PaymentOptions` for your gateway in the **Domain** layer of your project as shown below.
 
   ```csharp
   Configure<PaymentOptions>(options =>
@@ -119,7 +119,7 @@ There are 2 types of pages that are supported by default. You can define a pre-p
   <h3>Operation Done</h3>
   ```
 
-- Configure your pages in `PaymentWebOptions`
+- Configure your pages using `PaymentWebOptions` in **Web** layer of your project.
 
   ```csharp
   Configure<PaymentWebOptions>(options =>

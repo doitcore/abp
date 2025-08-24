@@ -1,6 +1,3 @@
-import { inject } from '@angular/core';
-import { map, tap } from 'rxjs';
-import { ConfigStateService } from '@abp/ng.core';
 import {
   ExtensionsService,
   getObjectExtensionEntitiesFromStore,
@@ -8,6 +5,9 @@ import {
   mergeWithDefaultActions,
   mergeWithDefaultProps,
 } from '@abp/ng.components/extensible';
+import { inject, Injector } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { map, tap } from 'rxjs';
 import { eTenantManagementComponents } from '../enums';
 import {
   TENANT_MANAGEMENT_ENTITY_ACTION_CONTRIBUTORS,
@@ -21,10 +21,9 @@ import {
   DEFAULT_TENANT_MANAGEMENT_CREATE_FORM_PROPS,
   DEFAULT_TENANT_MANAGEMENT_EDIT_FORM_PROPS,
 } from '../tokens';
-import { ResolveFn } from '@angular/router';
 
 export const tenantManagementExtensionsResolver: ResolveFn<any> = () => {
-  const configState = inject(ConfigStateService);
+  const injector = inject(Injector);
   const extensions = inject(ExtensionsService);
 
   const config = { optional: true };
@@ -36,11 +35,11 @@ export const tenantManagementExtensionsResolver: ResolveFn<any> = () => {
     inject(TENANT_MANAGEMENT_CREATE_FORM_PROP_CONTRIBUTORS, config) || {};
   const editFormContributors = inject(TENANT_MANAGEMENT_EDIT_FORM_PROP_CONTRIBUTORS, config) || {};
 
-  return getObjectExtensionEntitiesFromStore(configState, 'TenantManagement').pipe(
+  return getObjectExtensionEntitiesFromStore(injector, 'TenantManagement').pipe(
     map(entities => ({
       [eTenantManagementComponents.Tenants]: entities.Tenant,
     })),
-    mapEntitiesToContributors(configState, 'TenantManagement'),
+    mapEntitiesToContributors(injector, 'TenantManagement'),
     tap(objectExtensionContributors => {
       mergeWithDefaultActions(
         extensions.entityActions,

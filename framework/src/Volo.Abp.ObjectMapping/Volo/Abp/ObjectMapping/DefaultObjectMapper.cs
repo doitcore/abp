@@ -55,10 +55,9 @@ public class DefaultObjectMapper : IObjectMapper, ITransientDependency
                 return specificMapper.Map(source);
             }
 
-            var result = TryToMapCollection<TSource, TDestination>(scope, source, default);
-            if (result != null)
+            if (TryToMapCollection<TSource, TDestination>(scope, source, default, out var collectionResult))
             {
-                return result;
+                return collectionResult;
             }
         }
 
@@ -100,10 +99,9 @@ public class DefaultObjectMapper : IObjectMapper, ITransientDependency
                 return specificMapper.Map(source, destination);
             }
 
-            var result = TryToMapCollection(scope, source, destination);
-            if (result != null)
+            if (TryToMapCollection(scope, source, destination, out var collectionResult))
             {
-                return result;
+                return collectionResult;
             }
         }
 
@@ -122,11 +120,12 @@ public class DefaultObjectMapper : IObjectMapper, ITransientDependency
         return AutoMap(source, destination);
     }
 
-    protected virtual TDestination? TryToMapCollection<TSource, TDestination>(IServiceScope serviceScope, TSource source, TDestination? destination)
+    protected virtual bool TryToMapCollection<TSource, TDestination>(IServiceScope serviceScope, TSource source, TDestination? destination, out TDestination collectionResult)
     {
         if (!IsCollectionGenericType<TSource, TDestination>(out var sourceArgumentType, out var destinationArgumentType, out var definitionGenericType))
         {
-            return default;
+            collectionResult = default!;
+            return false;
         }
 
         var mapperType = typeof(IObjectMapper<,>).MakeGenericType(sourceArgumentType, destinationArgumentType);
@@ -134,7 +133,8 @@ public class DefaultObjectMapper : IObjectMapper, ITransientDependency
         if (specificMapper == null)
         {
             //skip, no specific mapper
-            return default;
+            collectionResult = default!;
+            return false;
         }
 
         var cacheKey = $"{mapperType.FullName}_{(destination == null ? "MapMethodWithSingleParameter" : "MapMethodWithDoubleParameters")}";
@@ -142,13 +142,39 @@ public class DefaultObjectMapper : IObjectMapper, ITransientDependency
             cacheKey,
             _ =>
             {
-                return specificMapper
+                var methods = specificMapper
                     .GetType()
-                    .GetMethods()
-                    .First(x =>
-                        x.Name == nameof(IObjectMapper<object, object>.Map) &&
-                        x.GetParameters().Length == (destination == null ? 1 : 2)
-                    );
+                    .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                    .Where(x => x.Name == nameof(IObjectMapper<object, object>.Map))
+                    .Where(x =>
+                    {
+                        var parameters = x.GetParameters();
+                        if (destination == null && parameters.Length != 1 ||
+                            destination != null && parameters.Length != 2 ||
+                            parameters[0].ParameterType != sourceArgumentType)
+                        {
+                            return false;
+                        }
+
+                        return destination == null || parameters[1].ParameterType == destinationArgumentType;
+                    })
+                    .ToList();
+
+                if (methods.IsNullOrEmpty())
+                {
+                    throw new AbpException($"Could not find a method named '{nameof(IObjectMapper<object, object>.Map)}'" +
+                                           $" with parameters({(destination == null ? sourceArgumentType.ToString() : sourceArgumentType + "," + destinationArgumentType)})" +
+                                           $" in the type '{mapperType}'.");
+                }
+
+                if (methods.Count > 1)
+                {
+                    throw new AbpException($"Found more than one method named '{nameof(IObjectMapper<object, object>.Map)}'" +
+                                           $" with parameters({(destination == null ? sourceArgumentType.ToString() : sourceArgumentType + "," + destinationArgumentType)})" +
+                                           $" in the type '{mapperType}'.");
+                }
+
+                return methods.First();
             }
         );
 
@@ -183,11 +209,13 @@ public class DefaultObjectMapper : IObjectMapper, ITransientDependency
         if (destination != null && destination.GetType().IsArray)
         {
             //Return the new collection if destination is an array,  We won't change array just same behavior as AutoMapper.
-            return (TDestination)result;
+            collectionResult = (TDestination)result;
+            return true;
         }
 
         //Return the destination if destination exists. The parameter reference equals with return object.
-        return destination ?? (TDestination)result;
+        collectionResult = destination ?? (TDestination)result;
+        return true;
     }
 
     protected virtual bool IsCollectionGenericType<TSource, TDestination>(out Type sourceArgumentType, out Type destinationArgumentType, out Type definitionGenericType)

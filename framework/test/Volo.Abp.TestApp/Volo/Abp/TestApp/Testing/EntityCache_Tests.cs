@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Shouldly;
 using Volo.Abp.Caching;
@@ -69,6 +68,29 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
 
         (await ProductEntityCache.FindAsync(TestDataBuilder.ProductId)).ShouldBeNull();
         (await ProductCacheItem.FindAsync(TestDataBuilder.ProductId)).ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Should_Return_New_EntityCache_IF_Added()
+    {
+        var productId = Guid.NewGuid();
+        (await ProductEntityCache.FindAsync(productId)).ShouldBeNull();
+        (await ProductCacheItem.FindAsync(productId)).ShouldBeNull();
+
+        var product = new Product(productId, "Product2", decimal.Zero);
+        await ProductRepository.InsertAsync(product);
+
+        product = await ProductEntityCache.FindAsync(product.Id);
+        product.ShouldNotBeNull();
+        product.Id.ShouldBe(productId);
+        product.Name.ShouldBe("Product2");
+        product.Price.ShouldBe(decimal.Zero);
+
+        var productCacheItem = await ProductCacheItem.FindAsync(product.Id);
+        productCacheItem.ShouldNotBeNull();
+        productCacheItem.Id.ShouldBe(productId);
+        productCacheItem.Name.ShouldBe("Product2");
+        productCacheItem.Price.ShouldBe(decimal.Zero);
     }
 
     [Fact]

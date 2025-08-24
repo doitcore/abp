@@ -13,7 +13,8 @@ public class AbpJsonNewtonsoftModule : AbpModule
         context.Services.AddOptions<AbpNewtonsoftJsonSerializerOptions>()
             .Configure<IServiceProvider>((options, rootServiceProvider) =>
             {
-                options.JsonSerializerSettings.ContractResolver = new AbpCamelCasePropertyNamesContractResolver(rootServiceProvider.GetRequiredService<AbpDateTimeConverter>());
+                options.JsonSerializerSettings.ContractResolver = new AbpCamelCasePropertyNamesContractResolver(
+                    rootServiceProvider.GetRequiredService<AbpDateTimeConverter>().SkipDateTimeNormalization());
             });
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -37,7 +36,6 @@ public class AngularSourceCodeAdder : ITransientDependency
 
             await AddPathsToTsConfigAsync(angularPath, angularProjectsPath, projects);
             await CreateTsConfigProdJsonAsync(angularPath);
-            await AddScriptsToPackageJsonAsync(angularPath);
             await AddProjectsToAngularJsonAsync(angularPath, projects);
         }
         catch (Exception e)
@@ -59,7 +57,6 @@ public class AngularSourceCodeAdder : ITransientDependency
 
             await AddPathsToTsConfigAsync(angularPath, angularProjectsPath, projects);
             await CreateTsConfigProdJsonAsync(angularPath);
-            await AddScriptsToPackageJsonAsync(angularPath);
             await AddProjectsToAngularJsonAsync(angularPath, projects);
         }
         catch (Exception e)
@@ -123,28 +120,6 @@ public class AngularSourceCodeAdder : ITransientDependency
         }
 
         File.WriteAllText(angularJsonFilePath, json.ToString(Formatting.Indented));
-    }
-
-    private async Task AddScriptsToPackageJsonAsync(string angularPath)
-    {
-        var packageJsonFilePath = Path.Combine(angularPath, "package.json");
-        var fileContent = File.ReadAllText(packageJsonFilePath);
-
-        var json = JObject.Parse(fileContent);
-
-        var scriptsJobject = (JObject)json["scripts"];
-
-        if (scriptsJobject == null || scriptsJobject["postinstall"] != null ||
-            scriptsJobject["compile:ivy"] != null)
-        {
-            return;
-        }
-
-        scriptsJobject["postinstall"] = "npm run compile:ivy";
-        scriptsJobject["compile:ivy"] =
-            "yarn ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points --tsconfig './tsconfig.prod.json' --source node_modules";
-
-        File.WriteAllText(packageJsonFilePath, json.ToString(Formatting.Indented));
     }
 
     private async Task CreateTsConfigProdJsonAsync(string angularPath)

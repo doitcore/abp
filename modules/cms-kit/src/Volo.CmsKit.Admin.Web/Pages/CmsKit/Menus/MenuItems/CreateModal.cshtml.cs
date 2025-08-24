@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Features;
 using Volo.Abp.GlobalFeatures;
 using Volo.Abp.ObjectExtending;
@@ -32,13 +33,14 @@ public class CreateModalModel : CmsKitAdminPageModel
     public virtual async Task OnGetAsync(Guid? parentId)
     {
         ViewModel.ParentId = parentId;
-
         IsPageFeatureEnabled = GlobalFeatureManager.Instance.IsEnabled<PagesFeature>()
             && await FeatureChecker.IsEnabledAsync(CmsKitFeatures.PageEnable);
     }
 
     public virtual async Task<IActionResult> OnPostAsync()
     {
+        ViewModel.Order = await MenuAdminAppService.GetAvailableMenuOrderAsync(ViewModel.ParentId);
+
         var input = ObjectMapper.Map<MenuItemCreateViewModel, MenuItemCreateInput>(ViewModel);
 
         var dto = await MenuAdminAppService.CreateAsync(input);
@@ -72,6 +74,8 @@ public class CreateModalModel : CmsKitAdminPageModel
         public string ElementId { get; set; }
 
         public string CssClass { get; set; }
+        
+        public string RequiredPermissionName { get; set; }
 
     }
 }

@@ -291,6 +291,12 @@
           "namespace": "Volo.Abp.Domain.Entities",
           "declaringAssemblyName": "Volo.Abp.Data",
           "fullName": "Volo.Abp.Domain.Entities.IHasConcurrencyStamp"
+        },
+        {
+          "name": "IHasCreationTime",
+          "namespace": "Volo.Abp.Auditing",
+          "declaringAssemblyName": "Volo.Abp.Auditing.Contracts",
+          "fullName": "Volo.Abp.Auditing.IHasCreationTime"
         }
       ],
       "methods": [
@@ -350,6 +356,11 @@
         {
           "type": "Volo.Abp.Identity.IdentityClaimValueType",
           "name": "ValueType",
+          "summary": null
+        },
+        {
+          "type": "System.DateTime",
+          "name": "CreationTime",
           "summary": null
         }
       ],
@@ -488,6 +499,12 @@
           "namespace": "Volo.Abp.Auditing",
           "declaringAssemblyName": "Volo.Abp.Auditing.Contracts",
           "fullName": "Volo.Abp.Auditing.IHasEntityVersion"
+        },
+        {
+          "name": "IHasCreationTime",
+          "namespace": "Volo.Abp.Auditing",
+          "declaringAssemblyName": "Volo.Abp.Auditing.Contracts",
+          "fullName": "Volo.Abp.Auditing.IHasCreationTime"
         }
       ],
       "methods": [
@@ -649,6 +666,11 @@
           "type": "System.Int32",
           "name": "EntityVersion",
           "summary": "A version value that is increased whenever the entity is changed."
+        },
+        {
+          "type": "System.DateTime",
+          "name": "CreationTime",
+          "summary": null
         }
       ],
       "contentType": "aggregateRoot",
@@ -822,6 +844,12 @@
           "fullName": "Volo.Abp.Domain.Entities.IGeneratesDomainEvents"
         },
         {
+          "name": "IHasExtraProperties",
+          "namespace": "Volo.Abp.Data",
+          "declaringAssemblyName": "Volo.Abp.ObjectExtending",
+          "fullName": "Volo.Abp.Data.IHasExtraProperties"
+        },
+        {
           "name": "IMultiTenant",
           "namespace": "Volo.Abp.MultiTenancy",
           "declaringAssemblyName": "Volo.Abp.MultiTenancy.Abstractions",
@@ -829,6 +857,23 @@
         }
       ],
       "methods": [
+        {
+          "returnType": "IEnumerable<ValidationResult>",
+          "namespace": "Volo.Abp.Identity",
+          "name": "Validate",
+          "summary": null,
+          "isAsync": false,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "ValidationContext",
+              "name": "validationContext",
+              "isOptional": false
+            }
+          ]
+        },
         {
           "returnType": "Void",
           "namespace": "Volo.Abp.Identity",
@@ -940,6 +985,11 @@
         {
           "type": "System.Nullable`1[System.DateTime]",
           "name": "LastAccessed",
+          "summary": null
+        },
+        {
+          "type": "Volo.Abp.Data.ExtraPropertyDictionary",
+          "name": "ExtraProperties",
           "summary": null
         }
       ],
@@ -2698,6 +2748,45 @@
           ]
         },
         {
+          "returnType": "IdentityResult",
+          "namespace": "Volo.Abp.Identity",
+          "name": "CallValidateUserAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "IdentityUser",
+              "name": "user",
+              "isOptional": false
+            }
+          ]
+        },
+        {
+          "returnType": "IdentityResult",
+          "namespace": "Volo.Abp.Identity",
+          "name": "CallValidatePasswordAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "IdentityUser",
+              "name": "user",
+              "isOptional": false
+            },
+            {
+              "type": "String",
+              "name": "password",
+              "isOptional": false
+            }
+          ]
+        },
+        {
           "returnType": "IdentityUser",
           "namespace": "Volo.Abp.Identity",
           "name": "GetByIdAsync",
@@ -4123,6 +4212,11 @@
               "isOptional": true
             },
             {
+              "type": "String",
+              "name": "clientIpAddress",
+              "isOptional": true
+            },
+            {
               "type": "Boolean",
               "name": "includeDetails",
               "isOptional": true
@@ -4187,6 +4281,11 @@
             {
               "type": "String",
               "name": "correlationId",
+              "isOptional": true
+            },
+            {
+              "type": "String",
+              "name": "clientIpAddress",
               "isOptional": true
             },
             {
@@ -4970,6 +5069,11 @@
               "isOptional": true
             },
             {
+              "type": "Nullable<Guid>",
+              "name": "id",
+              "isOptional": true
+            },
+            {
               "type": "String",
               "name": "userName",
               "isOptional": true
@@ -5184,6 +5288,11 @@
             {
               "type": "Nullable<Guid>",
               "name": "organizationUnitId",
+              "isOptional": true
+            },
+            {
+              "type": "Nullable<Guid>",
+              "name": "id",
               "isOptional": true
             },
             {
@@ -5619,6 +5728,33 @@
           ]
         },
         {
+          "returnType": "List<OrganizationUnit>",
+          "namespace": "Volo.Abp.Identity",
+          "name": "GetListByDisplayNamesAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "String[]",
+              "name": "displayNames",
+              "isOptional": false
+            },
+            {
+              "type": "Boolean",
+              "name": "includeDetails",
+              "isOptional": true
+            },
+            {
+              "type": "CancellationToken",
+              "name": "cancellationToken",
+              "isOptional": true
+            }
+          ]
+        },
+        {
           "returnType": "List<IdentityRole>",
           "namespace": "Volo.Abp.Identity",
           "name": "GetRolesAsync",
@@ -5835,6 +5971,11 @@
             },
             {
               "type": "Boolean",
+              "name": "includeChildren",
+              "isOptional": true
+            },
+            {
+              "type": "Boolean",
               "name": "includeDetails",
               "isOptional": true
             },
@@ -5861,6 +6002,11 @@
               "isOptional": false
             },
             {
+              "type": "Boolean",
+              "name": "includeChildren",
+              "isOptional": true
+            },
+            {
               "type": "CancellationToken",
               "name": "cancellationToken",
               "isOptional": true
@@ -5885,6 +6031,11 @@
             {
               "type": "String",
               "name": "filter",
+              "isOptional": true
+            },
+            {
+              "type": "Boolean",
+              "name": "includeChildren",
               "isOptional": true
             },
             {
@@ -6018,6 +6169,65 @@
       "summary": null
     },
     {
+      "eventHandlerType": "Local",
+      "namespace": "Volo.Abp.Identity",
+      "subscribedEvents": [
+        {
+          "underlyingType": {
+            "name": "IdentityUser",
+            "namespace": "Volo.Abp.Identity",
+            "declaringAssemblyName": "Volo.Abp.Identity.Domain",
+            "fullName": "Volo.Abp.Identity.IdentityUser"
+          },
+          "name": "EntityUpdatedEventData`1",
+          "namespace": "Volo.Abp.Domain.Entities.Events",
+          "declaringAssemblyName": "Volo.Abp.Ddd.Domain",
+          "fullName": "Volo.Abp.Domain.Entities.Events.EntityUpdatedEventData`1"
+        },
+        {
+          "underlyingType": {
+            "name": "IdentityUser",
+            "namespace": "Volo.Abp.Identity",
+            "declaringAssemblyName": "Volo.Abp.Identity.Domain",
+            "fullName": "Volo.Abp.Identity.IdentityUser"
+          },
+          "name": "EntityDeletedEventData`1",
+          "namespace": "Volo.Abp.Domain.Entities.Events",
+          "declaringAssemblyName": "Volo.Abp.Ddd.Domain",
+          "fullName": "Volo.Abp.Domain.Entities.Events.EntityDeletedEventData`1"
+        }
+      ],
+      "implementingInterfaces": [
+        {
+          "name": "ILocalEventHandler<EntityUpdatedEventData`1>",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.ILocalEventHandler<EntityUpdatedEventData`1>"
+        },
+        {
+          "name": "IEventHandler",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.IEventHandler"
+        },
+        {
+          "name": "ILocalEventHandler<EntityDeletedEventData`1>",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.ILocalEventHandler<EntityDeletedEventData`1>"
+        },
+        {
+          "name": "ITransientDependency",
+          "namespace": "Volo.Abp.DependencyInjection",
+          "declaringAssemblyName": "Volo.Abp.Core",
+          "fullName": "Volo.Abp.DependencyInjection.ITransientDependency"
+        }
+      ],
+      "contentType": "eventHandler",
+      "name": "UserEntityUpdatedOrDeletedEventHandler",
+      "summary": null
+    },
+    {
       "defaultValue": "6",
       "displayName": "Required length",
       "description": "The minimum length a password must be.",
@@ -6140,8 +6350,8 @@
     },
     {
       "defaultValue": "False",
-      "displayName": "Require confirmed email",
-      "description": "Whether a confirmed email address is required to sign in.",
+      "displayName": "Enforce email verification to sign in",
+      "description": "Users can create accounts but cannot sign in until they verify their email address.",
       "isVisibleToClient": true,
       "isInherited": true,
       "isEncrypted": false,
@@ -6152,7 +6362,7 @@
     {
       "defaultValue": "True",
       "displayName": "Allow users to confirm their phone number",
-      "description": "Whether the phoneNumber can be confirmed by the user.",
+      "description": "Users can verify their phone numbers. SMS integration required.",
       "isVisibleToClient": true,
       "isInherited": true,
       "isEncrypted": false,
@@ -6162,8 +6372,19 @@
     },
     {
       "defaultValue": "False",
-      "displayName": "Require confirmed phone number",
-      "description": "Whether a confirmed telephone number is required to sign in.",
+      "displayName": "Enforce email verification to register",
+      "description": "User accounts will not be created unless they verify their email addresses.",
+      "isVisibleToClient": false,
+      "isInherited": true,
+      "isEncrypted": false,
+      "contentType": "setting",
+      "name": "Abp.Identity.SignIn.RequireEmailVerificationToRegister",
+      "summary": null
+    },
+    {
+      "defaultValue": "False",
+      "displayName": "Enforce phone number verification to sign in",
+      "description": "Users can create accounts but cannot sign in until they verify their phone numbers.",
       "isVisibleToClient": true,
       "isInherited": true,
       "isEncrypted": false,

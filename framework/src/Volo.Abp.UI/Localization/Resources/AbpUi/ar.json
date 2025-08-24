@@ -38,6 +38,7 @@
     "PagerInfoEmpty": "عرض 0 الي 0 من 0 إدخالات",
     "PagerInfoFiltered": "(تمت تصفيته من _MAX_ مجموع الإدخالات)",
     "NoDataAvailableInDatatable": "لا توجد بيانات متاحة في الجدول",
+    "ErrorLoadingDatatable": "حدث خطأ أثناء الطلب. تحقق من الرسالة للتفاصيل.",
     "Total": "مجموع",
     "Selected": "مختارة",
     "PagerShowMenuEntries": "عرض _MENU_ إدخالات",
@@ -59,6 +60,7 @@
     "AddNew": "اضف جديد",
     "ProfilePicture": "الصوره الشخصيه",
     "Theme": "سمة",
-    "NotAssigned": "غيرمعتمد"
+    "NotAssigned": "غيرمعتمد",
+    "EntityActionsDisabledTooltip": "ليس لديك إذن لتنفيذ أي إجراء."
   }
 }

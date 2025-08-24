@@ -6,11 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Versioning;
 using Volo.Abp.Cli.GitHub;
@@ -140,10 +137,18 @@ public class AbpIoSourceCodeStore : ISourceCodeStore, ITransientDependency
                     ? $"The specified template version ({templateVersion}) is different than the CLI version ({currentCliVersion}). This may cause compatibility issues."
                     : $"The latest template version ({templateVersion}) is different than the CLI version ({currentCliVersion}). This may cause compatibility issues.");
                 Logger.LogWarning("Please upgrade/downgrade the CLI version to the template version.");
-                Logger.LogWarning($"> dotnet tool uninstall -g volo.abp.cli");
-                Logger.LogWarning(!templateVersion.IsPrerelease
-                    ? $"> dotnet tool install -g volo.abp.cli --version \"{templateVersion.Major}.{templateVersion.Minor}.*\""
-                    : $"> dotnet tool install -g volo.abp.cli --version {templateVersion}");
+
+                if (currentCliVersion.ToString().EndsWith("-studio"))
+                {
+                    Logger.LogWarning($"> abp install-old-cli --version {templateVersion}");
+                }
+                else
+                {
+                    Logger.LogWarning($"> dotnet tool uninstall -g volo.abp.cli");
+                    Logger.LogWarning(!templateVersion.IsPrerelease
+                        ? $"> dotnet tool install -g volo.abp.cli --version \"{templateVersion.Major}.{templateVersion.Minor}.*\""
+                        : $"> dotnet tool install -g volo.abp.cli --version {templateVersion}");
+                }
 
                 if (userSpecifiedVersion)
                 {
@@ -294,7 +299,7 @@ public class AbpIoSourceCodeStore : ISourceCodeStore, ITransientDependency
                 var result = await response.Content.ReadAsStringAsync();
                 var versions = JsonSerializer.Deserialize<GithubReleaseVersions>(result);
 
-                return templateName.Contains("LeptonX") ?
+                return (templateName.Contains("LeptonX") || templateName.Contains("lepton-x")) ?
                     versions.LeptonXVersions.Any(v => v.Name == version) :
                     versions.FrameworkAndCommercialVersions.Any(v => v.Name == version);
             }

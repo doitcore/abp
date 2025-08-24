@@ -18,8 +18,31 @@ public class DomainEvents_Tests : DomainEvents_Tests<AbpEntityFrameworkCoreTestM
 {
 }
 
-public class AbpEntityChangeOptions_DomainEvents_Tests : AbpEntityChangeOptions_DomainEvents_Tests<AbpEntityFrameworkCoreTestModule>
+public class AbpEntityChangeOptions_DomainEvents_PublishEntityUpdatedEventWhenNavigationChanges_Tests : AbpEntityChangeOptions_DomainEvents_Tests<AbpEntityFrameworkCoreTestModule>
 {
+    protected override void AfterAddApplication(IServiceCollection services)
+    {
+        services.Configure<AbpEntityChangeOptions>(options =>
+        {
+            options.PublishEntityUpdatedEventWhenNavigationChanges = false;
+        });
+
+        base.AfterAddApplication(services);
+    }
+}
+
+public class AbpEntityChangeOptions_DomainEvents_IgnoreEntityChangeSelectorList_Tests : AbpEntityChangeOptions_DomainEvents_Tests<AbpEntityFrameworkCoreTestModule>
+{
+    protected override void AfterAddApplication(IServiceCollection services)
+    {
+        services.Configure<AbpEntityChangeOptions>(options =>
+        {
+            options.PublishEntityUpdatedEventWhenNavigationChanges = true;
+            options.IgnoredNavigationEntitySelectors.Add("DisableAllEntity", _ => true);
+        });
+
+        base.AfterAddApplication(services);
+    }
 }
 
 public class AbpEfCoreDomainEvents_Tests : EntityFrameworkCoreTestBase
@@ -371,5 +394,136 @@ public class AbpEfCoreDomainEvents_Tests : EntityFrameworkCoreTestBase
         }
 
         entityUpdatedEventTriggered.ShouldBeTrue();
+    }
+}
+
+
+public abstract class AbpEfCoreDomainEvents_Disable_UpdateAggregateRoot_Tests : EntityFrameworkCoreTestBase
+{
+    protected readonly IRepository<AppEntityWithNavigations, Guid> AppEntityWithNavigationsRepository;
+    protected readonly IRepository<AppEntityWithNavigationsForeign, Guid> AppEntityWithNavigationForeignRepository;
+    protected readonly ILocalEventBus LocalEventBus;
+
+    protected AbpEfCoreDomainEvents_Disable_UpdateAggregateRoot_Tests()
+    {
+        AppEntityWithNavigationsRepository = GetRequiredService<IRepository<AppEntityWithNavigations, Guid>>();
+        AppEntityWithNavigationForeignRepository = GetRequiredService<IRepository<AppEntityWithNavigationsForeign, Guid>>();
+        LocalEventBus = GetRequiredService<ILocalEventBus>();
+    }
+
+    protected override void AfterAddApplication(IServiceCollection services)
+    {
+        services.Configure<AbpEntityChangeOptions>(options =>
+        {
+            options.PublishEntityUpdatedEventWhenNavigationChanges = true;
+            options.UpdateAggregateRootWhenNavigationChanges = false;
+        });
+
+        base.AfterAddApplication(services);
+    }
+
+    [Fact]
+    public async Task Should_Trigger_Domain_Events_But_Do_Not_Change_Aggregate_Root_When_Navigation_Changes_Tests()
+    {
+        var entityId = Guid.NewGuid();
+
+        var newEntity = await AppEntityWithNavigationsRepository.InsertAsync(new AppEntityWithNavigations(entityId, "TestEntity"));
+
+        var latestConcurrencyStamp = newEntity.ConcurrencyStamp;
+        var lastModificationTime = newEntity.LastModificationTime;
+
+        var entityUpdatedEventTriggered = false;
+
+        LocalEventBus.Subscribe<EntityUpdatedEventData<AppEntityWithNavigations>>(data =>
+        {
+            entityUpdatedEventTriggered = true;
+
+            // The Aggregate will not be updated
+            data.Entity.ConcurrencyStamp.ShouldBe(latestConcurrencyStamp);
+            data.Entity.LastModificationTime.ShouldBe(lastModificationTime);
+            return Task.CompletedTask;
+        });
+
+        // Test with value object
+        entityUpdatedEventTriggered = false;
+        await WithUnitOfWorkAsync(async () =>
+        {
+            var entity = await AppEntityWithNavigationsRepository.GetAsync(entityId);
+            entity.AppEntityWithValueObjectAddress = new AppEntityWithValueObjectAddress("Turkey");
+            await AppEntityWithNavigationsRepository.UpdateAsync(entity);
+        });
+        entityUpdatedEventTriggered.ShouldBeTrue();
+
+        // Test with one to one
+        entityUpdatedEventTriggered = false;
+        await WithUnitOfWorkAsync(async () =>
+        {
+            var entity = await AppEntityWithNavigationsRepository.GetAsync(entityId);
+            entity.OneToOne = new AppEntityWithNavigationChildOneToOne
+            {
+                ChildName = "ChildName"
+            };
+            await AppEntityWithNavigationsRepository.UpdateAsync(entity);
+        });
+        entityUpdatedEventTriggered.ShouldBeTrue();
+
+        // Test with one to many
+        entityUpdatedEventTriggered = false;
+        await WithUnitOfWorkAsync(async () =>
+        {
+            var entity = await AppEntityWithNavigationsRepository.GetAsync(entityId);
+            entity.OneToMany = new List<AppEntityWithNavigationChildOneToMany>()
+            {
+                new AppEntityWithNavigationChildOneToMany
+                {
+                    AppEntityWithNavigationId = entity.Id,
+                    ChildName = "ChildName1"
+                }
+            };
+            await AppEntityWithNavigationsRepository.UpdateAsync(entity);
+        });
+        entityUpdatedEventTriggered.ShouldBeTrue();
+
+        // Test with many to many
+        entityUpdatedEventTriggered = false;
+        await WithUnitOfWorkAsync(async () =>
+        {
+            var entity = await AppEntityWithNavigationsRepository.GetAsync(entityId);
+            entity.ManyToMany = new List<AppEntityWithNavigationChildManyToMany>()
+            {
+                new AppEntityWithNavigationChildManyToMany
+                {
+                    ChildName = "ChildName1"
+                }
+            };
+            await AppEntityWithNavigationsRepository.UpdateAsync(entity);
+        });
+        entityUpdatedEventTriggered.ShouldBeTrue();
+    }
+}
+
+public class AbpEfCoreDomainEvents_UpdateAggregateRootWhenNavigationChanges_Tests :  AbpEfCoreDomainEvents_Disable_UpdateAggregateRoot_Tests
+{
+    protected override void AfterAddApplication(IServiceCollection services)
+    {
+        services.Configure<AbpEntityChangeOptions>(options =>
+        {
+            options.UpdateAggregateRootWhenNavigationChanges = false;
+        });
+
+        base.AfterAddApplication(services);
+    }
+}
+
+public class AbpEfCoreDomainEvents_IgnoredUpdateAggregateRootSelectors_Test :  AbpEfCoreDomainEvents_Disable_UpdateAggregateRoot_Tests
+{
+    protected override void AfterAddApplication(IServiceCollection services)
+    {
+        services.Configure<AbpEntityChangeOptions>(options =>
+        {
+            options.IgnoredUpdateAggregateRootSelectors.Add("AppEntityWithValueObjectAddress", x => x == typeof(AppEntityWithNavigations));
+        });
+
+        base.AfterAddApplication(services);
     }
 }

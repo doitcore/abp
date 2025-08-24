@@ -37,11 +37,11 @@ namespace Volo.Abp.Identity
                     errors.Add(new IdentityError
                     {
                         Code = "InvalidUserName",
-                        Description = Localizer["InvalidUserName", userName]
+                        Description = Localizer["Volo.Abp.Identity:InvalidUserName", userName]
                     });
                 }
             }
-            
+
             var email = await manager.GetEmailAsync(user);
             if (email == null)
             {

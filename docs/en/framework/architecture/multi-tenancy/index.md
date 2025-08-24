@@ -40,7 +40,9 @@ ABP supports all the following approaches to store the tenant data in the databa
 - **Database per Tenant**: Every tenant has a separate, dedicated database to store the data related to that tenant.
 - **Hybrid**: Some tenants share a single database while some tenants may have their own databases.
 
-[Tenant management module](../../../modules/tenant-management.md) (which comes pre-installed with the startup projects) allows you to set a connection string for any tenant (as optional), so you can achieve any of the approaches.
+[Saas module (PRO)](../../../modules/saas.md) allows you to set a connection string for any tenant (as optional), so you can achieve any of the approaches.
+
+> You can see the community article *[Multi-Tenancy with Separate Databases in .NET and ABP Framework](https://abp.io/community/articles/multitenancy-with-separate-databases-in-dotnet-and-abp-51nvl4u9)* for more details about different database architectures with practical implementation details.
 
 ## Usage
 
@@ -229,18 +231,20 @@ services.Configure<AbpAspNetCoreMultiTenancyOptions>(options =>
 If you change the `TenantKey`, make sure to pass it to `provideAbpCore` via `withOptions` method in the Angular client as follows:
 
 ```js
-@NgModule({
+// app.config.ts
+// ...
+export const appConfig: ApplicationConfig = {
   providers: [
+    // ...
     provideAbpCore(
       withOptions({
         // ...
         tenantKey: "MyTenantKey",
       })
     ),
+    // ...
   ],
-  // ...
-})
-export class AppModule {}
+};
 ```
 
 If you need to access it, you can inject it as follows:
@@ -400,7 +404,7 @@ app.UseMultiTenancy();
 
 #### Tenant Management Module
 
-The [tenant management module](../../../modules/tenant-management.md) is **included in the startup templates** and implements the `ITenantStore` interface to get the tenants and their configuration from a database. It also provides the necessary functionality and UI to manage the tenants and their connection strings.
+The [tenant management module](../../../modules/tenant-management.md) is **included in the startup templates** and implements the `ITenantStore` interface to get the tenants and their configuration from a database. It also provides the necessary functionality and UI to manage the tenants.
 
 #### Configuration Data Store
 
@@ -438,8 +442,14 @@ BLOB Storing, Caching, Data Filtering, Data Seeding, Authorization and all the o
 
 ABP provides all the the infrastructure to create a multi-tenant application, but doesn't make any assumption about how you manage (create, delete...) your tenants.
 
-The [Tenant Management module](../../../modules/tenant-management.md) provides a basic UI to manage your tenants and set their connection strings. It is pre-configured for the [application startup template](../../../solution-templates/layered-web-application).
+The [Tenant Management module](../../../modules/tenant-management.md) provides a basic UI to manage your tenants. It is pre-configured for the [application startup template](../../../solution-templates/layered-web-application).
+
+### A note about separate database per tenant approach in open source version
+
+While ABP fully supports this option, managing connection strings of tenants from the UI is not available in open source version. You need to have [Saas module (PRO)](../../../modules/saas.md).
+Alternatively, you can implement this feature yourself by customizing the tenant management module and tenant application service to create and migrate the database on the fly.
 
 ## See Also
 
 * [Features](../../infrastructure/features.md)
+* [Article: Multi-Tenancy with Separate Databases in .NET and ABP Framework](https://abp.io/community/articles/multitenancy-with-separate-databases-in-dotnet-and-abp-51nvl4u9)

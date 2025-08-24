@@ -28,6 +28,7 @@ With this version on, ABP Framework allows you to use single blog mode, without 
 * `Volo.Blogging.Pages.Members` -> `Volo.Blogging.Pages.Blogs.Members` (members folder)
 
 > If you haven't overridden the pages above, then you don't need to make any additional changes. See [#19418](https://github.com/abpframework/abp/pull/19418) for more information.
+
 ## Removed `FlagIcon` property from the `ILanguageInfo`
 
 The `FlagIcon` property has been removed from the `ILanguageInfo` interface since we removed the flag icon library in the earlier versions from all of our themes and none of them using it now.
@@ -57,11 +58,20 @@ In this version, the Angular UI has been updated to use the Angular version 17.3
 
 The **Session Management** feature allows you to prevent concurrent login and manage user sessions.
 
-In this version, a new entity called `IdentitySession` has been added to the framework and you should create a new migration and apply it to your database.
+In this version, a new entity called `IdentitySession` has been added to the framework and you need to add new `DbSet<IdentitySession>` to your `DbContext` class if it implements `IIdentityDbContext` interface.
+
+```csharp
+public class YourDbContext : AbpDbContext<YourDbContext>, IIdentityDbContext
+{
+    public DbSet<IdentitySession> Sessions { get; set; }
+}
+```
+
+You should also create a new migration and apply it to your database.
 
 ## Upgraded NuGet Dependencies
 
-You can see the following list of NuGet libraries that have been upgraded with this release, if you are using one of these packages explicitly, you may consider upgrading them in your solution:
+You can see the following list of NuGet libraries that have been upgraded with this release, **if you are using one of these packages explicitly**, you may consider upgrading them in your solution, especially **Microsoft.IdentityModel.*** packages:
 
 | Package                                                    | Old Version | New Version |
 | ---------------------------------------------------------- | ----------- | ----------- |

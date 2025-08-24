@@ -70,12 +70,12 @@ public static class AbpLoggerExtensions
 
     private static void LogKnownProperties(ILogger logger, Exception exception, LogLevel logLevel)
     {
-        if (exception is IHasErrorCode exceptionWithErrorCode)
+        if (exception is IHasErrorCode exceptionWithErrorCode && !exceptionWithErrorCode.Code.IsNullOrWhiteSpace())
         {
             logger.LogWithLevel(logLevel, "Code:" + exceptionWithErrorCode.Code);
         }
 
-        if (exception is IHasErrorDetails exceptionWithErrorDetails)
+        if (exception is IHasErrorDetails exceptionWithErrorDetails && !exceptionWithErrorDetails.Details.IsNullOrWhiteSpace())
         {
             logger.LogWithLevel(logLevel, "Details:" + exceptionWithErrorDetails.Details);
         }

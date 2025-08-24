@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp.EventBus.Local;
@@ -63,7 +62,7 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
         return PublishAsync(typeof(TEvent), eventData, onUnitOfWorkComplete, useOutbox);
     }
 
-    public async Task PublishAsync(
+    public virtual async Task PublishAsync(
         Type eventType,
         object eventData,
         bool onUnitOfWorkComplete = true,
@@ -86,14 +85,14 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
             }
         }
 
+        await PublishToEventBusAsync(eventType, eventData);
+
         await TriggerDistributedEventSentAsync(new DistributedEventSent()
         {
             Source = DistributedEventSource.Direct,
             EventName = EventNameAttribute.GetNameOrDefault(eventType),
             EventData = eventData
         });
-
-        await PublishToEventBusAsync(eventType, eventData);
     }
 
     public abstract Task PublishFromOutboxAsync(
@@ -118,6 +117,8 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
             return false;
         }
 
+        var addedToOutbox = false;
+
         foreach (var outboxConfig in AbpDistributedEventBusOptions.Outboxes.Values.OrderBy(x => x.Selector is null))
         {
             if (outboxConfig.Selector == null || outboxConfig.Selector(eventType))
@@ -133,16 +134,19 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
                     Serialize(eventData),
                     Clock.Now
                 );
-                if (CorrelationIdProvider.Get() != null)
+
+                var correlationId = CorrelationIdProvider.Get();
+                if (correlationId != null)
                 {
-                    outgoingEventInfo.SetCorrelationId(CorrelationIdProvider.Get()!);
+                    outgoingEventInfo.SetCorrelationId(correlationId);
                 }
+
                 await eventOutbox.EnqueueAsync(outgoingEventInfo);
-                return true;
+                addedToOutbox = true;
             }
         }
 
-        return false;
+        return addedToOutbox;
     }
 
     protected virtual Task OnAddToOutboxAsync(string eventName, Type eventType, object eventData)
@@ -161,6 +165,8 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
         {
             return false;
         }
+
+        var addToInbox = false;
 
         using (var scope = ServiceScopeFactory.CreateScope())
         {
@@ -188,11 +194,12 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
                     );
                     incomingEventInfo.SetCorrelationId(correlationId!);
                     await eventInbox.EnqueueAsync(incomingEventInfo);
+                    addToInbox = true;
                 }
             }
         }
 
-        return true;
+        return addToInbox;
     }
 
     protected abstract byte[] Serialize(object eventData);
@@ -225,9 +232,9 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
     {
         try
         {
-            await LocalEventBus.PublishAsync(distributedEvent);
+            await LocalEventBus.PublishAsync(distributedEvent, onUnitOfWorkComplete: false);
         }
-        catch (Exception _)
+        catch (Exception)
         {
             // ignored
         }
@@ -237,9 +244,9 @@ public abstract class DistributedEventBusBase : EventBusBase, IDistributedEventB
     {
         try
         {
-            await LocalEventBus.PublishAsync(distributedEvent);
+            await LocalEventBus.PublishAsync(distributedEvent, false);
         }
-        catch (Exception _)
+        catch (Exception)
         {
             // ignored
         }

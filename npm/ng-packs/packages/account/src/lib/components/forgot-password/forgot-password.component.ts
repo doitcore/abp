@@ -1,11 +1,27 @@
 import { AccountService } from '@abp/ng.account.core/proxy';
 import { Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { finalize } from 'rxjs/operators';
+import { LocalizationPipe } from '@abp/ng.core';
+import { ButtonComponent } from '@abp/ng.theme.shared';
+import { RouterModule } from '@angular/router';
+import { NgxValidateCoreModule } from '@ngx-validate/core';
 
 @Component({
   selector: 'abp-forgot-password',
   templateUrl: 'forgot-password.component.html',
+  imports: [
+    ReactiveFormsModule,
+    RouterModule,
+    LocalizationPipe,
+    ButtonComponent,
+    NgxValidateCoreModule,
+  ],
 })
 export class ForgotPasswordComponent {
   form: UntypedFormGroup;
@@ -14,7 +30,10 @@ export class ForgotPasswordComponent {
 
   isEmailSent = false;
 
-  constructor(private fb: UntypedFormBuilder, private accountService: AccountService) {
+  constructor(
+    private fb: UntypedFormBuilder,
+    private accountService: AccountService,
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });

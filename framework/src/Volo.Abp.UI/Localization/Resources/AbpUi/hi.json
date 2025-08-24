@@ -38,6 +38,7 @@
     "PagerInfoEmpty": "0 से 0 प्रविष्टियों को दिखा रहा है",
     "PagerInfoFiltered": "(_MAX_ कुल प्रविष्टियों से फ़िल्टर किया गया)",
     "NoDataAvailableInDatatable": "कोई डेटा उपलब्ध नहीं है",
+    "ErrorLoadingDatatable": "अनुरोध के दौरान एक त्रुटि हुई। विवरण के लिए संदेश देखें।",
     "Total": "संपूर्ण",
     "Selected": "चयनित",
     "PagerShowMenuEntries": "_MENU_ प्रविष्टियाँ दिखाएँ",
@@ -59,6 +60,7 @@
     "AddNew": "नया जोड़ो",
     "ProfilePicture": "प्रोफ़ाइल फोटो",
     "Theme": "विषय",
-    "NotAssigned": "सौंपा नहीं गया है"
+    "NotAssigned": "सौंपा नहीं गया है",
+    "EntityActionsDisabledTooltip": "आपके पास कोई कार्रवाई नहीं है जो करने के लिए है।"
   }
 }

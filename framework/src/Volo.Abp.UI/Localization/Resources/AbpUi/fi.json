@@ -38,6 +38,7 @@
     "PagerInfoEmpty": "Näytetään 0 - 0/0 tietueesta",
     "PagerInfoFiltered": "(suodatettu _MAX_ tietueen kokonaismäärästä)",
     "NoDataAvailableInDatatable": "Tietoja ei löydy",
+    "ErrorLoadingDatatable": "Pyynnön aikana tapahtui virhe. Tarkista viesti yksityiskohtia varten.",
     "Total": "kaikki yhteensä",
     "Selected": "valittu",
     "PagerShowMenuEntries": "Näytä _MENU_ tietueet",
@@ -59,6 +60,7 @@
     "AddNew": "Lisää uusi",
     "ProfilePicture": "Profiilikuva",
     "Theme": "Teema",
-    "NotAssigned": "Ei määritetty"
+    "NotAssigned": "Ei määritetty",
+    "EntityActionsDisabledTooltip": "Sinulla ei ole oikeutta suorittaa mitään toimintoa."
   }
 }

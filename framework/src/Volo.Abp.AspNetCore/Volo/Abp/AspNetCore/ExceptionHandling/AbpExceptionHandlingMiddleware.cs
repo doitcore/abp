@@ -58,7 +58,12 @@ public class AbpExceptionHandlingMiddleware : AbpMiddlewareBase, ITransientDepen
 
     private async Task HandleAndWrapException(HttpContext httpContext, Exception exception)
     {
-        _logger.LogException(exception);
+        var exceptionHandlingOptions = httpContext.RequestServices.GetRequiredService<IOptions<AbpExceptionHandlingOptions>>().Value;
+
+        if (exceptionHandlingOptions.ShouldLogException(exception))
+        {
+            _logger.LogException(exception);
+        }
 
         await httpContext
             .RequestServices
@@ -77,13 +82,12 @@ public class AbpExceptionHandlingMiddleware : AbpMiddlewareBase, ITransientDepen
             var errorInfoConverter = httpContext.RequestServices.GetRequiredService<IExceptionToErrorInfoConverter>();
             var statusCodeFinder = httpContext.RequestServices.GetRequiredService<IHttpExceptionStatusCodeFinder>();
             var jsonSerializer = httpContext.RequestServices.GetRequiredService<IJsonSerializer>();
-            var exceptionHandlingOptions = httpContext.RequestServices.GetRequiredService<IOptions<AbpExceptionHandlingOptions>>().Value;
 
             httpContext.Response.Clear();
             httpContext.Response.StatusCode = (int)statusCodeFinder.GetStatusCode(httpContext, exception);
             httpContext.Response.OnStarting(_clearCacheHeadersDelegate, httpContext.Response);
-            httpContext.Response.Headers.Add(AbpHttpConsts.AbpErrorFormat, "true");
-            httpContext.Response.Headers.Add("Content-Type", "application/json");
+            httpContext.Response.Headers.Append(AbpHttpConsts.AbpErrorFormat, "true");
+            httpContext.Response.Headers.Append("Content-Type", "application/json");
 
             await httpContext.Response.WriteAsync(
                 jsonSerializer.Serialize(
@@ -92,6 +96,7 @@ public class AbpExceptionHandlingMiddleware : AbpMiddlewareBase, ITransientDepen
                         {
                             options.SendExceptionsDetailsToClients = exceptionHandlingOptions.SendExceptionsDetailsToClients;
                             options.SendStackTraceToClients = exceptionHandlingOptions.SendStackTraceToClients;
+                            options.SendExceptionDataToClientTypes = exceptionHandlingOptions.SendExceptionDataToClientTypes;
                         })
                     )
                 )

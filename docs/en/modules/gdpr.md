@@ -48,7 +48,14 @@ The "Personal Data" page is used to manage personal data requests. You can view 
 
 ![gdpr](../images/gdpr-personal-data-page.png)
 
-To see the other features of the GDPR module, visit [the module description page](https://abp.io/modules/Volo.Gdpr).
+The GDPR module is designed for distributed architectures. When a user requests their personal data, the module publishes two events:
+
+- `GdprUserDataRequestedEto`: Triggers personal data collectors to prepare user data
+- `GdprUserDataDeletionRequestedEto`: Triggers personal data collectors to delete user data
+
+You can subscribe to these events to implement custom data collection and deletion logic in your modules. See the [Distributed Events](#distributed-events) section for more details.
+
+> To see the other features of the GDPR module, visit [the module description page](https://abp.io/modules/Volo.Gdpr).
 
 ## Options
 
@@ -170,45 +177,46 @@ See the [connection strings](../framework/fundamentals/connection-strings.md) do
 
 ### Installation
 
-In order to configure the application to use the `GdprModule`, you first need to import `GdprConfigModule` from `@volo/abp.ng.gdpr/config` to the root module. `GdprConfigModule` has a static `forRoot` method which you should call for a proper configuration.
+In order to configure the application to use the gdpr module, you first need to import `provideGdprConfig` from `@volo/abp.ng.gdpr/config` to the root configuration. Then, you will need to append it to the `appConfig` array.
 
 ```js
-// app.module.ts
-import { GdprConfigModule } from '@volo/abp.ng.gdpr/config';
+// app.config.ts
+import {
+  provideGdprConfig,
+  withCookieConsentOptions,
+} from '@volo/abp.ng.gdpr/config';
 
-@NgModule({
-  imports: [
-    // other imports
-    GdprConfigModule.forRoot(),
-    // other imports
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideGdprConfig(
+      withCookieConsentOptions({
+        cookiePolicyUrl: '/gdpr-cookie-consent/cookie',
+        privacyPolicyUrl: '/gdpr-cookie-consent/privacy',
+      }),
+    ),
   ],
-  // ...
-})
-export class AppModule {}
+};
 ```
 
-The `GdprModule` should be imported and lazy-loaded in your routing module. It has a static `forLazy` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.gdpr`.
+The gdpr module should be imported and lazy-loaded in your routing array. It has a static `createRoutes` method for configuration. Available options are listed below. It is available for import from `@volo/abp.ng.gdpr`.
 
 ```js
-// app-routing.module.ts
-const routes: Routes = [
+// app.routes.ts
+const APP_ROUTES: Routes = [
   // other route definitions
   {
     path: 'gdpr',
     loadChildren: () =>
-      import('@volo/abp.ng.gdpr').then(m => m.GdprModule.forLazy(/* options here */)),
+      import('@volo/abp.ng.gdpr').then(c => c.createRoutes(/* options here */)),
   },
 ];
-
-@NgModule(/* AppRoutingModule metadata */)
-export class AppRoutingModule {}
 ```
 
-> If you have generated your project via the startup template, you do not have to do anything, because it already has both `GdprConfigModule` and `GdprModule`.
+> If you have generated your project via the startup template, you do not have to do anything, because it already has both files configured.
 
 <h4 id="h-gdpr-module-options">Options</h4>
 
-You can modify the look and behavior of the module pages by passing the following options to the `GdprModule.forLazy` static method:
+You can modify the look and behavior of the module pages by passing the following options to the `createRoutes` static method:
 
 - **entityActionContributors:** Changes the grid actions. Please check [Entity Action Extensions for Angular](../framework/ui/angular/entity-action-extensions.md) for details.
 - **toolbarActionContributors:** Changes the page toolbar. Please check [Page Toolbar Extensions for Angular](../framework/ui/angular/page-toolbar-extensions.md) for details.
@@ -227,8 +235,13 @@ This [Event Transfer Object](../framework/infrastructure/event-bus/distributed#e
 
 ### GdprUserDataPreparedEto
 
-This [Event Transfer Object](../framework/infrastructure/event-bus/distributed#event-transfer-object) is used to save the collected personal data into a single JSON file by module.
+This [Event Transfer Object](../framework/infrastructure/event-bus/distributed#event-transfer-object) is used to save the collected personal data into a single JSON file per module. Typically, you don't need to implement this event handler since the module already has an implementation that returns the collected data within a zip file containing multiple JSON files, with each file containing data collected from a specific module.
 
+### GdprUserDataDeletionRequestedEto
+
+This [Event Transfer Object](../framework/infrastructure/event-bus/distributed#event-transfer-object) is published when a user requests to permanently delete their personal data and account. By default, only the `IdentityGdprEventHandler` in the [Identity Pro Module](../modules/identity-pro) subscribes to this event to anonymize the user's data and delete their account (using soft-delete unless configured otherwise).
+
+If you want to delete additional sensitive user data stored in other modules, you can subscribe to this event and implement custom deletion (or anonymization) logic in those modules.
 
 ## Cookie Consent
 
@@ -248,9 +261,11 @@ If you want to override the texts in the Cookie Consent component, you just need
 
 > Refer to the [Localization documentation](../framework/fundamentals/localization.md) for more info about defining localization resources and overriding existing localization entries that comes from pre-built modules.
 
-### Configuring the Cookie Consent
+### Configuring Cookie Consent
 
-You can add Cookie Consent to your application by configuring the `AddAbpCookieConsent` in your module class as below:
+To enable cookie consent in your application, follow these two steps:
+
+**1. Configure the service in your module class (inside the `ConfigureServices` method):**
 
 ```csharp
 context.Services.AddAbpCookieConsent(options =>
@@ -261,4 +276,23 @@ context.Services.AddAbpCookieConsent(options =>
 });
 ```
 
-After configuring the `AddAbpCookieConsent` and setting it enabled, a cookie consent text will be prepared according to the options and a cookie consent banner will be seen at the bottom of the page. Thus, the users of the application will be informed about the Cookie Policy and Privacy Policy of the company/application.
+**2. Add the middleware (`UseAbpCookieConsent`) to the request pipeline (in the `OnApplicationInitialization` method):**
+
+```diff
+public override void OnApplicationInitialization(ApplicationInitializationContenxt context)
+{
+        var app = context.GetApplicationBuilder();
+        //...
+ 
++       app.UseAbpCookieConsent();
+        app.UseCorrelationId();
+        app.UseRouting();
+        app.MapAbpStaticAssets();
+        app.UseAbpSecurityHeaders();
+        app.UseAuthentication();
+
+        //...
+}
+```
+
+Once configured, a cookie consent banner will be shown at the bottom of the page. It includes links to your _Cookie Policy_ and _Privacy Policy_, helping inform users and support GDPR compliance.

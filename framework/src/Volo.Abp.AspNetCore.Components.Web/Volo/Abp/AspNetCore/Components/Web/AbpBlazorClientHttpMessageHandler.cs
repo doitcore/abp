@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Volo.Abp.AspNetCore.Components.Progression;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Timing;
 
 namespace Volo.Abp.AspNetCore.Components.Web;
 
@@ -21,6 +22,8 @@ public class AbpBlazorClientHttpMessageHandler : DelegatingHandler, ITransientDe
 
     private readonly IUiPageProgressService _uiPageProgressService;
 
+    private readonly ICurrentTimezoneProvider _currentTimezoneProvider;
+
     private const string AntiForgeryCookieName = "XSRF-TOKEN";
 
     private const string AntiForgeryHeaderName = "RequestVerificationToken";
@@ -29,11 +32,13 @@ public class AbpBlazorClientHttpMessageHandler : DelegatingHandler, ITransientDe
         IJSRuntime jsRuntime,
         ICookieService cookieService,
         NavigationManager navigationManager,
-        IClientScopeServiceProviderAccessor clientScopeServiceProviderAccessor)
+        IClientScopeServiceProviderAccessor clientScopeServiceProviderAccessor,
+        ICurrentTimezoneProvider currentTimezoneProvider)
     {
         _jsRuntime = jsRuntime;
         _cookieService = cookieService;
         _navigationManager = navigationManager;
+        _currentTimezoneProvider = currentTimezoneProvider;
         _uiPageProgressService = clientScopeServiceProviderAccessor.ServiceProvider.GetRequiredService<IUiPageProgressService>();
     }
 
@@ -48,6 +53,7 @@ public class AbpBlazorClientHttpMessageHandler : DelegatingHandler, ITransientDe
 
             await SetLanguageAsync(request, cancellationToken);
             await SetAntiForgeryTokenAsync(request);
+            await SetTimeZoneAsync(request);
 
             return await base.SendAsync(request, cancellationToken);
         }
@@ -93,5 +99,16 @@ public class AbpBlazorClientHttpMessageHandler : DelegatingHandler, ITransientDe
         {
             request.Headers.Add(AntiForgeryHeaderName, token);
         }
+    }
+
+    private Task SetTimeZoneAsync(HttpRequestMessage request)
+    {
+        if (!_currentTimezoneProvider.TimeZone.IsNullOrWhiteSpace())
+        {
+            request.Headers.Remove(TimeZoneConsts.DefaultTimeZoneKey);
+            request.Headers.Add(TimeZoneConsts.DefaultTimeZoneKey, _currentTimezoneProvider.TimeZone);
+        }
+
+        return Task.CompletedTask;
     }
 }

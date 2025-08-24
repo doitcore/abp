@@ -7,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Volo.Abp.Content;
@@ -21,6 +20,7 @@ using Volo.Abp.Json;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Reflection;
 using Volo.Abp.Threading;
+using Volo.Abp.Timing;
 using Volo.Abp.Tracing;
 
 namespace Volo.Abp.Http.Client.ClientProxying;
@@ -34,6 +34,7 @@ public class ClientProxyBase<TService> : ITransientDependency
     protected ICorrelationIdProvider CorrelationIdProvider => LazyServiceProvider.LazyGetRequiredService<ICorrelationIdProvider>();
     protected ICurrentTenant CurrentTenant => LazyServiceProvider.LazyGetRequiredService<ICurrentTenant>();
     protected IOptions<AbpCorrelationIdOptions> AbpCorrelationIdOptions => LazyServiceProvider.LazyGetRequiredService<IOptions<AbpCorrelationIdOptions>>();
+    protected ICurrentTimezoneProvider CurrentTimezoneProvider => LazyServiceProvider.LazyGetRequiredService<ICurrentTimezoneProvider>();
     protected IProxyHttpClientFactory HttpClientFactory => LazyServiceProvider.LazyGetRequiredService<IProxyHttpClientFactory>();
     protected IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider => LazyServiceProvider.LazyGetRequiredService<IRemoteServiceConfigurationProvider>();
     protected IOptions<AbpHttpClientOptions> ClientOptions => LazyServiceProvider.LazyGetRequiredService<IOptions<AbpHttpClientOptions>>();
@@ -147,6 +148,11 @@ public class ClientProxyBase<TService> : ITransientDependency
         HttpResponseMessage response;
         try
         {
+            foreach (var preSendAction in ClientOptions.Value.ProxyHttpClientPreSendActions.Where(x => x.Key  == clientConfig.RemoteServiceName).SelectMany(x => x.Value))
+            {
+                preSendAction(clientConfig, requestContext, client);
+            }
+
             response = await client.SendAsync(
                 requestMessage,
                 HttpCompletionOption.ResponseHeadersRead /*this will buffer only the headers, the content will be used as a stream*/,
@@ -333,6 +339,12 @@ public class ClientProxyBase<TService> : ITransientDependency
 
         //X-Requested-With
         requestMessage.Headers.Add("X-Requested-With", "XMLHttpRequest");
+
+        //Timezone
+        if (!CurrentTimezoneProvider.TimeZone.IsNullOrWhiteSpace())
+        {
+            requestMessage.Headers.Add(TimeZoneConsts.DefaultTimeZoneKey, CurrentTimezoneProvider.TimeZone);
+        }
     }
 
     protected virtual StringSegment RemoveQuotes(StringSegment input)

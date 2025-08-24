@@ -1,7 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
@@ -36,7 +37,8 @@ public class ConventionalRouteBuilder : IConventionalRouteBuilder, ITransientDep
         var idParameterModel = action.Parameters.FirstOrDefault(p => p.ParameterName == "id");
         if (idParameterModel != null)
         {
-            if (TypeHelper.IsPrimitiveExtended(idParameterModel.ParameterType, includeEnums: true))
+            if (TypeHelper.IsPrimitiveExtended(idParameterModel.ParameterType, includeEnums: true)
+                || TypeDescriptor.GetConverter(idParameterModel.ParameterType).CanConvertFrom(typeof(string)))
             {
                 url += "/{id}";
             }
@@ -62,7 +64,7 @@ public class ConventionalRouteBuilder : IConventionalRouteBuilder, ITransientDep
             //Add secondary Id
             var secondaryIds = action.Parameters
                 .Where(p => p.ParameterName.EndsWith("Id", StringComparison.Ordinal)).ToList();
-            if (secondaryIds.Count == 1)
+            if (secondaryIds.Count == 1 && !secondaryIds[0].Attributes.Any(x => x is OptionalAttribute))
             {
                 url += $"/{{{NormalizeSecondaryIdNameCase(secondaryIds[0], configuration)}}}";
             }

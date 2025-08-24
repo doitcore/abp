@@ -1,6 +1,7 @@
-import { AbstractNgModelComponent } from '@abp/ng.core';
-import { Component, EventEmitter, forwardRef, Injector, Input, Output } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-form-input',
@@ -31,6 +32,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true,
     },
   ],
+  imports: [CommonModule, LocalizationPipe, FormsModule],
 })
 export class FormInputComponent extends AbstractNgModelComponent {
   @Input() inputId!: string;

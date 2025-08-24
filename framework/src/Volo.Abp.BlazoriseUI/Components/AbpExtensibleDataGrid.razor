@@ -1,7 +1,6 @@
 ﻿@typeparam TItem
 @using Blazorise.DataGrid;
 @using Volo.Abp.Data
-@using Volo.Abp.BlazoriseUI.Components.ObjectExtending
 
 <DataGrid TItem="TItem"
           Data="@Data"
@@ -23,7 +22,7 @@
     <EmptyTemplate>
         <Row Class="w-100 align-items-center" Style="height: 150px;">
             <Column>
-                <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">No data available</Heading>
+                <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@UiLocalizer["NoDataAvailableInDatatable"]</Heading>
             </Column>
         </Row>
     </EmptyTemplate>
@@ -74,7 +73,7 @@
                     {
                         @if (column.ValueConverter == null)
                         {
-                            <DataGridColumn TItem="TItem" Field="@column.Data" Caption="@column.Title" Sortable="@column.Sortable" DisplayFormat="@column.DisplayFormat" DisplayFormatProvider="@column.DisplayFormatProvider" Displayable="column.Visible" >
+                            <DataGridColumn TItem="TItem" Field="@column.Data" Width="@column.Width" Caption="@column.Title" Sortable="@column.Sortable" DisplayFormat="@column.DisplayFormat" DisplayFormatProvider="@column.DisplayFormatProvider" Displayable="column.Visible" >
                                 <DisplayTemplate>
                                     @RenderCustomTableColumnComponent(column.Component, context!)
                                 </DisplayTemplate>
@@ -82,7 +81,7 @@
                         }
                         else
                         {
-                            <DataGridColumn TItem="TItem" Field="@column.Data" Caption="@column.Title" Sortable="@column.Sortable" Displayable="column.Visible">
+                            <DataGridColumn TItem="TItem" Field="@column.Data" Width="@column.Width"  Caption="@column.Title" Sortable="@column.Sortable" Displayable="column.Visible">
                                 <DisplayTemplate>
                                     @RenderCustomTableColumnComponent(column.Component, context!)
                                 </DisplayTemplate>
@@ -97,6 +96,7 @@
                             {
                                 <DataGridColumn TItem="TItem"
                                                 Field="@column.Data"
+                                                Width="@column.Width"
                                                 Caption="@column.Title"
                                                 Sortable="@column.Sortable"
                                                 DisplayFormat="@column.DisplayFormat"
@@ -107,18 +107,19 @@
                             {
                                 <DataGridColumn TItem="TItem"
                                                 Field="@column.Data"
+                                                Width="@column.Width"
                                                 Caption="@column.Title"
                                                 Sortable="@column.Sortable"
                                                 Displayable="column.Visible">
                                     <DisplayTemplate>
-                                        @(GetConvertedFieldValue(context, column))
+                                        @((MarkupString)GetConvertedFieldValue(context, column))
                                     </DisplayTemplate>
                                 </DataGridColumn>
                             }
                         }
                         else
                         {
-                            <DataGridColumn TItem="TItem" Field="@nameof(IHasExtraProperties.ExtraProperties)" SortField="@column.PropertyName" Caption="@column.Title" Displayable="column.Visible">
+                            <DataGridColumn TItem="TItem" Field="@nameof(IHasExtraProperties.ExtraProperties)" SortField="@column.PropertyName" Width="@column.Width" Caption="@column.Title" Displayable="column.Visible" Sortable="@column.Sortable">
                                 <DisplayTemplate>
                                     @{
                                         var entity = context as IHasExtraProperties;
@@ -139,7 +140,7 @@
                                         {
                                             if (column.ValueConverter != null)
                                             {
-                                                @(GetConvertedFieldValue(context, column))
+                                                @((MarkupString)GetConvertedFieldValue(context, column))
                                             }
                                             else
                                             {

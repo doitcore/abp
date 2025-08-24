@@ -57,7 +57,10 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   chart: any;
 
-  constructor(public el: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(
+    public el: ElementRef,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngAfterViewInit() {
     import('chart.js/auto').then(module => {
@@ -101,7 +104,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
       type: this.type as any,
       data: this.data,
       options: this.options,
-      plugins: this.plugins
+      plugins: this.plugins,
     });
   };
 

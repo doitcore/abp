@@ -77,7 +77,7 @@ public class AbpExceptionFilter : IAsyncExceptionFilter, IAbpFilter, ITransientD
         {
             if (!context.HttpContext.Response.HasStarted)
             {
-                context.HttpContext.Response.Headers.Add(AbpHttpConsts.AbpErrorFormat, "true");
+                context.HttpContext.Response.Headers.Append(AbpHttpConsts.AbpErrorFormat, "true");
                 context.HttpContext.Response.StatusCode = (int)context
                     .GetRequiredService<IHttpExceptionStatusCodeFinder>()
                     .GetStatusCode(context.HttpContext, context.Exception);
@@ -102,15 +102,19 @@ public class AbpExceptionFilter : IAsyncExceptionFilter, IAbpFilter, ITransientD
         {
             options.SendExceptionsDetailsToClients = exceptionHandlingOptions.SendExceptionsDetailsToClients;
             options.SendStackTraceToClients = exceptionHandlingOptions.SendStackTraceToClients;
+            options.SendExceptionDataToClientTypes = exceptionHandlingOptions.SendExceptionDataToClientTypes;
         });
 
         var remoteServiceErrorInfoBuilder = new StringBuilder();
         remoteServiceErrorInfoBuilder.AppendLine($"---------- {nameof(RemoteServiceErrorInfo)} ----------");
         remoteServiceErrorInfoBuilder.AppendLine(context.GetRequiredService<IJsonSerializer>().Serialize(remoteServiceErrorInfo, indented: true));
 
-        var logger = context.GetService<ILogger<AbpExceptionFilter>>(NullLogger<AbpExceptionFilter>.Instance)!;
-        var logLevel = context.Exception.GetLogLevel();
-        logger.LogWithLevel(logLevel, remoteServiceErrorInfoBuilder.ToString());
-        logger.LogException(context.Exception, logLevel);
+        if(exceptionHandlingOptions.ShouldLogException(context.Exception))
+        {
+            var logger = context.GetService<ILogger<AbpExceptionFilter>>(NullLogger<AbpExceptionFilter>.Instance)!;
+            var logLevel = context.Exception.GetLogLevel();
+            logger.LogWithLevel(logLevel, remoteServiceErrorInfoBuilder.ToString());
+            logger.LogException(context.Exception, logLevel);
+        }
     }
 }

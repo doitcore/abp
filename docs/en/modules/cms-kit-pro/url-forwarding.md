@@ -37,6 +37,20 @@ You can create new forwardings or update/delete existing ones, in the admin side
 
 ![url-forwarding-page](../../images/url-forwarding-page.png)
 
+
+## Options
+
+### ShortenedUrlCacheOptions
+
+`ShortenedUrlCacheOptions` is used to configure the cache settings for the URL forwarding system. Example:
+
+```csharp
+Configure<ShortenedUrlCacheOptions>(options =>
+{
+    options.CacheAllOnStartup = true; // Cache all shortened URLs on startup
+});
+```
+
 # Internals
 
 ## Domain Layer

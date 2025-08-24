@@ -250,8 +250,21 @@ public class RebusDistributedEventBus : DistributedEventBusBase, ISingletonDepen
         OutgoingEventInfo outgoingEvent,
         OutboxConfig outboxConfig)
     {
-        var eventType = EventTypes.GetOrDefault(outgoingEvent.EventName)!;
+        var eventType = EventTypes.GetOrDefault(outgoingEvent.EventName);
+        if (eventType == null)
+        {
+            return;
+        }
+
         var eventData = Serializer.Deserialize(outgoingEvent.EventData, eventType);
+
+        var headers = new Dictionary<string, string>();
+        if (outgoingEvent.GetCorrelationId() != null)
+        {
+            headers.Add(EventBusConsts.CorrelationIdHeaderName, outgoingEvent.GetCorrelationId()!);
+        }
+
+        await PublishAsync(eventType, eventData, eventId: outgoingEvent.Id, headersArguments: headers);
 
         using (CorrelationIdProvider.Change(outgoingEvent.GetCorrelationId()))
         {
@@ -261,14 +274,6 @@ public class RebusDistributedEventBus : DistributedEventBusBase, ISingletonDepen
                 EventData = outgoingEvent.EventData
             });
         }
-
-        var headers = new Dictionary<string, string>();
-        if (outgoingEvent.GetCorrelationId() != null)
-        {
-            headers.Add(EventBusConsts.CorrelationIdHeaderName, outgoingEvent.GetCorrelationId()!);
-        }
-
-        await PublishAsync(eventType, eventData, eventId: outgoingEvent.Id, headersArguments: headers);
     }
 
     public async override Task PublishManyFromOutboxAsync(IEnumerable<OutgoingEventInfo> outgoingEvents, OutboxConfig outboxConfig)
@@ -279,6 +284,8 @@ public class RebusDistributedEventBus : DistributedEventBusBase, ISingletonDepen
         {
             foreach (var outgoingEvent in outgoingEventArray)
             {
+                await PublishFromOutboxAsync(outgoingEvent, outboxConfig);
+
                 using (CorrelationIdProvider.Change(outgoingEvent.GetCorrelationId()))
                 {
                     await TriggerDistributedEventSentAsync(new DistributedEventSent()
@@ -288,8 +295,6 @@ public class RebusDistributedEventBus : DistributedEventBusBase, ISingletonDepen
                         EventData = outgoingEvent.EventData
                     });
                 }
-
-                await PublishFromOutboxAsync(outgoingEvent, outboxConfig);
             }
 
             await scope.CompleteAsync();

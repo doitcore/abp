@@ -35,9 +35,10 @@ public class InMemoryBackgroundJobStore : IBackgroundJobStore, ISingletonDepende
         return Task.CompletedTask;
     }
 
-    public virtual Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
+    public virtual Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(string? applicationName, int maxResultCount)
     {
         var waitingJobs = _jobs.Values
+            .Where(t => t.ApplicationName == applicationName)
             .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
             .OrderByDescending(t => t.Priority)
             .ThenBy(t => t.TryCount)

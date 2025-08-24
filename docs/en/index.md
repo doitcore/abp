@@ -93,21 +93,12 @@ ABP provides a UI theming system where you can use [pre-built themes](ui-themes)
 
 ## Books
 
-### Mastering ABP Framework
+You can check the following books to expertise the ABP platform:
 
-<img width="302" height="372" src="images/abp-book.png" alt="Mastering ABP - Halil İbrahim Kalkan" />
+![books](images/books.png)
 
-*Mastering ABP Framework* is an ultimate guide to get started and expertise with the ABP Framework. It is authored by Halil İbrahim Kalkan, the creator and the lead developer of the ABP Framework.
-
-**[Click here to see the details and order the book](https://abp.io/books/mastering-abp-framework)**.
-
-### Free E-Book: Implementing Domain Driven Design
-
-<img width="441" height="331" src="images/implementing-domain-driven-design-book.png" alt="Implementing Domain Driven Design">
-
-A **practical guide** for implementing Domain Driven Design (DDD). While the implementation details are **based on the ABP** infrastructure, the basic concepts, principles and models can be applied to any solution, even if it is not a .NET solution.
-
-**[Click here to get your free copy](https://abp.io/books/implementing-domain-driven-design?ref=doc).**
+* [See the details and **order** the **Mastering ABP Framework** book](https://abp.io/books/mastering-abp-framework)
+* [**Download** your free copy of the **Implementing Domain Driven Design** book](https://abp.io/books/implementing-domain-driven-design?ref=doc)
 
 ## Samples
 

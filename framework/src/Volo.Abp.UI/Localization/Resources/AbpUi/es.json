@@ -21,7 +21,7 @@
     "Language": "Idioma",
     "LoadMore": "Cargar más",
     "ProcessingWithThreeDot": "Procesando...",
-    "LoadingWithThreeDot": "Cargardo...",
+    "LoadingWithThreeDot": "Cargando...",
     "Welcome": "Bienvenido",
     "Login": "Iniciar sesión",
     "Register": "Registrarse",
@@ -38,6 +38,7 @@
     "PagerInfoEmpty": "Mostrando de 0 a 0 de 0 entradas",
     "PagerInfoFiltered": "(filtrado desde _MAX_ entradas totales)",
     "NoDataAvailableInDatatable": "No hay datos disponibles",
+    "ErrorLoadingDatatable": "Se produjo un error durante la solicitud. Consulte el mensaje para más detalles.",
     "Total": "Total",
     "Selected": "Seleccionado",
     "PagerShowMenuEntries": "Mostrar _MENU_ registros",
@@ -59,6 +60,7 @@
     "AddNew": "Agregar nuevo",
     "ProfilePicture": "Foto de perfil",
     "Theme": "Tema",
-    "NotAssigned": "No asignado"
+    "NotAssigned": "No asignado",
+    "EntityActionsDisabledTooltip": "No tienes permisos para realizar ninguna acción."
   }
 }

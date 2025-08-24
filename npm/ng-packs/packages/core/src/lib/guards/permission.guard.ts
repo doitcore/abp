@@ -7,7 +7,7 @@ import {
 } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { filter, take, tap } from 'rxjs/operators';
 import { AuthService, IAbpGuard } from '../abstracts';
 import { findRoute, getRoutePath } from '../utils/route-utils';
 import { RoutesService, PermissionService, HttpErrorReporterService } from '../services';
@@ -32,9 +32,13 @@ export class PermissionGuard implements IAbpGuard {
       requiredPolicy = routeFound?.requiredPolicy;
     }
 
-    if (!requiredPolicy) return of(true);
+    if (!requiredPolicy) {
+      return of(true);
+    }
 
     return this.permissionService.getGrantedPolicy$(requiredPolicy).pipe(
+      filter(Boolean),
+      take(1),
       tap(access => {
         if (!access && this.authService.isAuthenticated) {
           this.httpErrorReporter.reportError({ status: 403 } as HttpErrorResponse);
@@ -61,9 +65,13 @@ export const permissionGuard: CanActivateFn = (
     requiredPolicy = routeFound?.requiredPolicy;
   }
 
-  if (!requiredPolicy) return of(true);
+  if (!requiredPolicy) {
+    return of(true);
+  }
 
   return permissionService.getGrantedPolicy$(requiredPolicy).pipe(
+    filter(Boolean),
+    take(1),
     tap(access => {
       if (!access && authService.isAuthenticated) {
         httpErrorReporter.reportError({ status: 403 } as HttpErrorResponse);

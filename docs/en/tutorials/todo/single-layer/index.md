@@ -48,8 +48,8 @@ This documentation has a video tutorial on **YouTube**!! You can watch it here:
 
 ## Pre-Requirements
 
-* An IDE (e.g. [Visual Studio](https://visualstudio.microsoft.com/vs/)) that supports [.NET 8.0+](https://dotnet.microsoft.com/download/dotnet) development.
-* [Node v18.19+](https://nodejs.org/)
+* An IDE (e.g. [Visual Studio](https://visualstudio.microsoft.com/vs/)) that supports [.NET 9.0+](https://dotnet.microsoft.com/download/dotnet) development.
+* [Node v20.11+](https://nodejs.org/)
 
 {{if DB=="Mongo"}}
 
@@ -113,22 +113,6 @@ Run the `abp install-libs` command on the root directory of your solution to ins
 abp install-libs
 ```
 
-> We suggest you install [Yarn](https://classic.yarnpkg.com/) to prevent possible package inconsistencies, if you haven't installed it yet.
-
-{{if UI=="Blazor" || UI=="BlazorServer"}}
-
-#### Bundling and Minification
-
-Run the following command in the directory of your blazor application:
-
-```bash
-abp bundle
-```
-
-> For more details about managing style and script references in Blazor or MAUI Blazor apps, see [Managing Global Scripts & Styles](../../../framework/ui/blazor/global-scripts-styles.md).
-
-{{end}}
-
 ### Run the Application
 
 {{if UI=="MVC" || UI=="BlazorServer"}}
@@ -166,7 +150,7 @@ This command takes time, but eventually runs and opens the application in your d
 
 {{end}}
 
-![todo-ui-initial](../images/todo-ui-initial.png)
+![todo-ui-initial](../images/todo-ui-initial-v2.png)
 
 You can click on the *Login* button and use `admin` as the username and `1q2w3E*` as the password to login to the application.
 
@@ -187,7 +171,7 @@ public class TodoItem : BasicAggregateRoot<Guid>
 }
 ````
 
-`BasicAggregateRoot` is the simplest base class to create root entities, and `Guid` is the primary key (`Id`) of the entity here.
+`BasicAggregateRoot` is the simplest base class to create root [entities](../../../framework/architecture/domain-driven-design/entities.md), and `Guid` is the primary key (`Id`) of the entity here.
 
 ## Database Integration
 
@@ -237,7 +221,7 @@ dotnet ef migrations add Added_TodoItem
 
 This will add a new migration class to the project. You should see the new migration in the `Migrations` folder:
 
-![todo-efcore-migration](todo-efcore-migration-single-layer.png) 
+![todo-efcore-migration](todo-efcore-migration-single-layer-v2.png) 
 
 Then, you can apply changes to the database using the following command, in the same command-line terminal:
 
@@ -323,10 +307,8 @@ public interface ITodoAppService : IApplicationService
 Create a `TodoAppService` class under the `Services` folder of {{if UI=="Blazor"}}your `TodoApp.Host` project{{else}}your project{{end}}, as shown below:
 
 ```csharp
-using TodoApp.Services;
 using TodoApp.Services.Dtos;
 using TodoApp.Entities;
-using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
 namespace TodoApp.Services;
@@ -531,7 +513,7 @@ The interesting part here is how we communicate with the server. See the *Dynami
 
 ### Index.cshtml.css
 
-As for the final touch, open the `Index.cshtml.css` file in the `Pages` folder and replace with the following content:
+As for the final touch, open the `Index.cshtml.css` file in the `Pages` folder and add the following code block at the end of the file:
 
 ````css
 #TodoList{
@@ -669,7 +651,7 @@ Open the `Index.razor` file in the `Pages` folder and replace the content with t
 
 ### Index.razor.css
 
-As the final touch, open the `Index.razor.css` file in the `Pages` folder and replace it with the following content:
+As the final touch, open the `Index.razor.css` file in the `Pages` folder and add the following code block at the end of the file:
 
 ````css
 #TodoList{
@@ -815,7 +797,7 @@ Open the `/angular/src/app/home/home.component.html` file and replace its conten
 
 ### home.component.scss
 
-As the final touch, open the `/angular/src/app/home/home.component.scss` file and replace its content with the following code block:
+As the final touch, open the `/angular/src/app/home/home.component.scss` file and add the following code block at the end of the file:
 
 ````css
 #TodoList{
@@ -852,7 +834,7 @@ Now, you can run the application again to see the result.
 
 ## Conclusion 
 
-In this tutorial, we've built a very simple application to warm up with the ABP.
+In this tutorial, we've built a very simple application to warm up with the ABP. Check the [Web Application Development Tutorial](../../book-store/part-01.md) to see a real-life web application development in a layered architecture using the [Layered Application Startup Template](../../../solution-templates/layered-web-application).
 
 ## Source Code
 
@@ -860,4 +842,4 @@ You can find the source code of the completed application [here](https://github.
 
 ## See Also
 
-* Check the [Web Application Development Tutorial](../../book-store/part-01.md) to see a real-life web application development in a layered architecture using the [Layered Application Startup Template](../../../solution-templates/layered-web-application).
+* [Web Application Development Tutorial](../../book-store/part-01.md)

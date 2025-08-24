@@ -129,12 +129,12 @@ public partial class UserManagement
 
             if (await PermissionChecker.IsGrantedAsync(IdentityPermissions.Users.ManageRoles))
             {
-                var userRoleNames = (await AppService.GetRolesAsync(entity.Id)).Items.Select(r => r.Name).ToList();
+                var userRoleIds = (await AppService.GetRolesAsync(entity.Id)).Items.Select(r => r.Id).ToList();
 
                 EditUserRoles = Roles.Select(x => new AssignedRoleViewModel
                 {
                     Name = x.Name,
-                    IsAssigned = userRoleNames.Contains(x.Name)
+                    IsAssigned = userRoleIds.Contains(x.Id)
                 }).ToArray();
 
                 ChangePasswordTextRole(TextRole.Password);
@@ -197,7 +197,7 @@ public partial class UserManagement
         return base.SetEntityActionsAsync();
     }
 
-    protected override ValueTask SetTableColumnsAsync()
+    protected override async ValueTask SetTableColumnsAsync()
     {
         UserManagementTableColumns
             .AddRange(new TableColumn[]
@@ -227,9 +227,9 @@ public partial class UserManagement
                     }
             });
 
-        UserManagementTableColumns.AddRange(GetExtensionTableColumns(IdentityModuleExtensionConsts.ModuleName,
+        UserManagementTableColumns.AddRange(await GetExtensionTableColumnsAsync(IdentityModuleExtensionConsts.ModuleName,
             IdentityModuleExtensionConsts.EntityNames.User));
-        return base.SetTableColumnsAsync();
+        await base.SetTableColumnsAsync();
     }
 
     protected override ValueTask SetToolbarItemsAsync()

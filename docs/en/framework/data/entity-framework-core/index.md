@@ -142,24 +142,27 @@ Configure<AbpDbContextOptions>(options =>
 Add actions for the `ConfigureConventions` and `OnModelCreating` methods of the `DbContext` as shown below:
 
 ````csharp
-options.DefaultConventionAction = (dbContext, builder) =>
+Configure<AbpDbContextOptions>(options =>
 {
-    // This action is called for ConfigureConventions method of all DbContexts.
-};
+    options.ConfigureDefaultConvention((dbContext, builder) =>
+    {
+        // This action is called for ConfigureConventions method of all DbContexts.
+    });
 
-options.ConfigureConventions<YourDbContext>((dbContext, builder) =>
-{
-    // This action is called for ConfigureConventions method of specific DbContext.
-});
+    options.ConfigureConventions<YourDbContext>((dbContext, builder) =>
+    {
+        // This action is called for ConfigureConventions method of specific DbContext.
+    });
 
-options.DefaultOnModelCreatingAction = (dbContext, builder) =>
-{
-    // This action is called for OnModelCreating method of all DbContexts.
-};
+    options.ConfigureDefaultOnModelCreating((dbContext, builder) =>
+    {
+        // This action is called for OnModelCreating method of all DbContexts.
+    });
 
-options.ConfigureOnModelCreating<YourDbContext>((dbContext, builder) =>
-{
-    // This action is called for OnModelCreating method of specific DbContext.
+    options.ConfigureOnModelCreating<YourDbContext>((dbContext, builder) =>
+    {
+        // This action is called for OnModelCreating method of specific DbContext.
+    });
 });
 ````
 
@@ -755,7 +758,17 @@ public static class QADbContextModelCreatingExtensions
 
 > The `Object Extension` feature need the `Change Tracking`, which means you can't use the read-only repositories for the entities that have `extension properties(MapEfCoreProperty)`, Please see the [Repositories documentation](../../architecture/domain-driven-design/repositories.md) to learn the change tracking behavior.
 
-See the "*ConfigureByConvention Method*" section above for more information.
+See the **ConfigureByConvention Method** section above for more information.
+
+### Accessing Extra Properties(Shadow Properties)
+
+Extra properties stored in separate fields in the database are known as **Shadow Properties**. These properties are not defined in the entity class, but are part of the EF Core model and can be referenced in LINQ queries using the EF.Property static method
+
+```csharp
+var query = (await GetQueryableAsync()).Where(x => EF.Property<string>(x, "Title") == "MyTitle");
+```
+
+See the [EF Core Shadow and Indexer Properties document](https://learn.microsoft.com/en-us/ef/core/modeling/shadow-properties) for more information.
 
 ## Advanced Topics
 

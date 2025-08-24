@@ -41,4 +41,12 @@ public class PageLayout : IScopedDependency, INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    
+    public void Reset()
+    {
+        Title = string.Empty;
+        MenuItemName = string.Empty;
+        BreadcrumbItems.Clear();
+        ToolbarItems.Clear();
+    }
 }

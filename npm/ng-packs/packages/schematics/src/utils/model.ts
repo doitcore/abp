@@ -33,7 +33,6 @@ export function createImportRefsToModelReducer(params: ModelGeneratorParams) {
   const reduceImportRefsToInterfaces = createImportRefToInterfaceReducerCreator(params);
   const createRefToImportReducer = createRefToImportReducerCreator(params);
   const { solution, types } = params;
-
   return (models: Model[], importRefs: string[]) => {
     const enums: string[] = [];
     const interfaces = importRefs.reduce(reduceImportRefsToInterfaces, []);
@@ -148,7 +147,12 @@ export function createImportRefToInterfaceReducerCreator(params: ModelGeneratorP
     typeDef.properties?.forEach(prop => {
       let name = prop.jsonName || camel(prop.name);
       name = shouldQuote(name) ? `'${name}'` : name;
-      const type = simplifyType(prop.typeSimple);
+
+      let type = simplifyType(prop.typeSimple);
+      if (prop.typeSimple.includes('enum')) {
+        type = simplifyType(prop.type);
+      }
+
       const refs = parseType(prop.type).reduce(
         (acc: string[], r) => acc.concat(parseGenerics(r).toGenerics()),
         [],
@@ -182,7 +186,10 @@ export function createRefToImportReducerCreator(params: ModelGeneratorParams) {
 }
 
 function isOptionalProperty(prop: PropertyDef) {
-  return prop.typeSimple.endsWith('?') || (prop.typeSimple === 'string' && !prop.isRequired);
+  return (
+    prop.typeSimple.endsWith('?') ||
+    ((prop.typeSimple === 'string' || prop.typeSimple.includes('enum')) && !prop.isRequired)
+  );
 }
 
 export function parseBaseTypeWithGenericTypes(type: string): string[] {
@@ -206,8 +213,6 @@ export function resolveAbpPackages(models: Model[]) {
     renamePropForTenant(model.interfaces);
 
     model.imports.forEach((imp, i) => {
-      fixImportNameForTenant(imp);
-
       for (const ref of imp.refs) {
         const path = VOLO_PACKAGE_PROXY_IMPORTS.get(ref);
         if (path) {
@@ -229,16 +234,6 @@ function renamePropForTenant(interfaces: Interface[]) {
       }
     }
   }
-}
-
-function fixImportNameForTenant(imp: Import) {
-  imp.specifiers.forEach((spe, index) => {
-    const isTenant = spe.toLocaleLowerCase().includes(TENANT_KEY);
-
-    if (isTenant) {
-      imp.specifiers[index] = 'Saas' + spe;
-    }
-  });
 }
 
 export function resolveSelfGenericProps(params: Partial<ModelGeneratorParams>) {

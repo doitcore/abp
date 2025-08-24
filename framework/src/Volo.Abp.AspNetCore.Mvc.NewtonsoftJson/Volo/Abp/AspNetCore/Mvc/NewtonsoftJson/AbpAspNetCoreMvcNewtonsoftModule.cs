@@ -16,7 +16,9 @@ public class AbpAspNetCoreMvcNewtonsoftModule : AbpModule
         context.Services.AddOptions<MvcNewtonsoftJsonOptions>()
             .Configure<IServiceProvider>((options, rootServiceProvider) =>
             {
-                options.SerializerSettings.ContractResolver = new AbpCamelCasePropertyNamesContractResolver(rootServiceProvider.GetRequiredService<AbpDateTimeConverter>());
+                options.SerializerSettings.ContractResolver =
+                    new AbpCamelCasePropertyNamesContractResolver(rootServiceProvider
+                        .GetRequiredService<AbpDateTimeConverter>());
             });
     }
 }

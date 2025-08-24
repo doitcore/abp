@@ -1,7 +1,8 @@
-import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng.core';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { combineLatest, Subscription, timer } from 'rxjs';
+import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-loader-bar',
@@ -13,13 +14,14 @@ import { combineLatest, Subscription, timer } from 'rxjs';
         [style.width.vw]="progressLevel"
         [ngStyle]="{
           'background-color': color,
-          'box-shadow': boxShadow
+          'box-shadow': boxShadow,
         }"
       ></div>
     </div>
   `,
   styleUrls: ['./loader-bar.component.scss'],
   providers: [SubscriptionService],
+  imports: [CommonModule],
 })
 export class LoaderBarComponent implements OnDestroy, OnInit {
   protected _isLoading!: boolean;

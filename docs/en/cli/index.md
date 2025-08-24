@@ -44,7 +44,7 @@ Here, is the list of all available commands before explaining their details:
 * **`add-package-ref`**: Adds package to given project.
 * **`install-module`**: Adds a [multi-package application module](../modules/index.md) to a given module.
 * **`install-local-module`**: Installs a local module to given module.
-* **`list-modules`**: Lists names of open-source application modules.
+* **`list-modules`**: Lists names of application modules.
 * **`list-templates`**: Lists the names of available templates to create a solution.
 * **`get-source`**: Downloads the source code of a module.
 * **`add-source-code`**: Downloads the source code and replaces package references with project references.
@@ -70,6 +70,7 @@ Here, is the list of all available commands before explaining their details:
 * **`clear-download-cache`**: Clears the templates download cache.
 * **`check-extensions`**: Checks the latest version of the ABP CLI extensions.
 * **`install-old-cli`**: Installs old ABP CLI.
+* **`generate-razor-page`**: Generates a page class that you can use it in the ASP NET Core pipeline to return an HTML page.
 
 ### help
 
@@ -155,12 +156,12 @@ For more samples, go to [ABP CLI Create Solution Samples](new-command-samples.md
         * `--tiered`: The Auth Server project comes as a separate project and runs at a different endpoint. It separates the Auth Server from the API Host application. If not specified, you will have a single endpoint in the server side. (*Available for* ***Team*** *or higher licenses*)
     * `--mobile` or `-m`: Specifies the mobile application framework. Default value is `none`. Available frameworks:
       * `none`: Without any mobile application.
-      * `react-native`: React Native.
+      * `react-native`: React Native. This mobile option is only available for active **license owners**.
       * `maui`: MAUI. This mobile option is only available for ABP. (*Available for* ***Team*** *or higher licenses*)
     * `--database-provider` or `-d`: Specifies the database provider. Default provider is `ef`. Available providers:
         * `ef`: Entity Framework Core.
         * `mongodb`: MongoDB.
-    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution).
+    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution). **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
     * `--skip-migrations` or `-sm`: Skips the creating initial database migration step.
     * `--skip-migrator` or `-smr`: Skips the run database migrator step.
     * `--public-website`: Public Website is a front-facing website for describing your project, listing your products and doing SEO for marketing purposes. Users can login and register on your website with this website. This option is only included in PRO templates.
@@ -182,7 +183,7 @@ For more samples, go to [ABP CLI Create Solution Samples](new-command-samples.md
     * `--database-provider` or `-d`: Specifies the database provider. Default provider is `ef`. Available providers:
       * `ef`: Entity Framework Core.
       * `mongodb`: MongoDB.
-    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution).
+    * `--connection-string` or `-cs`:  Overwrites the default connection strings in all `appsettings.json` files. The default connection string is `Server=localhost;Database=MyProjectName;Trusted_Connection=True` for EF Core and it is configured to use the SQL Server. If you want to use the EF Core, but need to change the DBMS, you can change it as [described here](../framework/data/entity-framework-core/other-dbms.md) (after creating the solution). **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
     * `--skip-migrations` or `-sm`: Skips the creating initial database migration step.
     * `--skip-migrator` or `-smr`: Skips the run database migrator step.
     * `--sample-crud-page` or `-scp`: It adds the [BookStore](./../tutorials/book-store/index.md) sample to your solution.
@@ -210,6 +211,7 @@ For more samples, go to [ABP CLI Create Solution Samples](new-command-samples.md
       * `leptonx`: LeptonX Theme.
       * `basic`: Basic Theme.
     * `--public-website`: Public Website is a front-facing website for describing your project, listing your products and doing SEO for marketing purposes. Users can login and register on your website with this website. This option is only included in PRO templates.
+    * `--no-grafana-dashboard` or `-ngd`: Does not add example Grafana Dashboard to the solution.
 * `--output-folder` or `-o`: Specifies the output folder. Default value is the current directory.
 * `--local-framework-ref` or `-lfr`: Uses local projects references to the ABP framework instead of using the NuGet packages. It tries to find the paths from `ide-state.json`. The file is located at `%UserProfile%\.abp\studio\ui\ide-state.json` (for Windows) and `~/.abp/studio/ui/ide-state.json` (for MAC).
 * `--create-solution-folder` or `-csf`: Specifies if the project will be in a new folder in the output folder or directly the output folder.
@@ -224,15 +226,16 @@ For more samples, go to [ABP CLI Create Solution Samples](new-command-samples.md
 * `--dont-run-bundling`: Skip bundling for Blazor packages.
 * `--no-kubernetes-configuration` or `-nkc`: Skips the Kubernetes configuration files.
 * `--no-social-logins` or `-nsl`: Skipts the social login configuration.
-* *Module Options*: You can skip some modules if you don't want to add them to your solution (*Available for* ***Team*** *or higher licenses*). Available commands:
+* `--no-tests` or `-ntp`: Does not add test projects.
+* *Module Options*: You can skip some modules if you don't want to add them to your solution, or include if you want them (*Available for* ***Team*** *or higher licenses*). Available commands:
   * `-no-saas`: Skips the Saas module.
   * `-no-gdpr`: Skips the GDPR module.
   * `-no-openiddict-admin-ui`: Skips the OpenIddict Admin UI module.
   * `-no-audit-logging`: Skips the Audit Logging module.
-  * `-no-file-management`: Skips the File Management module.
   * `-no-language-management`: Skips the Language Management module.
   * `-no-text-template-management`: Skips the Text Template Management module.
-  * `-no-chat`: Skips the Chat module.
+  * `-file-management`: Includes the File Management module.
+  * `-chat`: Includes the Chat module.
 * `--legacy`: Generates a legacy solution.
   * `trust-version`: Trusts the user's version and does not check if the version exists or not. If the template with the given version is found in the cache, it will be used, otherwise throws an exception.
 
@@ -292,7 +295,7 @@ abp new-package --name Acme.BookStore.Domain --template lib.domain
 	* `lib.ef`
 		* `--include-migrations`: Allows migration operations on this package.
 		* `--connection-string-name`: Default value is the last part of the package's namespace (or package name simply).
-		* `--connection-string`: Connection string value. Defaut value is null. You can set it alter.
+		* `--connection-string`: Connection string value. Defaut value is null. You can set it alter. **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
 	* `lib.mongodb`
 	* `lib.http-api`
 	* `lib.http-api-client`
@@ -339,6 +342,7 @@ Note that this command can upgrade your solution from a previous version, and al
 * `--solution-name` or `-sn`: Specify the solution name. Search `*.sln` files in the directory by default.
 * `--check-all`: Check the new version of each package separately. Default is `false`.
 * `--version` or `-v`: Specifies the version to use for update. If not specified, latest version is used.
+* * `--leptonx-version` or `-lv`: Specifies the LeptonX version to use for update. If not specified, latest version or the version that is compatible with `--version` argument  is used.
 
 ### clean
 
@@ -880,17 +884,13 @@ abp translate -c zh-Hans --online --deepl-auth-key <auth-key>
 
 ### login
 
-Some features of the CLI requires to be logged in to ABP Platform. To login with your username write:
+Some features of the CLI requires to be logged in to ABP Platform. The login command supports the following usage options:
 
 ```bash
-abp login <username>                                  # Allows you to enter your password hidden
-abp login <username> -p <password>                    # Specify the password as a parameter (password is visible)
-abp login <username> --organization <organization>    # If you have multiple organizations, you need set your active organization
-abp login <username> -p <password> -o <organization>  # You can enter both your password and organization in the same command
-abp login <username> --device                         # Use device login flow
+abp login                                             # Opens a default browser to log in to ABP Platform via abp.io
+abp login --device                                    # Use device login flow
+abp login username -p ****** --password               # Use user password login
 ```
-
-> When using the -p parameter, be careful as your password will be visible. It's useful for CI/CD automation pipelines.
 
 A new login with an already active session overwrites the previous session.
 
@@ -912,13 +912,15 @@ abp logout
 
 ### bundle
 
-This command generates script and style references for ABP Blazor WebAssembly and MAUI Blazor project and updates the **index.html** file. It helps developers to manage dependencies required by ABP modules easily.  In order ```bundle``` command to work, its **executing directory** or passed ```--working-directory``` parameter's directory must contain a Blazor or MAUI Blazor project file(*.csproj).
+This command generates script and style references for ABP Blazor WebAssembly and MAUI Blazor project and updates the **index.html** file. It helps developers to manage dependencies required by ABP modules easily.  In order for ```bundle``` command to work, its **executing directory** or passed ```--working-directory``` parameter's directory must contain a Blazor or MAUI Blazor project file(*.csproj).
 
 Usage:
 
 ````bash
 abp bundle [options]
 ````
+
+> This command is no longer needed if you are using Global Assets feature. See [Managing Global Scripts & Styles](../framework/ui/blazor/global-scripts-styles.md) for more information.
 
 #### Options
 
@@ -966,6 +968,118 @@ Usage:
 ```bash
 abp install-old-cli [options]
 ```
+
+### generate-razor-page
+
+`generate-razor-page` command to generate a page class and then use it in the ASP NET Core pipeline to return an HTML page.
+
+Usage:
+
+1. Create a new `Razor Page(MyPage.cshtml)` that inherits from `AbpCompilationRazorPageBase` in `Views` folder.
+2. Create a `MyPageModel` class in the same folder.
+3. Create a `MyPage.js` and `MyPage.css` files in the same folder.
+4. Add the following code to the `MyPage.cshtml`, `MyPage.css` and `MyPage.js` files.
+
+```cs
+public class MyPageModel
+{
+    public string Message { get; set; }
+
+    public MyPageModel(string message)
+    {
+        Message = message;
+    }
+}
+```
+
+```cs
+@using System.Globalization
+@using Volo.Abp.AspNetCore.RazorViews
+@inherits AbpCompilationRazorPageBase
+@{
+    Response.ContentType = "text/html; charset=utf-8";
+    Response.StatusCode = 200;
+}
+
+@functions{
+    public MyPage(MyPageModel model)
+    {
+        Model = model;
+    }
+
+    public MyPageModel Model { get; set; }
+}
+
+<html lang="@HtmlEncoder.Encode(CultureInfo.CurrentCulture.Name)">
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            <%$ include: MyPage.css %>
+        </style>
+        <title>@HtmlEncoder.Encode(Model.Message)</title>
+    </head>
+    <body>
+        <h3>@HtmlEncoder.Encode(Model.Message)</h3>
+
+        <ul class="list-group">
+            @for(int i = 0; i < 10; i++)
+            {
+                <li class="list-group-item">@i item</li>
+            }
+        </ul>
+
+        <script>
+            //<!--
+            <%$ include: MyPage.js %>
+            //-->
+        </script>
+    </body>
+</html>
+```
+
+```css
+body {
+    background-color: #65b2ff;
+    color: #495057;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+```
+
+```js
+console.log('MyPage.js loaded!');
+```
+
+5. Finally, run the `generate-razor-page` command under the `Views` folder:
+
+```bash
+> abp generate-razor-page
+
+Generating code files for pages in /MyProject/Views
+  Generating code file for page MyPage.cshtml ...
+    Inlining file MyPage.css
+    Inlining file MyPage.js
+    Done!
+1 files successfully generated.
+```
+
+The output will be like in the above command output, and `MyPage.Designer.cs` file will be created in the same folder. It's a standard C# class that you can use it in the pipeline to return an HTML page:
+
+```cs
+app.Use(async (httpContext, next) =>
+{
+    if (true) // Your condition
+    {
+        var page = new MyPage(new MyPageModel("Test message"));
+        await page.ExecuteAsync(httpContext);
+    }
+    else
+    {
+        await next();
+    }
+});
+```
+
+![Razor Page](./../images/abp-generate-razor-page.png)
 
 #### Options
 

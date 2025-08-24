@@ -123,6 +123,25 @@ if (await context.IsGrantedAsync("MyPermissionName"))
 
 > You can use `context.AuthorizationService` to directly access to the `IAuthorizationService`.
 
+
+### Custom Components
+
+Custom components can be used to render the menu items instead of the default components of the theme. The extension method named `UseComponent` from `Volo.Abp.UI.Navigation` namespace can be used to set a custom component for a menu item.
+
+**Example: Set a custom component for a menu item**
+
+```csharp
+context.Menu.Items.Add(
+    new ApplicationMenuItem("MyProject.Crm.About", "About", "/about")
+        .UseComponent<AboutMenuItemComponent>()
+        );
+```
+
+_AboutMenuItemComponent.razor component will be renderd for the menu item._
+
+
+
+
 ### Resolving Dependencies
 
 `context.ServiceProvider` can be used to resolve any service dependency.

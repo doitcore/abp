@@ -1,5 +1,7 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   inject,
@@ -12,24 +14,22 @@ import {
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { AsyncPipe, formatDate, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, filter, map } from 'rxjs';
 
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
 
 import {
   ABP,
   ConfigStateService,
-  getShortDateFormat,
-  getShortDateShortTimeFormat,
-  getShortTimeFormat,
   ListService,
   LocalizationModule,
   PermissionDirective,
   PermissionService,
+  TimezoneService,
+  UtcToLocalPipe,
 } from '@abp/ng.core';
 import {
   AbpVisibleDirective,
@@ -46,6 +46,7 @@ import {
   ENTITY_PROP_TYPE_CLASSES,
   EXTENSIONS_IDENTIFIER,
   PROP_DATA_STREAM,
+  ROW_RECORD,
 } from '../../tokens/extensions.token';
 import { GridActionsComponent } from '../grid-actions/grid-actions.component';
 
@@ -54,7 +55,6 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
 @Component({
   exportAs: 'abpExtensibleTable',
   selector: 'abp-extensible-table',
-  standalone: true,
   imports: [
     AbpVisibleDirective,
     NgxDatatableModule,
@@ -64,6 +64,7 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
     NgxDatatableListDirective,
     PermissionDirective,
     LocalizationModule,
+    UtcToLocalPipe,
     AsyncPipe,
     NgTemplateOutlet,
     NgComponentOutlet,
@@ -71,7 +72,16 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
   templateUrl: './extensible-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExtensibleTableComponent<R = any> implements OnChanges {
+export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit {
+  readonly #injector = inject(Injector);
+  readonly getInjected = this.#injector.get.bind(this.#injector);
+  protected readonly cdr = inject(ChangeDetectorRef);
+  protected readonly locale = inject(LOCALE_ID);
+  protected readonly config = inject(ConfigStateService);
+  protected readonly timeZoneService = inject(TimezoneService);
+  protected readonly entityPropTypeClasses = inject(ENTITY_PROP_TYPE_CLASSES);
+  protected readonly permissionService = inject(PermissionService);
+
   protected _actionsText!: string;
   @Input()
   set actionsText(value: string) {
@@ -79,7 +89,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges {
   }
 
   get actionsText(): string {
-    return this._actionsText ?? (this.actionList.length > 1 ? 'AbpUi::Actions' : '');
+    return this._actionsText ?? (this.actionList.length >= 1 ? 'AbpUi::Actions' : '');
   }
 
   @Input() data!: R[];
@@ -94,6 +104,17 @@ export class ExtensibleTableComponent<R = any> implements OnChanges {
 
   @Output() tableActivate = new EventEmitter();
 
+  @Input() selectable = false;
+
+  @Input() set selectionType(value: SelectionType | string) {
+    this._selectionType = typeof value === 'string' ? SelectionType[value] : value;
+  }
+  _selectionType: SelectionType = SelectionType.multiClick;
+  
+  
+  @Input() selected: any[] = [];
+  @Output() selectionChange = new EventEmitter<any[]>();
+
   hasAtLeastOnePermittedAction: boolean;
 
   readonly columnWidths!: number[];
@@ -103,13 +124,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges {
   readonly actionList: EntityActionList<R>;
 
   readonly trackByFn: TrackByFunction<EntityProp<R>> = (_, item) => item.name;
-
-  locale = inject(LOCALE_ID);
-  private config = inject(ConfigStateService);
-  entityPropTypeClasses = inject(ENTITY_PROP_TYPE_CLASSES);
-  #injector = inject(Injector);
-  getInjected = this.#injector.get.bind(this.#injector);
-  permissionService = this.#injector.get(PermissionService);
 
   constructor() {
     const extensions = this.#injector.get(ExtensionsService);
@@ -133,10 +147,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges {
     (this.columnWidths as any) = widths;
   }
 
-  private getDate(value: Date | undefined, format: string | undefined) {
-    return value && format ? formatDate(value, format, this.locale) : '';
-  }
-
   private getIcon(value: boolean) {
     return value
       ? '<div class="text-success"><i class="fa fa-check" aria-hidden="true"></i></div>'
@@ -155,12 +165,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges {
         switch (prop.type) {
           case ePropType.Boolean:
             return this.getIcon(value);
-          case ePropType.Date:
-            return this.getDate(value, getShortDateFormat(this.config));
-          case ePropType.Time:
-            return this.getDate(value, getShortTimeFormat(this.config));
-          case ePropType.DateTime:
-            return this.getDate(value, getShortDateShortTimeFormat(this.config));
           case ePropType.Enum:
             return this.getEnum(value, prop.enumList || []);
           default:
@@ -195,6 +199,10 @@ export class ExtensibleTableComponent<R = any> implements OnChanges {
                 provide: PROP_DATA_STREAM,
                 useValue: value,
               },
+              {
+                provide: ROW_RECORD,
+                useValue: record,
+              },
             ],
             parent: this.#injector,
           });
@@ -226,5 +234,18 @@ export class ExtensibleTableComponent<R = any> implements OnChanges {
     });
 
     return visibleActions.length > 0;
+  }
+
+  onSelect({ selected }) {
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
+    this.selectionChange.emit(selected);
+  }
+
+  ngAfterViewInit(): void {
+    this.list?.requestStatus$?.pipe(filter(status => status === 'loading')).subscribe(() => {
+        this.data = [];
+        this.cdr.markForCheck();
+      });
   }
 }

@@ -14,17 +14,18 @@ import {
   DestroyRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 import { fromEvent, Subject } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
-import { LocalizationParam } from '@abp/ng.core';
+import { LocalizationParam, LocalizationPipe } from '@abp/ng.core';
 import { ErrorScreenErrorCodes } from '../../models';
 
 @Component({
   selector: 'abp-http-error-wrapper',
   templateUrl: './http-error-wrapper.component.html',
   styleUrls: ['http-error-wrapper.component.scss'],
+  imports: [CommonModule, LocalizationPipe],
 })
 export class HttpErrorWrapperComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly destroyRef = inject(DestroyRef);
@@ -72,7 +73,7 @@ export class HttpErrorWrapperComponent implements OnInit, AfterViewInit, OnDestr
       });
 
       customComponentRef.instance.errorStatus = this.status;
-      
+
       //In our custom "HttpErrorComponent", we have a "status" property.
       //We used to have "errorStatus", but it wasn't signal type. "status" variable is signal type.
       //I've checked because of backward compatibility. Developers might have their own custom HttpErrorComponent.
@@ -80,7 +81,7 @@ export class HttpErrorWrapperComponent implements OnInit, AfterViewInit, OnDestr
       if (customComponentRef.instance.status) {
         customComponentRef.instance.status.set(this.status);
       }
-      
+
       customComponentRef.instance.destroy$ = this.destroy$;
 
       this.appRef.attachView(customComponentRef.hostView);

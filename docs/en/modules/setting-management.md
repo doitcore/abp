@@ -118,11 +118,15 @@ The order of the providers are important. Providers are executed in the reverse 
 
 ## Setting Management UI
 
-Setting Mangement module provided the email setting UI by default.
+Setting Mangement module provided the Email setting, Feature management and Timezone setting UI by default.
 
 ![EmailSettingUi](../images/setting-management-email-ui.png)
 
 > You can click the Send test email button to send a test email to check your email settings.
+
+![FeatureManagementUi](../images/setting-management-feature-management-ui.png)
+
+![TimeZoneSettingUi](../images/setting-management-time-zone-ui.png)
 
 Setting it is extensible; You can add your tabs to this page for your application settings.
 

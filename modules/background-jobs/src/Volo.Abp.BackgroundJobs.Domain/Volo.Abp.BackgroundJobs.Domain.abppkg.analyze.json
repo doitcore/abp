@@ -134,6 +134,11 @@
       "properties": [
         {
           "type": "System.String",
+          "name": "ApplicationName",
+          "summary": "Application name that scheduled this job."
+        },
+        {
+          "type": "System.String",
           "name": "JobName",
           "summary": "Type of the job.\r\n            It's AssemblyQualifiedName of job type."
         },
@@ -230,6 +235,11 @@
           "isPrivate": false,
           "isStatic": false,
           "parameters": [
+            {
+              "type": "String",
+              "name": "applicationName",
+              "isOptional": false
+            },
             {
               "type": "Int32",
               "name": "maxResultCount",

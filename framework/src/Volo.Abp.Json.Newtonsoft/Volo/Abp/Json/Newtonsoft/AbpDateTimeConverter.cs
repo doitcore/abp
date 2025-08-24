@@ -19,11 +19,18 @@ public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
     private readonly CultureInfo _culture = CultureInfo.InvariantCulture;
     private readonly IClock _clock;
     private readonly AbpJsonOptions _options;
+    private bool _skipDateTimeNormalization;
 
     public AbpDateTimeConverter(IClock clock, IOptions<AbpJsonOptions> options)
     {
         _clock = clock;
         _options = options.Value;
+    }
+
+    public virtual AbpDateTimeConverter SkipDateTimeNormalization()
+    {
+        _skipDateTimeNormalization = true;
+        return this;
     }
 
     public override bool CanConvert(Type objectType)
@@ -46,7 +53,7 @@ public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
 
         if (reader.TokenType == JsonToken.Date)
         {
-            return _clock.Normalize(reader.Value!.To<DateTime>());
+            return Normalize(reader.Value!.To<DateTime>());
         }
 
         if (reader.TokenType != JsonToken.String)
@@ -67,20 +74,20 @@ public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
             {
                 if (DateTime.TryParseExact(dateText, format, _culture, _dateTimeStyles, out var d1))
                 {
-                    return _clock.Normalize(d1);
+                    return Normalize(d1);
                 }
             }
         }
 
         var date = DateTime.Parse(dateText!, _culture, _dateTimeStyles);
-        return _clock.Normalize(date);
+        return Normalize(date);
     }
 
     public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         if (value != null)
         {
-            value = _clock.Normalize(value.To<DateTime>());
+            value = Normalize(value.To<DateTime>());
         }
 
         if (value is DateTime dateTime)
@@ -110,5 +117,12 @@ public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
         }
 
         return ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableDateTimeNormalizationAttribute>(member) == null;
+    }
+
+    protected virtual DateTime Normalize(DateTime dateTime)
+    {
+        return _skipDateTimeNormalization
+            ? dateTime
+            : _clock.Normalize(dateTime);
     }
 }

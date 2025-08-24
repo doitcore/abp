@@ -107,6 +107,31 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         return result;
     }
 
+    /// <summary>
+    /// This is to call the protection method ValidateUserAsync
+    /// Should return <see cref="IdentityResult.Success"/> if validation is successful. This is
+    /// called before saving the user via Create or Update.
+    /// </summary>
+    /// <param name="user">The user</param>
+    /// <returns>A <see cref="IdentityResult"/> representing whether validation was successful.</returns>
+    public virtual async Task<IdentityResult> CallValidateUserAsync(IdentityUser user)
+    {
+        return await base.ValidateUserAsync(user);
+    }
+
+    /// <summary>
+    /// This is to call the protection method ValidatePasswordAsync
+    /// Should return <see cref="IdentityResult.Success"/> if validation is successful. This is
+    /// called before updating the password hash.
+    /// </summary>
+    /// <param name="user">The user.</param>
+    /// <param name="password">The password.</param>
+    /// <returns>A <see cref="IdentityResult"/> representing whether validation was successful.</returns>
+    public virtual async Task<IdentityResult> CallValidatePasswordAsync(IdentityUser user, string password)
+    {
+        return await base.ValidatePasswordAsync(user, password);
+    }
+
     public virtual async Task<IdentityUser> GetByIdAsync(Guid id)
     {
         var user = await Store.FindByIdAsync(id.ToString(), CancellationToken);
@@ -395,14 +420,14 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         var sourceOrganization = await OrganizationUnitRepository.GetAsync(sourceOrganizationId, cancellationToken: CancellationToken);
 
         Logger.LogDebug($"Remove dynamic claims cache for users of organization: {sourceOrganizationId}");
-        var userIdList = await OrganizationUnitRepository.GetMemberIdsAsync(sourceOrganizationId, cancellationToken: CancellationToken);
+        var userIdList = await OrganizationUnitRepository.GetMemberIdsAsync(sourceOrganizationId, includeChildren: true, cancellationToken: CancellationToken);
         await DynamicClaimCache.RemoveManyAsync(userIdList.Select(userId => AbpDynamicClaimCacheItem.CalculateCacheKey(userId, sourceOrganization.TenantId)), token: CancellationToken);
 
         var targetOrganization = targetOrganizationId.HasValue ? await OrganizationUnitRepository.GetAsync(targetOrganizationId.Value, cancellationToken: CancellationToken) : null;
         if (targetOrganization != null)
         {
             Logger.LogDebug($"Remove dynamic claims cache for users of organization: {targetOrganizationId}");
-            userIdList = await OrganizationUnitRepository.GetMemberIdsAsync(targetOrganizationId.Value, cancellationToken: CancellationToken);
+            userIdList = await OrganizationUnitRepository.GetMemberIdsAsync(targetOrganizationId.Value, includeChildren: true, cancellationToken: CancellationToken);
             await DynamicClaimCache.RemoveManyAsync(userIdList.Select(userId => AbpDynamicClaimCacheItem.CalculateCacheKey(userId, targetOrganization.TenantId)), token: CancellationToken);
         }
 

@@ -1,4 +1,5 @@
 import { Component, HostBinding, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'abp-card-footer',
@@ -8,6 +9,7 @@ import { Component, HostBinding, Input } from '@angular/core';
     </div>
   `,
   styles: [],
+  imports: [CommonModule],
 })
 export class CardFooterComponent {
   @HostBinding('class') componentClass = 'card-footer';

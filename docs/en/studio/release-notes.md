@@ -2,6 +2,201 @@
 
 This document contains **brief release notes** for each ABP Studio release. Release notes only include **major features** and **visible enhancements**. Therefore, they don't include all the development done in the related version. 
 
+## 1.2.1 (2025-08-14)
+
+* Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.3.1`)
+* Migrated templates to standalone structure for Angular UI.
+* Allowed relating tools with Kubernetes Services (allows to browse tools dashboard those are running in k8s).
+* Made several enhancements for Solution Runner.
+* Added test projects to **Application (Single Layer)** template (optional).
+
+
+## 1.1.2 (2025-07-31)
+
+* Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.2.3`)
+* Configured LeptonX Lite logos in the templates.
+* Added browser tab memory feature to remember previously selected tabs.
+* Enhanced tools section with default credentials display for first-time tool usage.
+* Improved module and package loading with better error handling.
+
+## 1.1.1 (2025-07-22)
+
+* Enhanced tools section with clear cookies option.
+* Fixed language management module name display for imported modules.
+* Improved update window messaging with "Skip this version" option.
+* Fixed Docker Compose file issues in microservice template.
+* Resolved RabbitMQ tool cookie problems.
+
+## 1.1.0 (2025-07-16)
+
+* Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.2.2`)
+* Enhanced UI scaling for all windows and improved user experience.
+* Added tools section in solution runner main area with basic Grafana dashboard for microservice template.
+* Improved container management during application building.
+* Enhanced background task exception handling.
+* Added public account module package reference to Blazor WebApp client.
+* Fixed tenant database context updating errors.
+* Improved optional module selection UI with better documentation integration.
+
+## 1.0.2 (2025-06-24)
+
+* Enhanced the ABP NuGet package installation experience.
+* Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.2.1`)
+* Replaced the `System.Data` package with `Microsoft.Data`.
+* Fixed a dynamic-env file path configuration issue in Angular templates.
+* Disabled Pushed Authorization for MAUI applications.
+* Improved the IDE experience by displaying the main project in a dedicated 'main' folder and hiding `.abppkg` files.
+
+## 1.0.1 (2025-06-13)
+
+* Fixed an issue with language selection during solution creation.
+* Resolved a logo visibility problem in the Angular semi-dark theme.
+* Added and corrected the handling of CEF (Chromium Embedded Framework) resources for the Windows version. 
+
+## 1.0.0 (2025-06-11)
+
+* **Solution Runner with Health Checks:** ABP Studio's Solution Runner now provides visual health monitoring that makes tracking your applications' status easily.
+* **Improved Multi-DbContext Migration Handling:** ABP Studio now prompts you to select the correct DbContext for migration operations when working with multiple DbContexts.
+* **Theme Style Selection on Project Creation:** When creating a new solution, you can now choose your theme, theme style, and layout right from the project creation wizard instead of having to configure these settings later.
+* **Solution & Module Creation:** Introduced major enhancements, including language selection, database provider choice for microservices, improved folder handling, theme visualization, and better module installation recommendations.
+* **MAUI & Blazor:** Configured the new MAUI/Blazor bundling system, added dashboard pages to MAUI projects, and applied various fixes for themes and dependencies.
+* **Solution Runner & Docker:** Added Docker container support to the solution runner, enabling users to add and manage containers within run profiles.
+* **Authentication & Authorization:** Fixed Swagger authentication, and added dynamic claims support for microservices.
+* **ABP Studio Login:** Improved login flows with selecting account and organization support.
+* **Language Selection:** Added language selection during solution creation. You can now include only the languages you need in your project.
+* **Performance:** Sped up the development cycle by skipping package restores during project runs when no dependencies have changed.
+* **Dependency Updates:** Upgraded ABP Framework, LeptonX, and other Microsoft dependencies to the latest versions. (targeting ABP `9.2.0`)
+* **User Experience:** Implemented several UI/UX improvements, such as remembering user choices in wizards and sorting items alphabetically.
+* **Testing & Internals:** Switched to `MongoSandbox` for integration tests, improved local development against abp.io websites, and made various fixes to CI/CD workflows.
+
+## 0.9.26 (2025-04-30)
+
+* Fixed the issue where C# applications would not stop when requested.  
+* Added idle session timeout feature to Blazor WebAssembly applications.  
+* Added “Setup as a modular solution” option to application startup templates.  
+* Automatically added remote service base URL after generating C# proxies.
+* Configured Helm charts for Kubernetes health check endpoints.  
+* Fixed auditing issue in Blazor WebAssembly applications.  
+* Fixed login error after registering a new user in Blazor WebApp.  
+* Implemented password login flow in Studio CLI.  
+* Supported non-root user mode in Docker Compose configurations.
+* Upgraded templates to version `9.1.1`.
+
+## 0.9.25 (2025-03-12)
+
+* Added ready/health check for solution runner.
+
+## 0.9.24 (2025-03-11)
+
+* Added automatic installation of necessary dependencies.
+* Added user feedback collection after the first week of application usage.
+* Added ability to add business services while creating a new microservice solution.
+* Fixed database migration issue during module installation.
+* Fixed angular ESLint dependency issue.
+* Upgraded templates to version `9.1.0`.
+
+## 0.9.23 (2025-02-04)
+
+* Fixed **Open with Terminal** option not working on macOS.
+* Fixed dynamic port assignment for Abp Suite if the default port is unavailable.
+* Added suite templates package to module templates.
+* Added warning message in CLI if the connection string is broken.
+
+## 0.9.22 (2025-01-22)
+
+* Allowed to display multiple installation notes.
+* Showed **Inner Exceptions** in the Solution Runner side-panel
+* Hidden logs when no selected application is present.
+* Added full docker compose to template.
+* Zipped microservice module template for better structuring the solution.
+* Upgraded templates to version `9.0.4`.
+
+## 0.9.21 (2025-01-09)
+
+* Showed a db test connection message while testing the database connection.
+* Fixed books sample's application service.
+
+## 0.9.20 (2025-01-08)
+
+* Upgraded templates to version `9.0.3`.
+* Fixed Invariant Culture problem in source code downloading.
+* Added missing linux support to OldCliInstaller
+* Increased database test connection timeout up to 10seconds.
+
+## 0.9.19 (2025-01-02)
+
+* Disabled auto-scroll when scrolled up in the logging section.
+* Added localhost development certificate check during solution load.
+* Added testing connection string in project creation.
+* Made enhancements for exception handling.
+
+## 0.9.18 (2024-12-24)
+
+* Fixed Blazor WebApp Kubernetes problems.
+* Added Visual Studio & Rider options to solution root.
+* Fixed problems in blazor-server nolayers template.
+
+## 0.9.17 (2024-12-17)
+
+* Added social login option to the "No Layers" Blazor WebAssembly template.
+* Fixed AutoMapper missing configuration exception problem during module import.
+* Fixed Blazor WebAssembly build issue for the MAUI template.
+* Fixed a problem that prevented ABP Studio from opening on macOS.
+
+## 0.9.16 (2024-12-11)
+
+> This version does not work for macOS, we are currently working on that manner.
+
+* Added a new command for refreshing the previously runned C#/Js Proxies.
+* Added kubernetes configurations to Blazor WebApp for Microservice Template.
+* Handled multiple dbcontexts for ef core migration operations.
+* Made enhancements for dynamic localization feature in Microservice Template.
+* Upgraded LeptonX Theme package versions to `4.0.2`.
+
+## 0.9.15 (2024-12-05)
+
+* Upgraded templates to version `9.0.1`.
+* Fixed problems in the microservice service_nolayers template.
+* Fixed microservice angular template for wrong file-management module reference.
+* Fixed added extra lines in the hosts.txt file.
+
+## 0.9.14 (2024-12-03)
+
+* Refactored `dotnet watch` command in solution runner.
+* Added multi-tenancy option for open source startup templates.
+* Implemented adding angular library when a new microservice is created.
+* Adjusted *Optional Modules* section in solution configurations
+* Fixed bugs in the nolayers host project.
+
+## 0.9.13 (2024-11-25)
+
+* Angular - Theme-based Fixes for the Home Page.
+
+## 0.9.12 (2024-11-25)
+
+* Handled the `DynamicPermissionDefinitionsChangedEto` event to automatically add permissions for the admin role.
+* Enhanced the Solution Configuration window with a more intuitive design and updated content.
+* Improved MAUI application support by displaying all target frameworks in the Solution Runner and automatically setting the appropriate targetFramework based on the operating system.
+
+## 0.9.11 (2024-11-21)
+
+* Fixed the extension loading problem occured in v0.9.9 & v0.9.10.
+
+## 0.9.10 (2024-11-21)
+
+> Recommended to use v0.9.11+ for .NET 9.
+
+* Added shortcut for Build & Start operation (CTRL + Click)
+* Fixed extension loading loop problem in v0.9.9
+* Fixed MAUI template for android
+
+## 0.9.9 (2024-11-21)
+
+> Recommended to use v0.9.11+ for .NET 9.
+
+* Upgraded templates to .NET 9
+* Fixed blazor wasm bundle problem in microservice template
+
 ## 0.9.8 (2024-11-20)
 
 * Upgraded templates to version `8.3.4`

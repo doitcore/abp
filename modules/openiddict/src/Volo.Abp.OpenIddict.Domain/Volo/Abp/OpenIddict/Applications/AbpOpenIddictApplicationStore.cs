@@ -51,8 +51,6 @@ public class AbpOpenIddictApplicationStore : AbpOpenIddictStoreBase<IOpenIddictA
         Check.NotNull(application, nameof(application));
 
         await Repository.InsertAsync(application.ToEntity(), autoSave: true, cancellationToken: cancellationToken);
-
-        application = (await Repository.FindAsync(application.Id, cancellationToken: cancellationToken)).ToModel();
     }
 
     public virtual async ValueTask DeleteAsync(OpenIddictApplicationModel application, CancellationToken cancellationToken)
@@ -635,8 +633,6 @@ public class AbpOpenIddictApplicationStore : AbpOpenIddictStoreBase<IOpenIddictA
             await ConcurrencyExceptionHandler.HandleAsync(e);
             throw new OpenIddictExceptions.ConcurrencyException(e.Message, e.InnerException);
         }
-
-        application = (await Repository.FindAsync(entity.Id, cancellationToken: cancellationToken)).ToModel();
     }
 
     public virtual ValueTask<string> GetClientUriAsync(OpenIddictApplicationModel application, CancellationToken cancellationToken = default)

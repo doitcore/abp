@@ -24,6 +24,8 @@ To add a new microservice to the solution, you can use the `service_nolayers` te
 
 In ABP Studio [Solution Explorer](../../studio/solution-explorer.md#adding-a-new-microservice-module), right-click on the `services` folder and select `Add` -> `New Module` -> `Microservice`.
 
+You can also add microservices during the project creation process by using the Additional Services screen. For more details, refer to the [Additional Services](../../get-started/microservice.md) section.
+
 ![new-microservice](images/new-microservice.png)
 
 It opens the `Create New Module` dialog. Enter the name of the new microservice, specify the output directory if needed, and click the `Next` button. There is a naming convention: the *Module name* should include the solution name as a prefix, and the use of the dot (.) character in the *Module name* is not allowed.

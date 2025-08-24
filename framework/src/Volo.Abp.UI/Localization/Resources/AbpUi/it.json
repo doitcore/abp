@@ -38,6 +38,7 @@
     "PagerInfoEmpty": "Risultati da 0 a 0 di 0 elementi",
     "PagerInfoFiltered": "(filtrati da _MAX_ elementi totali)",
     "NoDataAvailableInDatatable": "Nessun dato disponibile",
+    "ErrorLoadingDatatable": "Si è verificato un errore durante la richiesta. Controlla il messaggio per i dettagli.",
     "Total": "Totale",
     "Selected": "Selezionato",
     "PagerShowMenuEntries": "Righe per pagina _MENU_",
@@ -59,6 +60,7 @@
     "AddNew": "Aggiungere nuova",
     "ProfilePicture": "Immagine del profilo",
     "Theme": "Tema",
-    "NotAssigned": "Non assegnato"
+    "NotAssigned": "Non assegnato",
+    "EntityActionsDisabledTooltip": "Non hai i permessi per eseguire alcuna azione."
   }
 }

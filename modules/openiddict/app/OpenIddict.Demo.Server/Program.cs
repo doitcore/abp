@@ -8,7 +8,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-            builder.WithOrigins("http://localhost:4200", "https://localhost:44304")
+            builder.WithOrigins("http://localhost:4200", "https://localhost:44303", "https://localhost:44304")
                 .SetIsOriginAllowedToAllowWildcardSubdomains()
                 .AllowAnyHeader()
                 .AllowAnyMethod()
@@ -47,7 +47,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.MapAbpStaticAssets();
 app.UseRouting();
 app.UseCors();
 app.UseAuthentication();

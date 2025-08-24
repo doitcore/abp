@@ -823,6 +823,23 @@
               "isOptional": false
             }
           ]
+        },
+        {
+          "returnType": "Void",
+          "namespace": "Volo.CmsKit.Pages",
+          "name": "SetLayoutName",
+          "summary": null,
+          "isAsync": false,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "String",
+              "name": "layoutName",
+              "isOptional": false
+            }
+          ]
         }
       ],
       "collectionProperties": {},
@@ -868,6 +885,11 @@
         {
           "type": "System.Int32",
           "name": "EntityVersion",
+          "summary": null
+        },
+        {
+          "type": "System.String",
+          "name": "LayoutName",
           "summary": null
         }
       ],
@@ -1062,6 +1084,11 @@
         {
           "type": "System.Nullable`1[System.Guid]",
           "name": "TenantId",
+          "summary": null
+        },
+        {
+          "type": "System.String",
+          "name": "RequiredPermissionName",
           "summary": null
         }
       ],
@@ -2110,6 +2137,23 @@
         {
           "returnType": "Void",
           "namespace": "Volo.CmsKit.Blogs",
+          "name": "SetBlogId",
+          "summary": null,
+          "isAsync": false,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "Guid",
+              "name": "blogId",
+              "isOptional": false
+            }
+          ]
+        },
+        {
+          "returnType": "Void",
+          "namespace": "Volo.CmsKit.Blogs",
           "name": "SetShortDescription",
           "summary": null,
           "isAsync": false,
@@ -2768,6 +2812,11 @@
               "type": "String",
               "name": "style",
               "isOptional": true
+            },
+            {
+              "type": "String",
+              "name": "layoutName",
+              "isOptional": true
             }
           ]
         },
@@ -3054,6 +3103,38 @@
               "type": "String",
               "name": "entityId",
               "isOptional": false
+            }
+          ]
+        },
+        {
+          "returnType": "List<String>",
+          "namespace": "Volo.CmsKit.MarkedItems",
+          "name": "GetEntityIdsFilteredByUserAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "Guid",
+              "name": "userId",
+              "isOptional": false
+            },
+            {
+              "type": "String",
+              "name": "entityType",
+              "isOptional": false
+            },
+            {
+              "type": "Nullable<Guid>",
+              "name": "tenantId",
+              "isOptional": true
+            },
+            {
+              "type": "CancellationToken",
+              "name": "cancellationToken",
+              "isOptional": true
             }
           ]
         }
@@ -3502,6 +3583,23 @@
             {
               "type": "String",
               "name": "newSlug",
+              "isOptional": false
+            }
+          ]
+        },
+        {
+          "returnType": "Void",
+          "namespace": "Volo.CmsKit.Blogs",
+          "name": "DeleteAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "Guid",
+              "name": "blogId",
               "isOptional": false
             }
           ]
@@ -4999,6 +5097,33 @@
               "isOptional": true
             }
           ]
+        },
+        {
+          "returnType": "Void",
+          "namespace": "Volo.CmsKit.Comments",
+          "name": "DeleteByEntityTypeAndIdAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "String",
+              "name": "entityType",
+              "isOptional": false
+            },
+            {
+              "type": "String",
+              "name": "entityId",
+              "isOptional": false
+            },
+            {
+              "type": "CancellationToken",
+              "name": "cancellationToken",
+              "isOptional": true
+            }
+          ]
         }
       ],
       "contentType": "repositoryInterface",
@@ -5203,6 +5328,11 @@
               "isOptional": true
             },
             {
+              "type": "Nullable<Guid>",
+              "name": "favoriteUserId",
+              "isOptional": true
+            },
+            {
               "type": "Nullable<BlogPostStatus>",
               "name": "statusFilter",
               "isOptional": true
@@ -5242,6 +5372,11 @@
             {
               "type": "Nullable<Guid>",
               "name": "tagId",
+              "isOptional": true
+            },
+            {
+              "type": "Nullable<Guid>",
+              "name": "favoriteUserId",
               "isOptional": true
             },
             {
@@ -5422,6 +5557,55 @@
               "isOptional": true
             }
           ]
+        },
+        {
+          "returnType": "Void",
+          "namespace": "Volo.CmsKit.Blogs",
+          "name": "UpdateBlogAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "Guid",
+              "name": "sourceBlogId",
+              "isOptional": false
+            },
+            {
+              "type": "Nullable<Guid>",
+              "name": "targetBlogId",
+              "isOptional": true
+            },
+            {
+              "type": "CancellationToken",
+              "name": "cancellationToken",
+              "isOptional": true
+            }
+          ]
+        },
+        {
+          "returnType": "Void",
+          "namespace": "Volo.CmsKit.Blogs",
+          "name": "DeleteByBlogIdAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "Guid",
+              "name": "blogId",
+              "isOptional": false
+            },
+            {
+              "type": "CancellationToken",
+              "name": "cancellationToken",
+              "isOptional": true
+            }
+          ]
         }
       ],
       "contentType": "repositoryInterface",
@@ -5475,6 +5659,43 @@
           "returnType": "List<Blog>",
           "namespace": "Volo.CmsKit.Blogs",
           "name": "GetListAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "String",
+              "name": "filter",
+              "isOptional": true
+            },
+            {
+              "type": "String",
+              "name": "sorting",
+              "isOptional": true
+            },
+            {
+              "type": "Int32",
+              "name": "maxResultCount",
+              "isOptional": true
+            },
+            {
+              "type": "Int32",
+              "name": "skipCount",
+              "isOptional": true
+            },
+            {
+              "type": "CancellationToken",
+              "name": "cancellationToken",
+              "isOptional": true
+            }
+          ]
+        },
+        {
+          "returnType": "List<BlogWithBlogPostCount>",
+          "namespace": "Volo.CmsKit.Blogs",
+          "name": "GetListWithBlogPostCountAsync",
           "summary": null,
           "isAsync": true,
           "isPublic": true,
@@ -5599,6 +5820,88 @@
       ],
       "contentType": "repositoryInterface",
       "name": "IBlogRepository",
+      "summary": null
+    },
+    {
+      "eventHandlerType": "Distributed",
+      "namespace": "Volo.CmsKit.Users",
+      "subscribedEvents": [
+        {
+          "underlyingType": {
+            "name": "UserEto",
+            "namespace": "Volo.Abp.Users",
+            "declaringAssemblyName": "Volo.Abp.Users.Abstractions",
+            "fullName": "Volo.Abp.Users.UserEto"
+          },
+          "name": "EntityUpdatedEto`1",
+          "namespace": "Volo.Abp.Domain.Entities.Events.Distributed",
+          "declaringAssemblyName": "Volo.Abp.Ddd.Domain.Shared",
+          "fullName": "Volo.Abp.Domain.Entities.Events.Distributed.EntityUpdatedEto`1"
+        }
+      ],
+      "implementingInterfaces": [
+        {
+          "name": "IDistributedEventHandler<EntityUpdatedEto`1>",
+          "namespace": "Volo.Abp.EventBus.Distributed",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.Distributed.IDistributedEventHandler<EntityUpdatedEto`1>"
+        },
+        {
+          "name": "IEventHandler",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.IEventHandler"
+        },
+        {
+          "name": "ITransientDependency",
+          "namespace": "Volo.Abp.DependencyInjection",
+          "declaringAssemblyName": "Volo.Abp.Core",
+          "fullName": "Volo.Abp.DependencyInjection.ITransientDependency"
+        }
+      ],
+      "contentType": "eventHandler",
+      "name": "CmsUserSynchronizer",
+      "summary": null
+    },
+    {
+      "eventHandlerType": "Local",
+      "namespace": "Volo.CmsKit.Menus",
+      "subscribedEvents": [
+        {
+          "underlyingType": {
+            "name": "Page",
+            "namespace": "Volo.CmsKit.Pages",
+            "declaringAssemblyName": "Volo.CmsKit.Domain",
+            "fullName": "Volo.CmsKit.Pages.Page"
+          },
+          "name": "EntityUpdatedEventData`1",
+          "namespace": "Volo.Abp.Domain.Entities.Events",
+          "declaringAssemblyName": "Volo.Abp.Ddd.Domain",
+          "fullName": "Volo.Abp.Domain.Entities.Events.EntityUpdatedEventData`1"
+        }
+      ],
+      "implementingInterfaces": [
+        {
+          "name": "ILocalEventHandler<EntityUpdatedEventData`1>",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.ILocalEventHandler<EntityUpdatedEventData`1>"
+        },
+        {
+          "name": "IEventHandler",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.IEventHandler"
+        },
+        {
+          "name": "ITransientDependency",
+          "namespace": "Volo.Abp.DependencyInjection",
+          "declaringAssemblyName": "Volo.Abp.Core",
+          "fullName": "Volo.Abp.DependencyInjection.ITransientDependency"
+        }
+      ],
+      "contentType": "eventHandler",
+      "name": "PageChangedHandler",
       "summary": null
     }
   ]

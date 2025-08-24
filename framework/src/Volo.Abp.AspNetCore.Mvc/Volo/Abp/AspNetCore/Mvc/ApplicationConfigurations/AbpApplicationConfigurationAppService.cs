@@ -4,7 +4,6 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -312,7 +311,32 @@ public class AbpApplicationConfigurationAppService : ApplicationService, IAbpApp
 
     protected virtual async Task<TimingDto> GetTimingConfigAsync()
     {
-        var windowsTimeZoneId = await _settingProvider.GetOrNullAsync(TimingSettingNames.TimeZone);
+        var timeZone = await _settingProvider.GetOrNullAsync(TimingSettingNames.TimeZone);
+
+        string? timeZoneId = null;
+        string? timeZoneName = null;
+        if (!timeZone.IsNullOrWhiteSpace())
+        {
+            try
+            {
+                if (_timezoneProvider.GetIanaTimezones().Any(x => x.Value == timeZone))
+                {
+                    timeZoneId = _timezoneProvider.IanaToWindows(timeZone);
+                    timeZoneName = timeZone;
+                }
+                else if (_timezoneProvider.GetWindowsTimezones().Any(x => x.Value == timeZone))
+                {
+                    timeZoneId = timeZone;
+                    timeZoneName = _timezoneProvider.WindowsToIana(timeZone);
+                }
+            }
+            catch (Exception ex)
+            {
+                timeZoneId = null;
+                timeZoneName = null;
+                Logger.LogWarning(ex, $"Exception occurred while getting timezone({timeZone}) information");
+            }
+        }
 
         return new TimingDto
         {
@@ -320,13 +344,11 @@ public class AbpApplicationConfigurationAppService : ApplicationService, IAbpApp
             {
                 Windows = new WindowsTimeZone
                 {
-                    TimeZoneId = windowsTimeZoneId
+                    TimeZoneId = timeZoneId
                 },
                 Iana = new IanaTimeZone
                 {
-                    TimeZoneName = windowsTimeZoneId.IsNullOrWhiteSpace()
-                        ? null
-                        : _timezoneProvider.WindowsToIana(windowsTimeZoneId!)
+                    TimeZoneName = timeZoneName
                 }
             }
         };

@@ -5,3 +5,4 @@ export * from './extensible-table/extensible-table.component';
 export * from './date-time-picker/extensible-date-time-picker.component';
 export * from './grid-actions/grid-actions.component';
 export * from './page-toolbar/page-toolbar.component';
+export * from './multi-select/extensible-form-multiselect.component';

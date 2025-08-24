@@ -5,6 +5,7 @@
   providedIn: 'root',
 })
 export class <%= name %>Service {
+  private restService = inject(RestService);
   apiName = '<%= apiName %>';<%
   for (let {body, signature} of methods) { %>
   <%
@@ -26,6 +27,4 @@ export class <%= name %>Service {
       body: <%= body.body %>,<% } %>
     },
     { apiName: this.apiName,...config });<% } %>
-
-  constructor(private restService: RestService) {}
 }

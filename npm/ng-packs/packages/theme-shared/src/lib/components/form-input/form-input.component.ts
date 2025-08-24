@@ -1,6 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
 
 @Component({
@@ -32,7 +32,7 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
       multi: true,
     },
   ],
-  imports: [CommonModule, LocalizationPipe, FormsModule],
+  imports: [NgClass, NgStyle, LocalizationPipe, FormsModule],
 })
 export class FormInputComponent extends AbstractNgModelComponent {
   @Input() inputId!: string;

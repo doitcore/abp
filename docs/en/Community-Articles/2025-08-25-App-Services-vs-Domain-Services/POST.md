@@ -33,21 +33,20 @@ Application Services are stateless services primarily used to implement applicat
 A standard application service method typically follows this pattern:
 
 ```csharp
-public async Task<BookDto> CreateBookAsync(CreateBookDto input)
+[Authorize(BookPermissions.Create)] // Validate permissions
+public virtual async Task<BookDto> CreateBookAsync(CreateBookDto input) // input is automatically validated
 {
-    // 1. Validate permissions
-    await CheckCreatePermissionAsync();
-    
-    // 2. Get or validate related data
+    // Get related data
     var author = await _authorRepository.GetAsync(input.AuthorId);
     
-    // 3. Call domain service to execute business logic
+    // Call domain service to execute business logic
+    // You can also use the repository directly to create the book if you don't need to execute any business logic
     var book = await _bookManager.CreateAsync(input.Title, author, input.Price);
     
-    // 4. Persist changes
+    // Persist changes
     await _bookRepository.InsertAsync(book);
     
-    // 5. Return DTO
+    // Return DTO
     return ObjectMapper.Map<Book, BookDto>(book);
 }
 ```
@@ -87,11 +86,10 @@ public class IssueManager : DomainService
 {
     private readonly IRepository<Issue, Guid> _issueRepository;
     
-    public async Task AssignAsync(Issue issue, AppUser user)
+    public virtual async Task AssignAsync(Issue issue, IdentityUser user)
     {
         // Business rule: Check user's unfinished task count
-        var openIssueCount = await _issueRepository.GetCountAsync(
-            i => i.AssignedUserId == user.Id && !i.IsClosed);
+        var openIssueCount = await _issueRepository.GetCountAsync(i => i.AssignedUserId == user.Id && !i.IsClosed);
             
         if (openIssueCount >= 3)
         {
@@ -128,26 +126,23 @@ public class BookAppService : ApplicationService
     private readonly BookManager _bookManager;
     private readonly IRepository<Book> _bookRepository;
     
-    public async Task<BookDto> UpdatePriceAsync(Guid id, decimal newPrice)
+    [Authorize(BookPermissions.Update)]
+    public virtual async Task<BookDto> UpdatePriceAsync(Guid id, decimal newPrice)
     {
-        // Application service handles: permission checks, data retrieval, DTO conversion
-        await CheckUpdatePermissionAsync();
+        var book = await _bookRepository.GetAsync(id); // Get related data
+
+        await _bookManager.ChangePriceAsync(book, newPrice); // Call domain service to execute business logic
         
-        var book = await _bookRepository.GetAsync(id);
+        await _bookRepository.UpdateAsync(book); // Persist changes
         
-        // Delegate to domain service for business logic
-        await _bookManager.ChangePriceAsync(book, newPrice);
-        
-        await _bookRepository.UpdateAsync(book);
-        
-        return ObjectMapper.Map<Book, BookDto>(book);
+        return ObjectMapper.Map<Book, BookDto>(book); // Return DTO
     }
 }
 
 // Domain Service
 public class BookManager : DomainService
 {
-    public async Task ChangePriceAsync(Book book, decimal newPrice)
+    public virtual async Task ChangePriceAsync(Book book, decimal newPrice)
     {
         // Domain service focuses on business rules
         if (newPrice <= 0)
@@ -159,7 +154,14 @@ public class BookManager : DomainService
         {
             throw new BusinessException("Book:DiscountedPriceCannotExceedOriginal");
         }
-        
+
+        if (book.Price == newPrice)
+        {
+            return;
+        }
+
+        // More business logic can be added here 
+
         book.ChangePrice(newPrice);
     }
 }

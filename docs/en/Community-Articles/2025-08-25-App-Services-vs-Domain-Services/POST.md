@@ -187,6 +187,6 @@ Through clear separation of responsibilities, we can not only build more maintai
 
 ## References
 
-- [Application Services](https://abp.io/docs/en/app-services)
-- [Integration Services](https://abp.io/docs/en/integration-services)
-- [Domain Services](https://abp.io/docs/en/domain-services)
+- [Application Services](https://abp.io/docs/latest/framework/architecture/domain-driven-design/application-services)
+- [Integration Services](https://abp.io/docs/latest/framework/api-development/integration-services)
+- [Domain Services](https://abp.io/docs/latest/framework/architecture/domain-driven-design/domain-services)

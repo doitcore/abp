@@ -15,12 +15,13 @@ This layered design follows Domain-Driven Design (DDD) principles, ensuring clea
 
 ### Core Responsibilities
 
-Application Services are stateless services primarily used to implement application use cases. They act as a bridge between the UI layer and domain layer, responsible for:
+Application Services are stateless services primarily used to implement application use cases. They act as a bridge between the presentation layer and domain layer, responsible for:
 
+- **Parameter Validation**: Input validation is automatically handled by ABP using data annotations
+- **Authorization**: Checking user permissions and access control using `[Authorize]` attribute or manual authorization checks via `IAuthorizationService`
+- **Transaction Management**: Methods automatically run as Unit of Work (transactional by default)
 - **Use Case Orchestration**: Organizing and coordinating multiple domain objects to complete specific business use cases
-- **Data Transformation**: Handling conversion between DTOs and domain objects
-- **Authorization**: Checking user permissions and access control
-- **Transaction Management**: Ensuring operation atomicity
+- **Data Transformation**: Handling conversion between DTOs and domain objects using ObjectMapper
 
 ### Design Principles
 
@@ -33,14 +34,14 @@ Application Services are stateless services primarily used to implement applicat
 A standard application service method typically follows this pattern:
 
 ```csharp
-[Authorize(BookPermissions.Create)] // Validate permissions
+[Authorize(BookPermissions.Create)] // Declarative authorization
 public virtual async Task<BookDto> CreateBookAsync(CreateBookDto input) // input is automatically validated
 {
     // Get related data
     var author = await _authorRepository.GetAsync(input.AuthorId);
     
-    // Call domain service to execute business logic
-    // You can also use the repository directly to create the book if you don't need to execute any business logic
+    // Call domain service to execute business logic (if needed)
+    // You can also use the entity constructor directly if no complex business logic is required
     var book = await _bookManager.CreateAsync(input.Title, author, input.Price);
     
     // Persist changes
@@ -51,15 +52,9 @@ public virtual async Task<BookDto> CreateBookAsync(CreateBookDto input) // input
 }
 ```
 
-### Integration Services: Specialized Application Services
+### Integration Services: Special kind of Application Service
 
-It's worth mentioning that ABP also provides a special type of application service—Integration Services. They are used for:
-
-- **Inter-service Communication**: Service-to-service calls in microservice architectures
-- **Module Integration**: Inter-module communication in large monolithic applications
-- **Internal APIs**: Internal interfaces not exposed to the public
-
-Integration services are marked with the `[IntegrationService]` attribute and use the `/integration-api` route prefix by default, making it easy to implement access control at the gateway layer.
+It's worth mentioning that ABP also provides a special type of application service—Integration Services. They are application services marked with the `[IntegrationService]` attribute, designed for inter-module or inter-microservice communication.
 
 We have a community article dedicated to integration services: [Integration Services Explained — What they are, when to use them, and how they behave](https://abp.io/community/articles/integration-services-explained-what-they-are-when-to-use-lienmsy8)
 
@@ -67,17 +62,20 @@ We have a community article dedicated to integration services: [Integration Serv
 
 ### Core Responsibilities
 
-Domain Services implement core business logic and are particularly suitable for:
+Domain Services implement core business logic and are particularly needed when:
 
-- **Cross-Aggregate Operations**: Business logic that needs to operate on multiple aggregate roots
-- **Complex Business Rules**: Complex logic that doesn't fit within a single entity
-- **External Dependencies**: Business operations that need to access repositories or external services
+- **Core domain logic depends on services**: You need to implement logic that requires repositories or other external services
+- **Logic spans multiple aggregates**: The business logic is related to more than one aggregate/entity and doesn't properly fit in any single aggregate
+- **Complex business rules**: Complex domain rules that don't naturally belong in a single entity
 
 ### Design Principles
 
-1. **Domain Object Interaction**: Method parameters and return values should be domain objects (entities, value objects)
+1. **Domain Object Interaction**: Method parameters and return values should be domain objects (entities, value objects), never DTOs
 2. **Business Logic Focus**: Focus on implementing pure business rules
 3. **Stateless Design**: Maintain the stateless nature of services
+4. **State-Changing Operations Only**: Domain services should only define methods that mutate data, not query methods
+5. **No Authorization Logic**: Domain services should not perform authorization checks or depend on current user context
+6. **Specific Method Names**: Use descriptive, business-meaningful method names (e.g., `AssignToAsync`) instead of generic names (e.g., `UpdateAsync`)
 
 ### Implementation Example
 
@@ -86,10 +84,10 @@ public class IssueManager : DomainService
 {
     private readonly IRepository<Issue, Guid> _issueRepository;
     
-    public virtual async Task AssignAsync(Issue issue, IdentityUser user)
+    public virtual async Task AssignToAsync(Issue issue, Guid userId)
     {
         // Business rule: Check user's unfinished task count
-        var openIssueCount = await _issueRepository.GetCountAsync(i => i.AssignedUserId == user.Id && !i.IsClosed);
+        var openIssueCount = await _issueRepository.GetCountAsync(i => i.AssignedUserId == userId && !i.IsClosed);
             
         if (openIssueCount >= 3)
         {
@@ -97,7 +95,7 @@ public class IssueManager : DomainService
         }
         
         // Execute assignment logic
-        issue.AssignedUserId = user.Id;
+        issue.AssignedUserId = userId;
         issue.AssignedDate = Clock.Now;
     }
 }
@@ -110,9 +108,12 @@ public class IssueManager : DomainService
 | **Layer Position** | Application Layer | Domain Layer |
 | **Primary Responsibility** | Use Case Orchestration | Business Logic Implementation |
 | **Data Interaction** | DTOs | Domain Objects |
-| **Callers** | UI Layer/Clients | Application Services/Other Domain Services |
+| **Callers** | Presentation Layer/Client Applications | Application Services/Other Domain Services |
 | **Authorization** | Responsible for permission checks | No authorization logic |
-| **Transaction Management** | Manages transaction boundaries | Participates in transactions but doesn't manage |
+| **Transaction Management** | Manages transaction boundaries (Unit of Work) | Participates in transactions but doesn't manage |
+| **Current User Context** | Can access current user information | Should not depend on current user context |
+| **Return Types** | Returns DTOs | Returns domain objects only |
+| **Query Operations** | Can perform query operations | Should not define GET/query methods |
 | **Naming Convention** | `*AppService` | `*Manager` or `*Service` |
 
 ## Collaboration Patterns in Practice
@@ -129,13 +130,13 @@ public class BookAppService : ApplicationService
     [Authorize(BookPermissions.Update)]
     public virtual async Task<BookDto> UpdatePriceAsync(Guid id, decimal newPrice)
     {
-        var book = await _bookRepository.GetAsync(id); // Get related data
+        var book = await _bookRepository.GetAsync(id);
 
-        await _bookManager.ChangePriceAsync(book, newPrice); // Call domain service to execute business logic
+        await _bookManager.ChangePriceAsync(book, newPrice);
         
-        await _bookRepository.UpdateAsync(book); // Persist changes
+        await _bookRepository.UpdateAsync(book);
         
-        return ObjectMapper.Map<Book, BookDto>(book); // Return DTO
+        return ObjectMapper.Map<Book, BookDto>(book);
     }
 }
 
@@ -160,9 +161,20 @@ public class BookManager : DomainService
             return;
         }
 
-        // More business logic can be added here 
+        // Additional business logic: Check if price change requires approval
+        if (await RequiresApprovalAsync(book, newPrice))
+        {
+            throw new BusinessException("Book:PriceChangeRequiresApproval");
+        }
 
         book.ChangePrice(newPrice);
+    }
+    
+    private Task<bool> RequiresApprovalAsync(Book book, decimal newPrice)
+    {
+        // Example business rule: Large price increases require approval
+        var increasePercentage = ((newPrice - book.Price) / book.Price) * 100;
+        return Task.FromResult(increasePercentage > 50); // 50% increase threshold
     }
 }
 ```
@@ -173,19 +185,26 @@ public class BookManager : DomainService
 - Create a corresponding application service for each aggregate root
 - Use clear naming conventions (e.g., `IBookAppService`)
 - Implement standard CRUD operation methods (`GetAsync`, `CreateAsync`, `UpdateAsync`, `DeleteAsync`)
-- Avoid inter-application service calls
+- Avoid inter-application service calls within the same module/application
+- Always return DTOs, never expose domain entities directly
+- Use the `[Authorize]` attribute for declarative authorization or manual checks via `IAuthorizationService`
+- Methods automatically run as Unit of Work (transactional)
+- Input validation is handled automatically by ABP
 
 ### Domain Services
 - Use the `Manager` suffix for naming (e.g., `BookManager`)
-- Only define state-changing methods, avoid query methods
-- Throw business exceptions with clear error codes
-- Keep methods pure, avoid involving user context
+- Only define state-changing methods, avoid query methods (use repositories directly in Application Services for queries)
+- Throw `BusinessException` with clear, unique error codes for domain validation failures
+- Keep methods pure, avoid involving user context or authorization logic
+- Accept and return domain objects only, never DTOs
+- Use descriptive, business-meaningful method names (e.g., `AssignToAsync`, `ChangePriceAsync`)
+- Do not implement interfaces unless there's a specific need for multiple implementations
 
 ## Summary
 
-Application Services and Domain Services each have their distinct roles in the ABP framework: the former serves as use case orchestrators, handling external interactions and data transformation; the latter serves as implementers of business logic, ensuring proper execution of core rules. Correctly understanding and applying these two service patterns is key to building high-quality ABP applications.
+Application Services and Domain Services each have their distinct roles in the ABP framework: Application Services serve as use case orchestrators, handling authorization, validation, transaction management, and DTO transformations; Domain Services focus purely on business logic implementation without any infrastructure concerns. Integration Services are a special type of Application Service designed for inter-service communication.
 
-Through clear separation of responsibilities, we can not only build more maintainable code but also flexibly switch between monolithic and microservice architectures—this is precisely the elegance of ABP framework design.
+Correctly understanding and applying these service patterns is key to building high-quality ABP applications. Through clear separation of responsibilities, we can not only build more maintainable code but also flexibly switch between monolithic and microservice architectures—this is precisely the elegance of ABP framework design.
 
 ## References
 

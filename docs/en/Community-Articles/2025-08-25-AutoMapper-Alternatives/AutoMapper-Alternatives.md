@@ -59,6 +59,12 @@
 
    
 
+   https://github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md
+
+   https://github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md
+
+   
+
    ### Briefly explain what AutoMapper is and why developers adopted it.
 
    Mention the shift to a paid model and why it became controversial.

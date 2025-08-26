@@ -74,7 +74,7 @@ CMS kit packages are designed for various usage scenarios. If you check the [CMS
 
 ## Integrating Public and Admin Packages in a Unified Application
 
-If you are using a single application for both admin and public web side, it's important to configure the global layout settings appropriately. By default, the layout is set for a **Public Website**, which is suitable for public-facing pages. However, when your application serves both admin and public pages, you should explicitly set the global layout for all CMS Kit pages.
+If you are using a single application for both admin and public web site, it's important to configure the global layout settings appropriately. By default, the layout is set for a **Public Website**, which is suitable for public-facing pages. However, when your application serves both admin and public pages, you should explicitly set the global layout for all CMS Kit pages.
 
 To do this, add a `_ViewStart.cshtml` file to your web project at `/Pages/Public/CmsKit/_ViewStart.cshtml` and configure the layout as shown below:
 

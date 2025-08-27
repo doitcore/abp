@@ -90,9 +90,13 @@ Mapperly integration will be delivered with ABP v10. If you have already defined
 
 ## Migrating from AutoMapper to Mapperly
 
-In ABP v10, we will be migrating from AutoMapper to Mapperly. The document about the migration is not delivered by the time I wrote this article, but you can reach the document in our dev docs branch [github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md](https://github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md).
+In ABP v10, we will be migrating from AutoMapper to Mapperly. The document about the migration is not delivered by the time I wrote this article, but you can reach the document in our dev docs branch 
 
-Also for ABP, you can check out how you will define DTO mappings based on Mapperly at this document 👉 [github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md](https://github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md)
+* [github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md](https://github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md).
+
+Also for ABP, you can check out how you will define DTO mappings based on Mapperly at this document 
+
+* [github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md](https://github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md)
 
 
 

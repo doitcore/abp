@@ -175,6 +175,51 @@ var list = dbContext.Orders
 
 
 
+#### Mapperly (Free, Apache-2.0)
+
+This is compile-time generated mapping.
+
+```csharp
+
+[Mapper] // generates the implementation at build time
+public partial class OrderMapper
+{
+    // Simple property mapping: Customer.Name -> CustomerName
+    [MapProperty(nameof(Order.Customer) + "." + nameof(Customer.Name), nameof(OrderDto.CustomerName))]
+    public partial OrderDto ToDto(Order s);
+
+    // Update an existing target (like MapToExisting)
+    [MapProperty(nameof(Order.Customer) + "." + nameof(Customer.Name), nameof(OrderDto.CustomerName))]
+    public partial void UpdateDto(Order s, OrderDto target);
+
+    // Post-process calculated fields (ItemCount, Total, CreatedAtIso)
+    [AfterMapping]
+    private static void After(Order s, ref OrderDto d)
+    {
+        d = d with
+        {
+            ItemCount = s.Lines.Sum(l => l.Quantity),
+            Total = s.Lines.Sum(l => l.Quantity * l.UnitPrice),
+            CreatedAtIso = s.CreatedAt.ToString("O")
+        };
+    }
+}
+
+//USAGE
+var mapper = new OrderMapper();
+var dto = mapper.ToDto(order);
+
+var target = new OrderDto();
+mapper.UpdateDto(order, target);
+
+```
+
+**NuGet Packages:**
+
+* https://www.nuget.org/packages/Riok.Mapperly/
+
+
+
 #### Mapster Example (Free, MIT)
 
 ```csharp

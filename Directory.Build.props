@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Condition="'$(IsTestProject)' == 'true'" Include="coverlet.collector">
+    <PackageReference Condition="'$(IsTestProject)' == 'true'" Include="coverlet.collector" Version="6.0.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

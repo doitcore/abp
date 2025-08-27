@@ -44,11 +44,11 @@ public abstract class BasicRepositoryBase<TEntity> :
 
     public bool? IsChangeTrackingEnabled { get; protected set; }
     
-    protected string? CustomEntityName { get; private set; }
+    protected string? EntityName { get; private set; }
     
-    public void SetCustomEntityName(string? name)
+    public void SetEntityName(string? name)
     {
-        CustomEntityName = name;
+        EntityName = name;
     }
 
     protected BasicRepositoryBase()

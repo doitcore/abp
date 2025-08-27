@@ -122,8 +122,8 @@ public class EfCoreRepository<TDbContext, TEntity> : RepositoryBase<TEntity>, IE
 
     private DbSet<TEntity> GetDbSetInternal(TDbContext dbContext)
     {
-        return CustomEntityName != null
-            ? dbContext.Set<TEntity>(CustomEntityName)
+        return EntityName != null
+            ? dbContext.Set<TEntity>(EntityName)
             : dbContext.Set<TEntity>();
     }
 

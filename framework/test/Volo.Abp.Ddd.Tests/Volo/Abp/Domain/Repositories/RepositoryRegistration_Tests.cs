@@ -409,7 +409,7 @@ public class RepositoryRegistration_Tests
     {
         public bool? IsChangeTrackingEnabled { get; set; }
 
-        public void SetCustomEntityName(string name)
+        public void SetEntityName(string name)
         {
             
         }

@@ -14,7 +14,7 @@ public interface IRepository
 {
     bool? IsChangeTrackingEnabled { get; }
 
-    void SetCustomEntityName(string? name);
+    void SetEntityName(string? name);
 }
 
 public interface IRepository<TEntity> : IReadOnlyRepository<TEntity>, IBasicRepository<TEntity>

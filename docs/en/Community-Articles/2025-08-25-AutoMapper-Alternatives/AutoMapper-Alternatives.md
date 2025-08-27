@@ -1,69 +1,20 @@
 # AutoMapper Starts Charging: Replace with Cost-Free Alternatives
 
-
-
 ---
 
 ## Introduction
 
-[AutoMapper](https://automapper.io/) has been one of the most popular mapping library for .NET apps. It has been free and [open-source](https://github.com/LuckyPennySoftware/AutoMapper) since 2009. On April 16, 2025, Jimmy Bogard (the owner of the library) decided to make it commercial for his own reasons to be sustained. You can read this article about what happened to AutoMapper [here](https://www.jimmybogard.com/automapper-and-mediatr-licensing-update/).
+[AutoMapper](https://automapper.io/) has been one of the most popular mapping library for .NET apps. It has been free and [open-source](https://github.com/LuckyPennySoftware/AutoMapper) since 2009. On 16 April 2025, Jimmy Bogard (the owner of the project) decided to make it commercial for his own reasons. You can read [this announcement](https://www.jimmybogard.com/automapper-and-mediatr-licensing-update/) about what happened to AutoMapper.
 
-In ABP Framework we have also used AutoMapper for object mappings. After AutoMapper announced its commercial transition, we also needed to replace it. Because ABP Framework is open-source and under [LGPL-3.0 license](https://github.com/abpframework/abp#LGPL-3.0-1-ov-file).   
+In ABP Framework we have been also using AutoMapper for object mappings. After its commercial transition, we also needed to replace it. Because ABP Framework is open-source and under [LGPL-3.0 license](https://github.com/abpframework/abp#LGPL-3.0-1-ov-file).  
+
+**TL;DR** 
 
 > That's why, **we decided to replace AutoMapper with Mapperly**.
 
-In this article, we'll discuss the alternatives of AutoMapper so that you can cut down on costs and maximize performance while retaining control over your codebase. 
+In this article, we'll discuss the alternatives of AutoMapper so that you can cut down on costs and maximize performance while retaining control over your codebase. Also I'll explain why we chose Mapperly. 
 
 Also AutoMapper uses heavily reflection. And reflection comes with a performance cost if used indiscriminately, and compile-time safety is limited. Let's see how we can overcome these...
-
-
-
-## Why We Chose Mapperly
-
-We looked up different alternatives of AutoMapper, here's the initial issue of AutoMapper replacement https://github.com/abpframework/abp/issues/23243.
-
- The ABP team started Mapperly integration with this initial commit https://github.com/abpframework/abp/commit/178d3f56d42b4e5acb7e349470f4a644d4c5214e. And this is our Mapperly integration package : https://github.com/abpframework/abp/tree/dev/framework/src/Volo.Abp.Mapperly. 
-
-We filtered down all the alternatives into 2 options: Mapster and Mapperly. You 
-
-![Community Powers](mapster-mapperly-community-powers.png)
-
-
-
-Here are some considerations for developers who are used to ABP and AutoMapper. 
-
-### [Mapster](https://github.com/MapsterMapper/Mapster):
-
-* ✔ It is similar to AutoMapper, configuring mappings through code.
-* ✔ Support for dependency injection and complex runtime configuration.
-* ❌ It is looking additional Mapster maintainers ([Call for additional Mapster maintainers MapsterMapper/Mapster#752](https://github.com/MapsterMapper/Mapster/discussions/752))
-
-### [Mapperly](https://github.com/riok/Mapperly):
-
-- ✔ It generates mapping code(` source generator`) during the build process.
-- ✔ It is actively being developed and maintained.
-- ❌ It is a static `map` method, which is not friendly to dependency injection.
-- ❌ The configuration method is completely different from AutoMapper, and there is a learning curve.
-
-
-
-Both Mapster and Mapperly, generate mapping code at compile time. This is very important because it guarantees the mappings are working well. Also they provide type safety and improved performance. Another advantages of these libraries, they eliminate runtime surprises and offer better IDE support.
-
----
-
-
-
-## When Mapperly Will Come To ABP
-
-Mapperly integration will be delivered with ABP v10. If you have already defined AutoMapper configurations, you can still keep and use them. But the framework will use Mapperly. So there'll be 2 mapping integrations in your app. You can also remove AutoMapper from your final application and use one mapping library: Mapperly. It's up to you! Check [AutoMapper pricing table](https://automapper.io/#pricing).
-
-
-
-## Migrating from AutoMapper to Mapperly
-
-In ABP v10, we will be migrating from AutoMapper to Mapperly. And we wrote a document for this migration path. You can read the migration steps  at https://github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md
-
-Also for ABP, you can check out how you will define DTO mappings based on Mapperly at this document 👉 https://github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md
 
 
 
@@ -85,13 +36,68 @@ There others like **ExpressMapper**, **ValueInjecter**, **AgileMapper**. These a
 
 
 
-### Mapping Examples for AutoMapper, Mapster, AgileMapper
+## Why We Chose Mapperly
+
+We filtered down all the alternatives into 2: **Mapster** and **Mapperly**. 
+
+The crucial reason maintaince! As you see from the screenshots below, Mapster is already stopped development. We don't know if open a new issue to Mapster repo, someone will fix. On the other hand, Mapperly regularly gets commits. The community support is valuable. 
+
+We looked up different alternatives of AutoMapper also, here's the initial issue of AutoMapper replacement [github.com/abpframework/abp/issues/23243](https://github.com/abpframework/abp/issues/23243). 
+
+The ABP team started Mapperly integration with this initial commit [github.com/abpframework/abp/commit/178d3f56d42b4e5acb7e349470f4a644d4c5214e](https://github.com/abpframework/abp/commit/178d3f56d42b4e5acb7e349470f4a644d4c5214e). And this is our Mapperly integration package : [github.com/abpframework/abp/tree/dev/framework/src/Volo.Abp.Mapperly.](https://github.com/abpframework/abp/tree/dev/framework/src/Volo.Abp.Mapperly.) 
+
+![Community Powers](mapster-mapperly-community-powers.png)
+
+Here are some considerations for developers who are used to ABP and AutoMapper. 
+
+### [Mapster](https://github.com/MapsterMapper/Mapster):
+
+* ✔ It is similar to AutoMapper, configuring mappings through code.
+* ✔ Support for dependency injection and complex runtime configuration.
+* ❌ It is looking additional Mapster maintainers ([Call for additional Mapster maintainers MapsterMapper/Mapster#752](https://github.com/MapsterMapper/Mapster/discussions/752))
+
+### [Mapperly](https://github.com/riok/Mapperly):
+
+- ✔ It generates mapping code(` source generator`) during the build process.
+- ✔ It is actively being developed and maintained.
+- ❌ It is a static `map` method, which is not friendly to dependency injection.
+- ❌ The configuration method is completely different from AutoMapper, and there is a learning curve.
+
+
+
+**Mapperly** → generates mapping code at **compile time** using source generators.
+
+**Mapster** → has two modes:
+
+- By default, it uses **runtime code generation** (via expression trees and compilation).
+
+- But with **Mapster.Tool** (source generator), it can also generate mappings at **compile time**.
+
+  
+
+This is important because it guarantees the mappings are working well. Also they provide type safety and improved performance. Another advantages of these libraries, they eliminate runtime surprises and offer better IDE support.
+
+---
+
+## When Mapperly Will Come To ABP
+
+Mapperly integration will be delivered with ABP v10. If you have already defined AutoMapper configurations, you can still keep and use them. But the framework will use Mapperly. So there'll be 2 mapping integrations in your app. You can also remove AutoMapper from your final application and use one mapping library: Mapperly. It's up to you! Check [AutoMapper pricing table](https://automapper.io/#pricing).
+
+
+
+## Migrating from AutoMapper to Mapperly
+
+In ABP v10, we will be migrating from AutoMapper to Mapperly. The document about the migration is not delivered by the time I wrote this article, but you can reach the document in our dev docs branch [github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md](https://github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md).
+
+Also for ABP, you can check out how you will define DTO mappings based on Mapperly at this document 👉 [github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md](https://github.com/abpframework/abp/blob/dev/docs/en/framework/infrastructure/object-to-object-mapping.md)
+
+
+
+## Mapping Examples for AutoMapper, Mapster, AgileMapper
 
 Here are concise, drop-in **side-by-side C# snippets** that map the same model with AutoMapper, Mapster, AgileMapper, and manual mapping.
 
- 
-
-#### Models used in all examples
+ Models used in all examples
 
 We'll use these models to show the mapping examples for AutoMapper, Mapster, AgileMapper.
 

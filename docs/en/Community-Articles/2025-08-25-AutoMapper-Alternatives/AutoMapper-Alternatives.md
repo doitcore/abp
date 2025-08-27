@@ -177,7 +177,7 @@ var list = dbContext.Orders
 - https://www.nuget.org/packages/AutoMapper 
 - https://www.nuget.org/packages/AutoMapper.Extensions.Microsoft.DependencyInjection 
 
-
+---
 
 #### Mapperly (Free, Apache-2.0)
 
@@ -223,7 +223,7 @@ mapper.UpdateDto(order, target);
 
 * https://www.nuget.org/packages/Riok.Mapperly/
 
-
+---
 
 #### Mapster Example (Free, MIT)
 
@@ -254,7 +254,7 @@ var mappedList = dbContext.Orders
 - https://www.nuget.org/packages/Mapster.DependencyInjection
 - https://www.nuget.org/packages/Mapster.SourceGenerator (for performance improvement)
 
-
+---
 
 #### AgileMapper Example (Free, Apache-2.0)
 
@@ -277,7 +277,8 @@ var mappedDto = mapper.Map(order).ToANew<OrderDto>();
 
 * https://www.nuget.org/packages/AgileObjects.AgileMapper
 
-  
+
+---
 
 #### Manual (Pure) Mapping (no library)
 

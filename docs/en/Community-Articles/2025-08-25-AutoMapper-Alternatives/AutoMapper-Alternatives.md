@@ -35,7 +35,7 @@ Check out the comparison table for key features vs. AutoMapper.
 | **Maintainability** | Hidden mappings can be hard to debug            | Explicit & predictable                    | Very explicit, compiler-verified mappings    | Readable, good balance                      | Very explicit, most maintainable                 |
 | **Best For**        | Large teams used to AutoMapper & willing to pay | Teams wanting performance + free tool     | Teams prioritizing type-safety & performance | Developers needing flexibility & simplicity | Small/medium projects, performance-critical apps |
 
-There are other libraries such as **ExpressMapper**, **ValueInjecter**, **AgileMapper**. These are not very popular but also free and offer a different balance of simplicity and features.
+There are other libraries such as [**ExpressMapper**](https://github.com/fluentsprings/ExpressMapper) **(308K GitHub stars)**, [**ValueInjecter**](https://github.com/omuleanu/ValueInjecter) **(258K GitHub stars)**, [**AgileMapper**](https://github.com/agileobjects/AgileMapper) **(463K GitHub stars)**. These are not very popular but also free and offer a different balance of simplicity and features.
 
 
 
@@ -100,7 +100,7 @@ Also for ABP, you can check out how you will define DTO mappings based on Mapper
 
 
 
-## Mapping Examples for AutoMapper, Mapster, AgileMapper
+## Mapping  Code Examples for AutoMapper, Mapster, AgileMapper
 
 ### AutoMapper vs Mapster vs Mapperly Performance
 
@@ -184,7 +184,6 @@ var list = dbContext.Orders
 This is compile-time generated mapping.
 
 ```csharp
-
 [Mapper] // generates the implementation at build time
 public partial class OrderMapper
 {
@@ -216,7 +215,6 @@ var dto = mapper.ToDto(order);
 
 var target = new OrderDto();
 mapper.UpdateDto(order, target);
-
 ```
 
 **NuGet Packages:**
@@ -245,7 +243,6 @@ services.AddScoped<IMapper, ServiceMapper>();
 var mappedList = dbContext.Orders
     .ProjectToType<OrderDto>()   // Mapster projection
     .ToList();
-
 ```
 
 **NuGet Packages:**

@@ -193,7 +193,8 @@ public partial class OrderMapper
     public partial void UpdateDto(Order s, OrderDto target);
 
     // Post-process calculated fields (ItemCount, Total, CreatedAtIso)
-    [UserMapping(Default = true)] 
+    // https://mapperly.riok.app/docs/configuration/before-after-map/
+    [UserMapping(Default = true)]  
     private static void After(Order s, ref OrderDto d)
     {
         d = d with

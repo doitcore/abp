@@ -50,6 +50,8 @@ public class AbpEventBusRebusModule : AbpModule
             .Initialize();
 
         var rebusOptions = context.ServiceProvider.GetRequiredService<IOptions<AbpRebusEventBusOptions>>().Value;
-        context.ServiceProvider.GetRequiredService<IBusRegistry>().StartBus(rebusOptions.RebusInstanceName);
+        context.ServiceProvider
+            .GetRequiredService<IBusRegistry>()
+            .StartBus(rebusOptions.RebusInstanceName);
     }
 }

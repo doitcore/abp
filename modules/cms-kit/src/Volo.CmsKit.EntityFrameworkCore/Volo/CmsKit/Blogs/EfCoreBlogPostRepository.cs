@@ -58,31 +58,23 @@ public class EfCoreBlogPostRepository : EfCoreRepository<ICmsKitDbContext, BlogP
         BlogPostStatus? statusFilter = null,
         CancellationToken cancellationToken = default)
     {
-        List<Guid> entityIdFilters = null;
-        if (tagId.HasValue)
-        {
-            entityIdFilters = (await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)).Select(Guid.Parse).ToList();
-        }
-
         var tagFilteredEntityIds = tagId.HasValue
-                ? await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)
-                : null;
+            ? (await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
+            : [];
 
         var favoriteUserFilteredEntityIds = favoriteUserId.HasValue
-            ? await _markedItemManager.GetEntityIdsFilteredByUserAsync(favoriteUserId.Value, BlogPostConsts.EntityType)
-            : null;
+            ? (await _markedItemManager.GetEntityIdsFilteredByUserAsync(favoriteUserId.Value, BlogPostConsts.EntityType, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
+            : [];
 
         var queryable = (await GetDbSetAsync())
-            .WhereIf(entityIdFilters != null, x => entityIdFilters.Contains(x.Id))
-            .WhereIf(tagFilteredEntityIds != null, x => tagFilteredEntityIds.Contains(x.Id.ToString()))
-            .WhereIf(favoriteUserFilteredEntityIds != null, x => favoriteUserFilteredEntityIds.Contains(x.Id.ToString()))
+            .WhereIf(tagFilteredEntityIds.Count > 0, x => tagFilteredEntityIds.Contains(x.Id))
+            .WhereIf(favoriteUserFilteredEntityIds.Count > 0, x => favoriteUserFilteredEntityIds.Contains(x.Id))
             .WhereIf(blogId.HasValue, x => x.BlogId == blogId)
             .WhereIf(authorId.HasValue, x => x.AuthorId == authorId)
             .WhereIf(statusFilter.HasValue, x => x.Status == statusFilter)
             .WhereIf(!string.IsNullOrEmpty(filter), x => x.Title.Contains(filter) || x.Slug.Contains(filter));
 
-        var count = await queryable.CountAsync(GetCancellationToken(cancellationToken));
-        return count;
+        return await queryable.CountAsync(GetCancellationToken(cancellationToken));
     }
 
     public virtual async Task<List<BlogPost>> GetListAsync(
@@ -99,27 +91,19 @@ public class EfCoreBlogPostRepository : EfCoreRepository<ICmsKitDbContext, BlogP
 
     {
         var dbContext = await GetDbContextAsync();
-        var blogPostsDbSet = dbContext.Set<BlogPost>();
         var usersDbSet = dbContext.Set<CmsUser>();
 
-        List<Guid> entityIdFilters = null;
-        if (tagId.HasValue)
-        {
-            entityIdFilters = (await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)).Select(Guid.Parse).ToList();
-        }
-
         var tagFilteredEntityIds = tagId.HasValue
-                ? await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)
-                : null;
+            ? (await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
+            : [];
 
         var favoriteUserFilteredEntityIds = favoriteUserId.HasValue
-            ? await _markedItemManager.GetEntityIdsFilteredByUserAsync(favoriteUserId.Value, BlogPostConsts.EntityType)
-            : null;
+            ? (await _markedItemManager.GetEntityIdsFilteredByUserAsync(favoriteUserId.Value, BlogPostConsts.EntityType, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
+            : [];
 
         var queryable = (await GetDbSetAsync())
-            .WhereIf(entityIdFilters != null, x => entityIdFilters.Contains(x.Id))
-            .WhereIf(tagFilteredEntityIds != null, x => tagFilteredEntityIds.Contains(x.Id.ToString()))
-            .WhereIf(favoriteUserFilteredEntityIds != null, x => favoriteUserFilteredEntityIds.Contains(x.Id.ToString()))
+            .WhereIf(tagFilteredEntityIds.Count > 0, x => tagFilteredEntityIds.Contains(x.Id))
+            .WhereIf(favoriteUserFilteredEntityIds.Count > 0, x => favoriteUserFilteredEntityIds.Contains(x.Id))
             .WhereIf(blogId.HasValue, x => x.BlogId == blogId)
             .WhereIf(!string.IsNullOrWhiteSpace(filter), x => x.Title.Contains(filter) || x.Slug.Contains(filter))
             .WhereIf(authorId.HasValue, x => x.AuthorId == authorId)

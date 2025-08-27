@@ -1,10 +1,14 @@
-# AutoMapper Starts Charging: Replace with Cost-Free Alternatives
+# Best Free Alternatives to AutoMapper in .NET  — Why We Moved to Mapperly
 
 ---
 
 ## Introduction
 
 [AutoMapper](https://automapper.io/) has been one of the most popular mapping library for .NET apps. It has been free and [open-source](https://github.com/LuckyPennySoftware/AutoMapper) since 2009. On 16 April 2025, Jimmy Bogard (the owner of the project) decided to make it commercial for his own reasons. You can read [this announcement](https://www.jimmybogard.com/automapper-and-mediatr-licensing-update/) about what happened to AutoMapper.
+
+
+
+### Why AutoMapper’s licensing change matters
 
 In ABP Framework we have been also using AutoMapper for object mappings. After its commercial transition, we also needed to replace it. Because ABP Framework is open-source and under [LGPL-3.0 license](https://github.com/abpframework/abp#LGPL-3.0-1-ov-file).  
 
@@ -22,17 +26,16 @@ Also AutoMapper uses heavily reflection. And reflection comes with a performance
 
 Check out the comparison table for key features vs. AutoMapper.
 
+|                     | **AutoMapper (Paid)**                           | **Mapster (Free)**                        | **Mapperly (Free)**                          | **AgileMapper (Free)**                      | **Manual Mapping**                               |
+| ------------------- | ----------------------------------------------- | ----------------------------------------- | -------------------------------------------- | ------------------------------------------- | ------------------------------------------------ |
+| **License & Cost**  | Paid/commercial                                 | Free, MIT License                         | Free, MIT License                            | Free, Apache 2.0                            | Free (no library)                                |
+| **Performance**     | Slower due to reflection & conventions          | Very fast (runtime & compile-time modes)  | Very fast (compile-time code generation)     | Good, faster than AutoMapper                | Fastest (direct assignment)                      |
+| **Ease of Setup**   | Easy, but configuration-heavy                   | Easy, minimal config                      | Easy, but different approach from AutoMapper | Simple, flexible configuration              | Manual coding required                           |
+| **Features**        | Rich features, conventions, nested mappings     | Strong typed mappings, projection support | Strong typed, compile-time safe mappings     | Dynamic & conditional mapping               | Whatever you code                                |
+| **Maintainability** | Hidden mappings can be hard to debug            | Explicit & predictable                    | Very explicit, compiler-verified mappings    | Readable, good balance                      | Very explicit, most maintainable                 |
+| **Best For**        | Large teams used to AutoMapper & willing to pay | Teams wanting performance + free tool     | Teams prioritizing type-safety & performance | Developers needing flexibility & simplicity | Small/medium projects, performance-critical apps |
 
-|                     | **AutoMapper (Paid)**                           | **Mapster (Free)**                        | **AgileMapper (Free)**                      | **Manual Mapping**                               |
-| ------------------: | ----------------------------------------------- | ----------------------------------------- | ------------------------------------------- | ------------------------------------------------ |
-|  **License & Cost** | Paid/commercial                                 | Free, MIT License                         | Free, Apache 2.0                            | Free (no library)                                |
-|     **Performance** | Slower due to reflection & conventions          | Very fast (code generation)               | Good, faster than AutoMapper                | Fastest (direct assignment)                      |
-|   **Ease of Setup** | Easy, but configuration-heavy                   | Easy, minimal config                      | Simple, flexible configuration              | Manual coding required                           |
-|        **Features** | Rich features, conventions, nested mappings     | Strong typed mappings, projection support | Dynamic & conditional mapping               | Whatever you code                                |
-| **Maintainability** | Hidden mappings can be hard to debug            | Explicit & predictable                    | Readable, good balance                      | Very explicit, most maintainable                 |
-|        **Best For** | Large teams used to AutoMapper & willing to pay | Teams wanting performance + free tool     | Developers needing flexibility & simplicity | Small/medium projects, performance-critical apps |
-
-There others like **ExpressMapper**, **ValueInjecter**, **AgileMapper**. These are not very popular but also free and offer a different balance of simplicity and features.
+There are other libraries such as **ExpressMapper**, **ValueInjecter**, **AgileMapper**. These are not very popular but also free and offer a different balance of simplicity and features.
 
 
 
@@ -40,7 +43,7 @@ There others like **ExpressMapper**, **ValueInjecter**, **AgileMapper**. These a
 
 We filtered down all the alternatives into 2: **Mapster** and **Mapperly**. 
 
-The crucial reason maintaince! As you see from the screenshots below, Mapster is already stopped development. We don't know if open a new issue to Mapster repo, someone will fix. On the other hand, Mapperly regularly gets commits. The community support is valuable. 
+The crucial factor was maintainability! As you see from the screenshots below, Mapster is already stopped development. Mapster’s development appears stalled, and its future maintenance is uncertain. On the other hand, Mapperly regularly gets commits. The community support is valuable. 
 
 We looked up different alternatives of AutoMapper also, here's the initial issue of AutoMapper replacement [github.com/abpframework/abp/issues/23243](https://github.com/abpframework/abp/issues/23243). 
 
@@ -94,6 +97,8 @@ Also for ABP, you can check out how you will define DTO mappings based on Mapper
 
 
 ## Mapping Examples for AutoMapper, Mapster, AgileMapper
+
+### AutoMapper vs Mapster vs Mapperly Performance
 
 Here are concise, drop-in **side-by-side C# snippets** that map the same model with AutoMapper, Mapster, AgileMapper, and manual mapping.
 
@@ -261,5 +266,4 @@ var mappedList = dbContext.Orders.Select(s => new OrderDto
 
 ### Conclusion
 
-* AutoMapper’s new paid strategy force many companies to replace it. In this article, we've seen different alternatives. In the upcoming period, these open-source alternatives will be more popular, and maintainers will add new features by the time new developers join those communities.
-* As ABP Team, we picked Mapperly, open-source, flexible, and cost-free. Your requirements might be different, your project is not a framework so you decide the best one for you.
+If you rely on AutoMapper today, it’s time to evaluate alternatives. For ABP Framework, we chose **Mapperly** due to active development, strong community, and compile-time performance. But your team may prefer **Mapster** for flexibility or even manual mapping for small apps. Your requirements might be different, your project is not a framework so you decide the best one for you.

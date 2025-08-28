@@ -35,7 +35,7 @@ Check out the comparison table for key features vs. AutoMapper.
 | **Maintainability** | Hidden mappings can be hard to debug            | Explicit & predictable                    | Very explicit, compiler-verified mappings    | Readable, good balance                      | Very explicit, most maintainable                 |
 | **Best For**        | Large teams used to AutoMapper & willing to pay | Teams wanting performance + free tool     | Teams prioritizing type-safety & performance | Developers needing flexibility & simplicity | Small/medium projects, performance-critical apps |
 
-There are other libraries such as [**ExpressMapper**](https://github.com/fluentsprings/ExpressMapper) **(308K GitHub stars)**, [**ValueInjecter**](https://github.com/omuleanu/ValueInjecter) **(258K GitHub stars)**, [**AgileMapper**](https://github.com/agileobjects/AgileMapper) **(463K GitHub stars)**. These are not very popular but also free and offer a different balance of simplicity and features.
+There are other libraries such as [**ExpressMapper**](https://github.com/fluentsprings/ExpressMapper) **(308 GitHub stars)**, [**ValueInjecter**](https://github.com/omuleanu/ValueInjecter) **(258 GitHub stars)**, [**AgileMapper**](https://github.com/agileobjects/AgileMapper) **(463 GitHub stars)**. These are not very popular but also free and offer a different balance of simplicity and features.
 
 
 

@@ -41,6 +41,8 @@ public class AbpTenantManagementWebModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        context.Services.AddMapperlyObjectMapper<AbpTenantManagementWebModule>();
+
         Configure<AbpNavigationOptions>(options =>
         {
             options.MenuContributors.Add(new AbpTenantManagementWebMainMenuContributor());
@@ -50,8 +52,6 @@ public class AbpTenantManagementWebModule : AbpModule
         {
             options.FileSets.AddEmbedded<AbpTenantManagementWebModule>();
         });
-
-        context.Services.AddMapperlyObjectMapper<AbpTenantManagementWebModule>();
 
         Configure<RazorPagesOptions>(options =>
         {

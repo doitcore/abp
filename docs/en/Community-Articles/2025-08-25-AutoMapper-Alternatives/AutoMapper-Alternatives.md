@@ -111,35 +111,35 @@ Here are concise, drop-in **side-by-side C# snippets** that map the same model w
 We'll use these models to show the mapping examples for AutoMapper, Mapster, AgileMapper.
 
 ```csharp
-public sealed class Order
+public class Order
 {
-    public int Id { get; init; }
-    public Customer Customer { get; init; } = default!;
-    public List<OrderLine> Lines { get; init; } = new();
-    public DateTime CreatedAt { get; init; }
+    public int Id { get; set; }
+    public Customer Customer { get; set; } = default!;
+    public List<OrderLine> Lines { get; set; } = new();
+    public DateTime CreatedAt { get; set; }
 }
 
-public sealed class Customer
+public class Customer
 {
-    public int Id { get; init; }
-    public string Name { get; init; } = "";
-    public string? Email { get; init; }
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
+    public string? Email { get; set; }
 }
 
-public sealed class OrderLine
+public class OrderLine
 {
-    public int ProductId { get; init; }
-    public int Quantity { get; init; }
-    public decimal UnitPrice { get; init; }
+    public int ProductId { get; set; }
+    public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
 }
 
-public sealed class OrderDto
+public class OrderDto
 {
-    public int Id { get; init; }
-    public string CustomerName { get; init; } = "";
-    public int ItemCount { get; init; }
-    public decimal Total { get; init; }
-    public string CreatedAtIso { get; init; } = "";
+    public int Id { get; set; }
+    public string CustomerName { get; set; } = "";
+    public int ItemCount { get; set; }
+    public decimal Total { get; set; }
+    public string CreatedAtIso { get; set; } = "";
 }
 ```
 
@@ -189,32 +189,53 @@ public partial class OrderMapper
 {
     // Simple property mapping: Customer.Name -> CustomerName
     [MapProperty(nameof(Order.Customer) + "." + nameof(Customer.Name), nameof(OrderDto.CustomerName))]
-    public partial OrderDto ToDto(Order s);
+    public partial OrderDto ToDto(Order source);
 
     // Update an existing target (like MapToExisting)
     [MapProperty(nameof(Order.Customer) + "." + nameof(Customer.Name), nameof(OrderDto.CustomerName))]
-    public partial void UpdateDto(Order s, OrderDto target);
+    public partial void UpdateDto(Order source, OrderDto target);
 
-    // Post-process calculated fields (ItemCount, Total, CreatedAtIso)
-    // https://mapperly.riok.app/docs/configuration/before-after-map/
-    [UserMapping(Default = true)]  
-    private static void After(Order s, ref OrderDto d)
+    public OrderDto Map(Order s)
     {
-        d = d with
-        {
-            ItemCount = s.Lines.Sum(l => l.Quantity),
-            Total = s.Lines.Sum(l => l.Quantity * l.UnitPrice),
-            CreatedAtIso = s.CreatedAt.ToString("O")
-        };
+        var d = ToDto(s);
+        AfterMap(s, d);
+        return d;
+    }
+
+    public void Map(Order source, OrderDto d)
+    {
+        UpdateDto(source, d);
+        AfterMap(source, d);
+    }
+
+    private void AfterMap(Order source, OrderDto d)
+    {
+        d.ItemCount = source.Lines.Sum(l => l.Quantity);
+        d.Total = source.Lines.Sum(l => l.Quantity * l.UnitPrice);
+        d.CreatedAtIso = source.CreatedAt.ToString("O");
     }
 }
 
+
 //USAGE
 var mapper = new OrderMapper();
-var dto = mapper.ToDto(order);
+var order = new Order
+{
+    Id = 1,
+    Customer = new Customer { Id = 1, Name = "John Doe", Email = "johndoe@abp.io" },
+    Lines =
+    [
+        new OrderLine {ProductId = 1, Quantity = 2, UnitPrice = 10.0m},
+        new OrderLine {ProductId = 2, Quantity = 1, UnitPrice = 20.0m}
+    ]
+};
 
+// Map to a new object
+var dto = mapper.Map(order);
+
+// Map to an existing object
 var target = new OrderDto();
-mapper.UpdateDto(order, target);
+mapper.Map(order, target);
 ```
 
 **NuGet Packages:**

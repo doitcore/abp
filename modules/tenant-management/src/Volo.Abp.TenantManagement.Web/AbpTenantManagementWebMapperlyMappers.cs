@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Riok.Mapperly.Abstractions;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Mapperly;
 using Volo.Abp.TenantManagement.Web.Pages.TenantManagement.Tenants;
 
@@ -19,7 +20,7 @@ public partial class TenantDtoToTenantInfoModelMapper
 
 [Mapper]
 public partial class TenantInfoModelToTenantCreateDtoMapper
-    : MapperBase<EditModalModel.TenantInfoModel, TenantCreateDto>
+    : TwoWayMapperBase<EditModalModel.TenantInfoModel, TenantCreateDto>
 {
     [MapperIgnoreSource(nameof(EditModalModel.TenantInfoModel.Id))]
     [MapperIgnoreSource(nameof(EditModalModel.TenantInfoModel.ConcurrencyStamp))]
@@ -32,6 +33,10 @@ public partial class TenantInfoModelToTenantCreateDtoMapper
     [MapperIgnoreTarget(nameof(TenantCreateDto.AdminEmailAddress))]
     [MapperIgnoreTarget(nameof(TenantCreateDto.AdminPassword))]
     public override partial void Map(EditModalModel.TenantInfoModel source, TenantCreateDto destination);
+
+    public override partial EditModalModel.TenantInfoModel ReverseMap(TenantCreateDto source);
+
+    public override partial void ReverseMap(TenantCreateDto source, EditModalModel.TenantInfoModel destination);
 }
 
 [Mapper]

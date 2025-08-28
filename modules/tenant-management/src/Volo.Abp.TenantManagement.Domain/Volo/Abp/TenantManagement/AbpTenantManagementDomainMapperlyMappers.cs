@@ -7,34 +7,14 @@ using Volo.Abp.MultiTenancy;
 
 namespace Volo.Abp.TenantManagement.Domain.Volo.Abp.TenantManagement;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class TenantToTenantConfigurationMapper
     : MapperBase<Tenant, TenantConfiguration>
 {
-    [MapperIgnoreSource(nameof(Tenant.DeleterId))]
-    [MapperIgnoreSource(nameof(Tenant.DeletionTime))]
-    [MapperIgnoreSource(nameof(Tenant.LastModificationTime))]
-    [MapperIgnoreSource(nameof(Tenant.CreationTime))]
-    [MapperIgnoreSource(nameof(Tenant.CreatorId))]
-    [MapperIgnoreSource(nameof(Tenant.LastModifierId))]
-    [MapperIgnoreSource(nameof(Tenant.ExtraProperties))]
-    [MapperIgnoreSource(nameof(Tenant.ConcurrencyStamp))]
-    [MapperIgnoreSource(nameof(Tenant.IsDeleted))]
-    [MapperIgnoreSource(nameof(Tenant.EntityVersion))]
     [MapperIgnoreTarget(nameof(TenantConfiguration.EditionId))]
     [MapperIgnoreTarget(nameof(TenantConfiguration.IsActive))]
     public override partial TenantConfiguration Map(Tenant source);
 
-    [MapperIgnoreSource(nameof(Tenant.DeleterId))]
-    [MapperIgnoreSource(nameof(Tenant.DeletionTime))]
-    [MapperIgnoreSource(nameof(Tenant.IsDeleted))]
-    [MapperIgnoreSource(nameof(Tenant.LastModificationTime))]
-    [MapperIgnoreSource(nameof(Tenant.LastModifierId))]
-    [MapperIgnoreSource(nameof(Tenant.CreationTime))]
-    [MapperIgnoreSource(nameof(Tenant.CreatorId))]
-    [MapperIgnoreSource(nameof(Tenant.ExtraProperties))]
-    [MapperIgnoreSource(nameof(Tenant.ConcurrencyStamp))]
-    [MapperIgnoreSource(nameof(Tenant.EntityVersion))]
     [MapperIgnoreTarget(nameof(TenantConfiguration.EditionId))]
     [MapperIgnoreTarget(nameof(TenantConfiguration.IsActive))]
     public override partial void Map(Tenant source, TenantConfiguration destination);

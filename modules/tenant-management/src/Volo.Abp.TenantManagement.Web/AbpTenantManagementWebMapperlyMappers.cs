@@ -19,24 +19,16 @@ public partial class TenantDtoToTenantInfoModelMapper
 }
 
 [Mapper]
-public partial class TenantInfoModelToTenantCreateDtoMapper
-    : TwoWayMapperBase<EditModalModel.TenantInfoModel, TenantCreateDto>
+public partial class CreateTenantInfoModelToTenantCreateDtoMapper
+    : TwoWayMapperBase<CreateModalModel.TenantInfoModel, TenantCreateDto>
 {
-    [MapperIgnoreSource(nameof(EditModalModel.TenantInfoModel.Id))]
-    [MapperIgnoreSource(nameof(EditModalModel.TenantInfoModel.ConcurrencyStamp))]
-    [MapperIgnoreTarget(nameof(TenantCreateDto.AdminEmailAddress))]
-    [MapperIgnoreTarget(nameof(TenantCreateDto.AdminPassword))]
-    public override partial TenantCreateDto Map(EditModalModel.TenantInfoModel source);
+    public override partial TenantCreateDto Map(CreateModalModel.TenantInfoModel source);
 
-    [MapperIgnoreSource(nameof(EditModalModel.TenantInfoModel.Id))]
-    [MapperIgnoreSource(nameof(EditModalModel.TenantInfoModel.ConcurrencyStamp))]
-    [MapperIgnoreTarget(nameof(TenantCreateDto.AdminEmailAddress))]
-    [MapperIgnoreTarget(nameof(TenantCreateDto.AdminPassword))]
-    public override partial void Map(EditModalModel.TenantInfoModel source, TenantCreateDto destination);
+    public override partial void Map(CreateModalModel.TenantInfoModel source, TenantCreateDto destination);
 
-    public override partial EditModalModel.TenantInfoModel ReverseMap(TenantCreateDto source);
+    public override partial CreateModalModel.TenantInfoModel ReverseMap(TenantCreateDto source);
 
-    public override partial void ReverseMap(TenantCreateDto source, EditModalModel.TenantInfoModel destination);
+    public override partial void ReverseMap(TenantCreateDto source, CreateModalModel.TenantInfoModel destination);
 }
 
 [Mapper]

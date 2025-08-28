@@ -408,6 +408,11 @@ public class RepositoryRegistration_Tests
     public class MyTestAggregateRootWithDefaultPkEmptyRepository : IMyTestAggregateRootWithDefaultPkEmptyRepository
     {
         public bool? IsChangeTrackingEnabled { get; set; }
+
+        public void SetEntityName(string name)
+        {
+            
+        }
     }
 
     public class TestDbContextRegistrationOptions : AbpCommonDbContextRegistrationOptions

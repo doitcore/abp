@@ -184,7 +184,7 @@ public class PermissionStore : IPermissionStore, ITransientDependency
             Logger.LogDebug($"Getting not cache granted permissions from the repository for this provider name,key: {providerName},{providerKey}");
 
             var grantedPermissionsHashSet = new HashSet<string>(
-                (await PermissionGrantRepository.GetListAsync(notCacheKeys.Select(GetPermissionNameFormCacheKeyOrNull).ToArray(), providerName, providerKey)).Select(p => p.Name)
+                (await PermissionGrantRepository.GetListAsync(permissionNames.ToArray(), providerName, providerKey)).Select(p => p.Name)
             );
 
             Logger.LogDebug($"Setting the cache items. Count: {permissions.Count}");

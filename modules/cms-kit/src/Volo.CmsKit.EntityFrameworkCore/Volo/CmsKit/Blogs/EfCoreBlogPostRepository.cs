@@ -58,13 +58,10 @@ public class EfCoreBlogPostRepository : EfCoreRepository<ICmsKitDbContext, BlogP
         BlogPostStatus? statusFilter = null,
         CancellationToken cancellationToken = default)
     {
-        var tagFilteredEntityIds = tagId.HasValue
-            ? (await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
-            : [];
-
-        var favoriteUserFilteredEntityIds = favoriteUserId.HasValue
-            ? (await _markedItemManager.GetEntityIdsFilteredByUserAsync(favoriteUserId.Value, BlogPostConsts.EntityType, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
-            : [];
+        cancellationToken = GetCancellationToken(cancellationToken);
+        
+        var tagFilteredEntityIds = await GetEntityIdsByTagId(tagId, cancellationToken);
+        var favoriteUserFilteredEntityIds = await GetFavoriteEntityIdsByUserId(favoriteUserId, cancellationToken);
 
         var queryable = (await GetDbSetAsync())
             .WhereIf(tagFilteredEntityIds.Count > 0, x => tagFilteredEntityIds.Contains(x.Id))
@@ -93,13 +90,10 @@ public class EfCoreBlogPostRepository : EfCoreRepository<ICmsKitDbContext, BlogP
         var dbContext = await GetDbContextAsync();
         var usersDbSet = dbContext.Set<CmsUser>();
 
-        var tagFilteredEntityIds = tagId.HasValue
-            ? (await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
-            : [];
-
-        var favoriteUserFilteredEntityIds = favoriteUserId.HasValue
-            ? (await _markedItemManager.GetEntityIdsFilteredByUserAsync(favoriteUserId.Value, BlogPostConsts.EntityType, CurrentTenant.Id, cancellationToken)).Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList()
-            : [];
+        cancellationToken = GetCancellationToken(cancellationToken);
+        
+        var tagFilteredEntityIds = await GetEntityIdsByTagId(tagId, cancellationToken);
+        var favoriteUserFilteredEntityIds = await GetFavoriteEntityIdsByUserId(favoriteUserId, cancellationToken);
 
         var queryable = (await GetDbSetAsync())
             .WhereIf(tagFilteredEntityIds.Count > 0, x => tagFilteredEntityIds.Contains(x.Id))
@@ -187,5 +181,65 @@ public class EfCoreBlogPostRepository : EfCoreRepository<ICmsKitDbContext, BlogP
     public virtual async Task DeleteByBlogIdAsync(Guid blogId, CancellationToken cancellationToken = default)
     {
         await DeleteAsync(x => x.BlogId == blogId, cancellationToken: cancellationToken);
+    }
+    
+    private async Task<List<Guid>> GetFavoriteEntityIdsByUserId(Guid? userId, CancellationToken cancellationToken = default)
+    {
+        var entityIdFilters = new List<Guid>();
+        if (!userId.HasValue)
+        {
+            return entityIdFilters;
+        }
+
+        var entityIds = await _markedItemManager.GetEntityIdsFilteredByUserAsync(
+            userId.Value, 
+            BlogPostConsts.EntityType, 
+            CurrentTenant.Id, 
+            cancellationToken
+        );
+
+        if (entityIds.Count == 0)
+        {
+            entityIdFilters.Add(Guid.Empty);
+            return entityIdFilters;
+        }
+        
+        foreach (var entityId in entityIds)
+        {
+            if (Guid.TryParse(entityId, out var parsedEntityId))
+            {
+                entityIdFilters.Add(parsedEntityId);
+            }
+        }
+
+        return entityIdFilters;
+    }
+
+    private async Task<List<Guid>> GetEntityIdsByTagId(Guid? tagId, CancellationToken cancellationToken = default)
+    {
+        var entityIdFilters = new List<Guid>();
+        if (!tagId.HasValue)
+        {
+            return entityIdFilters;
+        }
+
+        var entityIds =
+            await _entityTagManager.GetEntityIdsFilteredByTagAsync(tagId.Value, CurrentTenant.Id, cancellationToken);
+
+        if (entityIds.Count == 0)
+        {
+            entityIdFilters.Add(Guid.Empty);
+            return entityIdFilters;
+        }
+        
+        foreach (var entityId in entityIds)
+        {
+            if (Guid.TryParse(entityId, out var parsedEntityId))
+            {
+                entityIdFilters.Add(parsedEntityId);
+            }
+        }
+
+        return entityIdFilters;
     }
 }

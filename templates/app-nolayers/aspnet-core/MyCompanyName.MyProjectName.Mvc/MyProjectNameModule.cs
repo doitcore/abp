@@ -293,7 +293,6 @@ public class MyProjectNameModule : AbpModule
 
     private void ConfigureMapperly(ServiceConfigurationContext context)
     {
-        context.Services.AddMapperlyObjectMapper();
         context.Services.AddMapperlyObjectMapper<MyProjectNameModule>();
     }
 

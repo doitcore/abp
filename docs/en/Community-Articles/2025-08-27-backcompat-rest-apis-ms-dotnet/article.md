@@ -44,9 +44,9 @@ x-api-version: 2.0
 Pros: Clean URLs; multiple reader support. Cons: Needs proxy/CDN rules.
 
 3) **Media Type**
-``` Accept: application/json;v=2
+ Accept: application/json;v=2
 
-``` Pros: Semantically accurate. Cons: More complicated to test and implement. **Recommendation:** For the majority of teams, favor **URI segments**, with an optional **`x-api-version`** header for flexibility.
+ Pros: Semantically accurate. <br> Cons: More complicated to test and implement. <br> **Recommendation:** For the majority of teams, favor **URI segments**, with an optional **`x-api-version`** header for flexibility.
 
 ### Quick Setup in ASP.NET Core (Asp.Versioning)
 ```csharp
@@ -156,13 +156,13 @@ public async Task Orders_v1_contract_should_match_snapshot()
 
 Swagger UI configuration by group name:
 ```csharp
-```
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
 c.SwaggerEndpoint("/swagger/v2/swagger.json", "API v2");
-}); ```
+});
+```
 ---
 
 ## Conclusion

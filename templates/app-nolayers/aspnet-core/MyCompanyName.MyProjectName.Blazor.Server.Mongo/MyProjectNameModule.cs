@@ -184,6 +184,8 @@ public class MyProjectNameModule : AbpModule
         ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureMongoDB(context);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameModule>();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

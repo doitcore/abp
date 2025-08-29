@@ -105,6 +105,8 @@ public class MyProjectNameWebHostModule : AbpModule
         ConfigureSwaggerServices(context.Services);
         ConfigureMultiTenancy();
         ConfigureDataProtection(context, configuration, hostingEnvironment);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameWebHostModule>();
     }
 
     private void ConfigureMenu(IConfiguration configuration)

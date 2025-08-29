@@ -96,6 +96,8 @@ public class MyProjectNameWebModule : AbpModule
         ConfigureNavigationServices(configuration);
         ConfigureMultiTenancy();
         ConfigureSwaggerServices(context.Services);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameWebModule>();
     }
 
     private void ConfigureBundles()

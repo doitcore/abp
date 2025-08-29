@@ -127,6 +127,8 @@ public class MyProjectNameBlazorModule : AbpModule
         ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureMenu(context);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameBlazorModule>();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

@@ -111,6 +111,8 @@ public class MyProjectNameWebModule : AbpModule
         ConfigureNavigationServices();
         ConfigureAutoApiControllers();
         ConfigureSwaggerServices(context.Services);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameWebModule>();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

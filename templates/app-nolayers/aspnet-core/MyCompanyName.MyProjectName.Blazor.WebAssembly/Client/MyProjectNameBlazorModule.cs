@@ -69,6 +69,8 @@ public class MyProjectNameBlazorModule : AbpModule
         ConfigureRouter(context);
         ConfigureMenu(context);
         ConfigureHttpClientProxies(context);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameBlazorModule>();
     }
 
     private void ConfigureRouter(ServiceConfigurationContext context)

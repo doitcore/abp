@@ -6,6 +6,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MyCompanyName.MyProjectName;
 
@@ -21,5 +22,8 @@ namespace MyCompanyName.MyProjectName;
     )]
 public class MyProjectNameApplicationModule : AbpModule
 {
-
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddMapperlyObjectMapper<MyProjectNameApplicationModule>();
+    }
 }

@@ -187,6 +187,8 @@ public class MyProjectNameModule : AbpModule
         ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureEfCore(context);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameModule>();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

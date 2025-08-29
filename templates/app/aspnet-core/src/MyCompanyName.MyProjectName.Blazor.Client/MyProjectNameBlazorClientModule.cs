@@ -39,6 +39,8 @@ public class MyProjectNameBlazorClientModule : AbpModule
         ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureMenu(context);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameBlazorClientModule>();
     }
 
     private void ConfigureRouter(ServiceConfigurationContext context)

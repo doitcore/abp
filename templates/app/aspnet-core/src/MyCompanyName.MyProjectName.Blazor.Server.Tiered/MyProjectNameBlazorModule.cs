@@ -115,6 +115,8 @@ public class MyProjectNameBlazorModule : AbpModule
         ConfigureDataProtection(context, configuration, hostingEnvironment);
         ConfigureDistributedLocking(context, configuration);
         ConfigureSwaggerServices(context.Services);
+
+        context.Services.AddMapperlyObjectMapper<MyProjectNameBlazorModule>();
     }
 
     private void ConfigureUrls(IConfiguration configuration)

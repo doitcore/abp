@@ -4,6 +4,7 @@ using Volo.Abp.Mapperly;
 namespace Volo.Abp.TenantManagement.Application.Volo.Abp.TenantManagement;
 
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+[MapExtraProperties]
 public partial class TenantToTenantDtoMapper
     : MapperBase<Tenant, TenantDto>
 {

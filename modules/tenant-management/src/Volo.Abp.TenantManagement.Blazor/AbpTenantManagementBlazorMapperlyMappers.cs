@@ -4,6 +4,7 @@ using Volo.Abp.Mapperly;
 namespace Volo.Abp.TenantManagement.Blazor;
 
 [Mapper]
+[MapExtraProperties]
 public partial class TenantDtoToTenantUpdateDtoMapper
     : MapperBase<TenantDto, TenantUpdateDto>
 {

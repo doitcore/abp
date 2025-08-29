@@ -10,6 +10,7 @@ using Volo.Abp.TenantManagement.Web.Pages.TenantManagement.Tenants;
 namespace Volo.Abp.TenantManagement.Web;
 
 [Mapper]
+[MapExtraProperties]
 public partial class TenantDtoToTenantInfoModelMapper
     : MapperBase<TenantDto, EditModalModel.TenantInfoModel>
 {
@@ -19,6 +20,7 @@ public partial class TenantDtoToTenantInfoModelMapper
 }
 
 [Mapper]
+[MapExtraProperties]
 public partial class CreateTenantInfoModelToTenantCreateDtoMapper
     : TwoWayMapperBase<CreateModalModel.TenantInfoModel, TenantCreateDto>
 {
@@ -32,6 +34,7 @@ public partial class CreateTenantInfoModelToTenantCreateDtoMapper
 }
 
 [Mapper]
+[MapExtraProperties]
 public partial class TenantInfoModelToTenantUpdateDtoMapper
     : MapperBase<EditModalModel.TenantInfoModel, TenantUpdateDto>
 {

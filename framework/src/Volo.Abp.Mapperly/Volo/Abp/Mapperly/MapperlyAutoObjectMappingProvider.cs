@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Data;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.ObjectMapping;
-using Volo.Abp.Reflection;
 
 namespace Volo.Abp.Mapperly;
 
@@ -62,8 +61,7 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
             return destination;
         }
 
-        throw new AbpException($"No {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpMapperlyMapper<TSource, TDestination>))} or" +
-                               $" {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpReverseMapperlyMapper<TSource, TDestination>))} was found");
+        throw GetNoMapperFoundException<TSource, TDestination>();
     }
 
     public virtual TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
@@ -95,8 +93,34 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
             return destination;
         }
 
-        throw new AbpException($"No {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpMapperlyMapper<TSource, TDestination>))} or" +
-                               $" {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpReverseMapperlyMapper<TSource, TDestination>))} was found");
+        throw GetNoMapperFoundException<TSource, TDestination>();
+    }
+
+    protected virtual AbpException GetNoMapperFoundException<TSource, TDestination>()
+    {
+        var newLine = Environment.NewLine;
+        var message = "No type mapper class was found for the given source and destination types." +
+                      newLine +
+                      newLine +
+                      "Mapping types:" +
+                      newLine +
+                      $"{typeof(TSource).Name} -> {typeof(TDestination).Name}" +
+                      newLine +
+                      $"{typeof(TSource).FullName} -> {typeof(TDestination).FullName}" +
+                      newLine +
+                      newLine +
+                      "Define a mapping class to resolve this issue:" +
+                      newLine +
+                      "   - Use MapperBase<TSource, TDestination> for one-way mapping." +
+                      newLine +
+                      "   - Use TwoWayMapperBase<TDestination, TSource> for two-way mapping." +
+                      newLine +
+                      newLine +
+                      "See the Mapperly documentation for details:" +
+                      newLine +
+                      "https://abp.io/docs/latest/framework/infrastructure/object-to-object-mapping#mapperly-integration";
+
+        return new AbpException(message);
     }
 
     protected virtual bool TryToMapCollection<TSource, TDestination>(TSource source, TDestination? destination, out TDestination collectionResult)

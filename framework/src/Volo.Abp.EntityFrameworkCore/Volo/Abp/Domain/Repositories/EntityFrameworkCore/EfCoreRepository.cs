@@ -93,6 +93,7 @@ public class EfCoreRepository<TDbContext, TEntity> : RepositoryBase<TEntity>, IE
     public IEfCoreBulkOperationProvider? BulkOperationProvider => LazyServiceProvider.LazyGetService<IEfCoreBulkOperationProvider>();
 
     public EfCoreRepository(IDbContextProvider<TDbContext> dbContextProvider)
+        : base(AbpEfCoreConsts.ProviderName)
     {
         _dbContextProvider = dbContextProvider;
 

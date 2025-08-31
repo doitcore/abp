@@ -251,12 +251,12 @@ public static class RepositoryExtensions
         await repository.DeleteAsync(entity, autoSave, cancellationToken);
     }
     
-    public static TRepository WithEntityName<TRepository>(
+    public static TRepository SetEntityName<TRepository>(
         this TRepository repository,
         string name
         ) where TRepository : class, IRepository
     {
-        repository.SetEntityName(name);
+        repository.EntityName = name;
         return repository;
     }
 }

@@ -16,6 +16,7 @@ public partial class BackgroundJobInfoToBackgroundJobRecordMapper
     public override partial BackgroundJobRecord Map(BackgroundJobInfo source);
     
     [MapperIgnoreTarget(nameof(BackgroundJobRecord.ConcurrencyStamp))]
+    [MapperIgnoreTarget(nameof(BackgroundJobRecord.ExtraProperties))]
     public override partial void Map(BackgroundJobInfo source, BackgroundJobRecord destination);
 
     [ObjectFactory]

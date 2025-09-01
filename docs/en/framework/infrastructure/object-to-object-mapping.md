@@ -302,6 +302,23 @@ public partial class UserToUserDtoMapper : MapperBase<User, UserDto>
 
 It is suggested to use the `MapExtraPropertiesAttribute` attribute if both classes are extensible objects (implement the `IHasExtraProperties` interface). See the [object extension document](../fundamentals/object-extensions.md) for more.
 
+### Property Setter Method
+
+Mapperly requires that properties of both source and destination objects have `setter` methods. Otherwise, the property will be ignored. You can use `protected set` or `private set` to control the visibility of the `setter` method, but each property must have a `setter` method.
+
+### Deep Cloning
+
+By default, Mapperly does not create deep copies of objects to improve performance. If an object can be directly assigned to the target, it will do so (e.g., if the source and target type are both `List<T>`, the list and its entries will not be cloned). To create deep copies, set the `UseDeepCloning` property on the `MapperAttribute` to `true`.
+
+````csharp
+[Mapper(UseDeepCloning = true)]
+public partial class UserToUserDtoMapper : MapperBase<User, UserDto>
+{
+    public override partial UserDto Map(User source);
+    public override partial void Map(User source, UserDto destination);
+}
+````
+
 ### Lists and Arrays Support
 
 ABP Mapperly integration also supports mapping lists and arrays as explained in the [IObjectMapper<TSource, TDestination> Interface](#iobjectmappertsource-tdestination-interface) section. 

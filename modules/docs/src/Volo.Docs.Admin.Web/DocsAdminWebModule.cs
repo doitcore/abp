@@ -32,6 +32,8 @@ namespace Volo.Docs.Admin
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddMapperlyObjectMapper<DocsAdminWebModule>();
+            
             Configure<AbpNavigationOptions>(options =>
             {
                 options.MenuContributors.Add(new DocsMenuContributor());

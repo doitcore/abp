@@ -40,8 +40,10 @@ app.get('/authorize', async (_req, res) => {
   const code_challenge = await oidc.calculatePKCECodeChallenge(code_verifier);
   const state = oidc.randomState();
 
-  const returnUrl = String(_req.query.returnUrl || null);
-  res.cookie('returnUrl', returnUrl, { ...secureCookie, maxAge: 5 * 60 * 1000 });
+  if (_req.query.returnUrl) {
+    const returnUrl = String(_req.query.returnUrl || null);
+    res.cookie('returnUrl', returnUrl, { ...secureCookie, maxAge: 5 * 60 * 1000 });
+  }
 
   const sid = crypto.randomUUID();
   sessions.set(sid, { pkce: code_verifier, state });
@@ -132,7 +134,7 @@ app.get('/', async (req, res, next) => {
     res.cookie('refresh_token', tokens.refresh_token, secureCookie);
     res.cookie('expires_at', String(accessExpiresAt.getTime()), tokenCookie);
 
-    const returnUrl = req.cookies.returnUrl || '/';
+    const returnUrl = req.cookies?.returnUrl ?? '/';
     res.clearCookie('returnUrl', secureCookie);
 
     return res.redirect(returnUrl);

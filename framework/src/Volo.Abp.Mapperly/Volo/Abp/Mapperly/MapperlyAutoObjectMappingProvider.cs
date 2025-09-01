@@ -99,26 +99,26 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
     protected virtual AbpException GetNoMapperFoundException<TSource, TDestination>()
     {
         var newLine = Environment.NewLine;
-        var message = "No type mapper class was found for the given source and destination types." +
+        var message = "No object mapping was found for the specified source and destination types." +
                       newLine +
                       newLine +
-                      "Mapping types:" +
+                      "Mapping attempted:" +
                       newLine +
                       $"{typeof(TSource).Name} -> {typeof(TDestination).Name}" +
                       newLine +
                       $"{typeof(TSource).FullName} -> {typeof(TDestination).FullName}" +
                       newLine +
                       newLine +
-                      "Define a mapping class to resolve this issue:" +
+                      "How to fix:" +
+                      newLine +
+                      "Define a mapping class for these types:" +
                       newLine +
                       "   - Use MapperBase<TSource, TDestination> for one-way mapping." +
                       newLine +
                       "   - Use TwoWayMapperBase<TDestination, TSource> for two-way mapping." +
                       newLine +
                       newLine +
-                      "See the Mapperly documentation for details:" +
-                      newLine +
-                      "https://abp.io/docs/latest/framework/infrastructure/object-to-object-mapping#mapperly-integration";
+                      "For details, see the Mapperly integration document https://abp.io/docs/latest/framework/infrastructure/object-to-object-mapping#mapperly-integration";
 
         return new AbpException(message);
     }

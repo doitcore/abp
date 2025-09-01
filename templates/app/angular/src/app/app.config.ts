@@ -29,6 +29,8 @@ export const appConfig: ApplicationConfig = {
         registerLocaleFn: registerLocale(),
       })
     ),
+    provideThemeLeptonX(),
+    provideSideMenuLayout(),
     provideAbpOAuth(),
     provideAbpThemeShared(),
     provideSettingManagementConfig(),
@@ -37,10 +39,7 @@ export const appConfig: ApplicationConfig = {
     provideTenantManagementConfig(),
     provideFeatureManagementConfig(),
     provideAnimations(),
-    provideAbpCore(),
     provideLogo(withEnvironmentOptions(environment)),
-    provideThemeLeptonX(),
-    provideSideMenuLayout(),
     provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({}))
   ],
 };

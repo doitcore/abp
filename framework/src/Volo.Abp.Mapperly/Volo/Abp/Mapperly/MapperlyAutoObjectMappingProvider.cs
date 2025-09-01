@@ -24,6 +24,9 @@ public class MapperlyAutoObjectMappingProvider<TContext> : MapperlyAutoObjectMap
 public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
 {
     protected static readonly ConcurrentDictionary<string, Func<object, object, object, object?>> MapCache = new();
+    protected static readonly List<MethodInfo> MapMethods = typeof(MapperlyAutoObjectMappingProvider)
+        .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+        .Where(x => x.Name == nameof(Map)).ToList();
 
     protected IServiceProvider ServiceProvider { get; }
 
@@ -168,33 +171,9 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
         Type destinationArgumentType,
         bool hasDestination)
     {
-        var methods = typeof(MapperlyAutoObjectMappingProvider)
-            .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(x => x.Name == nameof(Map))
-            .Where(x =>
-            {
-                var parameters = x.GetParameters();
-                return (hasDestination || parameters.Length == 1) &&
-                       (!hasDestination || parameters.Length == 2);
-            })
-            .ToList();
-
-        if (methods.Count == 0)
-        {
-            throw new AbpException($"Could not find a method named '{nameof(Map)}'" +
-                                   $" with parameters({(hasDestination ? sourceArgumentType + ", " + destinationArgumentType : sourceArgumentType.ToString())})" +
-                                   $" in the type '{mapperType}'.");
-        }
-
-        if (methods.Count > 1)
-        {
-            throw new AbpException($"Found more than one method named '{nameof(Map)}'" +
-                                   $" with parameters({(hasDestination ? sourceArgumentType + ", " + destinationArgumentType : sourceArgumentType.ToString())})" +
-                                   $" in the type '{mapperType}'.");
-        }
-
-        var method = methods[0].MakeGenericMethod(sourceArgumentType, destinationArgumentType);
-
+        var method = !hasDestination
+            ? MapMethods.First(x => x.GetParameters().Length == 1).MakeGenericMethod(sourceArgumentType, destinationArgumentType)
+            : MapMethods.First(x => x.GetParameters().Length == 2).MakeGenericMethod(sourceArgumentType, destinationArgumentType);
         var instanceParam = Expression.Parameter(typeof(object), "mapper");
         var sourceParam = Expression.Parameter(typeof(object), "source");
         var destinationParam = Expression.Parameter(typeof(object), "destination");

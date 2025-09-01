@@ -8,7 +8,7 @@
 
   <ng-template #defaultLink let-route>
     <li class="nav-item" *abpPermission="route.requiredPolicy">
-      <a class="nav-link" [href]="[route.path]">
+      <a class="nav-link" [routerLink]="[route.path]">
         @if (route.iconClass) {
           <i [ngClass]="route.iconClass"></i>
         }

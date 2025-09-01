@@ -44,8 +44,6 @@ export class AbpCookieStorageService implements Storage {
       path: '/',
       sameSite: 'Lax',
       secure: true,
-      // İstersen kalıcı yapmak için maxAge / expires ekleyebilirsin
-      // 'max-age': 60 * 60, // 1 saat
     });
   }
 

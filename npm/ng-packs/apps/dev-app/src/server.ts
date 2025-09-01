@@ -135,7 +135,7 @@ app.get('/', async (req, res, next) => {
     const returnUrl = req.cookies.returnUrl || '/';
     res.clearCookie('returnUrl', secureCookie);
 
-    return res.redirect('/');
+    return res.redirect(returnUrl);
   } catch (e) {
     console.error('OIDC error:', e);
     return res.status(500).send('oidc error');

@@ -38,6 +38,8 @@ public class CreateModalModel : CmsKitAdminPageModel
 
     public virtual async Task<IActionResult> OnPostAsync()
     {
+        ViewModel.Order = await MenuAdminAppService.GetAvailableMenuOrderAsync(ViewModel.ParentId);
+
         var input = ObjectMapper.Map<MenuItemCreateViewModel, MenuItemCreateInput>(ViewModel);
 
         var dto = await MenuAdminAppService.CreateAsync(input);

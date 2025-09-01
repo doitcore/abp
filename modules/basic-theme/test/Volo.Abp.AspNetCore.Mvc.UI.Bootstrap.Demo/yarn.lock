@@ -2,203 +2,203 @@
 # yarn lockfile v1
 
 
-"@abp/aspnetcore.mvc.ui.theme.shared@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/aspnetcore.mvc.ui.theme.shared/-/aspnetcore.mvc.ui.theme.shared-9.3.0-rc.4.tgz#860574efd49c1e5748d2d47ff93a4ca63d9c832a"
-  integrity sha512-lDCAEI7cdRTFqyIG2Mzxw+q2ZDbznOzjGNOAJOMVRQW+vL/qqoTL9NfzkY0X67qNiBYLja+EVJKTBOSrF30Tuw==
+"@abp/aspnetcore.mvc.ui.theme.shared@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/aspnetcore.mvc.ui.theme.shared/-/aspnetcore.mvc.ui.theme.shared-9.3.2.tgz#94089c3dcac4571c5fcb9bdb754e5df28a24e966"
+  integrity sha512-eRSvhLimwf65KKI1P/DZgQK+l300EwX4r2S4XYL0gJjjXI9aeIDQuPEqGZs2a6P5/zfejFvefqCIcG5EfEH9ew==
   dependencies:
-    "@abp/aspnetcore.mvc.ui" "~9.3.0-rc.4"
-    "@abp/bootstrap" "~9.3.0-rc.4"
-    "@abp/bootstrap-datepicker" "~9.3.0-rc.4"
-    "@abp/bootstrap-daterangepicker" "~9.3.0-rc.4"
-    "@abp/datatables.net-bs5" "~9.3.0-rc.4"
-    "@abp/font-awesome" "~9.3.0-rc.4"
-    "@abp/jquery-form" "~9.3.0-rc.4"
-    "@abp/jquery-validation-unobtrusive" "~9.3.0-rc.4"
-    "@abp/lodash" "~9.3.0-rc.4"
-    "@abp/luxon" "~9.3.0-rc.4"
-    "@abp/malihu-custom-scrollbar-plugin" "~9.3.0-rc.4"
-    "@abp/moment" "~9.3.0-rc.4"
-    "@abp/select2" "~9.3.0-rc.4"
-    "@abp/sweetalert2" "~9.3.0-rc.4"
-    "@abp/timeago" "~9.3.0-rc.4"
+    "@abp/aspnetcore.mvc.ui" "~9.3.2"
+    "@abp/bootstrap" "~9.3.2"
+    "@abp/bootstrap-datepicker" "~9.3.2"
+    "@abp/bootstrap-daterangepicker" "~9.3.2"
+    "@abp/datatables.net-bs5" "~9.3.2"
+    "@abp/font-awesome" "~9.3.2"
+    "@abp/jquery-form" "~9.3.2"
+    "@abp/jquery-validation-unobtrusive" "~9.3.2"
+    "@abp/lodash" "~9.3.2"
+    "@abp/luxon" "~9.3.2"
+    "@abp/malihu-custom-scrollbar-plugin" "~9.3.2"
+    "@abp/moment" "~9.3.2"
+    "@abp/select2" "~9.3.2"
+    "@abp/sweetalert2" "~9.3.2"
+    "@abp/timeago" "~9.3.2"
 
-"@abp/aspnetcore.mvc.ui@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/aspnetcore.mvc.ui/-/aspnetcore.mvc.ui-9.3.0-rc.4.tgz#840d863f65eb07585e1c6c556f1860d5f663a625"
-  integrity sha512-XwwsyhBtOkBJ0JT7Ret/f3G1iwl+Wq5ugdReuC7xE6gllwISdLT3rd4BjS27ZTP3cyVIIsdBowYPB4vZgALZdA==
+"@abp/aspnetcore.mvc.ui@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/aspnetcore.mvc.ui/-/aspnetcore.mvc.ui-9.3.2.tgz#5cab40d0f17eea2ae97a0d25fa238e52b5e8ef91"
+  integrity sha512-C73MB6abc531CmYyRctZXtKUY/0t+hhBQg5fIbzdJaR8SCSHEh2v9j2ZAhKFU0kectdrpKrLroOihOWYMfuWdQ==
   dependencies:
     ansi-colors "^4.1.3"
 
-"@abp/bootstrap-datepicker@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/bootstrap-datepicker/-/bootstrap-datepicker-9.3.0-rc.4.tgz#14e31d889ccfafe4c8f1af0a5d746a55cbaa69ec"
-  integrity sha512-O2WEeL1c2A7zPB8+Q4FaI2zvwSSQ+swuthXYY6FuZojrrzi4wOP8BW9fM0KleVEbKJXFFv+ya0ZGzoyIiy5T5w==
+"@abp/bootstrap-datepicker@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/bootstrap-datepicker/-/bootstrap-datepicker-9.3.2.tgz#e156b0715b87a182e2cf3132436559e7c47f8987"
+  integrity sha512-8tDHiFvppm5YlIaLL0IfRd9r/YtyV4+bIp8zuIDeVW6eUvFd1ueuifCzf89vZXRf18PLR8JAiYFdBOx9+8CjZw==
   dependencies:
     bootstrap-datepicker "^1.10.0"
 
-"@abp/bootstrap-daterangepicker@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/bootstrap-daterangepicker/-/bootstrap-daterangepicker-9.3.0-rc.4.tgz#8b78310830bb0d4ecd37f85a5df662e73c9e2b17"
-  integrity sha512-0Vhb0tczxYjKNwdUJD+T5YwxHGkNI63MjvlvTjcfhN9AXVoLKGpCxerZ5pEooAyDHQbcCmAmjtLinRujOtAIDA==
+"@abp/bootstrap-daterangepicker@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/bootstrap-daterangepicker/-/bootstrap-daterangepicker-9.3.2.tgz#19c2f5088ef8cf1cdc4483376f28faa2ca172f18"
+  integrity sha512-ygyUkiffq5Dry5yuyAzCKnlymbGZZ5f8es9d+dXLjp5lzk8K88LI4jTaIhm/Gc7wzKhFmHMpOIFYIRMzwvMmRQ==
   dependencies:
     bootstrap-daterangepicker "^3.1.0"
 
-"@abp/bootstrap@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/bootstrap/-/bootstrap-9.3.0-rc.4.tgz#9ea1fd07953fd763d1d8640282bddd52331231f3"
-  integrity sha512-hbB575kX+t9g3SrRR3apXnSbpDuMVpNEqTZWzNfpFUr6g20HTYhsI87VStT5EIcwonRK5rKkoZSBYjiARwhBhw==
+"@abp/bootstrap@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/bootstrap/-/bootstrap-9.3.2.tgz#53dc0d68d15c60d36200d711b4f5a0acef15096b"
+  integrity sha512-vrUux40RDPx7hBXp2u5evRpm2LHRwHmRhmtTXx6ltQ8Aq7BwD9BvqBZEgg5GB5L9MGy5oy5Wm57t9ooQ8qmLgg==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     bootstrap "^5.3.3"
 
-"@abp/clipboard@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/clipboard/-/clipboard-9.3.0-rc.4.tgz#d3a0320147338f0a4863debf8485c71a32f349b9"
-  integrity sha512-Eobwf7x2GWUt+p4nnMR04Cj5to9E3XOJCfGqI3uEZ3NprI1PCJb2Pf6/3UFhR2AmZFt6DOLZkHmySv8g0lDRew==
+"@abp/clipboard@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/clipboard/-/clipboard-9.3.2.tgz#4e0d6456e142e552ca3b4ec10159276e096c56bf"
+  integrity sha512-jorX68Yw/9pWAmt8cOuVx3Cnp7VF9xuvCD/ecvL5eZyHhXt4tDcYIFO5LkF+CaIky79gdzdF3tmYeFSPUE/HzA==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     clipboard "^2.0.11"
 
-"@abp/core@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/core/-/core-9.3.0-rc.4.tgz#96380f05e37942da1b126dc8d515d5d4b970a481"
-  integrity sha512-ZbsApLGzvXk2jS1ZbAFbuns7eWdYc3/YusMWZgVU4HaW4D6VOjXrEWFs0n74O0GBRS2+4rrXHcLn1D6eRSTFnA==
+"@abp/core@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/core/-/core-9.3.2.tgz#10f0a485affb15d51c319bbdf88c1bfa24b5b778"
+  integrity sha512-y3kkP9+PBG1xxiHDXPk+kYs1BzbAytVRg611vKhCejHntMSD3cD4vCg4NW5oNEtCktNRBYcnQICdgLElAX/koQ==
   dependencies:
-    "@abp/utils" "~9.3.0-rc.4"
+    "@abp/utils" "~9.3.2"
 
-"@abp/datatables.net-bs5@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/datatables.net-bs5/-/datatables.net-bs5-9.3.0-rc.4.tgz#80c582aa95685dfb7e6bbf9a1850cbd56294dce0"
-  integrity sha512-9wgkGLUwKySPc5X5SGKyNzsS5bCftWp2ygxTqCMqc1kAyi0tc03f+FsAiGmfRnR0NLDBMqfy2inc3U1iGzCrzw==
+"@abp/datatables.net-bs5@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/datatables.net-bs5/-/datatables.net-bs5-9.3.2.tgz#89a3664c2ee0e98b16a41894f04f12edcf7b7780"
+  integrity sha512-llju5jfVIppot59cQ4cBGJdl9VA156mDI5V+h5ZHGBmVvwG79R/mUd3D49XmqQGBke95K1Z49R7V/JxYqa6F+Q==
   dependencies:
-    "@abp/datatables.net" "~9.3.0-rc.4"
+    "@abp/datatables.net" "~9.3.2"
     datatables.net-bs5 "^2.1.8"
 
-"@abp/datatables.net@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/datatables.net/-/datatables.net-9.3.0-rc.4.tgz#2dc5a65c5065268ee54cc6ea9d9caec7e75343f2"
-  integrity sha512-LSTr+9+lgfdPdLFqS5irS/rkPzDGv78MjcqJTRtTDzZWzlhutxaF0cRLW1oyUsGVWw3C7CiJrrVJVIvr+gNFgQ==
+"@abp/datatables.net@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/datatables.net/-/datatables.net-9.3.2.tgz#ee5cd8cb286211404d50593b33ea532f1b7cb9f1"
+  integrity sha512-JK6XgZeP2diBOnC9jSml0kYc1uvbU09yz4GOyPmh/QZiGdS4vonRKfjIXdFd0YbxK0qAPZO+MzZuwqvZSA6nyA==
   dependencies:
-    "@abp/jquery" "~9.3.0-rc.4"
+    "@abp/jquery" "~9.3.2"
     datatables.net "^2.1.8"
 
-"@abp/font-awesome@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/font-awesome/-/font-awesome-9.3.0-rc.4.tgz#0a32ec4c52caa71e3fe210f8cbe6a2b9dd1cd43b"
-  integrity sha512-+XdSvkoFYzswP2QSGUt6hSme980sp9lGFlgnHMn3z6TyjE8PjaKO6oIP1Gh+E0R6NyCMrZ9iyK6ou7B6m5oRww==
+"@abp/font-awesome@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/font-awesome/-/font-awesome-9.3.2.tgz#b0659aeec243a4fe3c851a98a79673292c2687b1"
+  integrity sha512-7esRWpT7PFMPSVhGPKb3DGq1h5n/R2xmusurbGDGhTHckiOfna8tQerZ6A9YdRsM2kIIDisWbuSzBkoM8hqfCQ==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     "@fortawesome/fontawesome-free" "^6.6.0"
 
-"@abp/highlight.js@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/highlight.js/-/highlight.js-9.3.0-rc.4.tgz#a137d901170632968081f9e1c044fc43840e291d"
-  integrity sha512-bKrMVDfjuDKXsC+9CCaQRO7jBHOkxz4xlhfy1l7wPlRoqsztAmlMVH1+K0fjRQCE8Zx1ST5t+9GnKJJ6nEIakw==
+"@abp/highlight.js@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/highlight.js/-/highlight.js-9.3.2.tgz#add22b40f5b412d6c86629a4d6d449d426c9b141"
+  integrity sha512-EVUCK6Hm3J+sMCuGZDTEEyWxfvAK5mxLuYGRuRrmzZvxXKsnAwqZitMddAvkZVAwN1QiV3gyXgdrz1XUBWZ2kg==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     "@highlightjs/cdn-assets" "~11.10.0"
 
-"@abp/jquery-form@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/jquery-form/-/jquery-form-9.3.0-rc.4.tgz#c872db6318d4362c3dda7c5a86df979972cd9d3a"
-  integrity sha512-ELWV5ui8VWsbvr4FxTfWcm0Qua1xlpS1ZAB/VmD5ixcSHJE3Jwy8cwqRtzByzzsqLrQ9jqfP2tQ1YTIETyQ14g==
+"@abp/jquery-form@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/jquery-form/-/jquery-form-9.3.2.tgz#17d0fe0a81d61e2e96131379e82872e5e45a2d5b"
+  integrity sha512-IwXWBRbtLhdB6/pJwQsWJHqLDHpZfJoA6x48A/GbTQLgWhpt0/OainDZsEUH3o0TWMhgJU+tp274uPENlG3DzQ==
   dependencies:
-    "@abp/jquery" "~9.3.0-rc.4"
+    "@abp/jquery" "~9.3.2"
     jquery-form "^4.3.0"
 
-"@abp/jquery-validation-unobtrusive@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/jquery-validation-unobtrusive/-/jquery-validation-unobtrusive-9.3.0-rc.4.tgz#6af707ed8e08441be96dbc8bb2f7664762827e51"
-  integrity sha512-PU3LH3X41Qgkw/YUK7KqT4wguqUeX5uto+tX9W7XLs8+ptJpywsqUCaddrk7C1KmoH73AEoUv1Hu/vFiGmojDw==
+"@abp/jquery-validation-unobtrusive@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/jquery-validation-unobtrusive/-/jquery-validation-unobtrusive-9.3.2.tgz#f13183ed7108cdea1500f18b1f80aff3037132ce"
+  integrity sha512-0v0Rhj3bir91cqwhlxDuD0PqwEYceyqLYf6K5eFF1/nE+1wN1VIST/oLN1Xis9x4NswbnnKai+OST0fqagpuhg==
   dependencies:
-    "@abp/jquery-validation" "~9.3.0-rc.4"
+    "@abp/jquery-validation" "~9.3.2"
     jquery-validation-unobtrusive "^4.0.0"
 
-"@abp/jquery-validation@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/jquery-validation/-/jquery-validation-9.3.0-rc.4.tgz#319e6a2724272a18462312689a1369bba8574f57"
-  integrity sha512-4jO8B23SLlxySDAo46gNQPRCzHxzWzad/YvTWawjUzME2Zbax/BpRbFeq1G2usWlqHByFUwfQStzK09zg7/Kug==
+"@abp/jquery-validation@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/jquery-validation/-/jquery-validation-9.3.2.tgz#8ec072e2babb5d75aa1088a3754b837b7387df76"
+  integrity sha512-JCquJcN0FAF+8TQOYgbqeDZqPIwy2mWVDtHKCts2lVj8ol+sQgWCOhZDx11sl1oqVZjkvdOmKMgWHDztdoUojA==
   dependencies:
-    "@abp/jquery" "~9.3.0-rc.4"
+    "@abp/jquery" "~9.3.2"
     jquery-validation "^1.21.0"
 
-"@abp/jquery@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/jquery/-/jquery-9.3.0-rc.4.tgz#c71bbb179374fd21410563ea52aca461f7cad50c"
-  integrity sha512-k2HKg/n8GWNs/gm5sMd1iigo+c9Pn4cnFH+HzlWFROGbsRHK3kSL9ekEdLBXT1vGaL0lvsJ+miiJay9Ysz3q5w==
+"@abp/jquery@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/jquery/-/jquery-9.3.2.tgz#edb3d65bdbd3885af72759ce0cd9d813ab41aade"
+  integrity sha512-i4scUZt6q09jhl8YTtQrPg+GV5Vd1QW57hHesYmgor8pLD87JU7cc5sCEJlmmtzVZsXjDkVuiyD2sOUXSItxMw==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     jquery "~3.7.1"
 
-"@abp/lodash@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/lodash/-/lodash-9.3.0-rc.4.tgz#3d2744780616fdc6e6d014b8e6da7c49fcd0a2e4"
-  integrity sha512-VjlqKz6zjwb4zie3HfaVIMf3dnYEs0JKln47FekqoxVHW/up9lhJnPbE2yFK4ICYn6EQts7SU5sKCLOzSKPxXA==
+"@abp/lodash@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/lodash/-/lodash-9.3.2.tgz#d3ca624dd8927d33cf8728403ef591977b9e11f4"
+  integrity sha512-4XOhLKa/reKB85DyHtz1obC96j2VJs9+xqlO8Pn58hXP396cMEMuC1MfjHMwhPuMVHwgffg0UCfukKKf/UGJ/w==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     lodash "^4.17.21"
 
-"@abp/luxon@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/luxon/-/luxon-9.3.0-rc.4.tgz#5d8aebf991cf0bb42daa45721edafb22c785a444"
-  integrity sha512-RuWFh/wMIKSVBr3U8uNaC3WwYi98UlS9rddscZXPHND9uKrxXVNqA0ahGSMJJLOqUxtBVkW7DHE23KTiolkFqw==
+"@abp/luxon@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/luxon/-/luxon-9.3.2.tgz#806464e828adf6b99a9620f3c39a16f8621ecd84"
+  integrity sha512-oP74Q9/FJ8QpB7yVOycFlfsGhPKFUk6NTnoT+cVRNg0wpUkRRjg5WTkZeKLoVxKNk9RwA/9fa6MnBiiNs2z/Pg==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     luxon "^3.5.0"
 
-"@abp/malihu-custom-scrollbar-plugin@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/malihu-custom-scrollbar-plugin/-/malihu-custom-scrollbar-plugin-9.3.0-rc.4.tgz#4415c7eb22f289fb443f2a6b2fc097f23b4dd60e"
-  integrity sha512-k8DY1jPHNl1RaTO8n+TSBuKLv4Swo4VmwpaDfDwyFixiKw7vnxh9P/Kd9d4j0Z6+65zqMBiNcdzEXW2wSWxfKQ==
+"@abp/malihu-custom-scrollbar-plugin@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/malihu-custom-scrollbar-plugin/-/malihu-custom-scrollbar-plugin-9.3.2.tgz#71069a6abd8a9456f0fc6227ee17b93300ad6030"
+  integrity sha512-6pFO68hvtbGiGTaxkzTPnzJA2NZkzE+acWlTfBvSVyMvZM1jER5wYJmDpflZO+WPtTTu9CUflTwvYw2TiNKlUg==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     malihu-custom-scrollbar-plugin "^3.1.5"
 
-"@abp/moment@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/moment/-/moment-9.3.0-rc.4.tgz#56ff26ba2dff3487bd27d7ec0761f3ca1e11d843"
-  integrity sha512-33wuojZgP5AxPmpZESMRMA5vFH1Y53NLE49ZjVauxsvFmxI2BnlSHddwZXpdj6ncmrVtiu8GDODKOoVfb6KG4g==
+"@abp/moment@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/moment/-/moment-9.3.2.tgz#150548dd2b817d586f87113abb40c85f9b1ab406"
+  integrity sha512-TdHeqPPEPk00/5vKbGHY6D74XlzfRM2Kb4WVvykVx2gjzScp5Sfunpus/A9UCOYls/bWp1MVMT7V0ExBXYPyNg==
   dependencies:
     moment "^2.30.1"
 
-"@abp/prismjs@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/prismjs/-/prismjs-9.3.0-rc.4.tgz#3859fa653664bd980e480088a1e9478b175df912"
-  integrity sha512-krz+2Q8hd2FDd1nZ3pDWuVK5YtU+6rkIruAkzlel6aeWvxgLyUxpGKrp3nYFqBvrVnpxsgJ6hELekEWrxtOZHA==
+"@abp/prismjs@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/prismjs/-/prismjs-9.3.2.tgz#2ea48bfa5ebcfd98962029eebeab374d63a4e242"
+  integrity sha512-q8bdUjk+IuP+nWzN8phgFjvKtOHR94OT5Sth7Rp64L68pVCJopihyth8f4mLZl7hMtwrro/5GFxjpR+KRNRpbg==
   dependencies:
-    "@abp/clipboard" "~9.3.0-rc.4"
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/clipboard" "~9.3.2"
+    "@abp/core" "~9.3.2"
     prismjs "^1.29.0"
 
-"@abp/select2@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/select2/-/select2-9.3.0-rc.4.tgz#1a26e9689dd26d27758085406b0604756d0d6b95"
-  integrity sha512-MrS/iQpcDT3N2TiYYT23nCrfWMtKLOu1k6/5PtVnZVA3EnSoLnMzgHvBvUjtqy1lhN8lzfJLddVcXkiIJ92hUQ==
+"@abp/select2@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/select2/-/select2-9.3.2.tgz#5c069ff7a9fcb9e78bd4a8591d1e5eac6d66f03f"
+  integrity sha512-/N5bJjyLQnN8zPovRrmrcYhiUxG/RTI6kNaH0QW/QEsryfuX24wdDWrRXacsJ1QKlMxig++IHRnpMBrHhxAKUw==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     select2 "^4.0.13"
 
-"@abp/sweetalert2@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/sweetalert2/-/sweetalert2-9.3.0-rc.4.tgz#f3e47e161a67a014295937e1cd4c5b89b90e97bc"
-  integrity sha512-vTttrc+tinXUFRq79QsJb0G/Zy2BPrnhwRaWADYyoPK/ATM+MDw4wXJfHYhkuDYA5gpENRNi7+I5NpmQMa6qKA==
+"@abp/sweetalert2@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/sweetalert2/-/sweetalert2-9.3.2.tgz#1ada87b720faef1289aa5fdcf42c0f5c74ff4493"
+  integrity sha512-PUNbt7O6reTqDelUBGryullFDD5XeZkgQFn/FXbZVp6y0owHUyIlX+Jr7PIesWEB/RHuLa+uZoSywtVPH7fsEw==
   dependencies:
-    "@abp/core" "~9.3.0-rc.4"
+    "@abp/core" "~9.3.2"
     sweetalert2 "^11.14.1"
 
-"@abp/timeago@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/timeago/-/timeago-9.3.0-rc.4.tgz#c8d96483b2ff51808bda5c8419c009aff34567e3"
-  integrity sha512-ZI9JTOQHnz4UrPf/XZB1rxUI79dlU1wpgZlT97gSQ5fcpyU0mMSkwN29l52pB5R+J4QvQomMfQFqKK/P9BaXKw==
+"@abp/timeago@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/timeago/-/timeago-9.3.2.tgz#fe4d184aed92dd265e3c9531c53bdc684abb3b52"
+  integrity sha512-GLimaRixGtZ5oiH3JLEmeUe54gePdSfVZtyJOvGcc0wQjQVOa5JgyTqktszb+pF4QVdeJr+ijz6RZlavwIY0EA==
   dependencies:
-    "@abp/jquery" "~9.3.0-rc.4"
+    "@abp/jquery" "~9.3.2"
     timeago "^1.6.7"
 
-"@abp/utils@~9.3.0-rc.4":
-  version "9.3.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@abp/utils/-/utils-9.3.0-rc.4.tgz#6bd33c2050e72f69a7c50323f263a4f329722e24"
-  integrity sha512-ukWrNxQbvIqPxvlrLzdKxa4XYTydn5cvtQfP7lX/yAwj9X5DRqnFu28yCl47yxnZzlyKopqk9uXofiOy6qkYuA==
+"@abp/utils@~9.3.2":
+  version "9.3.2"
+  resolved "https://registry.yarnpkg.com/@abp/utils/-/utils-9.3.2.tgz#f2158e9858c8efcbd3f17bf6e79c41116ac66795"
+  integrity sha512-DtD07VHsDS5KPfn3jnL6f9WsfXEJVv7xUF+NcgW+HBTHnJTxunnE/OYGf/clTM4xeDb+RWl3AoGYP+kF4H/Snw==
   dependencies:
     just-compare "^2.3.0"
 

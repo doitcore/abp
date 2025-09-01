@@ -5,7 +5,7 @@ using Volo.Blogging.Blogs.Dtos;
 
 namespace Volo.Blogging.Admin;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class BlogToBlogDtoMapper : MapperBase<Blog, BlogDto>
 {
     public override partial BlogDto Map(Blog source);

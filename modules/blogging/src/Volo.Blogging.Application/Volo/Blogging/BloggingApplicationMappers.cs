@@ -11,7 +11,7 @@ using Volo.Blogging.Users;
 
 namespace Volo.Blogging;
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PostCacheItemToPostWithDetailsDtoMapper : MapperBase<PostCacheItem, PostWithDetailsDto>
 {
     [MapperIgnoreTarget(nameof(PostWithDetailsDto.LastModificationTime))]
@@ -37,7 +37,7 @@ public partial class PostCacheItemToPostWithDetailsDtoMapper : MapperBase<PostCa
     public override partial void Map(PostCacheItem source, PostWithDetailsDto destination);
 }
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PostToPostCacheItemMapper : MapperBase<Post, PostCacheItem>
 {
     [MapperIgnoreTarget(nameof(PostCacheItem.CommentCount))]
@@ -49,7 +49,7 @@ public partial class PostToPostCacheItemMapper : MapperBase<Post, PostCacheItem>
     public override partial void Map(Post source, PostCacheItem destination);
 }
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class CommentToCommentWithDetailsDtoMapper : MapperBase<Comment, CommentWithDetailsDto>
 {
     [MapperIgnoreTarget(nameof(CommentWithDetailsDto.Writer))]
@@ -59,7 +59,7 @@ public partial class CommentToCommentWithDetailsDtoMapper : MapperBase<Comment, 
     public override partial void Map(Comment source, CommentWithDetailsDto destination);
 }
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PostToPostWithDetailsDtoMapper : MapperBase<Post, PostWithDetailsDto>
 {
     [MapperIgnoreTarget(nameof(PostWithDetailsDto.Tags))]
@@ -73,7 +73,7 @@ public partial class PostToPostWithDetailsDtoMapper : MapperBase<Post, PostWithD
     public override partial void Map(Post source, PostWithDetailsDto destination);
 }
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class TagToTagDtoMapper : MapperBase<Tag, TagDto>
 {
     public override partial TagDto Map(Tag source);
@@ -81,7 +81,7 @@ public partial class TagToTagDtoMapper : MapperBase<Tag, TagDto>
     public override partial void Map(Tag source, TagDto destination);
 }
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class BlogUserToBlogUserDtoMapper : MapperBase<BlogUser, BlogUserDto>
 {
     public override partial BlogUserDto Map(BlogUser source);
@@ -89,7 +89,7 @@ public partial class BlogUserToBlogUserDtoMapper : MapperBase<BlogUser, BlogUser
     public override partial void Map(BlogUser source, BlogUserDto destination);
 }
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class BlogToBlogDtoMapper : MapperBase<Blog, BlogDto>
 {
     public override partial BlogDto Map(Blog source);

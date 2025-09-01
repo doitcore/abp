@@ -7,7 +7,7 @@ using Volo.Docs.Projects;
 
 namespace Volo.Docs.Admin;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ProjectPdfFileToProjectPdfFileDtoMapper : MapperBase<ProjectPdfFile, ProjectPdfFileDto>
 {
     public override partial ProjectPdfFileDto Map(ProjectPdfFile source);
@@ -15,7 +15,7 @@ public partial class ProjectPdfFileToProjectPdfFileDtoMapper : MapperBase<Projec
     public override partial void Map(ProjectPdfFile source, ProjectPdfFileDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class DocumentInfoToDocumentInfoDtoMapper : MapperBase<DocumentInfo, DocumentInfoDto>
 {
     public override partial DocumentInfoDto Map(DocumentInfo source);
@@ -23,7 +23,7 @@ public partial class DocumentInfoToDocumentInfoDtoMapper : MapperBase<DocumentIn
     public override partial void Map(DocumentInfo source, DocumentInfoDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ProjectWithoutDetailsToProjectWithoutDetailsDtoMapper : MapperBase<ProjectWithoutDetails, ProjectWithoutDetailsDto>
 {
     public override partial ProjectWithoutDetailsDto Map(ProjectWithoutDetails source);
@@ -31,7 +31,7 @@ public partial class ProjectWithoutDetailsToProjectWithoutDetailsDtoMapper : Map
     public override partial void Map(ProjectWithoutDetails source, ProjectWithoutDetailsDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class DocumentWithoutContentToDocumentDtoMapper : MapperBase<DocumentWithoutContent, DocumentDto>
 {
     public override partial DocumentDto Map(DocumentWithoutContent source);
@@ -39,7 +39,7 @@ public partial class DocumentWithoutContentToDocumentDtoMapper : MapperBase<Docu
     public override partial void Map(DocumentWithoutContent source, DocumentDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class DocumentToDocumentDtoMapper : MapperBase<Document, DocumentDto>
 {
     [MapperIgnoreTarget(nameof(DocumentDto.ProjectName))]
@@ -49,7 +49,7 @@ public partial class DocumentToDocumentDtoMapper : MapperBase<Document, Document
     public override partial void Map(Document source, DocumentDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ProjectToProjectDtoMapper : MapperBase<Project, ProjectDto>
 {
     public override partial ProjectDto Map(Project source);

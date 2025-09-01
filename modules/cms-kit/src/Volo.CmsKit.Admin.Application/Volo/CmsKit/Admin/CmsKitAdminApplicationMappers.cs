@@ -16,7 +16,7 @@ using Volo.CmsKit.Admin.Menus;
 
 namespace Volo.CmsKit.Admin;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class TagEntityTypeDefinitonToTagDefinitionDtoMapper : MapperBase<TagEntityTypeDefiniton, TagDefinitionDto>
 {
     public override partial TagDefinitionDto Map(TagEntityTypeDefiniton source);
@@ -24,7 +24,7 @@ public partial class TagEntityTypeDefinitonToTagDefinitionDtoMapper : MapperBase
     public override partial void Map(TagEntityTypeDefiniton source, TagDefinitionDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class BlogPostToBlogPostDtoMapper : MapperBase<BlogPost, BlogPostDto>
 {
@@ -33,7 +33,7 @@ public partial class BlogPostToBlogPostDtoMapper : MapperBase<BlogPost, BlogPost
     public override partial void Map(BlogPost source, BlogPostDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class BlogPostToBlogPostListDtoMapper : MapperBase<BlogPost, BlogPostListDto>
 {
@@ -44,7 +44,7 @@ public partial class BlogPostToBlogPostListDtoMapper : MapperBase<BlogPost, Blog
     public override partial void Map(BlogPost source, BlogPostListDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class MenuItemToMenuItemWithDetailsDtoMapper : MapperBase<MenuItem, MenuItemWithDetailsDto>
 {
@@ -55,7 +55,7 @@ public partial class MenuItemToMenuItemWithDetailsDtoMapper : MapperBase<MenuIte
     public override partial void Map(MenuItem source, MenuItemWithDetailsDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class MenuItemToMenuItemMapper : MapperBase<MenuItem, MenuItemDto>
 {
@@ -64,7 +64,7 @@ public partial class MenuItemToMenuItemMapper : MapperBase<MenuItem, MenuItemDto
     public override partial void Map(MenuItem source, MenuItemDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class MediaDescriptorToMediaDescriptorDtoMapper : MapperBase<MediaDescriptor, MediaDescriptorDto>
 {
@@ -73,7 +73,7 @@ public partial class MediaDescriptorToMediaDescriptorDtoMapper : MapperBase<Medi
     public override partial void Map(MediaDescriptor source, MediaDescriptorDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class TagToTagDtoMapper : MapperBase<Tag, TagDto>
 {
@@ -82,7 +82,7 @@ public partial class TagToTagDtoMapper : MapperBase<Tag, TagDto>
     public override partial void Map(Tag source, TagDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class BlogToBlogDtoMapper : MapperBase<Blog, BlogDto>
 {
@@ -93,7 +93,7 @@ public partial class BlogToBlogDtoMapper : MapperBase<Blog, BlogDto>
     public override partial void Map(Blog source, BlogDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PageToPageLookupDtoMapper : MapperBase<Page, PageLookupDto>
 {
     public override partial PageLookupDto Map(Page source);
@@ -101,7 +101,7 @@ public partial class PageToPageLookupDtoMapper : MapperBase<Page, PageLookupDto>
     public override partial void Map(Page source, PageLookupDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class PageToPageDtoMapper : MapperBase<Page, PageDto>
 {
@@ -110,7 +110,7 @@ public partial class PageToPageDtoMapper : MapperBase<Page, PageDto>
     public override partial void Map(Page source, PageDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CommentToCommentWithAuthorDtoMapper : MapperBase<Comment, CommentWithAuthorDto>
 {
@@ -121,7 +121,7 @@ public partial class CommentToCommentWithAuthorDtoMapper : MapperBase<Comment, C
     public override partial void Map(Comment source, CommentWithAuthorDto destination);
 }
     
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CommentToCommentDtoMapper : MapperBase<Comment, CommentDto>
 {
@@ -130,7 +130,7 @@ public partial class CommentToCommentDtoMapper : MapperBase<Comment, CommentDto>
     public override partial void Map(Comment source, CommentDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CmsUserToCommentsCmsUserDtoMapper : MapperBase<CmsUser, Comments.CmsUserDto>
 {

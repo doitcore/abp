@@ -7,7 +7,7 @@ using Volo.Blogging.Tagging;
 
 namespace Volo.Blogging;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class TagToTagEtoMapper : MapperBase<Tag, TagEto>
 {
     public override partial TagEto Map(Tag source);
@@ -15,7 +15,7 @@ public partial class TagToTagEtoMapper : MapperBase<Tag, TagEto>
     public override partial void Map(Tag source, TagEto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PostToPostEtoMapper : MapperBase<Post, PostEto>
 {
     public override partial PostEto Map(Post source);
@@ -23,7 +23,7 @@ public partial class PostToPostEtoMapper : MapperBase<Post, PostEto>
     public override partial void Map(Post source, PostEto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class CommentToCommentEtoMapper : MapperBase<Comment, CommentEto>
 {
     public override partial CommentEto Map(Comment source);
@@ -31,7 +31,7 @@ public partial class CommentToCommentEtoMapper : MapperBase<Comment, CommentEto>
     public override partial void Map(Comment source, CommentEto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class BlogToBlogEtoMapper : MapperBase<Blog, BlogEto>
 {
     public override partial BlogEto Map(Blog source);

@@ -5,7 +5,7 @@ using Volo.Blogging.Posts;
 
 namespace Volo.Blogging;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PostWithDetailsDtoToEditPostViewModelMapper : MapperBase<PostWithDetailsDto, EditPostViewModel>
 {
     [MapperIgnoreTarget(nameof(EditPostViewModel.Tags))]
@@ -15,7 +15,7 @@ public partial class PostWithDetailsDtoToEditPostViewModelMapper : MapperBase<Po
     public override partial void Map(PostWithDetailsDto source, EditPostViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class CreatePostViewModelToCreatePostDtoMapper : MapperBase<NewModel.CreatePostViewModel, CreatePostDto>
 {
     public override partial CreatePostDto Map(NewModel.CreatePostViewModel source);

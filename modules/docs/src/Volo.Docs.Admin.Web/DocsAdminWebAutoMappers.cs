@@ -6,7 +6,7 @@ using Volo.Docs.Admin.Projects;
 
 namespace Volo.Docs.Admin;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PullDocumentViewModelToPullAllDocumentInputMapper : MapperBase<PullModel.PullDocumentViewModel, PullAllDocumentInput>
 {
     public override partial PullAllDocumentInput Map(PullModel.PullDocumentViewModel source);
@@ -14,7 +14,7 @@ public partial class PullDocumentViewModelToPullAllDocumentInputMapper : MapperB
     public override partial void Map(PullModel.PullDocumentViewModel source, PullAllDocumentInput destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PullDocumentViewModelToPullDocumentInputMapper : MapperBase<PullModel.PullDocumentViewModel, PullDocumentInput>
 {
     public override partial PullDocumentInput Map(PullModel.PullDocumentViewModel source);
@@ -22,7 +22,7 @@ public partial class PullDocumentViewModelToPullDocumentInputMapper : MapperBase
     public override partial void Map(PullModel.PullDocumentViewModel source, PullDocumentInput destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ProjectDtoToEditGithubProjectViewModelMapper : MapperBase<ProjectDto, EditModel.EditGithubProjectViewModel>
 {
     [MapperIgnoreTarget(nameof(EditModel.EditGithubProjectViewModel.GitHubAccessToken))]
@@ -40,7 +40,7 @@ public partial class ProjectDtoToEditGithubProjectViewModelMapper : MapperBase<P
     public override partial void Map(ProjectDto source, EditModel.EditGithubProjectViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CreateGithubProjectViewModelToCreateProjectDtoMapper : MapperBase<CreateModel.CreateGithubProjectViewModel, CreateProjectDto>
 {
@@ -50,7 +50,7 @@ public partial class CreateGithubProjectViewModelToCreateProjectDtoMapper : Mapp
 }
 
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class EditGithubProjectViewModelToUpdateProjectDtoMyClassMapper : MapperBase<EditModel.EditGithubProjectViewModel, UpdateProjectDto>
 {

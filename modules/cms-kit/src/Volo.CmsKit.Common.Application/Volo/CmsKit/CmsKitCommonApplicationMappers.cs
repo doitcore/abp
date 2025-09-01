@@ -6,7 +6,7 @@ using Volo.CmsKit.Users;
 
 namespace Volo.CmsKit;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class OrganizationUnitRoleToOrganizationUnitRoleDtoMapper : TwoWayMapperBase<BlogFeatureCacheItem, BlogFeatureDto>
 {
@@ -17,7 +17,7 @@ public partial class OrganizationUnitRoleToOrganizationUnitRoleDtoMapper : TwoWa
     public override partial void ReverseMap(BlogFeatureDto destination, BlogFeatureCacheItem source);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class BlogFeatureToBlogFeatureDtoMapper : MapperBase<BlogFeature, BlogFeatureDto>
 {
@@ -26,7 +26,7 @@ public partial class BlogFeatureToBlogFeatureDtoMapper : MapperBase<BlogFeature,
     public override partial void Map(BlogFeature source, BlogFeatureDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class BlogFeatureToBlogFeatureCacheItemMapper : MapperBase<BlogFeature, BlogFeatureCacheItem>
 {
@@ -35,7 +35,7 @@ public partial class BlogFeatureToBlogFeatureCacheItemMapper : MapperBase<BlogFe
     public override partial void Map(BlogFeature source, BlogFeatureCacheItem destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PopularTagToPopularTagDtoMapper : MapperBase<PopularTag, PopularTagDto>
 {
     public override partial PopularTagDto Map(PopularTag source);
@@ -43,7 +43,7 @@ public partial class PopularTagToPopularTagDtoMapper : MapperBase<PopularTag, Po
     public override partial void Map(PopularTag source, PopularTagDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CmsUserToCmsUserDtoMapper : MapperBase<CmsUser, CmsUserDto>
 {
@@ -52,7 +52,7 @@ public partial class CmsUserToCmsUserDtoMapper : MapperBase<CmsUser, CmsUserDto>
     public override partial void Map(CmsUser source, CmsUserDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class TagToTagDtoMapper : MapperBase<Tag, TagDto>
 {

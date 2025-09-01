@@ -14,7 +14,7 @@ using Volo.CmsKit.Users;
 
 namespace Volo.CmsKit.Public;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CmsUserToCmsUserDtoMapper : MapperBase<CmsUser, Comments.CmsUserDto>
 {
@@ -23,7 +23,7 @@ public partial class CmsUserToCmsUserDtoMapper : MapperBase<CmsUser, Comments.Cm
     public override partial void Map(CmsUser source, Comments.CmsUserDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CommentToCommentDtoMapper : MapperBase<Comment, CommentDto>
 {
@@ -34,7 +34,7 @@ public partial class CommentToCommentDtoMapper : MapperBase<Comment, CommentDto>
     public override partial void Map(Comment source, CommentDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CommentToCommentWithDetailsDtoMapper : MapperBase<Comment, CommentWithDetailsDto>
 {
@@ -47,7 +47,7 @@ public partial class CommentToCommentWithDetailsDtoMapper : MapperBase<Comment, 
     public override partial void Map(Comment source, CommentWithDetailsDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class RatingToRatingDtoMapper : MapperBase<Rating, RatingDto>
 {
@@ -56,7 +56,7 @@ public partial class RatingToRatingDtoMapper : MapperBase<Rating, RatingDto>
     public override partial void Map(Rating source, RatingDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class PageToPageCacheItemMapper : MapperBase<Page, PageCacheItem>
 {
@@ -65,7 +65,7 @@ public partial class PageToPageCacheItemMapper : MapperBase<Page, PageCacheItem>
     public override partial void Map(Page source, PageCacheItem destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class PageCacheItemToPageDtoMapper : MapperBase<PageCacheItem, PageDto>
 {
@@ -74,7 +74,7 @@ public partial class PageCacheItemToPageDtoMapper : MapperBase<PageCacheItem, Pa
     public override partial void Map(PageCacheItem source, PageDto destination);
 }
         
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class BlogPostToPageDtoMapper : MapperBase<Page, PageDto>
 {
@@ -83,7 +83,7 @@ public partial class BlogPostToPageDtoMapper : MapperBase<Page, PageDto>
     public override partial void Map(Page source, PageDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class BlogPostToBlogPostCommonDtoMapper : MapperBase<BlogPost, BlogPostCommonDto>
 {
@@ -92,7 +92,7 @@ public partial class BlogPostToBlogPostCommonDtoMapper : MapperBase<BlogPost, Bl
     public override partial void Map(BlogPost source, BlogPostCommonDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class MenuItemToMenuItemDtoMapper : MapperBase<MenuItem, MenuItemDto>
 {
@@ -101,7 +101,7 @@ public partial class MenuItemToMenuItemDtoMapper : MapperBase<MenuItem, MenuItem
     public override partial void Map(MenuItem source, MenuItemDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class GlobalResourceToGlobalResourceDtoMapper : MapperBase<GlobalResource, GlobalResourceDto>
 {

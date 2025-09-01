@@ -7,7 +7,7 @@ using EditModel = Volo.Blogging.Admin.Pages.Blogging.Admin.Blogs.EditModel;
 
 namespace Volo.Blogging.Admin;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class BlogDtoToBlogEditViewModelMapper : MapperBase<BlogDto, EditModel.BlogEditViewModel>
 {
     public override partial EditModel.BlogEditViewModel Map(BlogDto source);
@@ -15,7 +15,7 @@ public partial class BlogDtoToBlogEditViewModelMapper : MapperBase<BlogDto, Edit
     public override partial void Map(BlogDto source, EditModel.BlogEditViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class BlogCreateModalViewToCreateBlogDtoMapper : MapperBase<CreateModel.BlogCreateModalView, CreateBlogDto>
 {
     public override partial CreateBlogDto Map(CreateModel.BlogCreateModalView source);

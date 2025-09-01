@@ -7,7 +7,7 @@ using Volo.CmsKit.Public.Web.Pages.Public.CmsKit.Pages;
 
 namespace Volo.CmsKit.Public.Web;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PageDtoToPageViewModelMapper : TwoWayMapperBase<PageDto, PageViewModel>
 {
     public override partial PageViewModel Map(PageDto source);
@@ -17,7 +17,7 @@ public partial class PageDtoToPageViewModelMapper : TwoWayMapperBase<PageDto, Pa
     public override partial void ReverseMap(PageViewModel destination, PageDto source);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class BlogPostCommonDtoToBlogPostViewModelMapper : TwoWayMapperBase<BlogPostCommonDto, BlogPostViewModel>
 {
     public override partial BlogPostViewModel Map(BlogPostCommonDto source);
@@ -27,7 +27,7 @@ public partial class BlogPostCommonDtoToBlogPostViewModelMapper : TwoWayMapperBa
     public override partial void ReverseMap(BlogPostViewModel destination, BlogPostCommonDto source);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class CreateCommentWithParametersInputToCommentDtoMapper : MapperBase<CreateCommentWithParametersInput, CreateCommentInput>
 {
     [MapperIgnoreTarget(nameof(CreateCommentInput.ExtraProperties))]

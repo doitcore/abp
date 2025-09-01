@@ -212,11 +212,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
       return record;
     });
-
-    if ((this.columnWidths as any)?.some?.((w: number | undefined) => w == null)) {
-      this.setColumnWidths(this.columnWidths?.[0] as any);
-      this.cdr.markForCheck();
-    }
   }
 
   isVisibleActions(rowData: any): boolean {

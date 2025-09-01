@@ -4,7 +4,7 @@ using static Volo.Abp.PermissionManagement.Web.Pages.AbpPermissionManagement.Per
 
 namespace Volo.Abp.PermissionManagement.Web;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PermissionGroupDtoToPermissionGroupViewModelMapper : MapperBase<PermissionGroupDto, PermissionGroupViewModel>
 {
     [MapperIgnoreTarget(nameof(PermissionGroupViewModel.IsAllPermissionsGranted))]
@@ -14,7 +14,7 @@ public partial class PermissionGroupDtoToPermissionGroupViewModelMapper : Mapper
     public override partial void Map(PermissionGroupDto source, PermissionGroupViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PermissionGrantInfoDtoToPermissionGrantInfoViewModelMapper : MapperBase<PermissionGrantInfoDto, PermissionGrantInfoViewModel>
 {
     [MapperIgnoreTarget(nameof(PermissionGrantInfoViewModel.Depth))]
@@ -24,7 +24,7 @@ public partial class PermissionGrantInfoDtoToPermissionGrantInfoViewModelMapper 
     public override partial void Map(PermissionGrantInfoDto source, PermissionGrantInfoViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ProviderInfoDtoToProviderInfoViewModelMapper : MapperBase<ProviderInfoDto, ProviderInfoViewModel>
 {
     public override partial ProviderInfoViewModel Map(ProviderInfoDto source);

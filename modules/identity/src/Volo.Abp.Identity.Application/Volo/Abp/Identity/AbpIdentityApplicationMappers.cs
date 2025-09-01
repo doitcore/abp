@@ -2,7 +2,7 @@
 using Volo.Abp.Identity;
 using Volo.Abp.Mapperly;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUser, IdentityUserDto>
 {
@@ -10,7 +10,7 @@ public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUs
     public override partial void Map(IdentityUser source, IdentityUserDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class IdentityRoleToIdentityRoleDtoMapper : MapperBase<IdentityRole, IdentityRoleDto>
 {

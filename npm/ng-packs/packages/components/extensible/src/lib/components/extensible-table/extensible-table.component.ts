@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   EventEmitter,
   inject,
   Injector,
@@ -10,9 +11,11 @@ import {
   LOCALE_ID,
   OnChanges,
   Output,
+  signal,
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
+  ViewChild,
 } from '@angular/core';
 import { AsyncPipe, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
@@ -97,7 +100,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Input() recordsTotal!: number;
 
   @Input() set actionsColumnWidth(width: number) {
-    this.setColumnWidths(width ? Number(width) : undefined);
+    this._actionsColumnWidth.set(width ? Number(width) : undefined);
   }
 
   @Input() actionsTemplate?: TemplateRef<any>;
@@ -117,13 +120,23 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
   hasAtLeastOnePermittedAction: boolean;
 
-  readonly columnWidths!: number[];
-
   readonly propList: EntityPropList<R>;
 
   readonly actionList: EntityActionList<R>;
 
   readonly trackByFn: TrackByFunction<EntityProp<R>> = (_, item) => item.name;
+
+  // Signal for actions column width
+  private readonly _actionsColumnWidth = signal<number | undefined>(DEFAULT_ACTIONS_COLUMN_WIDTH);
+
+  readonly columnWidths = computed(() => {
+    const actionsColumn = this._actionsColumnWidth();
+    const widths = [actionsColumn];
+    this.propList.forEach(({ value: prop }) => {
+      widths.push(prop.columnWidth);
+    });
+    return widths;
+  });
 
   constructor() {
     const extensions = this.#injector.get(ExtensionsService);
@@ -136,15 +149,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
       this.permissionService.filterItemsByPolicy(
         this.actionList.toArray().map(action => ({ requiredPolicy: action.permission })),
       ).length > 0;
-    this.setColumnWidths(DEFAULT_ACTIONS_COLUMN_WIDTH);
-  }
-
-  private setColumnWidths(actionsColumn: number | undefined) {
-    const widths = [actionsColumn];
-    this.propList.forEach(({ value: prop }) => {
-      widths.push(prop.columnWidth);
-    });
-    (this.columnWidths as any) = widths;
   }
 
   private getIcon(value: boolean) {
@@ -213,10 +217,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
       return record;
     });
 
-    if ((this.columnWidths as any)?.some?.((w: number | undefined) => w == null)) {
-      this.setColumnWidths(this.columnWidths?.[0] as any);
-      this.cdr.markForCheck();
-    }
   }
 
   isVisibleActions(rowData: any): boolean {

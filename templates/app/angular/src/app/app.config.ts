@@ -17,7 +17,6 @@ import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
 import { provideThemeLeptonX } from '@abp/ng.theme.lepton-x';
 import { provideSideMenuLayout } from '@abp/ng.theme.lepton-x/layouts';
 import { provideLogo, withEnvironmentOptions } from '@volo/ngx-lepton-x.core';
-import {provideClientHydration, withEventReplay, withHttpTransferCacheOptions} from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -40,6 +39,5 @@ export const appConfig: ApplicationConfig = {
     provideFeatureManagementConfig(),
     provideAnimations(),
     provideLogo(withEnvironmentOptions(environment)),
-    provideClientHydration(withEventReplay(), withHttpTransferCacheOptions({}))
   ],
 };

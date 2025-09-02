@@ -21,22 +21,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/MyProjectName/browser",
+            "outputPath": "dist/MyProjectName",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "allowedCommonJsDependencies": [
-              "chart.js",
-              "js-sha256"
-            ],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "allowedCommonJsDependencies": ["chart.js", "js-sha256"],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               {
                 "input": "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
@@ -188,67 +180,6 @@
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/MyProjectName/server",
-            "main": "src/server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "inlineStyleLanguage": "scss"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@angular-devkit/build-angular:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "MyProjectName:build:development",
-              "serverTarget": "MyProjectName:server:development"
-            },
-            "production": {
-              "browserTarget": "MyProjectName:build:production",
-              "serverTarget": "MyProjectName:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "routes": [
-              "/"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "MyProjectName:build:production",
-              "serverTarget": "MyProjectName:server:production"
-            },
-            "development": {
-              "browserTarget": "MyProjectName:build:development",
-              "serverTarget": "MyProjectName:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     }

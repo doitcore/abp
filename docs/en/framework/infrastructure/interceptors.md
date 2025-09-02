@@ -184,3 +184,4 @@ To avoid generating dynamic proxies for specific types, use the static class `Dy
 * [Castle DynamicProxy](https://github.com/castleproject/Core/blob/master/docs/dynamicproxy.md)
 * [Castle.Core.AsyncInterceptor](https://github.com/JSkimming/Castle.Core.AsyncInterceptors)
 * [ASP.NET Core Filters](https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/filters)
+* [ABP Video Introduction](https://abp.io/video-courses/essentials/interception)

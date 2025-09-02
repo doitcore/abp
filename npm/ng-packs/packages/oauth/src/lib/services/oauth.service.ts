@@ -61,7 +61,6 @@ export class AbpOAuthService implements IAuthService {
     if (!this.strategy) {
       return EMPTY;
     }
-    console.log("logout called with queryParams:", queryParams);
     return this.strategy.logout(queryParams);
   }
 
@@ -74,7 +73,6 @@ export class AbpOAuthService implements IAuthService {
   }
 
   get isAuthenticated(): boolean {
-    console.log("isAuthenticated --->>>", this.oAuthService.hasValidAccessToken());
     return this.oAuthService.hasValidAccessToken();
   }
 

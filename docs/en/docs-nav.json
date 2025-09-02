@@ -750,6 +750,10 @@
               "path": "framework/infrastructure/json.md"
             },
             {
+              "text": "Interceptors",
+              "path": "framework/infrastructure/interceptors.md"
+            },
+            {
               "text": "Object to Object Mapping",
               "path": "framework/infrastructure/object-to-object-mapping.md"
             },

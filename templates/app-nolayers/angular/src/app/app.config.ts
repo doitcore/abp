@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
@@ -13,8 +13,8 @@ import { provideAccountConfig } from '@abp/ng.account/config';
 import { provideIdentityConfig } from '@abp/ng.identity/config';
 import { provideTenantManagementConfig } from '@abp/ng.tenant-management/config';
 import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
-import { ThemeLeptonXModule } from '@abp/ng.theme.lepton-x';
-import { SideMenuLayoutModule } from '@abp/ng.theme.lepton-x/layouts';
+import { provideThemeLeptonX } from '@abp/ng.theme.lepton-x';
+import { provideSideMenuLayout } from '@abp/ng.theme.lepton-x/layouts';
 import { provideLogo, withEnvironmentOptions } from '@volo/ngx-lepton-x.core';
 
 export const appConfig: ApplicationConfig = {
@@ -27,6 +27,8 @@ export const appConfig: ApplicationConfig = {
         registerLocaleFn: registerLocale(),
       })
     ),
+    provideThemeLeptonX(),
+    provideSideMenuLayout(),
     provideAbpOAuth(),
     provideAbpThemeShared(),
     provideSettingManagementConfig(),
@@ -36,6 +38,5 @@ export const appConfig: ApplicationConfig = {
     provideFeatureManagementConfig(),
     provideAnimations(),
     provideLogo(withEnvironmentOptions(environment)),
-    importProvidersFrom([ThemeLeptonXModule.forRoot(), SideMenuLayoutModule.forRoot()]),
   ],
 };

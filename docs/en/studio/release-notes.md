@@ -2,6 +2,15 @@
 
 This document contains **brief release notes** for each ABP Studio release. Release notes only include **major features** and **visible enhancements**. Therefore, they don't include all the development done in the related version. 
 
+## 1.2.1 (2025-08-14)
+
+* Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.3.1`)
+* Migrated templates to standalone structure for Angular UI.
+* Allowed relating tools with Kubernetes Services (allows to browse tools dashboard those are running in k8s).
+* Made several enhancements for Solution Runner.
+* Added test projects to **Application (Single Layer)** template (optional).
+
+
 ## 1.1.2 (2025-07-31)
 
 * Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.2.3`)

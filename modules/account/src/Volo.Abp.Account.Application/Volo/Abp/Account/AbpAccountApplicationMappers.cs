@@ -4,7 +4,7 @@ using Volo.Abp.Mapperly;
 
 namespace Volo.Abp.Account;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class IdentityUserToProfileDtoMapper : MapperBase<IdentityUser, ProfileDto>
 {

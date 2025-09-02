@@ -120,7 +120,6 @@ app.get('/', async (req, res, next) => {
     }
 
     const tokens = await resp.json();
-    console.log(tokens);
 
     const expiresInSec =
       Number(tokens.expires_in ?? tokens.expiresIn ?? 3600);

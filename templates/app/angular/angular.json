@@ -120,11 +120,7 @@
               },
               "src/styles.scss"
             ],
-            "scripts": [],
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {

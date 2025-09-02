@@ -1,4 +1,5 @@
-﻿using Volo.Abp.Mapperly;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Emailing;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -28,5 +29,7 @@ public class AbpAccountApplicationModule : AbpModule
         {
             options.Applications["MVC"].Urls[AccountUrlNames.PasswordReset] = "Account/ResetPassword";
         });
+
+        context.Services.AddMapperlyObjectMapper<AbpAccountApplicationModule>();
     }
 }

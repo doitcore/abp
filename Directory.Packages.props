@@ -29,6 +29,7 @@
     <PackageVersion Include="Dapper" Version="2.1.66" />
     <PackageVersion Include="Dapr.AspNetCore" Version="1.15.4" />
     <PackageVersion Include="Dapr.Client" Version="1.15.4" />
+	<PackageVersion Include="HtmlAgilityPack" Version="1.12.2" />
     <PackageVersion Include="MyCSharp.HttpUserAgentParser" Version="3.0.25" />
     <PackageVersion Include="Devart.Data.Oracle.EFCore" Version="10.4.235.9" />
     <PackageVersion Include="DistributedLock.Core" Version="1.0.8" />

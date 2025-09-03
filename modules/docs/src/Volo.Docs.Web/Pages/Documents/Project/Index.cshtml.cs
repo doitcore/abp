@@ -28,6 +28,7 @@ using Volo.Docs.Projects;
 using Volo.Docs.GitHub.Documents.Version;
 using Volo.Docs.Localization;
 using Volo.Docs.Utils;
+using Volo.Docs.TableOfContents;
 
 namespace Volo.Docs.Pages.Documents.Project
 {
@@ -75,6 +76,8 @@ namespace Volo.Docs.Pages.Documents.Project
 
         public string DocumentsUrlPrefix { get; set; }
 
+        public string TocHtml { get; set; } = string.Empty;
+
         public bool ShowProjectsCombobox { get; set; }
 
         public bool ShowProjectsComboboxLabel { get; set; }
@@ -105,6 +108,7 @@ namespace Volo.Docs.Pages.Documents.Project
         private readonly DocsUiOptions _uiOptions;
         private readonly IPermissionChecker _permissionChecker;
         private readonly IDocumentPdfAppService _documentPdfAppService;
+        private readonly ITocGeneratorService _tocGeneratorService;
 
         protected IDocsLinkGenerator DocsLinkGenerator => LazyServiceProvider.LazyGetRequiredService<IDocsLinkGenerator>();
         
@@ -117,7 +121,8 @@ namespace Volo.Docs.Pages.Documents.Project
             IOptions<DocsUiOptions> options,
             IWebDocumentSectionRenderer webDocumentSectionRenderer, 
             IPermissionChecker permissionChecker, 
-            IDocumentPdfAppService documentPdfAppService)
+            IDocumentPdfAppService documentPdfAppService,
+            ITocGeneratorService tocGeneratorService)
         {
             ObjectMapperContext = typeof(DocsWebModule);
 
@@ -128,6 +133,7 @@ namespace Volo.Docs.Pages.Documents.Project
             _permissionChecker = permissionChecker;
             _documentPdfAppService = documentPdfAppService;
             _uiOptions = options.Value;
+            _tocGeneratorService = tocGeneratorService;
             
             LocalizationResourceType = typeof(DocsResource);
         }
@@ -535,6 +541,15 @@ namespace Volo.Docs.Pages.Documents.Project
                     DocumentNameWithExtension = Document.Name;
                     SetDocumentPageTitle();
                     await ConvertDocumentContentToHtmlAsync();
+
+                    if (Document != null && !string.IsNullOrEmpty(Document.Content))
+                    {
+                        var (toc, processedContent) = _tocGeneratorService.GenerateTocAndProcessHeadings(Document.Content);
+
+                        Document.Content = processedContent;
+                        TocHtml = toc;
+                    }
+
                     return true;
                 }
                 catch (DocumentNotFoundException e)

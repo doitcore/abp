@@ -97,7 +97,7 @@ export class AuthCodeFlowStrategy extends AuthFlowStrategy {
 
   navigateToLogin(queryParams?: Params) {
     if (isPlatformBrowser(this.platformId)) {
-      if (APP_STARTED_WITH_SSR) {
+      if (this.appStartedWithSSR) {
         if (this.document.defaultView) {
           this.document.defaultView.location.replace('/authorize');
         }

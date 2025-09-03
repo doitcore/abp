@@ -12,7 +12,7 @@ using Volo.Abp.IdentityServer.IdentityResources;
 
 namespace Volo.Abp.IdentityServer;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ClientToISClientMapper : MapperBase<Client, IdentityServer4.Models.Client>
 {
     [MapperIgnoreTarget(nameof(IdentityServer4.Models.Client.AllowedIdentityTokenSigningAlgorithms))]
@@ -81,7 +81,7 @@ public partial class ClientToISClientMapper : MapperBase<Client, IdentityServer4
     }
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ApiResourceToISApiResourceMapper : MapperBase<ApiResource, IdentityServer4.Models.ApiResource>
 {
     [MapperIgnoreTarget(nameof(IdentityServer4.Models.ApiResource.AllowedAccessTokenSigningAlgorithms))]
@@ -120,7 +120,7 @@ public partial class ApiResourceToISApiResourceMapper : MapperBase<ApiResource, 
     }
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ApiScopeToISApiScopeMapper : MapperBase<ApiScope, IdentityServer4.Models.ApiScope>
 {
     [MapperIgnoreTarget(nameof(IdentityServer4.Models.ApiScope.UserClaims))]
@@ -144,7 +144,7 @@ public partial class ApiScopeToISApiScopeMapper : MapperBase<ApiScope, IdentityS
     }
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityResourceToISIdentityResourceMapper : MapperBase<IdentityResource, IdentityServer4.Models.IdentityResource>
 {
     [MapperIgnoreTarget(nameof(IdentityServer4.Models.IdentityResource.UserClaims))]
@@ -168,21 +168,21 @@ public partial class IdentityResourceToISIdentityResourceMapper : MapperBase<Ide
     }
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ClientToClientEtoMapper : MapperBase<Client, ClientEto>
 {
     public override partial ClientEto Map(Client source);
     public override partial void Map(Client source, ClientEto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityResourceToIdentityResourceEtoMapper : MapperBase<IdentityResource, IdentityResourceEto>
 {
     public override partial IdentityResourceEto Map(IdentityResource source);
     public override partial void Map(IdentityResource source, IdentityResourceEto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PersistedGrantToISPersistedGrantMapper : TwoWayMapperBase<PersistedGrant, IdentityServer4.Models.PersistedGrant>
 {
     public override partial IdentityServer4.Models.PersistedGrant Map(PersistedGrant source);
@@ -221,14 +221,14 @@ public partial class PersistedGrantToISPersistedGrantMapper : TwoWayMapperBase<P
     }
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class PersistedGrantToPersistedGrantEtoMapper : MapperBase<PersistedGrant, PersistedGrantEto>
 {
     public override partial PersistedGrantEto Map(PersistedGrant source);
     public override partial void Map(PersistedGrant source, PersistedGrantEto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class DeviceFlowCodesToDeviceFlowCodesEtoMapper : MapperBase<DeviceFlowCodes, DeviceFlowCodesEto>
 {
     public override partial DeviceFlowCodesEto Map(DeviceFlowCodes source);

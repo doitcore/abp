@@ -6,7 +6,7 @@ using EditUserModalModel = Volo.Abp.Identity.Web.Pages.Identity.Users.EditModalM
 
 namespace Volo.Abp.Identity.Web;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityUserDtoToEditUserModalModelUserInfoViewModelMapper : MapperBase<IdentityUserDto, EditUserModalModel.UserInfoViewModel>
 {
     [MapperIgnoreTarget(nameof(EditUserModalModel.UserInfoViewModel.Password))]
@@ -16,7 +16,7 @@ public partial class IdentityUserDtoToEditUserModalModelUserInfoViewModelMapper 
     public override partial void Map(IdentityUserDto source, EditUserModalModel.UserInfoViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CreateUserModalModelUserInfoViewModelToIdentityUserCreateDtoMapper : MapperBase<CreateUserModalModel.UserInfoViewModel, IdentityUserCreateDto>
 {
@@ -27,7 +27,7 @@ public partial class CreateUserModalModelUserInfoViewModelToIdentityUserCreateDt
     public override partial void Map(CreateUserModalModel.UserInfoViewModel source, IdentityUserCreateDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class IdentityRoleDtoToCreateUserModalModelAssignedRoleViewModelMapper : MapperBase<IdentityRoleDto, CreateUserModalModel.AssignedRoleViewModel>
 {
@@ -38,7 +38,7 @@ public partial class IdentityRoleDtoToCreateUserModalModelAssignedRoleViewModelM
     public override partial void Map(IdentityRoleDto source, CreateUserModalModel.AssignedRoleViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class EditUserModalModelUserInfoViewModelToIdentityUserUpdateDtoMapper : MapperBase<EditUserModalModel.UserInfoViewModel, IdentityUserUpdateDto>
 {
     [MapperIgnoreTarget(nameof(IdentityUserUpdateDto.RoleNames))]
@@ -48,7 +48,7 @@ public partial class EditUserModalModelUserInfoViewModelToIdentityUserUpdateDtoM
     public override partial void Map(EditUserModalModel.UserInfoViewModel source, IdentityUserUpdateDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityRoleDtoToEditUserModalModelAssignedRoleViewModelMapper : MapperBase<IdentityRoleDto, EditUserModalModel.AssignedRoleViewModel>
 {
     [MapperIgnoreTarget(nameof(EditUserModalModel.AssignedRoleViewModel.IsAssigned))]
@@ -58,7 +58,7 @@ public partial class IdentityRoleDtoToEditUserModalModelAssignedRoleViewModelMap
     public override partial void Map(IdentityRoleDto source, EditUserModalModel.AssignedRoleViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityUserDtoToEditUserModalModelDetailViewModelMapper : MapperBase<IdentityUserDto, EditUserModalModel.DetailViewModel>
 {
     [MapperIgnoreTarget(nameof(EditUserModalModel.DetailViewModel.CreatedBy))]
@@ -70,14 +70,14 @@ public partial class IdentityUserDtoToEditUserModalModelDetailViewModelMapper : 
     public override partial void Map(IdentityUserDto source, EditUserModalModel.DetailViewModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityRoleDtoToEditModalModelRoleInfoModelMapper : MapperBase<IdentityRoleDto, EditModalModel.RoleInfoModel>
 {
     public override partial EditModalModel.RoleInfoModel Map(IdentityRoleDto source);
     public override partial void Map(IdentityRoleDto source, EditModalModel.RoleInfoModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class CreateModalModelRoleInfoModelToIdentityRoleCreateDtoMapper : MapperBase<CreateModalModel.RoleInfoModel, IdentityRoleCreateDto>
 {
@@ -85,7 +85,7 @@ public partial class CreateModalModelRoleInfoModelToIdentityRoleCreateDtoMapper 
     public override partial void Map(CreateModalModel.RoleInfoModel source, IdentityRoleCreateDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class EditModalModelRoleInfoModelToIdentityRoleUpdateDtoMapper : MapperBase<EditModalModel.RoleInfoModel, IdentityRoleUpdateDto>
 {

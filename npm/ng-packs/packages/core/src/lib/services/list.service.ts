@@ -1,4 +1,4 @@
-import { Injectable, Injector, OnDestroy } from '@angular/core';
+import { Injectable, Injector, OnDestroy, inject } from '@angular/core';
 import {
   EMPTY,
   BehaviorSubject,
@@ -119,7 +119,9 @@ export class ListService<QueryParamsType = ABP.PageQueryParams | any> implements
     this.next();
   };
 
-  constructor(injector: Injector) {
+  constructor() {
+    const injector = inject(Injector);
+
     const delay = injector.get(LIST_QUERY_DEBOUNCE_TIME, 300);
     this.delay = delay ? debounceTime(delay) : tap();
     this.get();

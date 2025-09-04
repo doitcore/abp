@@ -81,14 +81,14 @@ public class ExecutionTimeLogInterceptor : AbpInterceptor, ITransientDependency
     {
         var sw = Stopwatch.StartNew();
 
-        _logger.LogInformation("Executing {invocation.TargetObject.GetType().Name}.{invocation.Method.Name}");
+        _logger.LogInformation($"Executing {invocation.TargetObject.GetType().Name}.{invocation.Method.Name}");
 
         // Proceed to the actual target method
         await invocation.ProceedAsync();
 
         sw.Stop();
 
-        _logger.LogInformation("Executed {invocation.TargetObject.GetType().Name}.{invocation.Method.Name} in {sw.ElapsedMilliseconds} ms");
+        _logger.LogInformation($"Executed {invocation.TargetObject.GetType().Name}.{invocation.Method.Name} in {sw.ElapsedMilliseconds} ms");
     }
 }
 ````
@@ -105,6 +105,21 @@ The `ShouldIntercept` method is used to determine if the interceptor should be r
 // Define an interface to mark the classes that should be intercepted
 public interface IExecutionTimeLogEnabled
 {
+}
+````
+
+````csharp
+using System.Threading.Tasks;
+using Volo.Abp.DependencyInjection;
+
+// A simple service that added to the DI container and will be intercepted since it implements the `IExecutionTimeLogEnabled` interface
+public class SampleExecutionTimeService : IExecutionTimeLogEnabled, ITransientDependency
+{
+    public virtual async Task DoWorkAsync()
+    {
+        // Simulate a long-running task to test the interceptor
+        await Task.Delay(1000);
+    }
 }
 ````
 
@@ -133,18 +148,22 @@ public static class ExecutionTimeLogInterceptorRegistrar
 ````csharp
 public override void PreConfigureServices(ServiceConfigurationContext context)
 {
-    context.Services.OnRegistered(ExecutionTimeLogInterceptor.RegisterIfNeeded);
+    context.Services.OnRegistered(ExecutionTimeLogInterceptorRegistrar.RegisterIfNeeded);
 }
 ````
 
 ## Restrictions and Important Notes
+
+### Always use asynchronous methods
+
+For best performance and reliability, implement your service methods as asynchronous to avoid **async over sync**, that can cause unexpected problems, For more information, see [Should I expose synchronous wrappers for asynchronous methods?](https://devblogs.microsoft.com/dotnet/should-i-expose-synchronous-wrappers-for-asynchronous-methods/)
 
 ### Virtual Methods Requirement
 
 For **class proxies**, methods need to be marked as `virtual` so that they can be overridden by the proxy. Otherwise, interception will not occur.
 
 ````csharp
-public class MyService : ITransientDependency
+public class MyService : IExecutionTimeLogEnabled, ITransientDependency
 {
     // This method CANNOT be intercepted (not virtual)
     public void CannotBeIntercepted()
@@ -190,5 +209,5 @@ To avoid generating dynamic proxies for specific types, use the static class `Dy
 
 * [Video tutorial: Interceptors in ABP Framework](https://abp.io/video-courses/essentials/interception)
 * [Castle DynamicProxy](https://www.castleproject.org/projects/dynamicproxy/)
-* [Castle.Core.AsyncInterceptor](https://github.com/JSkimming/Castle.Core.AsyncInterceptors)
+* [Castle.Core.AsyncInterceptor](https://github.com/JSkimming/Castle.Core.AsyncInterceptor)
 * [ASP.NET Core Filters](https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/filters)

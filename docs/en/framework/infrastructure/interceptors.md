@@ -1,6 +1,6 @@
 # Interceptors
 
-ABP provides a powerful interception system that allows you to execute custom logic before and after method calls without modifying the original method code. This is achieved through **dynamic proxying** and is extensively used throughout the ABP framework to implement cross-cutting concerns. ABP's interception is implemented on top of the Castle DynamicProxy library.
+ABP provides a powerful interception system that allows you to execute custom logic before and after method calls without modifying the original method code. This is achieved through **dynamic proxying** and is extensively used throughout the ABP framework to implement cross-cutting concerns. ABP's interception is implemented on top of the [Castle DynamicProxy](https://www.castleproject.org/projects/dynamicproxy/) library.
 
 ## What is Dynamic Proxying / Interception?
 
@@ -34,23 +34,23 @@ If you are familiar with ASP.NET Core MVC, you've likely used **action filters**
 
 ABP Framework extensively leverages interception to provide built-in features without requiring boilerplate code. Here are some key examples:
 
-### Unit of Work (UOW)
+### [Unit of Work (UOW)](../architecture/domain-driven-design/unit-of-work.md)
 
 Automatically begins and commits/rolls back a database transaction when entering or exiting an application service method. This ensures data consistency without manual transaction management.
 
-### Input Validation
+### [Input Validation](../fundamentals/validation.md)
 
 Input DTOs are automatically validated against data annotation attributes and custom validation rules before executing the service logic, providing consistent validation behavior across all services.
 
-### Authorization
+### [Authorization](../fundamentals/authorization.md)
 
 Checks user permissions before allowing the execution of application service methods, ensuring security policies are enforced consistently.
 
-### Feature & Global Feature Checking
+### [Feature](./features.md) & [Global Feature](./global-features.md) Checking
 
 Checks if a feature is enabled before executing the service logic, allowing you to conditionally enable or restrict functionality for tenants or the application.
 
-### Auditing
+### [Auditing](./audit-logging.md)
 
 Automatically logs who performed an action, when it happened, what parameters were used, and what data was involved, providing comprehensive audit trails.
 
@@ -102,6 +102,13 @@ The `ShouldIntercept` method is used to determine if the interceptor should be r
 > `DynamicProxyIgnoreTypes` is static class that contains the types that should be ignored by the interceptor. See [Performance Considerations](#performance-considerations) for more information.
 
 ````csharp
+// Define an interface to mark the classes that should be intercepted
+public interface IExecutionTimeLogEnabled
+{
+}
+````
+
+````csharp
 using System;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.DynamicProxy;
@@ -112,7 +119,7 @@ public static class ExecutionTimeLogInterceptorRegistrar
     {
         if (ShouldIntercept(context.ImplementationType))
         {
-            context.Interceptors.TryAdd<GlobalFeatureInterceptor>();
+            context.Interceptors.TryAdd<ExecutionTimeLogInterceptor>();
         }
     }
 
@@ -181,7 +188,7 @@ To avoid generating dynamic proxies for specific types, use the static class `Dy
 
 ## See Also
 
-* [Castle DynamicProxy](https://github.com/castleproject/Core/blob/master/docs/dynamicproxy.md)
+* [Video tutorial: Interceptors in ABP Framework](https://abp.io/video-courses/essentials/interception)
+* [Castle DynamicProxy](https://www.castleproject.org/projects/dynamicproxy/)
 * [Castle.Core.AsyncInterceptor](https://github.com/JSkimming/Castle.Core.AsyncInterceptors)
 * [ASP.NET Core Filters](https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/filters)
-* [ABP Video Introduction](https://abp.io/video-courses/essentials/interception)

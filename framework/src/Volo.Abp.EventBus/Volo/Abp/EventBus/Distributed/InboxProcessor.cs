@@ -148,14 +148,14 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
                                         continue;
                                     }
 
-                                    waitingEvent.NextRetryTime = GetNextRetryTime(waitingEvent.RetryCount);
+                                    waitingEvent.NextRetryTime = GetNextRetryTime(waitingEvent.RetryCount, EventBusBoxesOptions.InboxProcessorRetryBackoffFactor);
 
                                     Logger.LogInformation($"Event with id = {waitingEvent.Id:N} will retry later. " +
                                                           $"Current retry count: {waitingEvent.RetryCount}, " +
                                                           $"Next retry time: {waitingEvent.NextRetryTime}, " +
                                                           $"Max retry count: {EventBusBoxesOptions.InboxProcessorMaxRetryCount}.");
 
-                                    await Inbox.RetryLaterAsync(waitingEvent.Id, waitingEvent.RetryCount, GetNextRetryTime(waitingEvent.RetryCount));
+                                    await Inbox.RetryLaterAsync(waitingEvent.Id, waitingEvent.RetryCount, GetNextRetryTime(waitingEvent.RetryCount, EventBusBoxesOptions.InboxProcessorRetryBackoffFactor));
                                     await uow.CompleteAsync(StoppingToken);
                                 }
                                 continue;
@@ -188,9 +188,9 @@ public class InboxProcessor : IInboxProcessor, ITransientDependency
         }
     }
 
-    protected virtual DateTime? GetNextRetryTime(int retryCount)
+    protected virtual DateTime? GetNextRetryTime(int retryCount, double factor)
     {
-        var delaySeconds = (int)Math.Pow(2, retryCount);
+        var delaySeconds = factor * Math.Pow(2, retryCount);
         return DateTime.Now.AddSeconds(delaySeconds);
     }
 

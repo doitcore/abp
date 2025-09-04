@@ -47,6 +47,13 @@ public class AbpEventBusBoxesOptions
     public int InboxProcessorMaxRetryCount { get; set; } = 10;
 
     /// <summary>
+    /// Default value is 10
+    /// The initial retry delay factor (double) when `InboxProcessorFailurePolicy` is `RetryLater`.
+    /// The delay is calculated as: `delay = InboxProcessorRetryBackoffFactor × 2^retryCount`
+    /// </summary>
+    public double InboxProcessorRetryBackoffFactor { get; set; } = 10;
+
+    /// <summary>
     /// Default: 15 seconds
     /// </summary>
     public TimeSpan DistributedLockWaitDuration { get; set; }

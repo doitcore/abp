@@ -8,9 +8,10 @@ public enum InboxProcessorFailurePolicy
     Retry,
 
     /// <summary>
-    /// Skip and retry the event in next period time, but with a delay.
-    /// The delay increases in every fail, and it is discarded after a specified amount of time
-    /// (e.g. 1 second, 2 seconds, 4 seconds, 8 seconds, etc.),
+    /// Skip the failed event and retry it after a delay. 
+    /// The delay doubles with each retry, starting from the configured InboxProcessorRetryBackoffFactor 
+    /// (e.g., 10, 20, 40, 80 seconds, etc.). 
+    /// The event is discarded if it still fails after reaching the maximum retry count.
     /// </summary>
     RetryLater,
 

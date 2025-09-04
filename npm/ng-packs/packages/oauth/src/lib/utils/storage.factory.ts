@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ServerTokenStorageService } from '../services/server-token-storage.service';
 import { BrowserTokenStorageService } from '../services';
 import { OAuthStorage } from 'angular-oauth2-oidc';
+import { AbpLocalStorageService, APP_STARTED_WITH_SSR } from '@abp/ng.core';
 
 export class MockStorage implements Storage {
   private data = new Map<string, string>();
@@ -28,7 +29,11 @@ export class MockStorage implements Storage {
 
 export function oAuthStorageFactory(): OAuthStorage {
   const platformId = inject(PLATFORM_ID);
-  return isPlatformBrowser(platformId)
-    ? inject(BrowserTokenStorageService)
-    : inject(ServerTokenStorageService);
+  const appStartedWithSSR = inject(APP_STARTED_WITH_SSR);
+  if (appStartedWithSSR) {
+    return isPlatformBrowser(platformId)
+      ? inject(BrowserTokenStorageService)
+      : inject(ServerTokenStorageService);
+  }
+  return inject(AbpLocalStorageService);
 }

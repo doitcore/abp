@@ -9,7 +9,7 @@
   [selected]="selected"
   (scroll)="onScroll($event)"
   [scrollbarV]="infiniteScroll"
-  [style.height]="infiniteScroll ? '300px' : 'auto'"
+  [style.height]="getTableHeight()"
   [loadingIndicator]="infiniteScroll && isLoading"
   [footerHeight]="infiniteScroll ? false : 50"
 >

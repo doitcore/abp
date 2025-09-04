@@ -121,6 +121,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Input() infiniteScroll = false;
   @Input() isLoading = false;
   @Output() loadMore = new EventEmitter<void>();
+  @Input() tableHeight: number;
 
   hasAtLeastOnePermittedAction: boolean;
 
@@ -260,6 +261,12 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     ) {
       this.loadMore.emit();
     }
+  }
+
+  getTableHeight() {
+    if (!this.infiniteScroll) return 'auto';
+
+    return this.tableHeight ? `${this.tableHeight}px` : 'auto';
   }
 
   ngAfterViewInit(): void {

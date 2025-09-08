@@ -1,6 +1,9 @@
-﻿using Riok.Mapperly.Abstractions;
+﻿using System;
+using Riok.Mapperly.Abstractions;
+using Volo.Abp.Data;
 using Volo.Abp.Mapperly;
 using Volo.Abp.Mapperly.SampleClasses;
+using Volo.Abp.ObjectExtending;
 using Volo.Abp.ObjectExtending.TestObjects;
 
 [Mapper]
@@ -41,4 +44,44 @@ public partial class ExtensibleTestPersonWithRegularPropertiesDtoMapper : Mapper
     public override partial ExtensibleTestPersonWithRegularPropertiesDto Map(ExtensibleTestPerson source);
 
     public override partial void Map(ExtensibleTestPerson source, ExtensibleTestPersonWithRegularPropertiesDto destination);
+}
+
+// Test entities for ExtraProperties dictionary reference tests
+public class TestEntityWithExtraProperties : ExtensibleObject
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
+public class TestEntityDtoWithExtraProperties : ExtensibleObject
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
+public class TestEntityWithReadonlyExtraProperties : IHasExtraProperties
+{
+    private readonly ExtraPropertyDictionary _extraProperties = new();
+
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public ExtraPropertyDictionary ExtraProperties => _extraProperties;
+}
+
+[Mapper]
+[MapExtraProperties]
+public partial class TestEntityWithExtraPropertiesMapper : MapperBase<TestEntityWithExtraProperties, TestEntityDtoWithExtraProperties>
+{
+    public override partial TestEntityDtoWithExtraProperties Map(TestEntityWithExtraProperties source);
+
+    public override partial void Map(TestEntityWithExtraProperties source, TestEntityDtoWithExtraProperties destination);
+}
+
+[Mapper]
+[MapExtraProperties]
+public partial class TestEntityWithReadonlyExtraPropertiesMapper : MapperBase<TestEntityWithReadonlyExtraProperties, TestEntityWithReadonlyExtraProperties>
+{
+    public override partial TestEntityWithReadonlyExtraProperties Map(TestEntityWithReadonlyExtraProperties source);
+
+    public override partial void Map(TestEntityWithReadonlyExtraProperties source, TestEntityWithReadonlyExtraProperties destination);
 }

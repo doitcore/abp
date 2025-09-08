@@ -46,7 +46,6 @@ public partial class SettingManagement
         {
             SelectedGroup = GetNormalizedString(SettingComponentCreationContext.Groups.First().Id);
         }
-
     }
 
     protected virtual string GetNormalizedString(string value)

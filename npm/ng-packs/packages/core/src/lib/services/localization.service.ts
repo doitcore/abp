@@ -280,7 +280,7 @@ function recursivelyMergeBaseResources(
 
   return item.baseResources.reduce((acc, baseResource) => {
     const baseItem = recursivelyMergeBaseResources(baseResource, source);
-    const texts = { ...baseItem.texts, ...item.texts };
+    const texts = { ...baseItem.texts, ...acc.texts };
     return { ...acc, texts };
   }, item);
 }

@@ -236,13 +236,34 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
 
     protected virtual void TryMapExtraProperties<TSource, TDestination>(MapExtraPropertiesAttribute? mapExtraPropertiesAttribute, TSource source, TDestination destination, ExtraPropertyDictionary destinationExtraProperty)
     {
-        if (mapExtraPropertiesAttribute != null &&
-            typeof(IHasExtraProperties).IsAssignableFrom(typeof(TDestination)) &&
-            typeof(IHasExtraProperties).IsAssignableFrom(typeof(TSource)))
+        if(source is not IHasExtraProperties sourceHasExtraProperties)
+        {
+            return;
+        }
+
+        if (destination is not IHasExtraProperties destinationHasExtraProperties)
+        {
+            return;
+        }
+
+        if (sourceHasExtraProperties.ExtraProperties ==
+            destinationHasExtraProperties.ExtraProperties)
+        {
+            try
+            {
+                ObjectHelper.TrySetProperty(destinationHasExtraProperties, x => x.ExtraProperties, () => new ExtraPropertyDictionary(sourceHasExtraProperties.ExtraProperties));
+            }
+            catch
+            {
+                // Has no setter, ignore it.
+            }
+        }
+        
+        if (mapExtraPropertiesAttribute != null)
         {
             MapExtraProperties<TSource, TDestination>(
-                source!.As<IHasExtraProperties>(),
-                destination!.As<IHasExtraProperties>(),
+                sourceHasExtraProperties,
+                destinationHasExtraProperties,
                 destinationExtraProperty,
                 mapExtraPropertiesAttribute.DefinitionChecks,
                 mapExtraPropertiesAttribute.IgnoredProperties,

@@ -494,6 +494,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.AI", "src\Volo.Abp.AI\Volo.Abp.AI.csproj", "{82BD7B8C-7CE1-4C9B-B447-3796DA54B080}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.AI.Abstractions", "src\Volo.Abp.AI.Abstractions\Volo.Abp.AI.Abstractions.csproj", "{63BEAA7D-4807-4534-9B45-66FD36491FD3}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.Mapperly", "src\Volo.Abp.Mapperly\Volo.Abp.Mapperly.csproj", "{AF556046-54CD-48BC-9740-3E926DB8B510}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.Mapperly.Tests", "test\Volo.Abp.Mapperly.Tests\Volo.Abp.Mapperly.Tests.csproj", "{C38926D5-C1E7-47D6-BD0B-D36BE4C19AE7}"

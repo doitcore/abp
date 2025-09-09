@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.AI;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.SemanticKernel;
@@ -11,12 +13,16 @@ namespace Volo.Abp.AI;
 )]
 public class AbpAIModule : AbpModule
 {
-
     public const string DefaultWorkspaceName = "Default";
 
     public override void PostConfigureServices(ServiceConfigurationContext context)
     {
         var options = context.Services.ExecutePreConfiguredActions<AbpAIOptions>();
+
+        context.Services.Configure<AbpAIWorkspaceOptions>(workspaceOptions =>
+        {
+            workspaceOptions.ConfiguredWorkspaceNames.UnionWith(options.Workspaces.Select(x => x.Key).ToArray());
+        });
 
         foreach (var workspaceConfig in options.Workspaces.Values)
         {
@@ -73,5 +79,7 @@ public class AbpAIModule : AbpModule
         }
 
         context.Services.TryAddTransient(typeof(IKernelAccessor<>), typeof(TypedKernelAccessor<>));
+
+        
     }
 }

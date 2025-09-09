@@ -1,14 +1,16 @@
 import { getLocaleDirection, LocalizationService } from '@abp/ng.core';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LocaleDirection } from '../models/common';
 
 @Injectable()
 export class DocumentDirHandlerService {
+  protected injector = inject(Injector);
+
   private dir = new BehaviorSubject<LocaleDirection>('ltr');
   dir$ = this.dir.asObservable();
-  constructor(protected injector: Injector) {
+  constructor() {
     this.listenToLanguageChanges();
   }
 

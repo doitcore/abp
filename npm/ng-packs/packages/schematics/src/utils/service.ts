@@ -46,7 +46,7 @@ export function createControllerToServiceMapper({
       [],
     );
     imports.push(new Import({ path: '@abp/ng.core', specifiers: ['RestService', 'Rest'] }));
-    imports.push(new Import({ path: '@angular/core', specifiers: ['Injectable'] }));
+    imports.push(new Import({ path: '@angular/core', specifiers: ['Injectable', 'inject'] }));
     sortImports(imports);
     const methods = actions.map(mapActionToMethod);
     sortMethods(methods);
@@ -124,7 +124,7 @@ export function createActionToSignatureMapper() {
       }
 
       let type = adaptType(p.typeSimple);
-      if (p.typeSimple === 'enum' || p.typeSimple === '[enum]') {
+      if (p.typeSimple === 'enum' || p.typeSimple === '[enum]' || p.typeSimple === 'enum?' || p.typeSimple === '[enum]?') {
         type = adaptType(p.type);
       }
 

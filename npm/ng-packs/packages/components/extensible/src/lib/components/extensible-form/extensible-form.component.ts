@@ -17,14 +17,14 @@ import { ExtensionsService } from '../../services/extensions.service';
 import { EXTENSIONS_IDENTIFIER } from '../../tokens/extensions.token';
 import { selfFactory } from '../../utils/factory.util';
 import { ExtensibleFormPropComponent } from './extensible-form-prop.component';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { PropDataDirective } from '../../directives/prop-data.directive';
 
 @Component({
   exportAs: 'abpExtensibleForm',
   selector: 'abp-extensible-form',
   templateUrl: './extensible-form.component.html',
-  imports: [CommonModule, PropDataDirective, ReactiveFormsModule, ExtensibleFormPropComponent],
+  imports: [NgClass, NgTemplateOutlet, PropDataDirective, ReactiveFormsModule, ExtensibleFormPropComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [
     {

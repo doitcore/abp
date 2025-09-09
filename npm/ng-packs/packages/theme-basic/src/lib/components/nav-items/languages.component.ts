@@ -1,8 +1,8 @@
 import { ConfigStateService, LanguageInfo, SessionStateService } from '@abp/ng.core';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -39,9 +39,12 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
       </div>
     }
   `,
-  imports: [CommonModule, NgbDropdownModule],
+  imports: [AsyncPipe, NgbDropdownModule],
 })
 export class LanguagesComponent {
+  private sessionState = inject(SessionStateService);
+  private configState = inject(ConfigStateService);
+
   get smallScreen(): boolean {
     return window.innerWidth < 992;
   }
@@ -68,11 +71,6 @@ export class LanguagesComponent {
   get selectedLangCulture(): string {
     return this.sessionState.getLanguage();
   }
-
-  constructor(
-    private sessionState: SessionStateService,
-    private configState: ConfigStateService,
-  ) {}
 
   onChangeLang(cultureName: string) {
     this.sessionState.setLanguage(cultureName);

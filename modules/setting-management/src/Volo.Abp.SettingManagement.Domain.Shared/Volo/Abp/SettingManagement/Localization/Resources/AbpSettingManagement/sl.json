@@ -17,6 +17,7 @@
     "SentSuccessfully": "Poslano uspešno",
     "MailSendingFailed": "Pošiljanje e-pošte ni uspelo, preverite konfiguracijo e-pošte in poskusite znova.",
     "Send": "Pošlji",
+    "Menu:Settings": "Nastavitve",
     "Menu:Emailing": "Pošiljanje po e-pošti",
     "Menu:TimeZone": "Časovni Pas",
     "DisplayName:Timezone": "Časovni pas",

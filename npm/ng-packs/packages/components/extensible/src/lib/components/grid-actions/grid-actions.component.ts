@@ -1,15 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Injector,
-  Input,
-  TrackByFunction,
+import { 
+  ChangeDetectionStrategy, 
+  Component, 
+  Input, 
+  TrackByFunction, 
 } from '@angular/core';
 import { EntityAction, EntityActionList } from '../../models/entity-actions';
 import { EXTENSIONS_ACTION_TYPE } from '../../tokens/extensions.token';
 import { AbstractActionsComponent } from '../abstract-actions/abstract-actions.component';
 import { NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
-import { LocalizationModule, PermissionDirective } from '@abp/ng.core';
+import { LocalizationPipe, PermissionDirective } from '@abp/ng.core';
 import { EllipsisDirective } from '@abp/ng.theme.shared';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 
@@ -20,7 +19,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
     EllipsisDirective,
     PermissionDirective,
     NgClass,
-    LocalizationModule,
+    LocalizationPipe,
     NgTemplateOutlet,
     NgbTooltipModule,
   ],
@@ -43,7 +42,7 @@ export class GridActionsComponent<R = any> extends AbstractActionsComponent<Enti
 
   readonly trackByFn: TrackByFunction<EntityAction<R>> = (_, item) => item.text;
 
-  constructor(injector: Injector) {
-    super(injector);
+  constructor() {
+    super();
   }
 }

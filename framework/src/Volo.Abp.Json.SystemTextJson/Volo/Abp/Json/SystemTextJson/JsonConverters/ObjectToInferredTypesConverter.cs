@@ -9,6 +9,8 @@ namespace Volo.Abp.Json.SystemTextJson.JsonConverters;
 /// </summary>
 public class ObjectToInferredTypesConverter : JsonConverter<object>
 {
+    private JsonSerializerOptions? _writeJsonSerializerOptions;
+
     public override object Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -26,6 +28,11 @@ public class ObjectToInferredTypesConverter : JsonConverter<object>
     public override void Write(
         Utf8JsonWriter writer,
         object objectToWrite,
-        JsonSerializerOptions options) =>
-        JsonSerializer.Serialize(writer, objectToWrite, objectToWrite.GetType(), options);
+        JsonSerializerOptions options)
+    {
+        _writeJsonSerializerOptions ??= JsonSerializerOptionsHelper.Create(options, x =>
+            x == this ||
+            x.GetType() == typeof(ObjectToInferredTypesConverter));
+        JsonSerializer.Serialize(writer, objectToWrite, objectToWrite.GetType(), _writeJsonSerializerOptions);
+    }
 }

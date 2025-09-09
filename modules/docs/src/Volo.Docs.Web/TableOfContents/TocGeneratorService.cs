@@ -80,6 +80,7 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
                     tocBuilder.Append("</li></ul>");
                     levelStack.Pop();
                 }
+                tocBuilder.Append("</li>"); 
             }
             else if (heading.Level > previousLevel)
             {

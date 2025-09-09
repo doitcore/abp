@@ -69,7 +69,6 @@ public class TestEntityWithReadonlyExtraProperties : IHasExtraProperties
 }
 
 [Mapper]
-[MapExtraProperties]
 public partial class TestEntityWithExtraPropertiesMapper : MapperBase<TestEntityWithExtraProperties, TestEntityDtoWithExtraProperties>
 {
     public override partial TestEntityDtoWithExtraProperties Map(TestEntityWithExtraProperties source);
@@ -78,7 +77,6 @@ public partial class TestEntityWithExtraPropertiesMapper : MapperBase<TestEntity
 }
 
 [Mapper]
-[MapExtraProperties]
 public partial class TestEntityWithReadonlyExtraPropertiesMapper : MapperBase<TestEntityWithReadonlyExtraProperties, TestEntityWithReadonlyExtraProperties>
 {
     public override partial TestEntityWithReadonlyExtraProperties Map(TestEntityWithReadonlyExtraProperties source);

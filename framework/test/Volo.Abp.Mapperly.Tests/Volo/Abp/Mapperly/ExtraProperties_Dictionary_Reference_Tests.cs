@@ -84,7 +84,6 @@ public class ExtraProperties_Dictionary_Reference_Tests : AbpIntegratedTest<Mapp
         destination.SetProperty("DestinationProperty", "DestinationValue");
 
         var originalSourceReference = source.ExtraProperties;
-        var originalDestinationReference = destination.ExtraProperties;
 
         // Verify they have different references before mapping
         ReferenceEquals(source.ExtraProperties, destination.ExtraProperties).ShouldBeFalse();

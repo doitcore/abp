@@ -245,31 +245,15 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
         {
             return;
         }
-
-        if (sourceHasExtraProperties.ExtraProperties ==
-            destinationHasExtraProperties.ExtraProperties)
-        {
-            try
-            {
-                ObjectHelper.TrySetProperty(destinationHasExtraProperties, x => x.ExtraProperties, () => new ExtraPropertyDictionary(sourceHasExtraProperties.ExtraProperties));
-            }
-            catch
-            {
-                // Has no setter, ignore it.
-            }
-        }
         
-        if (mapExtraPropertiesAttribute != null)
-        {
-            MapExtraProperties<TSource, TDestination>(
-                sourceHasExtraProperties,
-                destinationHasExtraProperties,
-                destinationExtraProperty,
-                mapExtraPropertiesAttribute.DefinitionChecks,
-                mapExtraPropertiesAttribute.IgnoredProperties,
-                mapExtraPropertiesAttribute.MapToRegularProperties
-            );
-        }
+        MapExtraProperties<TSource, TDestination>(
+            sourceHasExtraProperties,
+            destinationHasExtraProperties,
+            destinationExtraProperty,
+            mapExtraPropertiesAttribute?.DefinitionChecks ?? MappingPropertyDefinitionChecks.Null,
+            mapExtraPropertiesAttribute?.IgnoredProperties,
+            mapExtraPropertiesAttribute?.MapToRegularProperties ?? false
+        );
     }
     protected virtual void MapExtraProperties<TSource, TDestination>(
         IHasExtraProperties source,

@@ -4,5 +4,5 @@ namespace Volo.Docs.TableOfContents;
 
 public interface ITocGeneratorService : IApplicationService
 {
-    (string TocHtml, string ProcessedContent) GenerateTocAndProcessHeadings(string content);
+    string GenerateToc(string markdownContent);
 }

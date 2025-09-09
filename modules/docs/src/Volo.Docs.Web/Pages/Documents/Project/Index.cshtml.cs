@@ -540,15 +540,13 @@ namespace Volo.Docs.Pages.Documents.Project
                     DocumentLanguageCode = language;
                     DocumentNameWithExtension = Document.Name;
                     SetDocumentPageTitle();
-                    await ConvertDocumentContentToHtmlAsync();
 
                     if (Document != null && !string.IsNullOrEmpty(Document.Content))
                     {
-                        var (toc, processedContent) = _tocGeneratorService.GenerateTocAndProcessHeadings(Document.Content);
-
-                        Document.Content = processedContent;
-                        TocHtml = toc;
+                        TocHtml = _tocGeneratorService.GenerateToc(Document.Content);
                     }
+
+                    await ConvertDocumentContentToHtmlAsync();
 
                     return true;
                 }

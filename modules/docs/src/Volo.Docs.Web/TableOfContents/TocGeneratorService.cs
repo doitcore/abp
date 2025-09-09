@@ -2,94 +2,44 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using Markdig;
+using Markdig.Extensions.AutoIdentifiers;
 using Volo.Abp.DependencyInjection;
-using HtmlAgilityPack;
+using Volo.Docs.Markdown;
 
 namespace Volo.Docs.TableOfContents;
 
 public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 {
-    private readonly HashSet<string> _generatedIds = [];
     public record Heading(int Level, string Text, string Id);
+    public IMarkdownConverter _markdownConverter;
 
-    public (string TocHtml, string ProcessedContent) GenerateTocAndProcessHeadings(string content)
+    public TocGeneratorService(IMarkdownConverter markdownConverter)
     {
-        if (content.IsNullOrWhiteSpace())
-        {
-            return (string.Empty, string.Empty);
-        }
-
-        _generatedIds.Clear();
-        var tocHeadings = new List<Heading>();
-
-        var doc = new HtmlDocument();
-        doc.LoadHtml(content);
-
-        var nodesWithId = doc.DocumentNode.SelectNodes("//*[@id]");
-        if (nodesWithId != null)
-        {
-            foreach (var node in nodesWithId)
-            {
-                _generatedIds.Add(node.Id);
-            }
-        }
-
-        var headingNodes = doc.DocumentNode.SelectNodes("//h1|//h2|//h3|//h4|//h5|//h6");
-        if (headingNodes != null)
-        {
-            foreach (var node in headingNodes)
-            {
-                var id = node.Id;
-
-                if (id.IsNullOrWhiteSpace())
-                {
-                    id = GenerateUniqueId(node.InnerText.Trim());
-                    node.SetAttributeValue("id", id);
-                }
-
-                var level = int.Parse(node.Name.Substring(1));
-                if (level == 2 || level == 3)
-                {
-                    tocHeadings.Add(new Heading(level, node.InnerText.Trim(), id));
-                }
-            }
-        }
-
-        var tocHtml = BuildTocHtml(tocHeadings);
-
-        var processedContent = doc.DocumentNode.OuterHtml;
-
-        return (tocHtml, processedContent);
+        _markdownConverter = markdownConverter;
     }
 
-    private string GenerateUniqueId(string text)
+    public string GenerateToc(string markdownContent)
     {
-        if (text.IsNullOrWhiteSpace())
+        if (markdownContent.IsNullOrWhiteSpace())
         {
-            return $"section-{Guid.NewGuid().ToString("N")[..8]}";
+            return string.Empty;
         }
 
-        var baseId = text.ToLowerInvariant();
+        var headingExtractionExtension = new HeadingExtractionExtension();
+        var pipelineBuilder = new MarkdownPipelineBuilder()
+            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
+            .UseAdvancedExtensions();
+        pipelineBuilder.Use(headingExtractionExtension);
 
-        baseId = Regex.Replace(baseId, @"[^a-z0-9]+", "-", RegexOptions.Compiled);
+        var pipeline = pipelineBuilder.Build();
+        Markdig.Markdown.ToHtml(markdownContent, pipeline);
 
-        baseId = baseId.Trim('-');
+        var headings = headingExtractionExtension.Headings
+            .Select(h => new Heading(h.Level, h.Text, h.Id))
+            .ToList();
 
-        if (baseId.IsNullOrWhiteSpace())
-        {
-            return $"section-{Guid.NewGuid().ToString("N")[..8]}";
-        }
-
-        var finalId = baseId;
-        var counter = 1;
-
-        while (!_generatedIds.Add(finalId))
-        {
-            finalId = $"{baseId}-{++counter}";
-        }
-
-        return finalId;
+        return BuildTocHtml(headings);
     }
 
     private static string BuildTocHtml(List<Heading> headings)
@@ -99,60 +49,73 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
             return string.Empty;
         }
 
-        const int H2Level = 2;
-        const int H3Level = 3;
+        var relevantHeadings = headings
+            .Where(h => h.Level is 2 or 3)
+            .ToList();
+
+        if (relevantHeadings.Count == 0)
+        {
+            relevantHeadings = headings
+                .Where(h => h.Level == 1)
+                .ToList();
+        }
+
+        if (relevantHeadings.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        var baseLevel = relevantHeadings.Min(h => h.Level);
+        var normalizedHeadings = relevantHeadings
+            .Select(h => h with { Level = h.Level - baseLevel + 1 })
+            .ToList();
 
         var tocBuilder = new StringBuilder();
-        tocBuilder.Append("<ul class=\"nav nav-pills flex-column\">");
+        var levelStack = new Stack<int>();
+        levelStack.Push(0);
 
-        var currentLevel = 0;
-        var isFirstH2 = true;
-
-        foreach (var (index, heading) in headings.Select((h, i) => (i, h)))
+        for (var i = 0; i < normalizedHeadings.Count; i++)
         {
-            var isLastItem = index == headings.Count - 1;
-            var nextHeading = isLastItem ? null : headings[index + 1];
+            var heading = normalizedHeadings[i];
+            var previousLevel = levelStack.Peek();
 
-            var hasChildren = nextHeading?.Level == H3Level && heading.Level == H2Level;
-
-            if (heading.Level < currentLevel)
+            if (heading.Level < previousLevel)
             {
-                tocBuilder.Append("</ul></li>");
+                while (heading.Level < levelStack.Peek())
+                {
+                    tocBuilder.Append("</li></ul>");
+                    levelStack.Pop();
+                }
             }
-            else if (heading.Level == currentLevel && heading.Level == H2Level && !isFirstH2)
+            else if (heading.Level > previousLevel)
+            {
+                tocBuilder.Append("<ul class=\"nav nav-pills flex-column\">");
+                levelStack.Push(heading.Level);
+            }
+            else if (i > 0)
             {
                 tocBuilder.Append("</li>");
             }
 
-            if (heading.Level == H2Level)
-            {
-                var liClass = hasChildren ? "nav-item toc-item-has-children" : "nav-item";
-                tocBuilder.Append($"<li class=\"{liClass}\"><a class=\"nav-link\" href=\"#{heading.Id}\">{heading.Text}</a>");
-                isFirstH2 = false;
-            }
-            else if (heading.Level == H3Level)
-            {
-                if (currentLevel < H3Level)
-                {
-                    tocBuilder.Append("<ul class=\"nav nav-pills flex-column\">");
-                }
-                tocBuilder.Append($"<li class=\"nav-item\"><a class=\"nav-link\" href=\"#{heading.Id}\">{heading.Text}</a></li>");
-            }
+            var hasChildren = (i + 1 < normalizedHeadings.Count) &&
+                              (normalizedHeadings[i + 1].Level > heading.Level);
 
-            currentLevel = heading.Level;
+            var liClass = hasChildren ? "nav-item toc-item-has-children" : "nav-item";
+
+            tocBuilder.Append($"<li class=\"{liClass}\"><a class=\"nav-link\" href=\"#{heading.Id}\">{heading.Text}</a>");
         }
 
-        if (currentLevel == H3Level)
-        {
-            tocBuilder.Append("</ul></li>"); 
-        }
-        else if (currentLevel == H2Level)
+        if (normalizedHeadings.Count > 0)
         {
             tocBuilder.Append("</li>");
         }
 
-        tocBuilder.Append("</ul>"); 
-
+        while (levelStack.Count > 1)
+        {
+            tocBuilder.Append("</ul>");
+            levelStack.Pop();
+        }
+        
         return tocBuilder.ToString();
     }
 }

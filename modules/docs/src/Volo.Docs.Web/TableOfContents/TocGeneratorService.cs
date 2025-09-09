@@ -12,12 +12,6 @@ namespace Volo.Docs.TableOfContents;
 public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 {
     public record Heading(int Level, string Text, string Id);
-    public IMarkdownConverter _markdownConverter;
-
-    public TocGeneratorService(IMarkdownConverter markdownConverter)
-    {
-        _markdownConverter = markdownConverter;
-    }
 
     public string GenerateToc(string markdownContent)
     {

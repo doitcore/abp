@@ -46,7 +46,7 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
         {
             mapper.BeforeMap((TSource)source);
             var destination = mapper.Map((TSource)source);
-            TryMapExtraProperties(mapper.GetType().GetSingleAttributeOrNull<MapExtraPropertiesAttribute>(), (TSource)source, destination, new ExtraPropertyDictionary());
+            TryMapExtraProperties(mapper.GetType().GetSingleAttributeOrNull<MapExtraPropertiesAttribute>(), (TSource)source, destination, GetExtraProperties(destination));
             mapper.AfterMap((TSource)source, destination);
             return destination;
         }
@@ -245,15 +245,24 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
         {
             return;
         }
-        
-        MapExtraProperties<TSource, TDestination>(
-            sourceHasExtraProperties,
-            destinationHasExtraProperties,
-            destinationExtraProperty,
-            mapExtraPropertiesAttribute?.DefinitionChecks ?? MappingPropertyDefinitionChecks.Null,
-            mapExtraPropertiesAttribute?.IgnoredProperties,
-            mapExtraPropertiesAttribute?.MapToRegularProperties ?? false
-        );
+
+        if (sourceHasExtraProperties.ExtraProperties != null && sourceHasExtraProperties.ExtraProperties ==
+            destinationHasExtraProperties.ExtraProperties)
+        {
+            ObjectHelper.TrySetProperty(destinationHasExtraProperties, x => x.ExtraProperties, () => new ExtraPropertyDictionary(destinationHasExtraProperties.ExtraProperties));;
+        }
+
+        if (mapExtraPropertiesAttribute != null)
+        {
+            MapExtraProperties<TSource, TDestination>(
+                sourceHasExtraProperties,
+                destinationHasExtraProperties,
+                destinationExtraProperty,
+                mapExtraPropertiesAttribute.DefinitionChecks,
+                mapExtraPropertiesAttribute.IgnoredProperties,
+                mapExtraPropertiesAttribute.MapToRegularProperties
+            );
+        }
     }
     protected virtual void MapExtraProperties<TSource, TDestination>(
         IHasExtraProperties source,

@@ -96,6 +96,9 @@ public class ExtraProperties_Dictionary_Reference_Tests : AbpIntegratedTest<Mapp
         
         // Destination reference may change due to normal mapping process, but should not be same as source
         ReferenceEquals(source.ExtraProperties, destination.ExtraProperties).ShouldBeFalse();
+        
+        destination.ExtraProperties["SourceProperty"].ShouldBe("SourceValue");
+        destination.ExtraProperties["DestinationProperty"].ShouldBe("DestinationValue");
     }
 
     [Fact]

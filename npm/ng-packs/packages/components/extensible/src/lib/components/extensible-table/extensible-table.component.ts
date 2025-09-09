@@ -10,16 +10,16 @@ import {
   Input,
   LOCALE_ID,
   OnChanges,
+  OnDestroy,
   Output,
   signal,
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
-  ViewChild,
 } from '@angular/core';
 import { AsyncPipe, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
-import { Observable, filter, map } from 'rxjs';
+import { Observable, filter, map, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
@@ -75,7 +75,7 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
   templateUrl: './extensible-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit {
+export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit, OnDestroy {
   readonly #injector = inject(Injector);
   readonly getInjected = this.#injector.get.bind(this.#injector);
   protected readonly cdr = inject(ChangeDetectorRef);
@@ -113,13 +113,14 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     this._selectionType = typeof value === 'string' ? SelectionType[value] : value;
   }
   _selectionType: SelectionType = SelectionType.multiClick;
-  
-  
+
   @Input() selected: any[] = [];
   @Output() selectionChange = new EventEmitter<any[]>();
 
+  // Infinite scroll configuration
   @Input() infiniteScroll = false;
   @Input() isLoading = false;
+  @Input() scrollThreshold = 10;
   @Output() loadMore = new EventEmitter<void>();
   @Input() tableHeight: number;
 
@@ -133,6 +134,12 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
   // Signal for actions column width
   private readonly _actionsColumnWidth = signal<number | undefined>(DEFAULT_ACTIONS_COLUMN_WIDTH);
+
+  // Infinite scroll: debounced load more subject
+  private readonly loadMoreSubject = new Subject<void>();
+  private readonly loadMoreSubscription = this.loadMoreSubject
+    .pipe(debounceTime(100), distinctUntilChanged())
+    .subscribe(() => this.triggerLoadMore());
 
   readonly columnWidths = computed(() => {
     const actionsColumn = this._actionsColumnWidth();
@@ -221,7 +228,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
       return record;
     });
-
   }
 
   isVisibleActions(rowData: any): boolean {
@@ -252,15 +258,32 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     this.selectionChange.emit(selected);
   }
 
-  onScroll(scrollEvent) {
-    if (
-      this.infiniteScroll &&
-      !this.isLoading &&
-      scrollEvent?.target?.offsetHeight + scrollEvent?.target?.scrollTop >=
-        scrollEvent?.target?.scrollHeight - 1
-    ) {
-      this.loadMore.emit();
+  onScroll(scrollEvent: Event): void {
+    if (!this.shouldHandleScroll()) {
+      return;
     }
+
+    const target = scrollEvent.target as HTMLElement;
+    if (!target) {
+      return;
+    }
+
+    if (this.isNearScrollBottom(target)) {
+      this.loadMoreSubject.next();
+    }
+  }
+
+  private shouldHandleScroll(): boolean {
+    return this.infiniteScroll && !this.isLoading;
+  }
+
+  private isNearScrollBottom(element: HTMLElement): boolean {
+    const { offsetHeight, scrollTop, scrollHeight } = element;
+    return offsetHeight + scrollTop >= scrollHeight - this.scrollThreshold;
+  }
+
+  private triggerLoadMore(): void {
+    this.loadMore.emit();
   }
 
   getTableHeight() {
@@ -276,5 +299,9 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
         this.cdr.markForCheck();
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.loadMoreSubscription.unsubscribe();
   }
 }

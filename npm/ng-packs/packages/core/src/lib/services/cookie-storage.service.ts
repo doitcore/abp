@@ -1,23 +1,25 @@
-import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject, REQUEST } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
 export class AbpCookieStorageService implements Storage {
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
-  private isBrowser = isPlatformBrowser(this.platformId);
+  private request = inject(REQUEST);
 
   get length(): number {
-    return this.isBrowser ? this.keys().length : 0;
+    return isPlatformBrowser(this.platformId) ? this.keys().length : this.getCookiesFromRequest()?.size ?? 0;
   }
 
   clear(): void {
-    if (!this.isBrowser) return;
+    if (!isPlatformBrowser(this.platformId)) return;
     this.keys().forEach(k => this.removeItem(k));
   }
 
   getItem(key: string): string | null {
-    if (!this.isBrowser) return null;
+    if (!isPlatformBrowser(this.platformId)) {
+      return this.getCookiesFromRequest()?.get(key) ?? null;
+    }
     const name = key + '=';
     const parts = (this.document.cookie || '').split('; ');
     for (const p of parts) {
@@ -29,17 +31,16 @@ export class AbpCookieStorageService implements Storage {
   }
 
   key(index: number): string | null {
-    if (!this.isBrowser) return null;
+    if (!isPlatformBrowser(this.platformId)) return null;
     return this.keys()[index] ?? null;
   }
 
   removeItem(key: string): void {
-    if (!this.isBrowser) return;
+    if (!isPlatformBrowser(this.platformId)) return;
     this.setCookie(key, '', { 'max-age': -1, path: '/' });
   }
 
   setItem(key: string, value: string): void {
-    if (!this.isBrowser) return;
     this.setCookie(key, encodeURIComponent(value), {
       path: '/',
       sameSite: 'Lax',
@@ -48,7 +49,7 @@ export class AbpCookieStorageService implements Storage {
   }
 
   setItemWithExpiry(key: string, value: string, seconds: number): void {
-    if (!this.isBrowser) return;
+    if (!isPlatformBrowser(this.platformId)) return;
     this.setCookie(key, encodeURIComponent(value), {
       path: '/',
       sameSite: 'Lax',
@@ -79,5 +80,19 @@ export class AbpCookieStorageService implements Storage {
     if (opts.expires) s += `; Expires=${opts.expires.toUTCString()}`;
     if (typeof opts['max-age'] === 'number') s += `; Max-Age=${opts['max-age']}`;
     this.document.cookie = s;
+  }
+
+  private getCookiesFromRequest(): Map<string, string> {
+    const  cookies = new Map<string, string>();
+    const cookieHeader = this.request?.headers.get('cookie') ?? '';
+    for (const part of cookieHeader.split(';')) {
+      const i = part.indexOf('=');
+      if (i > -1) {
+        const k = part.slice(0, i).trim();
+        const v = decodeURIComponent(part.slice(i + 1).trim());
+        cookies.set(k, v);
+      }
+    }
+    return cookies;
   }
 }

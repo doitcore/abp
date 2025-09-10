@@ -44,16 +44,18 @@ public abstract class BasicRepositoryBase<TEntity> :
 
     public bool? IsChangeTrackingEnabled { get; protected set; }
     
-    protected string? CustomEntityName { get; private set; }
+    public string? EntityName { get; set; }
     
-    public void SetCustomEntityName(string? name)
+    public void SetEntityName(string? name)
     {
-        CustomEntityName = name;
+        EntityName = name;
     }
 
-    protected BasicRepositoryBase()
-    {
+    public string ProviderName { get; }
 
+    protected BasicRepositoryBase(string providerName)
+    {
+        ProviderName = Check.NotNullOrWhiteSpace(providerName, nameof(providerName));
     }
 
     public abstract Task<TEntity> InsertAsync(TEntity entity, bool autoSave = false, CancellationToken cancellationToken = default);
@@ -146,6 +148,12 @@ public abstract class BasicRepositoryBase<TEntity> :
 public abstract class BasicRepositoryBase<TEntity, TKey> : BasicRepositoryBase<TEntity>, IBasicRepository<TEntity, TKey>
     where TEntity : class, IEntity<TKey>
 {
+    protected BasicRepositoryBase(string providerName) 
+        : base(providerName)
+    {
+        
+    }
+
     public virtual async Task<TEntity> GetAsync(TKey id, bool includeDetails = true, CancellationToken cancellationToken = default)
     {
         var entity = await FindAsync(id, includeDetails, cancellationToken);

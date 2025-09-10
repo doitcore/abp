@@ -29,7 +29,7 @@ public class SharedEntity_Repository_Tests : EntityFrameworkCoreTestBase
     {
         await WithUnitOfWorkAsync(async () =>
         {
-            TestSharedTypeEntityRepository.SetCustomEntityName("TestSharedEntity1");
+            TestSharedTypeEntityRepository.SetEntityName("TestSharedEntity1");
 
             var tenantId = Guid.NewGuid();
             await TestSharedTypeEntityRepository.InsertManyAsync(new List<TestSharedEntity>()
@@ -121,7 +121,7 @@ public class SharedEntity_Repository_Tests : EntityFrameworkCoreTestBase
                 }
             }
 
-            TestSharedTypeEntityRepository.SetCustomEntityName("TestSharedEntity2");
+            TestSharedTypeEntityRepository.SetEntityName("TestSharedEntity2");
             await TestSharedTypeEntityRepository.InsertManyAsync(new List<TestSharedEntity>()
             {
                 new TestSharedEntity(Guid.NewGuid())
@@ -146,7 +146,7 @@ public class SharedEntity_Repository_Tests : EntityFrameworkCoreTestBase
     {
         await WithUnitOfWorkAsync(async () =>
         {
-            TestSharedTypeEntityRepository.SetCustomEntityName("TestSharedEntity1");
+            TestSharedTypeEntityRepository.SetEntityName("TestSharedEntity1");
 
             var entity = new TestSharedEntity(Guid.NewGuid())
             {
@@ -169,7 +169,7 @@ public class SharedEntity_Repository_Tests : EntityFrameworkCoreTestBase
             entity.Birthday.ShouldNotBeNull();
             entity["DynamicProperty"].ShouldBe("Test Value1");
 
-            TestSharedTypeEntityRepository.SetCustomEntityName("TestSharedEntity2");
+            TestSharedTypeEntityRepository.SetEntityName("TestSharedEntity2");
             entity = await TestSharedTypeEntityRepository.FindAsync(x => x.Id == entity.Id!);
             entity.ShouldBeNull();
         });

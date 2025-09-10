@@ -3,7 +3,7 @@ using Volo.Abp.Mapperly;
 
 namespace Volo.Abp.Identity.Blazor;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class IdentityUserDtoToIdentityUserUpdateDtoMapper : MapperBase<IdentityUserDto, IdentityUserUpdateDto>
 {
@@ -16,7 +16,7 @@ public partial class IdentityUserDtoToIdentityUserUpdateDtoMapper : MapperBase<I
     public override partial void Map(IdentityUserDto source, IdentityUserUpdateDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class IdentityRoleDtoToIdentityRoleUpdateDtoMapper : MapperBase<IdentityRoleDto, IdentityRoleUpdateDto>
 {

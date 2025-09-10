@@ -4,7 +4,7 @@ using Volo.Abp.Mapperly;
 
 namespace Volo.Abp.Account.Web;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class ProfileDtoToPersonalInfoModelMapper : MapperBase<ProfileDto, AccountProfilePersonalInfoManagementGroupViewComponent.PersonalInfoModel>
 {

@@ -41,6 +41,7 @@ export class AbpCookieStorageService implements Storage {
   }
 
   setItem(key: string, value: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     this.setCookie(key, encodeURIComponent(value), {
       path: '/',
       sameSite: 'Lax',

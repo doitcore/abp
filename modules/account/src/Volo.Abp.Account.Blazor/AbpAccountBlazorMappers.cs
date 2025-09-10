@@ -5,7 +5,7 @@ using Volo.Abp.Identity;
 
 namespace Volo.Abp.Account.Blazor;
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class ProfileDtoToPersonalInfoModelMapper : MapperBase<ProfileDto, PersonalInfoModel>
 {
@@ -18,7 +18,7 @@ public partial class ProfileDtoToPersonalInfoModelMapper : MapperBase<ProfileDto
     public override partial void Map(ProfileDto source, PersonalInfoModel destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class PersonalInfoModelToUpdateProfileDtoMapper : MapperBase<PersonalInfoModel, UpdateProfileDto>
 {

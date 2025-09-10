@@ -93,6 +93,7 @@ public class EfCoreRepository<TDbContext, TEntity> : RepositoryBase<TEntity>, IE
     public IEfCoreBulkOperationProvider? BulkOperationProvider => LazyServiceProvider.LazyGetService<IEfCoreBulkOperationProvider>();
 
     public EfCoreRepository(IDbContextProvider<TDbContext> dbContextProvider)
+        : base(AbpEfCoreConsts.ProviderName)
     {
         _dbContextProvider = dbContextProvider;
 
@@ -122,8 +123,8 @@ public class EfCoreRepository<TDbContext, TEntity> : RepositoryBase<TEntity>, IE
 
     private DbSet<TEntity> GetDbSetInternal(TDbContext dbContext)
     {
-        return CustomEntityName != null
-            ? dbContext.Set<TEntity>(CustomEntityName)
+        return EntityName != null
+            ? dbContext.Set<TEntity>(EntityName)
             : dbContext.Set<TEntity>();
     }
 

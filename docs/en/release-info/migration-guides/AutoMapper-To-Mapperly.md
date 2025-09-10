@@ -143,7 +143,7 @@ public partial class IdentityUserToIdentityUserExportDtoMapper : MapperBase<Iden
 
 To use Mapperly, you'll need to create a dedicated mapping class for each source and destination types.
 
-* Use the `[Mapper]` attribute to designate the class as a Mapperly mapper. The `RequiredMappingStrategy` is set to `Target` by default,
+* Use the `[Mapper]` attribute to designate the class as a Mapperly mapper. The `RequiredMappingStrategy` is set to `Target` by default.
 * Replace AutoMapper's `Ignore()` method with the `[MapperIgnoreTarget]` attribute.
 * Replace the `MapExtraProperties()` method with the `[MapExtraProperties]` attribute.
 * Use the `TwoWayMapperBase` class as an alternative to AutoMapper’s `ReverseMap()` functionality.
@@ -151,7 +151,7 @@ To use Mapperly, you'll need to create a dedicated mapping class for each source
 
 ### Dependency Injection in Mapper Class
 
-All Mapperly mapping classes automatically registered in the the [dependency injection (DI)](../../framework/fundamentals/dependency-injection.md) container. To use a service within a Mapper class, simply add it to the constructor, Mapperly will inject it automatically.
+All Mapperly mapping classes automatically registered in the [dependency injection (DI)](../../framework/fundamentals/dependency-injection.md) container. To use a service within a Mapper class, simply add it to the constructor; Mapperly will inject it automatically.
 
 **Example:**
 
@@ -176,7 +176,7 @@ public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUs
 
 ## AI Prompt for Migrating AutoMapper to Mapperly
 
-If you have AI tools like Cursor, you can use the following prompt to migrate your AutoMapper mappings to Mapperly:
+If you have AI tools like Cursor, you can use the following prompt to migrate your AutoMapper mappings to Mapperly automatically:
 
 > AI may generate some code that is not correct. Please check the code carefully.
 

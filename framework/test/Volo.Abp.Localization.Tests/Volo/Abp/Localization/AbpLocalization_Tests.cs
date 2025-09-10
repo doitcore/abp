@@ -386,6 +386,7 @@ public class AbpLocalization_Tests : AbpIntegratedTest<AbpLocalizationTestModule
         {
             _localizer["MyNestedTranslation__SomeKey"].Value.ShouldBe("Some nested value");
             _localizer["MyNestedTranslation__SomeOtherKey"].Value.ShouldBe("Some other nested value");
+            _localizer["MyNestedTranslation__DeeplyNested__DeepKey"].Value.ShouldBe("A deeply nested value");
         }
     }
 }

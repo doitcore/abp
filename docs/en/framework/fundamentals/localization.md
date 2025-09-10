@@ -91,6 +91,20 @@ A JSON localization file content is shown below:
 
 > ABP will ignore (skip) the JSON file if the `culture` section is missing.
 
+You may also use Nesting in your localization file
+
+````json
+{
+  "culture": "en",
+  "texts": {
+    "HelloWorld": "Hello World!",
+    "MyNestedTranslation": {
+        "SomeKey": "Some nested value"
+    }
+  }
+}
+````
+
 ### Default Resource
 
 `AbpLocalizationOptions.DefaultResourceType` can be set to a resource type, so it is used when the localization resource was not specified:

@@ -4,7 +4,10 @@
     "SeeYou": "See you",
     "MyNestedTranslation": {
       "SomeKey": "Some nested value",
-      "SomeOtherKey": "Some other nested value"
+      "SomeOtherKey": "Some other nested value",
+      "DeeplyNested": {
+        "DeepKey": "A deeply nested value"
+      }
     }
   }
 }

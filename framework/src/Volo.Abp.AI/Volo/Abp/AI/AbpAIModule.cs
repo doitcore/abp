@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Volo.Abp.Modularity;
 
 namespace Volo.Abp.AI;
@@ -65,15 +67,24 @@ public class AbpAIModule : AbpModule
                 builderConfigurer.Action(workspaceConfig.Kernel.Builder!);
             }
 
-            context.Services.AddKeyedSingleton<Kernel>(
+            context.Services.AddKeyedTransient<Kernel>(
                 AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Name),
                 (provider, _) => workspaceConfig.Kernel.Builder!.Build());
 
             if (workspaceConfig.Name == DefaultWorkspaceName)
             {
-                context.Services.AddSingleton<Kernel>(sp => sp.GetRequiredKeyedService<Kernel>(
+                context.Services.AddTransient<Kernel>(sp => sp.GetRequiredKeyedService<Kernel>(
                         AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Name)
                     )
+                );
+            }
+
+            if (workspaceConfig.ChatClient?.Builder is null)
+            {
+                context.Services.AddKeyedTransient<IChatClient>(
+                    AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.Name),
+                    (sp, _) => sp.GetKeyedService<Kernel>(AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Name))?
+                        .GetRequiredService<IChatClient>() ?? throw new InvalidOperationException("Kernel or IChatClient not found with workspace name: " + workspaceConfig.Name)
                 );
             }
         }

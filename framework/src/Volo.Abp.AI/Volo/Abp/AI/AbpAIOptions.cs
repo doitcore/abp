@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Volo.Abp.AI;
 
 public class AbpAIOptions

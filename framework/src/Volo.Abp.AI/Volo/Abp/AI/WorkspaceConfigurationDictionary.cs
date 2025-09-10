@@ -5,13 +5,13 @@ namespace Volo.Abp.AI;
 
 public class WorkspaceConfigurationDictionary : Dictionary<string, WorkspaceConfiguration>
 {
-    public void Configure<TWorkSpace>(Action<WorkspaceConfiguration> configureAction)
+    public void Configure<TWorkSpace>(Action<WorkspaceConfiguration>? configureAction = null)
         where TWorkSpace : class
     {
         Configure(WorkspaceNameAttribute.GetWorkspaceName<TWorkSpace>(), configureAction);
     }
 
-    public void Configure(string name, Action<WorkspaceConfiguration> configureAction)
+    public void Configure(string name, Action<WorkspaceConfiguration>? configureAction = null)
     {
         if (!TryGetValue(name, out var configuration))
         {
@@ -19,6 +19,6 @@ public class WorkspaceConfigurationDictionary : Dictionary<string, WorkspaceConf
             this[name] = configuration;
         }
 
-        configureAction(configuration);
+        configureAction?.Invoke(configuration);
     }
 }

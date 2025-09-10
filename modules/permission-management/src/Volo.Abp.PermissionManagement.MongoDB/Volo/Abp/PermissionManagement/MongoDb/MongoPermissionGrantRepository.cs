@@ -55,10 +55,9 @@ public class MongoPermissionGrantRepository :
     {
         cancellationToken = GetCancellationToken(cancellationToken);
         return await (await GetQueryableAsync(cancellationToken))
-            .Where(s =>
-                names.Contains(s.Name) &&
-                s.ProviderName == providerName &&
-                s.ProviderKey == providerKey
+            .Where(s => names.Any(n => n.Equals(s.Name, StringComparison.CurrentCultureIgnoreCase)) &&
+                        s.ProviderName == providerName &&
+                        s.ProviderKey == providerKey
             ).ToListAsync(cancellationToken);
     }
 }

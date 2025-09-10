@@ -119,7 +119,7 @@
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.12.0" />
     <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.12.0" />
     <PackageVersion Include="Minio" Version="6.0.4" />
-    <PackageVersion Include="MongoDB.Driver" Version="3.3.0" />
+    <PackageVersion Include="MongoDB.Driver" Version="3.4.3" />
     <PackageVersion Include="NEST" Version="7.17.5" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Nito.AsyncEx.Context" Version="5.1.2" />

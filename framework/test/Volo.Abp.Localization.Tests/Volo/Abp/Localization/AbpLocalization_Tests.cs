@@ -375,4 +375,17 @@ public class AbpLocalization_Tests : AbpIntegratedTest<AbpLocalizationTestModule
         var externalLocalizer = _localizerFactory.CreateByResourceName(TestExternalLocalizationStore.TestExternalResourceNames.ExternalResource1);
         externalLocalizer["Car"].Value.ShouldBe("Car");
     }
+
+    /// <summary>
+    /// <see href="https://github.com/abpframework/abp/issues/18208"/>
+    /// </summary>
+    [Fact]
+    public void Should_Get_Nested_Translations()
+    {
+        using (CultureHelper.Use("en"))
+        {
+            _localizer["MyNestedTranslation__SomeKey"].Value.ShouldBe("Some nested value");
+            _localizer["MyNestedTranslation__SomeOtherKey"].Value.ShouldBe("Some other nested value");
+        }
+    }
 }

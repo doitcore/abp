@@ -47,12 +47,11 @@ public static class JsonLocalizationDictionaryBuilder
         {
             throw new AbpException("Can not parse json string. " + ex.Message);
         }
-
         if (jsonFile == null)
         {
             return null;
         }
-        
+
         var cultureCode = jsonFile.Culture;
         if (string.IsNullOrEmpty(cultureCode))
         {
@@ -61,18 +60,20 @@ public static class JsonLocalizationDictionaryBuilder
 
         var dictionary = new Dictionary<string, LocalizedString>();
         var dublicateNames = new List<string>();
-        foreach (var item in jsonFile.Texts)
+
+        // Flache Struktur in Dictionary umwandeln
+        var flatTexts = FlattenTexts(jsonFile.Texts);
+
+        foreach (var item in flatTexts)
         {
             if (string.IsNullOrEmpty(item.Key))
             {
                 throw new AbpException("The key is empty in given json string.");
             }
-
             if (dictionary.GetOrDefault(item.Key) != null)
             {
                 dublicateNames.Add(item.Key);
             }
-
             dictionary[item.Key] = new LocalizedString(item.Key, item.Value.NormalizeLineEndings());
         }
 
@@ -84,5 +85,49 @@ public static class JsonLocalizationDictionaryBuilder
         }
 
         return new StaticLocalizationDictionary(cultureCode, dictionary);
+    }
+
+    private static Dictionary<string, string> FlattenTexts(Dictionary<string, object> texts, string prefix = "")
+    {
+        var result = new Dictionary<string, string>();
+
+        foreach (var item in texts)
+        {
+            var currentKey = string.IsNullOrEmpty(prefix) ? item.Key : $"{prefix}__{item.Key}";
+
+            if (item.Value is JsonElement jsonElement)
+            {
+                if (jsonElement.ValueKind == JsonValueKind.String)
+                {
+                    result[currentKey] = jsonElement.GetString() ?? "";
+                }
+                else if (jsonElement.ValueKind == JsonValueKind.Object)
+                {
+                    var nestedDict = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonElement.GetRawText());
+                    if (nestedDict != null)
+                    {
+                        var flattenedNested = FlattenTexts(nestedDict, currentKey);
+                        foreach (var nested in flattenedNested)
+                        {
+                            result[nested.Key] = nested.Value;
+                        }
+                    }
+                }
+            }
+            else if (item.Value is string stringValue)
+            {
+                result[currentKey] = stringValue;
+            }
+            else if (item.Value is Dictionary<string, object> nestedDict)
+            {
+                var flattenedNested = FlattenTexts(nestedDict, currentKey);
+                foreach (var nested in flattenedNested)
+                {
+                    result[nested.Key] = nested.Value;
+                }
+            }
+        }
+
+        return result;
     }
 }

@@ -1,6 +1,10 @@
 {
   "culture": "en",
   "texts": {
-    "SeeYou": "See you"
+    "SeeYou": "See you",
+    "MyNestedTranslation": {
+      "SomeKey": "Some nested value",
+      "SomeOtherKey": "Some other nested value"
+    }
   }
 }

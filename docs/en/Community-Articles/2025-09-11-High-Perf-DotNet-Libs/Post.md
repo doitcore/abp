@@ -7,7 +7,7 @@ Here are some **high-performance .NET libraries** you might not know but definit
 
 ## 1. BenchmarkDotNet – Measure before you optimize
 
-![BenchmarkDotnet](benchmarkdotnet.png)
+![BenchmarkDotnet](BenchmarkDotnet.png)
 
 BenchmarkDotNet makes it simple to **benchmark .NET code with precision**.
 

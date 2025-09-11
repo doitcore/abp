@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Localization;
 
@@ -61,10 +62,7 @@ public static class JsonLocalizationDictionaryBuilder
         var dictionary = new Dictionary<string, LocalizedString>();
         var dublicateNames = new List<string>();
 
-        // Flache Struktur in Dictionary umwandeln
-        var flatTexts = FlattenTexts(jsonFile.Texts);
-
-        foreach (var item in flatTexts)
+        foreach (var item in FlattenTexts(jsonFile.Texts))
         {
             if (string.IsNullOrEmpty(item.Key))
             {
@@ -90,44 +88,63 @@ public static class JsonLocalizationDictionaryBuilder
     private static Dictionary<string, string> FlattenTexts(Dictionary<string, object> texts, string prefix = "")
     {
         var result = new Dictionary<string, string>();
-
-        foreach (var item in texts)
+        foreach (var text in texts)
         {
-            var currentKey = string.IsNullOrEmpty(prefix) ? item.Key : $"{prefix}__{item.Key}";
-
-            if (item.Value is JsonElement jsonElement)
+            var currentKey = string.IsNullOrEmpty(prefix) ? text.Key : $"{prefix}__{text.Key}";
+            switch (text.Value)
             {
-                if (jsonElement.ValueKind == JsonValueKind.String)
-                {
-                    result[currentKey] = jsonElement.GetString() ?? "";
-                }
-                else if (jsonElement.ValueKind == JsonValueKind.Object)
-                {
-                    var nestedDict = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonElement.GetRawText());
-                    if (nestedDict != null)
+                case JsonElement jsonElement:
+                    foreach (var item in FlattenJsonElement(jsonElement, currentKey))
                     {
-                        var flattenedNested = FlattenTexts(nestedDict, currentKey);
-                        foreach (var nested in flattenedNested)
-                        {
-                            result[nested.Key] = nested.Value;
-                        }
+                        result[item.Key] = item.Value;
                     }
-                }
-            }
-            else if (item.Value is string stringValue)
-            {
-                result[currentKey] = stringValue;
-            }
-            else if (item.Value is Dictionary<string, object> nestedDict)
-            {
-                var flattenedNested = FlattenTexts(nestedDict, currentKey);
-                foreach (var nested in flattenedNested)
-                {
-                    result[nested.Key] = nested.Value;
-                }
+                    break;
+                case string str:
+                    result[currentKey] = str;
+                    break;
+                case null:
+                    result[currentKey] = "";
+                    break;
+                default:
+                    result[currentKey] = text.Value.ToString() ?? "";
+                    break;
             }
         }
-
         return result;
+    }
+
+    private static IEnumerable<KeyValuePair<string, string>> FlattenJsonElement(JsonElement element, string prefix)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.String:
+                yield return new KeyValuePair<string, string>(prefix, element.GetString() ?? "");
+                break;
+            case JsonValueKind.Object:
+                foreach (var prop in element.EnumerateObject())
+                {
+                    var newKey = $"{prefix}__{prop.Name}";
+                    foreach (var item in FlattenJsonElement(prop.Value, newKey))
+                    {
+                        yield return item;
+                    }
+                }
+                break;
+            case JsonValueKind.Array:
+                var i = 0;
+                foreach (var prop in element.EnumerateArray())
+                {
+                    var newKey = $"{prefix}__{i}";
+                    foreach (var item in FlattenJsonElement(prop, newKey))
+                    {
+                        yield return item;
+                    }
+                    i++;
+                }
+                break;
+            default:
+                yield return new KeyValuePair<string, string>(prefix, element.ToString());
+                break;
+        }
     }
 }

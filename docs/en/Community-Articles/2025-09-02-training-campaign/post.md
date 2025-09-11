@@ -25,5 +25,5 @@ Simply visit our training page, select your preferred package, add your note if 
 
 Invest in your skills and advance your career with ABP.IO training. This offer won’t last long, so grab your spot now\!
 
-### 🔗[Pick your package, add a note if needed, and send your training request!](https://abp.io/trainings?utm_source=referral&utm_medium=website&utm_campaign=training_abpblogpost)
+### 🔗[Pick your package and send your training request now!](https://abp.io/trainings?utm_source=referral&utm_medium=website&utm_campaign=training_abpblogpost)
 

@@ -29,7 +29,6 @@ using Volo.Docs.Models;
 using Volo.Docs.Projects;
 using Volo.Docs.TableOfContents;
 using Volo.Docs.Utils;
-using static Volo.Docs.TableOfContents.TocGeneratorService;
 
 namespace Volo.Docs.Pages.Documents.Project
 {
@@ -77,7 +76,7 @@ namespace Volo.Docs.Pages.Documents.Project
 
         public string DocumentsUrlPrefix { get; set; }
 
-        public List<Heading> TocHeadings { get; set; } = [];
+        public List<TocHeading> TocHeadings { get; set; } = [];
 
         public bool ShowProjectsCombobox { get; set; }
 

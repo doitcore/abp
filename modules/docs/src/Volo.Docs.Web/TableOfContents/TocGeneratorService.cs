@@ -13,9 +13,7 @@ namespace Volo.Docs.TableOfContents;
 
 public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 {
-    public record Heading(int Level, string Text, string Id);
-
-    public List<Heading> GenerateTocHeadings(string markdownContent)
+    public List<TocHeading> GenerateTocHeadings(string markdownContent)
     {
         if (markdownContent.IsNullOrWhiteSpace())
         {
@@ -28,7 +26,7 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 
         var pipeline = pipelineBuilder.Build();
 
-        var headings = new List<Heading>();
+        var headings = new List<TocHeading>();
 
         var document = Markdig.Markdown.Parse(markdownContent, pipeline);
 
@@ -36,11 +34,11 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 
         foreach (var headingBlock in headingBlocks)
         {
-            headings.Add(new Heading(
-                headingBlock.Level,
-                GetPlainText(headingBlock.Inline), 
-                headingBlock.GetAttributes()?.Id
-            ));
+            headings.Add(new TocHeading {
+                Level =  headingBlock.Level,
+                Text = GetPlainText(headingBlock.Inline),
+                Id = headingBlock.GetAttributes()?.Id
+            });
         }
 
         return headings;

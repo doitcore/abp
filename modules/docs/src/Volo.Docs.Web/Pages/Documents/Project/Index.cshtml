@@ -597,8 +597,8 @@
                         <h5 class="card-title">@L["InThisDocument"]</h5>
 
                         <div id="scroll-index" class="">
-                            <nav id="docs-sticky-index" class="navbar index-scroll">
-                                @Html.Raw(Model.TocHtml)
+                            <nav id="toc" class="navbar index-scroll">
+                                    <partial name="TableOfContents" model="Model" />
                             </nav>
                             <div class="row">
                                 <div class="col p-0">

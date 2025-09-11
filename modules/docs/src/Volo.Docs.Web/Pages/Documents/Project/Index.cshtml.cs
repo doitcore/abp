@@ -22,13 +22,14 @@ using Volo.Docs.Common.Documents;
 using Volo.Docs.Common.Projects;
 using Volo.Docs.Documents;
 using Volo.Docs.Documents.Rendering;
+using Volo.Docs.GitHub.Documents.Version;
 using Volo.Docs.HtmlConverting;
+using Volo.Docs.Localization;
 using Volo.Docs.Models;
 using Volo.Docs.Projects;
-using Volo.Docs.GitHub.Documents.Version;
-using Volo.Docs.Localization;
-using Volo.Docs.Utils;
 using Volo.Docs.TableOfContents;
+using Volo.Docs.Utils;
+using static Volo.Docs.TableOfContents.TocGeneratorService;
 
 namespace Volo.Docs.Pages.Documents.Project
 {
@@ -76,7 +77,7 @@ namespace Volo.Docs.Pages.Documents.Project
 
         public string DocumentsUrlPrefix { get; set; }
 
-        public string TocHtml { get; set; } = string.Empty;
+        public List<Heading> TocHeadings { get; set; } = [];
 
         public bool ShowProjectsCombobox { get; set; }
 
@@ -541,9 +542,9 @@ namespace Volo.Docs.Pages.Documents.Project
                     DocumentNameWithExtension = Document.Name;
                     SetDocumentPageTitle();
 
-                    if (Document != null && !string.IsNullOrEmpty(Document.Content))
+                    if (Document != null && !Document.Content.IsNullOrEmpty())
                     {
-                        TocHtml = _tocGeneratorService.GenerateToc(Document.Content);
+                        TocHeadings = _tocGeneratorService.GenerateTocHeadings(Document.Content);
                     }
 
                     await ConvertDocumentContentToHtmlAsync();

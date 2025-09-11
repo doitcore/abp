@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
+using Markdig.Renderers.Html;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using Volo.Abp.DependencyInjection;
-using Volo.Docs.Markdown;
 
 namespace Volo.Docs.TableOfContents;
 
@@ -13,104 +15,80 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 {
     public record Heading(int Level, string Text, string Id);
 
-    public string GenerateToc(string markdownContent)
+    public List<Heading> GenerateTocHeadings(string markdownContent)
     {
         if (markdownContent.IsNullOrWhiteSpace())
         {
-            return string.Empty;
+            return null;
         }
 
-        var headingExtractionExtension = new HeadingExtractionExtension();
         var pipelineBuilder = new MarkdownPipelineBuilder()
             .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
             .UseAdvancedExtensions();
-        pipelineBuilder.Use(headingExtractionExtension);
 
         var pipeline = pipelineBuilder.Build();
-        Markdig.Markdown.ToHtml(markdownContent, pipeline);
 
-        var headings = headingExtractionExtension.Headings
-            .Select(h => new Heading(h.Level, h.Text, h.Id))
-            .ToList();
+        var headings = new List<Heading>();
 
-        return BuildTocHtml(headings);
+        var document = Markdig.Markdown.Parse(markdownContent, pipeline);
+
+        var headingBlocks = document.Descendants<HeadingBlock>();
+
+        foreach (var headingBlock in headingBlocks)
+        {
+            headings.Add(new Heading(
+                headingBlock.Level,
+                GetPlainText(headingBlock.Inline), 
+                headingBlock.GetAttributes()?.Id
+            ));
+        }
+
+        return headings;
     }
 
-    private static string BuildTocHtml(List<Heading> headings)
+    private static string GetPlainText(ContainerInline container)
     {
-        if (headings == null || headings.Count == 0)
+        if (container == null)
         {
             return string.Empty;
         }
-
-        var relevantHeadings = headings
-            .Where(h => h.Level is 2 or 3)
-            .ToList();
-
-        if (relevantHeadings.Count == 0)
+       
+        if(container.Count() == 1 && container.First() is LiteralInline literalInline)
         {
-            relevantHeadings = headings
-                .Where(h => h.Level == 1)
-                .ToList();
+            return literalInline.Content.ToString();
         }
 
-        if (relevantHeadings.Count == 0)
+        var builder = new StringBuilder();
+        var inlinesToProcess = new Queue<Inline>();
+
+        foreach (var inline in container)
         {
-            return string.Empty;
+            inlinesToProcess.Enqueue(inline);
         }
 
-        var baseLevel = relevantHeadings.Min(h => h.Level);
-        var normalizedHeadings = relevantHeadings
-            .Select(h => h with { Level = h.Level - baseLevel + 1 })
-            .ToList();
-
-        var tocBuilder = new StringBuilder();
-        var levelStack = new Stack<int>();
-        levelStack.Push(0);
-
-        for (var i = 0; i < normalizedHeadings.Count; i++)
+        while (inlinesToProcess.Count > 0)
         {
-            var heading = normalizedHeadings[i];
-            var previousLevel = levelStack.Peek();
+            var currentInline = inlinesToProcess.Dequeue();
 
-            if (heading.Level < previousLevel)
+            switch (currentInline)
             {
-                while (heading.Level < levelStack.Peek())
-                {
-                    tocBuilder.Append("</li></ul>");
-                    levelStack.Pop();
-                }
-                tocBuilder.Append("</li>"); 
-            }
-            else if (heading.Level > previousLevel)
-            {
-                tocBuilder.Append("<ul class=\"nav nav-pills flex-column\">");
-                levelStack.Push(heading.Level);
-            }
-            else if (i > 0)
-            {
-                tocBuilder.Append("</li>");
-            }
+                case LiteralInline literal:
+                    builder.Append(literal.Content);
+                    break;
 
-            var hasChildren = (i + 1 < normalizedHeadings.Count) &&
-                              (normalizedHeadings[i + 1].Level > heading.Level);
+                case CodeInline code:
+                    builder.Append(code.Content);
+                    break;
 
-            var liClass = hasChildren ? "nav-item toc-item-has-children" : "nav-item";
-
-            tocBuilder.Append($"<li class=\"{liClass}\"><a class=\"nav-link\" href=\"#{heading.Id}\">{heading.Text}</a>");
+                case ContainerInline childContainer:
+                    foreach (var childInline in childContainer)
+                    {
+                        inlinesToProcess.Enqueue(childInline);
+                    }
+                    break;
+            }
         }
 
-        if (normalizedHeadings.Count > 0)
-        {
-            tocBuilder.Append("</li>");
-        }
-
-        while (levelStack.Count > 1)
-        {
-            tocBuilder.Append("</ul>");
-            levelStack.Pop();
-        }
-        
-        return tocBuilder.ToString();
+        return builder.ToString();
     }
 }

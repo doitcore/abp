@@ -1,8 +1,10 @@
-﻿using Volo.Abp.Application.Services;
+﻿using System.Collections.Generic;
+using Volo.Abp.Application.Services;
+using static Volo.Docs.TableOfContents.TocGeneratorService;
 
 namespace Volo.Docs.TableOfContents;
 
 public interface ITocGeneratorService : IApplicationService
 {
-    string GenerateToc(string markdownContent);
+    List<Heading> GenerateTocHeadings(string markdownContent);
 }

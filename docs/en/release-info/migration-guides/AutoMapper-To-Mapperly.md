@@ -56,7 +56,7 @@ public class ExampleAutoMapper : Profile
 And the Mapperly mapping class:
 
 ```csharp
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUser, IdentityUserDto>
 {
@@ -71,7 +71,7 @@ public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUs
     public override partial void Map(IdentityUser source, IdentityUserDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityUserClaimToIdentityUserClaimDtoMapper : MapperBase<IdentityUserClaim, IdentityUserClaimDto>
 {
     public override partial IdentityUserClaimDto Map(IdentityUserClaim source);
@@ -79,7 +79,7 @@ public partial class IdentityUserClaimToIdentityUserClaimDtoMapper : MapperBase<
     public override partial void Map(IdentityUserClaim source, IdentityUserClaimDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class OrganizationUnitToOrganizationUnitDtoMapper : MapperBase<OrganizationUnit, OrganizationUnitDto>
 {
@@ -87,7 +87,7 @@ public partial class OrganizationUnitToOrganizationUnitDtoMapper : MapperBase<Or
     public override partial void Map(OrganizationUnit source, OrganizationUnitDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class OrganizationUnitRoleToOrganizationUnitRoleDtoMapper : TwoWayMapperBase<OrganizationUnitRole, OrganizationUnitRoleDto>
 {
     public override partial OrganizationUnitRoleDto Map(OrganizationUnitRole source);
@@ -97,7 +97,7 @@ public partial class OrganizationUnitRoleToOrganizationUnitRoleDtoMapper : TwoWa
     public override partial void ReverseMap(OrganizationUnitRoleDto destination, OrganizationUnitRole source);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 [MapExtraProperties]
 public partial class OrganizationUnitToOrganizationUnitWithDetailsDtoMapper : MapperBase<OrganizationUnit, OrganizationUnitWithDetailsDto>
 {
@@ -110,7 +110,7 @@ public partial class OrganizationUnitToOrganizationUnitWithDetailsDtoMapper : Ma
     public override partial void Map(OrganizationUnit source, OrganizationUnitWithDetailsDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityRoleToOrganizationUnitRoleDtoMapper : MapperBase<IdentityRole, OrganizationUnitRoleDto>
 {
     [MapProperty(nameof(IdentityRole.Id), nameof(OrganizationUnitRoleDto.RoleId))]
@@ -120,7 +120,7 @@ public partial class IdentityRoleToOrganizationUnitRoleDtoMapper : MapperBase<Id
     public override partial void Map(IdentityRole source, OrganizationUnitRoleDto destination);
 }
 
-[Mapper]
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityUserToIdentityUserExportDtoMapper : MapperBase<IdentityUser, IdentityUserExportDto>
 {
     [MapperIgnoreTarget(nameof(IdentityUserExportDto.Roles))]
@@ -143,7 +143,7 @@ public partial class IdentityUserToIdentityUserExportDtoMapper : MapperBase<Iden
 
 To use Mapperly, you'll need to create a dedicated mapping class for each source and destination types.
 
-* Use the `[Mapper]` attribute to designate the class as a Mapperly mapper.
+* Use the `[Mapper]` attribute to designate the class as a Mapperly mapper. The `RequiredMappingStrategy` is set to `Target` by default.
 * Replace AutoMapper's `Ignore()` method with the `[MapperIgnoreTarget]` attribute.
 * Replace the `MapExtraProperties()` method with the `[MapExtraProperties]` attribute.
 * Use the `TwoWayMapperBase` class as an alternative to AutoMapper’s `ReverseMap()` functionality.
@@ -151,11 +151,12 @@ To use Mapperly, you'll need to create a dedicated mapping class for each source
 
 ### Dependency Injection in Mapper Class
 
-All Mapperly mapping classes automatically registered in the the [dependency injection (DI)](../../framework/fundamentals/dependency-injection.md) container. To use a service within a Mapper class, simply add it to the constructor, Mapperly will inject it automatically.
+All Mapperly mapping classes automatically registered in the [dependency injection (DI)](../../framework/fundamentals/dependency-injection.md) container. To use a service within a Mapper class, simply add it to the constructor; Mapperly will inject it automatically.
 
 **Example:**
 
 ```csharp
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUser, IdentityUserDto>
 {
     public IdentityUserToIdentityUserDtoMapper(MyService myService)
@@ -169,6 +170,170 @@ public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUs
     public override void AfterMap(IdentityUser source, IdentityUserDto destination)
     {
         destination.MyProperty = _myService.GetMyProperty(source.MyProperty);
+    }
+}
+```
+
+## AI Prompt for Migrating AutoMapper to Mapperly
+
+If you have AI tools like Cursor, you can use the following prompt to migrate your AutoMapper mappings to Mapperly automatically:
+
+> AI may generate some code that is not correct. Please check the code carefully.
+
+```
+Please help me migrate AutoMapper Profile classes to Mapperly. I have AutoMapper Profile files in my current workspace/context that need to be converted. 
+
+**Conversion Requirements:**
+
+1. **Convert AutoMapper Profile to Mapperly Mappers**: Transform each `CreateMap` into a separate Mapperly mapper class
+2. **Rename the file**: Change from `XXXAutoMapperProfile.cs` to `XXXMappers.cs`
+3. **Use proper Mapperly attributes**: 
+   - `[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]` for each mapper class
+   - `[MapExtraProperties]` for classes that need extra properties mapping
+   - `[MapperIgnoreTarget]` for ignored properties
+   - `[MapProperty]` for custom property mappings
+4. **Inherit from appropriate base classes**:
+   - `MapperBase<TSource, TDestination>` for one-way mapping
+   - `TwoWayMapperBase<TSource, TDestination>` for reverse mapping
+5. **Handle complex mappings**: Use `AfterMap` method for complex transformations
+
+**Note:** The code below contains two parts - both are reference examples for you to understand the conversion pattern:
+1. **AutoMapper Profile example** - shows the original AutoMapper code structure
+2. **Mapperly Mappers example** - shows the expected converted Mapperly code structure
+
+Please convert the actual AutoMapper Profile files that exist in your current context/workspace, following the same conversion pattern as shown in these examples.
+
+**Reference Examples:**
+
+**1. AutoMapper Profile (original code):**
+
+using System;
+using AutoMapper;
+using System.Linq;
+using Volo.Abp.AutoMapper;
+
+namespace Volo.Abp.Identity;
+
+public class ExampleAutoMapperProfile : Profile
+{
+    public ExampleAutoMapperProfile()
+    {
+        CreateMap<IdentityUser, IdentityUserDto>()
+            .MapExtraProperties()
+            .Ignore(x => x.IsLockedOut)
+            .Ignore(x => x.SupportTwoFactor)
+            .Ignore(x => x.RoleNames);
+
+        CreateMap<IdentityUserClaim, IdentityUserClaimDto>();
+
+        CreateMap<OrganizationUnit, OrganizationUnitDto>()
+            .MapExtraProperties();
+
+        CreateMap<OrganizationUnitRole, OrganizationUnitRoleDto>()
+            .ReverseMap();
+
+        CreateMap<IdentityRole, OrganizationUnitRoleDto>()
+            .ForMember(dest => dest.RoleId, src => src.MapFrom(r => r.Id));
+
+        CreateMap<IdentityUser, IdentityUserExportDto>()
+            .ForMember(dest => dest.Active, src => src.MapFrom(r => r.IsActive ? "Yes" : "No"))
+            .ForMember(dest => dest.EmailConfirmed, src => src.MapFrom(r => r.EmailConfirmed ? "Yes" : "No"))
+            .ForMember(dest => dest.TwoFactorEnabled, src => src.MapFrom(r => r.TwoFactorEnabled ? "Yes" : "No"))
+            .ForMember(dest => dest.AccountLookout, src => src.MapFrom(r => r.LockoutEnd != null && r.LockoutEnd > DateTime.UtcNow ? "Yes" : "No"))
+            .Ignore(x => x.Roles);
+    }
+}
+
+---
+
+**2. Mapperly Mappers (converted code):**
+
+using System;
+using System.Linq;
+using Riok.Mapperly.Abstractions;
+using Volo.Abp.Mapperly;
+
+namespace Volo.Abp.Identity;
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+[MapExtraProperties]
+public partial class IdentityUserToIdentityUserDtoMapper : MapperBase<IdentityUser, IdentityUserDto>
+{
+    [MapperIgnoreTarget(nameof(IdentityUserDto.IsLockedOut))]
+    [MapperIgnoreTarget(nameof(IdentityUserDto.SupportTwoFactor))]
+    [MapperIgnoreTarget(nameof(IdentityUserDto.RoleNames))]
+    public override partial IdentityUserDto Map(IdentityUser source);
+
+    [MapperIgnoreTarget(nameof(IdentityUserDto.IsLockedOut))]
+    [MapperIgnoreTarget(nameof(IdentityUserDto.SupportTwoFactor))]
+    [MapperIgnoreTarget(nameof(IdentityUserDto.RoleNames))]
+    public override partial void Map(IdentityUser source, IdentityUserDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class IdentityUserClaimToIdentityUserClaimDtoMapper : MapperBase<IdentityUserClaim, IdentityUserClaimDto>
+{
+    public override partial IdentityUserClaimDto Map(IdentityUserClaim source);
+
+    public override partial void Map(IdentityUserClaim source, IdentityUserClaimDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+[MapExtraProperties]
+public partial class OrganizationUnitToOrganizationUnitDtoMapper : MapperBase<OrganizationUnit, OrganizationUnitDto>
+{
+    public override partial OrganizationUnitDto Map(OrganizationUnit source);
+    public override partial void Map(OrganizationUnit source, OrganizationUnitDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class OrganizationUnitRoleToOrganizationUnitRoleDtoMapper : TwoWayMapperBase<OrganizationUnitRole, OrganizationUnitRoleDto>
+{
+    public override partial OrganizationUnitRoleDto Map(OrganizationUnitRole source);
+    public override partial void Map(OrganizationUnitRole source, OrganizationUnitRoleDto destination);
+
+    public override partial OrganizationUnitRole ReverseMap(OrganizationUnitRoleDto destination);
+    public override partial void ReverseMap(OrganizationUnitRoleDto destination, OrganizationUnitRole source);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+[MapExtraProperties]
+public partial class OrganizationUnitToOrganizationUnitWithDetailsDtoMapper : MapperBase<OrganizationUnit, OrganizationUnitWithDetailsDto>
+{
+    [MapperIgnoreTarget(nameof(OrganizationUnitWithDetailsDto.Roles))]
+    [MapperIgnoreTarget(nameof(OrganizationUnitWithDetailsDto.UserCount))]
+    public override partial OrganizationUnitWithDetailsDto Map(OrganizationUnit source);
+
+    [MapperIgnoreTarget(nameof(OrganizationUnitWithDetailsDto.Roles))]
+    [MapperIgnoreTarget(nameof(OrganizationUnitWithDetailsDto.UserCount))]
+    public override partial void Map(OrganizationUnit source, OrganizationUnitWithDetailsDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class IdentityRoleToOrganizationUnitRoleDtoMapper : MapperBase<IdentityRole, OrganizationUnitRoleDto>
+{
+    [MapProperty(nameof(IdentityRole.Id), nameof(OrganizationUnitRoleDto.RoleId))]
+    public override partial OrganizationUnitRoleDto Map(IdentityRole source);
+
+    [MapProperty(nameof(IdentityRole.Id), nameof(OrganizationUnitRoleDto.RoleId))]
+    public override partial void Map(IdentityRole source, OrganizationUnitRoleDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class IdentityUserToIdentityUserExportDtoMapper : MapperBase<IdentityUser, IdentityUserExportDto>
+{
+    [MapperIgnoreTarget(nameof(IdentityUserExportDto.Roles))]
+    public override partial IdentityUserExportDto Map(IdentityUser source);
+
+    [MapperIgnoreTarget(nameof(IdentityUserExportDto.Roles))]
+    public override partial void Map(IdentityUser source, IdentityUserExportDto destination);
+
+    public override void AfterMap(IdentityUser source, IdentityUserExportDto destination)
+    {
+        destination.Active = source.IsActive ? "Yes" : "No";
+        destination.EmailConfirmed = source.EmailConfirmed ? "Yes" : "No";
+        destination.TwoFactorEnabled = source.TwoFactorEnabled ? "Yes" : "No";
+        destination.AccountLookout = source.LockoutEnd != null && source.LockoutEnd > DateTime.UtcNow ? "Yes" : "No";
     }
 }
 ```

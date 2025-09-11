@@ -67,6 +67,7 @@ public class AbpAIModule : AbpModule
                 builderConfigurer.Action(workspaceConfig.Kernel.Builder!);
             }
 
+            // TODO: Check if we can use transient instead of singleton for Kernel
             context.Services.AddKeyedTransient<Kernel>(
                 AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Name),
                 (provider, _) => workspaceConfig.Kernel.Builder!.Build());
@@ -84,7 +85,8 @@ public class AbpAIModule : AbpModule
                 context.Services.AddKeyedTransient<IChatClient>(
                     AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.Name),
                     (sp, _) => sp.GetKeyedService<Kernel>(AbpAIOptions.GetKernelServiceKeyName(workspaceConfig.Name))?
-                        .GetRequiredService<IChatClient>() ?? throw new InvalidOperationException("Kernel or IChatClient not found with workspace name: " + workspaceConfig.Name)
+                        .GetRequiredService<IChatClient>() 
+                            ?? throw new InvalidOperationException("Kernel or IChatClient not found with workspace name: " + workspaceConfig.Name)
                 );
             }
         }

@@ -117,8 +117,7 @@ Let's get started.
 
 In this **initial stage**, the designer needs to identify the end goal of the website design, usually in close collaboration with the client or other stakeholders. Questions to explore and answer in this stage of the design and website development process include:
 
-* ### Who is the site for?
-
+* Who is the site for?
 * What do they hope to find or do there?  
 * Is the main purpose of this website to inform, to sell (e-commerce, for everyone?), or to entertain?  
 * Does the website need to clearly convey the **brand's core message**, or is it part of a broader **brand strategy** with its own unique focus?  
@@ -128,14 +127,14 @@ To have clear answers to above questions will lead to the **successful execution
 
 ### What Purpose Will the Website Serve?
 
-Whatever the project you’re taking on, you always want each and every initiative you take to achieve the goals you’ve set for it**. Goal setting is critical** because it will be key in making decisions throughout the project by asking yourself the right questions and **prioritizing tasks and efforts**.
+Whatever the project you’re taking on, you always want each and every initiative you take to achieve the goals you’ve set for it. **Goal setting is critical** because it will be key in making decisions throughout the project by asking yourself the right questions and **prioritizing tasks and efforts**.
 
 As basic as it may seem, following the **SMART framework** is always a great idea when setting your goals, to **ensure effectiveness:** 
 
 **S \- SPECIFIC**  
 Your goal is direct, detailed, and meaningful.
 
-M \- MEASURABLE  
+**M \- MEASURABLE**  
 Your goal is quantifiable to track progress or success.
 
 **A \- ATTAINABLE**  

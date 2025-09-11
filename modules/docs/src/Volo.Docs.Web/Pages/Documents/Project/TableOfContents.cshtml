@@ -1,17 +1,18 @@
-﻿@model Volo.Docs.Pages.Documents.Project.IndexModel
+﻿@using Volo.Docs.TableOfContents
+@model List<TocHeading>
 @{
-    if (Model.TocHeadings == null ||Model.TocHeadings.Count == 0)
+    if (Model == null || Model.Count == 0)
     {
         return;
     }
 
-    var relevantHeadings = Model.TocHeadings
+    var relevantHeadings = Model
         .Where(h => h.Level is 2 or 3)
         .ToList();
 
     if (relevantHeadings.Count == 0)
     {
-        relevantHeadings = Model.TocHeadings
+        relevantHeadings = Model
             .Where(h => h.Level == 1)
             .ToList();
     }

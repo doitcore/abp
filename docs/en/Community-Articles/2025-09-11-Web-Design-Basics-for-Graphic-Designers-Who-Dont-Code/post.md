@@ -127,14 +127,14 @@ To have clear answers to above questions will lead to the **successful execution
 
 ### What Purpose Will the Website Serve?
 
-Whatever the project you’re taking on, you always want each and every initiative you take to achieve the goals you’ve set for it**. Goal setting is critical** because it will be key in making decisions throughout the project by asking yourself the right questions and **prioritizing tasks and efforts**.
+Whatever the project you’re taking on, you always want each and every initiative you take to achieve the goals you’ve set for it. **Goal setting is critical** because it will be key in making decisions throughout the project by asking yourself the right questions and **prioritizing tasks and efforts**.
 
 As basic as it may seem, following the **SMART framework** is always a great idea when setting your goals, to **ensure effectiveness:** 
 
 **S \- SPECIFIC**  
 Your goal is direct, detailed, and meaningful.
 
-M \- MEASURABLE  
+**M \- MEASURABLE**  
 Your goal is quantifiable to track progress or success.
 
 **A \- ATTAINABLE**  

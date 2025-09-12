@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Data;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.ObjectMapping;
-using Volo.Abp.Reflection;
 
 namespace Volo.Abp.Mapperly;
 
@@ -47,7 +46,7 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
         {
             mapper.BeforeMap((TSource)source);
             var destination = mapper.Map((TSource)source);
-            TryMapExtraProperties(mapper.GetType().GetSingleAttributeOrNull<MapExtraPropertiesAttribute>(), (TSource)source, destination, new ExtraPropertyDictionary());
+            TryMapExtraProperties(mapper.GetType().GetSingleAttributeOrNull<MapExtraPropertiesAttribute>(), (TSource)source, destination, GetExtraProperties(destination));
             mapper.AfterMap((TSource)source, destination);
             return destination;
         }
@@ -62,8 +61,7 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
             return destination;
         }
 
-        throw new AbpException($"No {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpMapperlyMapper<TSource, TDestination>))} or" +
-                               $" {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpReverseMapperlyMapper<TSource, TDestination>))} was found");
+        throw GetNoMapperFoundException<TSource, TDestination>();
     }
 
     public virtual TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
@@ -95,8 +93,34 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
             return destination;
         }
 
-        throw new AbpException($"No {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpMapperlyMapper<TSource, TDestination>))} or" +
-                               $" {TypeHelper.GetFullNameHandlingNullableAndGenerics(typeof(IAbpReverseMapperlyMapper<TSource, TDestination>))} was found");
+        throw GetNoMapperFoundException<TSource, TDestination>();
+    }
+
+    protected virtual AbpException GetNoMapperFoundException<TSource, TDestination>()
+    {
+        var newLine = Environment.NewLine;
+        var message = "No object mapping was found for the specified source and destination types." +
+                      newLine +
+                      newLine +
+                      "Mapping attempted:" +
+                      newLine +
+                      $"{typeof(TSource).Name} -> {typeof(TDestination).Name}" +
+                      newLine +
+                      $"{typeof(TSource).FullName} -> {typeof(TDestination).FullName}" +
+                      newLine +
+                      newLine +
+                      "How to fix:" +
+                      newLine +
+                      "Define a mapping class for these types:" +
+                      newLine +
+                      "   - Use MapperBase<TSource, TDestination> for one-way mapping." +
+                      newLine +
+                      "   - Use TwoWayMapperBase<TDestination, TSource> for two-way mapping." +
+                      newLine +
+                      newLine +
+                      "For details, see the Mapperly integration document https://abp.io/docs/latest/framework/infrastructure/object-to-object-mapping#mapperly-integration";
+
+        return new AbpException(message);
     }
 
     protected virtual bool TryToMapCollection<TSource, TDestination>(TSource source, TDestination? destination, out TDestination collectionResult)
@@ -212,13 +236,27 @@ public class MapperlyAutoObjectMappingProvider : IAutoObjectMappingProvider
 
     protected virtual void TryMapExtraProperties<TSource, TDestination>(MapExtraPropertiesAttribute? mapExtraPropertiesAttribute, TSource source, TDestination destination, ExtraPropertyDictionary destinationExtraProperty)
     {
-        if (mapExtraPropertiesAttribute != null &&
-            typeof(IHasExtraProperties).IsAssignableFrom(typeof(TDestination)) &&
-            typeof(IHasExtraProperties).IsAssignableFrom(typeof(TSource)))
+        if(source is not IHasExtraProperties sourceHasExtraProperties)
+        {
+            return;
+        }
+
+        if (destination is not IHasExtraProperties destinationHasExtraProperties)
+        {
+            return;
+        }
+
+        if (sourceHasExtraProperties.ExtraProperties != null && sourceHasExtraProperties.ExtraProperties ==
+            destinationHasExtraProperties.ExtraProperties)
+        {
+            ObjectHelper.TrySetProperty(destinationHasExtraProperties, x => x.ExtraProperties, () => new ExtraPropertyDictionary(destinationHasExtraProperties.ExtraProperties));;
+        }
+
+        if (mapExtraPropertiesAttribute != null)
         {
             MapExtraProperties<TSource, TDestination>(
-                source!.As<IHasExtraProperties>(),
-                destination!.As<IHasExtraProperties>(),
+                sourceHasExtraProperties,
+                destinationHasExtraProperties,
                 destinationExtraProperty,
                 mapExtraPropertiesAttribute.DefinitionChecks,
                 mapExtraPropertiesAttribute.IgnoredProperties,

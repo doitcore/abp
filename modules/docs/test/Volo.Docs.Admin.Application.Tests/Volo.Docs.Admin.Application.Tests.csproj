@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Volo.Docs.Admin.Application\Volo.Docs.Admin.Application.csproj" />
+    <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.BlobStoring.Memory\Volo.Abp.BlobStoring.Memory.csproj" />
     <ProjectReference Include="..\Volo.Docs.Domain.Tests\Volo.Docs.Domain.Tests.csproj" />
   </ItemGroup>
 

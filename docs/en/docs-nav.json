@@ -604,6 +604,10 @@
                   "text": "Storage Providers",
                   "items": [
                     {
+                      "text": "Memory Provider",
+                      "path": "framework/infrastructure/blob-storing/memory.md"
+                    },
+                    {
                       "text": "File System Provider",
                       "path": "framework/infrastructure/blob-storing/file-system.md"
                     },

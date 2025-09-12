@@ -163,6 +163,7 @@
     <Project Path="src/Volo.Abp.Validation/Volo.Abp.Validation.csproj" />
     <Project Path="src/Volo.Abp.VirtualFileSystem/Volo.Abp.VirtualFileSystem.csproj" />
     <Project Path="src/Volo.Abp/Volo.Abp.csproj" />
+    <Project Path="src/Volo.Abp.BlobStoring.Memory/Volo.Abp.BlobStoring.Memory.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/AbpTestBase/AbpTestBase.csproj" />
@@ -247,5 +248,6 @@
     <Project Path="test/Volo.Abp.Uow.Tests/Volo.Abp.Uow.Tests.csproj" />
     <Project Path="test/Volo.Abp.Validation.Tests/Volo.Abp.Validation.Tests.csproj" />
     <Project Path="test/Volo.Abp.VirtualFileSystem.Tests/Volo.Abp.VirtualFileSystem.Tests.csproj" />
+    <Project Path="test/Volo.Abp.BlobStoring.Memory.Tests/Volo.Abp.BlobStoring.Memory.Tests.csproj" />
   </Folder>
 </Solution>

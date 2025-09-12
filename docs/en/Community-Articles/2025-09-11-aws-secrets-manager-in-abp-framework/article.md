@@ -800,4 +800,4 @@ With this post, you can securely utilize AWS Secrets Manager in your ABP Framewo
 - [ABP Framework Documentation](https://docs.abp.io/)
 - [AWS SDK for .NET](https://docs.aws.amazon.com/sdk-for-net/)
 - [AWS Security Best Practices](https://aws.amazon.com/architecture/security-identity-compliance/)
-- [Sample Project Repository](https://github.com/your-repo/abp-aws-secrets-manager)
+- [Sample Project Repository](https://github.com/fahrigedik/AWSIntegrationABP)

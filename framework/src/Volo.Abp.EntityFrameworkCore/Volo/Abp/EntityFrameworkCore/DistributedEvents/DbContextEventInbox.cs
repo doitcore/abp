@@ -47,11 +47,12 @@ public class DbContextEventInbox<TDbContext> : IDbContextEventInbox<TDbContext>
             transformedFilter = InboxOutboxFilterExpressionTransformer.Transform<IIncomingEventInfo, IncomingEventRecord>(filter)!;
         }
 
+        var now = Clock.Now;
         var outgoingEventRecords = await dbContext
             .IncomingEvents
             .AsNoTracking()
             .Where(x => x.Status == IncomingEventStatus.Pending)
-            .Where(x => x.NextRetryTime == null || x.NextRetryTime <= Clock.Now)
+            .Where(x => x.NextRetryTime == null || x.NextRetryTime <= now)
             .WhereIf(transformedFilter != null, transformedFilter!)
             .OrderBy(x => x.CreationTime)
             .Take(maxCount)

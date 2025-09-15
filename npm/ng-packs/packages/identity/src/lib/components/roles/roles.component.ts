@@ -76,8 +76,6 @@ export class RolesComponent implements OnInit {
   modalBusy = false;
   permissionManagementKey = ePermissionManagementComponents.PermissionManagement;
 
-  constructor() {}
-
   onVisiblePermissionChange = (event: boolean) => {
     this.visiblePermissions = event;
   };

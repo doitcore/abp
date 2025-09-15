@@ -5,7 +5,7 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
   providedIn: 'root',
 })
 export class SSRService {
-  constructor(@Inject(PLATFORM_ID) private platformId: unknown) {}
+  private platformId = Inject(PLATFORM_ID);
 
   get isBrowser() {
     return isPlatformBrowser(this.platformId);

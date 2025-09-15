@@ -21,6 +21,7 @@ import { debounceTime } from 'rxjs/operators';
 export class NgxDatatableDefaultDirective implements AfterViewInit, OnDestroy {
   private table = inject(DatatableComponent);
   private document = inject<MockDocument>(DOCUMENT);
+  private platformId = inject(PLATFORM_ID);
 
   private subscription = new Subscription();
   private resizeDiff = 0;
@@ -32,7 +33,7 @@ export class NgxDatatableDefaultDirective implements AfterViewInit, OnDestroy {
     return `ngx-datatable ${this.class}`;
   }
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+  constructor() {
     this.table.columnMode = ColumnMode.force;
     this.table.footerHeight = 50;
     this.table.headerHeight = 50;

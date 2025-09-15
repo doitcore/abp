@@ -28,4 +28,3 @@ export * from './time.service';
 export * from './ssr.service';
 export * from './cookie-storage.service';
 export * from './dom-strategy.service';
-export * from './server-cookie-parser.service';

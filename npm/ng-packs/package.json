@@ -145,7 +145,6 @@
     ]
   },
   "dependencies": {
-    "cookie-parser": "^1.4.7",
     "openid-client": "^6.6.4"
   }
 }

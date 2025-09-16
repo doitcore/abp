@@ -4,8 +4,7 @@ import {
   LocalizationPipe,
   PagedAndSortedResultRequestDto,
   PagedResultDto,
-  ReplaceableTemplateDirective,
-  SSRService,
+  ReplaceableTemplateDirective
 } from '@abp/ng.core';
 import { IdentityRoleDto, IdentityRoleService } from '@abp/ng.identity/proxy';
 import {
@@ -65,7 +64,6 @@ export class RolesComponent implements OnInit {
   protected readonly toasterService = inject(ToasterService);
   private readonly injector = inject(Injector);
   protected readonly service = inject(IdentityRoleService);
-  protected readonly ssrService = inject(SSRService);
 
   data: PagedResultDto<IdentityRoleDto> = { items: [], totalCount: 0 };
   form!: UntypedFormGroup;

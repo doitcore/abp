@@ -746,6 +746,10 @@
               "path": "framework/infrastructure/image-manipulation.md"
             },
             {
+              "text": "Interceptors",
+              "path": "framework/infrastructure/interceptors.md"
+            },
+            {
               "text": "JSON",
               "path": "framework/infrastructure/json.md"
             },

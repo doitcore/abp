@@ -11,7 +11,7 @@ Whether you’re designing for e-commerce, SaaS, lifestyle blogs, or creative po
 - Brand recall (consistent use of signature colors builds recognition)
 - User comfort and inclusivity (high contrast, accessibility standards)
 
-IMG-1
+![image](./img-1.png)
 
 👉 In short, color psychology is not a design afterthought—it’s a core driver of user engagement, retention, and revenue growth.
 
@@ -54,7 +54,7 @@ In global web design, one palette does not fit all. Colors have different cultur
 - **Green** – Islamically significant in the Middle East, while in the West it often symbolizes money.
 - **Black** – Luxury in the West, but mourning in many cultures.
 
-IMG-2
+![image](./img-2.png)
 
 👉 For international brands, it’s crucial to localize website color palettes to avoid misinterpretations.
 
@@ -120,7 +120,7 @@ Color impacts brand authority and indirectly influences SEO by shaping user beha
 - **Conversion Rates** – Optimized CTAs improve click-throughs.
 - **Social Sharing** – Bold, appealing colors increase shareability
 
-IMG-3
+![image](./img-3.png)
 
 ## Future Outlook: Where Color Psychology Is Headed
 

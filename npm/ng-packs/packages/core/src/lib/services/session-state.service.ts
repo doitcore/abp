@@ -12,6 +12,9 @@ import { AbpLocalStorageService } from './local-storage.service';
   providedIn: 'root',
 })
 export class SessionStateService {
+  private configState = inject(ConfigStateService);
+  private localStorageService = inject(AbpLocalStorageService);
+
   private readonly store = new InternalStore({} as Session.State);
   protected readonly document = inject(DOCUMENT);
 
@@ -19,10 +22,7 @@ export class SessionStateService {
     this.localStorageService.setItem('abpSession', JSON.stringify(this.store.state));
   };
 
-  constructor(
-    private configState: ConfigStateService,
-    private localStorageService: AbpLocalStorageService,
-  ) {
+  constructor() {
     this.init();
     this.setInitialLanguage();
   }

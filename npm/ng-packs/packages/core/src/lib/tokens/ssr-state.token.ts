@@ -11,9 +11,9 @@ export const APP_STARTED_WITH_SSR = new InjectionToken<boolean>('APP_STARTED_WIT
     const cookieService = inject(AbpCookieStorageService);
     if (!isPlatformBrowser(platformId)) return true;
     const ts = inject(TransferState);
-    const ssrEnabled = cookieService.getItem('ssrEnabled');
+    const ssrEnabled = cookieService.getItem('ssr-init');
     // Remove the cookie after reading its value because it's only needed once
-    cookieService.removeItem('ssrEnabled');
+    cookieService.removeItem('ssr-init');
     return ts.get(SSR_FLAG, false) || ssrEnabled === 'true';
   },
 });

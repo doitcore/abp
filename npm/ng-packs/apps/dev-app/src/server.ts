@@ -161,7 +161,7 @@ app.use((req, res, next) => {
     .handle(req)
     .then(response => {
       if (response) {
-        res.cookie('ssrEnabled', 'true', {...secureCookie, httpOnly: false});
+        res.cookie('ssr-init', 'true', {...secureCookie, httpOnly: false});
         return writeResponseToNodeResponse(response, res);
       } else {
         return next()

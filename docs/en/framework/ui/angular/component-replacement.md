@@ -213,6 +213,23 @@ function configureRoutes() {
 
 ![LogoComponent](./images/logo-component.png)
 
+Note
+- If your goal is only to change the logo image or application name, you don't need to replace the component. Prefer providing the logo via `@abp/ng.theme.shared` so all themes/components consume it consistently:
+
+```ts
+// app.config.ts
+import { provideLogo, withEnvironmentOptions } from '@abp/ng.theme.shared';
+import { environment } from './environments/environment';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideLogo(withEnvironmentOptions(environment)),
+  ],
+};
+```
+
+If you still want to completely replace the logo component UI, follow the steps below:
+
 Run the following command in `angular` folder to create a new component called `LogoComponent`.
 
 ```bash

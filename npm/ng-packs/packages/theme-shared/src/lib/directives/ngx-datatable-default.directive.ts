@@ -7,7 +7,6 @@ import {
   OnDestroy,
   inject,
   PLATFORM_ID,
-  Inject,
 } from '@angular/core';
 import { ColumnMode, DatatableComponent, ScrollerComponent } from '@swimlane/ngx-datatable';
 import { fromEvent, Subscription } from 'rxjs';

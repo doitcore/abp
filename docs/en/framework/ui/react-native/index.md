@@ -173,7 +173,7 @@ A React Native application running on an Android emulator or a physical phone **
   }
   ```
 
-- Lastly update the mobile gateway configurations as follows
+- Lastly, update the mobile gateway configurations as following:
 
   ```json
   //gateways/mobile/MyMicroserviceProject.MobileGateway/Properties/launchSettings.json
@@ -308,7 +308,7 @@ In the above image, you can start the application with an Android emulator, an i
 1. Start the emulator in **Android Studio** before running the `yarn start` or `npm start` command.
 2. Press **a** to open in Android Studio.
 
-![React Native login screen on iPhone 11](../../../images/rn-login-android-studio.png)
+![React Native login screen on Android Device](../../../images/rn-login-android-studio.png)
 
 Enter **admin** as the username and **1q2w3E\*** as the password to login to the application.
 

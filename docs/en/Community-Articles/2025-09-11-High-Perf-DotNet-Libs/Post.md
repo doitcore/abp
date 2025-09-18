@@ -20,18 +20,18 @@ Perfect for spotting bottlenecks in APIs, background services, or CPU-bound oper
 - **NuGet** (40M downloads) 🔗 https://www.nuget.org/packages/BenchmarkDotNet
 - **GitHub** (11k stars) 🔗 https://github.com/dotnet/BenchmarkDotNet
 
-------
+
 
 ## 2. MessagePack – Fastest JSON serializer
 
-Need speed beyond System.Text.Json or Newtonsoft.Json ?  MessagePack is the fastest serializer for C# (.NET, .NET Core, Unity, Xamarin). MessagePack has a compact binary size and a full set of general purpose expressive data types. Ideal for high-traffic APIs, IoT data processing, and microservices.
+Need speed beyond System.Text.Json or Newtonsoft.Json?  MessagePack is the fastest serializer for C# (.NET, .NET Core, Unity, Xamarin). MessagePack has a compact binary size and a full set of general-purpose expressive data types. Ideal for high-traffic APIs, IoT data processing, and microservices.
 
 ![MessagePack Benchmark](MessagePack.png)
 
 - **NuGet** (204M downloads) 🔗 https://www.nuget.org/packages/messagepack
 - **GitHub** (6.4K stars) 🔗 https://github.com/MessagePack-CSharp/MessagePack-CSharp
 
-------
+
 
 ## 3. Polly – Resilience at scale
 
@@ -48,7 +48,7 @@ A must-have for cloud-native .NET applications.
 - **NuGet** (1B downloads) 🔗 https://www.nuget.org/packages/polly/
 - **GitHub** (14K stars) 🔗 https://github.com/App-vNext/Polly
 
-------
+
 
 ## 4. MemoryPack – Zero-cost binary serialization
 
@@ -65,20 +65,20 @@ Great for real-time multiplayer games, chat apps, or financial systems.
 - **NuGet** (5.3M downloads) 🔗 https://www.nuget.org/packages/MemoryPack
 - **GitHub** (4K stars) 🔗 https://github.com/Cysharp/MemoryPack
 
-------
+
 
 ## 5. WolverineFx –  Ultra-low latency messaging
 
 ![wolverine](wolverine-logo.png)
 
-MediatR  was one of the best mediator library but now it's a paid library. Wolverine is a toolset for command execution and message handling within .NET applications. The killer feature of Wolverine is its very efficient command execution pipeline that can be used as:
+MediatR was one of the best mediator libraries, but now it's a paid library. Wolverine is a toolset for command execution and message handling within .NET applications. The killer feature of Wolverine is its very efficient command execution pipeline that can be used as:
 
 - An [inline "mediator" pipeline](https://wolverinefx.net/tutorials/mediator.html) for executing commands
 - A [local message bus](https://wolverinefx.net/guide/messaging/transports/local.html) for in-application communication
-- A full-fledged [asynchronous messaging framework](https://wolverinefx.net/guide/messaging/introduction.html) for robust communication and interaction between services when used in conjunction with low level messaging infrastructure tools like RabbitMQ
-- With the [WolverineFx.Http](https://wolverinefx.net/guide/http/) library, Wolverine's execution pipeline can be used directly as an alternative ASP.Net Core Endpoint provider
+- A full-fledged [asynchronous messaging framework](https://wolverinefx.net/guide/messaging/introduction.html) for robust communication and interaction between services when used in conjunction with low-level messaging infrastructure tools like RabbitMQ
+- With the [WolverineFx.Http](https://wolverinefx.net/guide/http/) library, Wolverine's execution pipeline can be used directly as an alternative ASP.NET Core Endpoint provider
 
-*Below image is from [codecrash.net](https://www.codecrash.net/2024/02/06/Mediatr-versus-Wolverine-performance.html)*
+*image below is from [codecrash.net](https://www.codecrash.net/2024/02/06/Mediatr-versus-Wolverine-performance.html)*
 ![WolverineFx](wolverine.png)
 
 WolverineFx is great for cleanly separating business logic from controllers while unifying in-process mediator patterns with powerful distributed messaging in a single, high-performance .NET library.
@@ -87,11 +87,10 @@ WolverineFx is great for cleanly separating business logic from controllers whil
 - **GitHub** (1.7K stars) 🔗 https://github.com/JasperFx/wolverine
 
 
-
 ## 6.  Disruptor-net – Next generation free .NET mediator
 
-The Disruptor is a high performance inter-thread message passing framework. A lock-free ring buffer for ultra-low latency messaging.
-features are:
+The Disruptor is a high-performance inter-thread message passing framework. A lock-free ring buffer for ultra-low latency messaging.
+Features are:
 
 - Zero memory allocation after initial setup (the events are pre-allocated).
 
@@ -107,12 +106,11 @@ features are:
 - **GitHub** (1.3K stars) 🔗 https://github.com/disruptor-net/Disruptor-net
 
 
-
 ## 7. CliWrap - Running command-line processes
 
-![CLIWrap](C:\Users\alper\Desktop\high-perf-dotnet-libs\cliwrap.png)
+![CLIWrap](cliwrap.png)
 
-CliWrap makes it easy to **run and manage external CLI processes in .NET**.
+CliWrap makes it easy to **run and manage external CLI processes in  .NET**.
 
 - Fluent, task-based API for starting commands
 - Streams standard input/output and error in real time
@@ -124,9 +122,7 @@ Ideal for automation, build tools, and integrating external executables.
 - **GitHub** (4.7K stars) 🔗 https://github.com/Tyrrrz/CliWrap
 
 
-
 ---
-
 
 
 ## Hidden Libs from the Community
@@ -144,7 +140,7 @@ Ideal for automation, build tools, and integrating external executables.
 
 - **MemoryPack**: One of the fastest serializers available, with low allocations and high throughput. Ideal for Web APIs or microservices. ([Reddit](https://www.reddit.com/r/csharp/comments/191rwgt/extremely_highperformance_libraries_for_common/?utm_source=chatgpt.com))
 - **MasterMemory**: Designed for databases or config storage. Claims *4,700× faster than SQLite* with zero-allocations per query. ([Reddit](https://www.reddit.com/r/csharp/comments/191rwgt/extremely_highperformance_libraries_for_common/?utm_source=chatgpt.com))
-- **SimdLinq**: SIMD-accelerated LINQ operations supporting a broader set of methods than .NET's built-in SIMD. Works when slight floating-point differences are acceptable. ([Reddit](https://www.reddit.com/r/csharp/comments/191rwgt/extremely_highperformance_libraries_for_common/?utm_source=chatgpt.com))
+- **SimdLinq**: SIMD-accelerated LINQ operations supporting a broader set of methods than  .NET's built-in SIMD. Works when slight floating-point differences are acceptable. ([Reddit](https://www.reddit.com/r/csharp/comments/191rwgt/extremely_highperformance_libraries_for_common/?utm_source=chatgpt.com))
 
 ### Jil – JSON Deserializer
 
@@ -157,5 +153,5 @@ Ideal for automation, build tools, and integrating external executables.
 ### Math Libraries: Math.NET Numerics & ILNumerics
 
 - **Math.NET Numerics**: Core numerical methods and matrix math, similar to BLAS/LAPACK. ([Wikipedia](https://en.wikipedia.org/wiki/Math.NET_Numerics?utm_source=chatgpt.com))
-- **ILNumerics**: Efficient numerical arrays with parallelized processing, loop unrolling, cache optimizations. Great for scientific computing. ([Wikipedia](https://en.wikipedia.org/wiki/ILNumerics?utm_source=chatgpt.com))
+- **ILNumerics**: Efficient numerical arrays with parallelized processing, loop unrolling and cache optimizations. Great for scientific computing. ([Wikipedia](https://en.wikipedia.org/wiki/ILNumerics?utm_source=chatgpt.com))
 

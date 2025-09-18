@@ -101,7 +101,7 @@ namespace Volo.Docs.Pages.Documents.Project
         public DocumentNavigationsDto DocumentNavigationsDto { get; private set; }
 
         private const int MaxDescriptionMetaTagLength = 200;
-        private const int MaxTocLevel = 2;
+        private const int MaxTocLevel = 3;
         private readonly IDocumentAppService _documentAppService;
         private readonly IDocumentToHtmlConverterFactory _documentToHtmlConverterFactory;
         private readonly IProjectAppService _projectAppService;

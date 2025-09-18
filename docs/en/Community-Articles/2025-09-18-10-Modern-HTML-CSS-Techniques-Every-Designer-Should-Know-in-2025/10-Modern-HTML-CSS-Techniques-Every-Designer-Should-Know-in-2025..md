@@ -7,7 +7,7 @@ Let's start ...
 ## Modern HTML Techniques
 
 
-### 1. <details> and <summary> tag
+### 1. `<details>` and `<summary>` tag
 
 This structure offers a structure where users can open and turn off according to their wishes.
 If you need to examine in detail;
@@ -86,7 +86,7 @@ This feature allows multiple `<details>` to move into a group by connecting to e
 
 
 
-### 2.  <dialog> Tag
+### 2.  `<dialog>` Tag
 `<dialog>` tag is a modern label used to create native modal and popup in HTML. 
 As of 2025, it is now supported in many browser and can be easily controlled with Javascript.
 
@@ -185,7 +185,7 @@ As of 2025, it is now supported in many browser and can be easily controlled wit
 
 ---
 
-### 3. inert Attribute
+### 3. Inert Attribute
 
 `inert attr()` temporarily makes an element interactive. 
 So the user cannot focus on that area with the Tab key, Screen Reader does not see, clickable links do not work.
@@ -282,6 +282,7 @@ It makes a big difference, especially in multi -ly illustrated pages or heavy -b
 ##### *More Information*:
 - [https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/fetchPriority](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/fetchPriority)
 
+---
 
 ## Modern CSS Techniques
 

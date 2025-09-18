@@ -13,50 +13,65 @@ namespace Volo.Docs.TableOfContents;
 
 public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 {
+    private const int MinHeadingLevel = 1;
+    private const int MaxHeadingLevel = 6;
+
     public virtual List<TocHeading> GenerateTocHeadings(string markdownContent)
     {
         if (markdownContent.IsNullOrWhiteSpace())
         {
-            return null;
+            return new List<TocHeading>();
         }
 
-        var pipelineBuilder = new MarkdownPipelineBuilder()
-            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
-            .UseAdvancedExtensions();
-
-        var pipeline = pipelineBuilder.Build();
-
-        var document = Markdig.Markdown.Parse(markdownContent, pipeline);
-
+        var markdownPipeline = CreateMarkdownPipeline();
+        var document = Markdig.Markdown.Parse(markdownContent, markdownPipeline);
         var headingBlocks = document.Descendants<HeadingBlock>();
 
         return headingBlocks
-            .Select(hb => new TocHeading(hb.Level, GetPlainText(hb.Inline), hb.GetAttributes().Id)).ToList();
+            .Select(CreateTocHeading)
+            .ToList();
     }
 
     public virtual List<TocItem> GenerateTocItems(List<TocHeading> tocHeadings, int topLevel, int maxLevel)
     {
-        return BuildHierarchicalStructure(tocHeadings
-            .Where(h => h.Level >= topLevel && h.Level <= maxLevel).ToList(), topLevel);
+        var filteredHeadings = tocHeadings
+            .Where(heading => heading.Level >= topLevel && heading.Level <= maxLevel)
+            .ToList();
+
+        return BuildHierarchicalStructure(filteredHeadings, topLevel);
     }
-    
+
     public virtual int GetTopLevel(List<TocHeading> headings)
     {
-        for (var i = 1; i <= 6; i++)
-        {
-            if (headings.Count(h => h.Level == i) > 1)
-            {
-                return i;
-            }
-        }
-        return 1;
+        return Enumerable.Range(MinHeadingLevel, MaxHeadingLevel)
+            .FirstOrDefault(level => headings.Count(h => h.Level == level) > 1, MinHeadingLevel);
     }
 
     public virtual List<TocItem> GenerateTocItems(string markdownContent, int maxLevel, int? topLevel = null)
     {
         var headings = GenerateTocHeadings(markdownContent);
-        var topLevelToUse = topLevel ?? GetTopLevel(headings);
-        return GenerateTocItems(headings, topLevelToUse, maxLevel);
+        if (headings.Count == 0)
+        {
+            return new List<TocItem>();
+        }
+
+        var resolvedTopLevel = topLevel ?? GetTopLevel(headings);
+        return GenerateTocItems(headings, resolvedTopLevel, maxLevel);
+    }
+
+    protected virtual MarkdownPipeline CreateMarkdownPipeline()
+    {
+        return new MarkdownPipelineBuilder()
+            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
+            .UseAdvancedExtensions()
+            .Build();
+    }
+
+    protected virtual TocHeading CreateTocHeading(HeadingBlock headingBlock)
+    {
+        var plainText = GetPlainText(headingBlock.Inline);
+        var id = headingBlock.GetAttributes().Id;
+        return new TocHeading(headingBlock.Level, plainText, id);
     }
 
     protected virtual List<TocItem> BuildHierarchicalStructure(List<TocHeading> headings, int topLevel)
@@ -72,7 +87,8 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
                 continue;
             }
 
-            result.Add(new TocItem(currentHeading, GetDirectChildren(headings, i, currentHeading.Level)));
+            var children = GetDirectChildren(headings, i, currentHeading.Level);
+            result.Add(new TocItem(currentHeading, children));
         }
 
         return result;
@@ -80,24 +96,27 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 
     protected virtual List<TocItem> GetDirectChildren(List<TocHeading> allHeadings, int parentIndex, int parentLevel)
     {
-        var children = new List<TocItem>();
         var targetChildLevel = parentLevel + 1;
+        var children = new List<TocItem>();
 
         for (var i = parentIndex + 1; i < allHeadings.Count; i++)
         {
             var heading = allHeadings[i];
-            
+
+            // Stop if we encounter a heading at the same level or higher than parent
             if (heading.Level <= parentLevel)
             {
                 break;
             }
 
+            // Only process direct children (not grandchildren)
             if (heading.Level != targetChildLevel)
             {
                 continue;
             }
 
-            children.Add(new TocItem(heading, GetDirectChildren(allHeadings, i, heading.Level)));
+            var grandChildren = GetDirectChildren(allHeadings, i, heading.Level);
+            children.Add(new TocItem(heading, grandChildren));
         }
 
         return children;
@@ -109,43 +128,70 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
         {
             return string.Empty;
         }
-       
-        if(container.Count() == 1 && container.First() is LiteralInline literalInline)
+
+        // Optimization for simple case with single literal inline
+        if (HasExactCount(container, 1) && container.First() is LiteralInline singleLiteral)
         {
-            return literalInline.Content.ToString();
+            return singleLiteral.Content.ToString();
         }
 
-        var builder = new StringBuilder();
-        var inlinesToProcess = new Queue<Inline>();
+        return ProcessInlineContent(container);
+    }
 
+    protected virtual string ProcessInlineContent(ContainerInline container)
+    {
+        var textBuilder = new StringBuilder();
+        var processingQueue = new Queue<Inline>();
+
+        // Enqueue all initial inlines
         foreach (var inline in container)
         {
-            inlinesToProcess.Enqueue(inline);
+            processingQueue.Enqueue(inline);
         }
 
-        while (inlinesToProcess.Count > 0)
+        // Process each inline in the queue
+        while (processingQueue.Count > 0)
         {
-            var currentInline = inlinesToProcess.Dequeue();
+            var currentInline = processingQueue.Dequeue();
+            AppendInlineText(currentInline, textBuilder, processingQueue);
+        }
 
-            switch (currentInline)
+        return textBuilder.ToString();
+    }
+
+    protected virtual void AppendInlineText(Inline inline, StringBuilder builder, Queue<Inline> processingQueue)
+    {
+        switch (inline)
+        {
+            case LiteralInline literal:
+                builder.Append(literal.Content);
+                break;
+
+            case CodeInline code:
+                builder.Append(code.Content);
+                break;
+
+            case ContainerInline containerInline:
+                foreach (var childInline in containerInline)
+                {
+                    processingQueue.Enqueue(childInline);
+                }
+                break;
+        }
+    }
+
+    protected virtual bool HasExactCount<T>(IEnumerable<T> enumerable, int count)
+    {
+        var itemCount = 0;
+        foreach (var _ in enumerable)
+        {
+            itemCount++;
+            if (itemCount > count)
             {
-                case LiteralInline literal:
-                    builder.Append(literal.Content);
-                    break;
-
-                case CodeInline code:
-                    builder.Append(code.Content);
-                    break;
-
-                case ContainerInline childContainer:
-                    foreach (var childInline in childContainer)
-                    {
-                        inlinesToProcess.Enqueue(childInline);
-                    }
-                    break;
+                return false;
             }
         }
-
-        return builder.ToString();
+        
+        return itemCount == count;
     }
 }

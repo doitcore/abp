@@ -7,7 +7,7 @@ Let's start ...
 ## Modern HTML Techniques
 
 
-### 1. `<details>` and `<summary>` tag
+### 1. <details> and <summary> tag
 
 This structure offers a structure where users can open and turn off according to their wishes.
 If you need to examine in detail;
@@ -36,7 +36,7 @@ Additionally, the default triangle marker of `<summary>` can also be styled usin
 The marker is a small sign indicating that the structure is open or closed. 
 We can use the `:: marker` pseudo-element to style it.  But we should use it as `::marker` which belongs to the `<summary>`.
 
-**👉**  *HTML Demo* : [https://codepen.io/halimekarayay/pen/OPyKBZM]
+**👉**  *HTML Demo* : https://codepen.io/halimekarayay/pen/OPyKBZM
 
 
 #### Attributes
@@ -86,7 +86,7 @@ This feature allows multiple `<details>` to move into a group by connecting to e
 
 
 
-### 2.  `<dialog>` Tag
+### 2.  <dialog> Tag
 `<dialog>` tag is a modern label used to create native modal and popup in HTML. 
 As of 2025, it is now supported in many browser and can be easily controlled with Javascript.
 
@@ -354,7 +354,7 @@ This structure increases readability by collecting style rules in a single block
 - https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting/Using_CSS_nesting
 - https://www.w3.org/TR/css-nesting-1
 
-
+---
 
 ### 2. @container Queries (Container Query)
 
@@ -364,7 +364,7 @@ We have used **media query** for **responsive design** for years: we have writte
 **Media query** looks at the width of the entire page. But sometimes it looks small when a card is lined up side by side, it should look big when it is alone. In this case, instead of looking at the page width, it would make more sense to look at the inclusive width of the card.
 
 -  The browser checks the condition in `@container` for each parent (parent) element.
-- If the parent element is **marked as a container,** ** (`Container-Type` is given), its size is examined.
+- If the parent element is **marked as a container,** (`container-type` is given), its size is examined.
 - So `@container` automatically connects to the nearest **“ container ”** upper element.
 
 
@@ -536,12 +536,12 @@ But now thanks to the new feature of CSS, we can do this **directly with CSS**. 
 
 Let's make a box move to the right as a box shifts down:
 
-    /* HTML */
+    // HTML
     <div class="scroller">
       <div class="box"></div>
     </div>
     
-    /* CSS */
+    // CSS
     .scroller {
       height: 200vh; 
       background: linear-gradient(white, lightblue);

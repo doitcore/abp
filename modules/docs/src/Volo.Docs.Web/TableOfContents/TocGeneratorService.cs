@@ -32,8 +32,10 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
             .ToList();
     }
 
-    public virtual List<TocItem> GenerateTocItems(List<TocHeading> tocHeadings, int topLevel, int maxLevel)
+    public virtual List<TocItem> GenerateTocItems(List<TocHeading> tocHeadings, int topLevel, int levelCount)
     {
+        var maxLevel = GetMaxLevel(tocHeadings, topLevel, levelCount);
+
         var filteredHeadings = tocHeadings
             .Where(heading => heading.Level >= topLevel && heading.Level <= maxLevel)
             .ToList();
@@ -47,7 +49,7 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
             .FirstOrDefault(level => headings.Count(h => h.Level == level) > 1, MinHeadingLevel);
     }
 
-    public virtual List<TocItem> GenerateTocItems(string markdownContent, int maxLevel, int? topLevel = null)
+    public virtual List<TocItem> GenerateTocItems(string markdownContent, int levelCount, int? topLevel = null)
     {
         var headings = GenerateTocHeadings(markdownContent);
         if (headings.Count == 0)
@@ -56,7 +58,7 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
         }
 
         var resolvedTopLevel = topLevel ?? GetTopLevel(headings);
-        return GenerateTocItems(headings, resolvedTopLevel, maxLevel);
+        return GenerateTocItems(headings, resolvedTopLevel, levelCount);
     }
 
     protected virtual MarkdownPipeline CreateMarkdownPipeline()
@@ -178,6 +180,16 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
                 }
                 break;
         }
+    }
+
+    protected virtual int GetMaxLevel(List<TocHeading> tocHeadings, int topLevel, int levelCount)
+    {
+        return tocHeadings.Where(h => h.Level >= topLevel)
+            .Select(h => h.Level)
+            .Distinct()
+            .OrderBy(level => level)
+            .Skip(levelCount - 1)
+            .FirstOrDefault(topLevel);
     }
 
     protected virtual bool HasExactCount<T>(IEnumerable<T> enumerable, int count)

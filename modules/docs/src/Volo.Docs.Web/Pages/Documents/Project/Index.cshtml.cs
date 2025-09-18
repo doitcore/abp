@@ -101,7 +101,7 @@ namespace Volo.Docs.Pages.Documents.Project
         public DocumentNavigationsDto DocumentNavigationsDto { get; private set; }
 
         private const int MaxDescriptionMetaTagLength = 200;
-        private const int MaxTocLevel = 3;
+        private const int TocLevelCount = 2;
         private readonly IDocumentAppService _documentAppService;
         private readonly IDocumentToHtmlConverterFactory _documentToHtmlConverterFactory;
         private readonly IProjectAppService _projectAppService;
@@ -544,7 +544,7 @@ namespace Volo.Docs.Pages.Documents.Project
 
                     if (Document != null && !Document.Content.IsNullOrEmpty())
                     {
-                        TocItems = _tocGeneratorService.GenerateTocItems(Document.Content, MaxTocLevel);
+                        TocItems = _tocGeneratorService.GenerateTocItems(Document.Content, TocLevelCount);
                     }
 
                     await ConvertDocumentContentToHtmlAsync();

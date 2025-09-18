@@ -7,9 +7,9 @@ public interface ITocGeneratorService : IApplicationService
 {
     List<TocHeading> GenerateTocHeadings(string markdownContent);
     
-    List<TocItem> GenerateTocItems(List<TocHeading> tocHeadings, int topLevel, int maxLevel);
+    List<TocItem> GenerateTocItems(List<TocHeading> tocHeadings, int topLevel, int levelCount);
     
     int GetTopLevel(List<TocHeading> tocHeadings);
     
-    List<TocItem> GenerateTocItems(string markdownContent, int maxLevel, int? topLevel = null);
+    List<TocItem> GenerateTocItems(string markdownContent, int levelCount, int? topLevel = null);
 }

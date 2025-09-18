@@ -76,7 +76,7 @@ namespace Volo.Docs.Pages.Documents.Project
 
         public string DocumentsUrlPrefix { get; set; }
 
-        public List<TocHeading> TocHeadings { get; set; } = [];
+        public List<TocItem> TocItems { get; set; } = [];
 
         public bool ShowProjectsCombobox { get; set; }
 
@@ -101,6 +101,7 @@ namespace Volo.Docs.Pages.Documents.Project
         public DocumentNavigationsDto DocumentNavigationsDto { get; private set; }
 
         private const int MaxDescriptionMetaTagLength = 200;
+        private const int MaxTocLevel = 2;
         private readonly IDocumentAppService _documentAppService;
         private readonly IDocumentToHtmlConverterFactory _documentToHtmlConverterFactory;
         private readonly IProjectAppService _projectAppService;
@@ -543,7 +544,7 @@ namespace Volo.Docs.Pages.Documents.Project
 
                     if (Document != null && !Document.Content.IsNullOrEmpty())
                     {
-                        TocHeadings = _tocGeneratorService.GenerateTocHeadings(Document.Content);
+                        TocItems = _tocGeneratorService.GenerateTocItems(Document.Content, MaxTocLevel);
                     }
 
                     await ConvertDocumentContentToHtmlAsync();

@@ -13,7 +13,7 @@ namespace Volo.Docs.TableOfContents;
 
 public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 {
-    public List<TocHeading> GenerateTocHeadings(string markdownContent)
+    public virtual List<TocHeading> GenerateTocHeadings(string markdownContent)
     {
         if (markdownContent.IsNullOrWhiteSpace())
         {
@@ -26,25 +26,84 @@ public class TocGeneratorService : ITocGeneratorService, ITransientDependency
 
         var pipeline = pipelineBuilder.Build();
 
-        var headings = new List<TocHeading>();
-
         var document = Markdig.Markdown.Parse(markdownContent, pipeline);
 
         var headingBlocks = document.Descendants<HeadingBlock>();
 
-        foreach (var headingBlock in headingBlocks)
-        {
-            headings.Add(new TocHeading {
-                Level =  headingBlock.Level,
-                Text = GetPlainText(headingBlock.Inline),
-                Id = headingBlock.GetAttributes()?.Id
-            });
-        }
-
-        return headings;
+        return headingBlocks
+            .Select(hb => new TocHeading(hb.Level, GetPlainText(hb.Inline), hb.GetAttributes().Id)).ToList();
     }
 
-    private static string GetPlainText(ContainerInline container)
+    public virtual List<TocItem> GenerateTocItems(List<TocHeading> tocHeadings, int topLevel, int maxLevel)
+    {
+        return BuildHierarchicalStructure(tocHeadings
+            .Where(h => h.Level >= topLevel && h.Level <= maxLevel).ToList(), topLevel);
+    }
+    
+    public virtual int GetTopLevel(List<TocHeading> headings)
+    {
+        for (var i = 1; i <= 6; i++)
+        {
+            if (headings.Count(h => h.Level == i) > 1)
+            {
+                return i;
+            }
+        }
+        return 1;
+    }
+
+    public virtual List<TocItem> GenerateTocItems(string markdownContent, int maxLevel, int? topLevel = null)
+    {
+        var headings = GenerateTocHeadings(markdownContent);
+        var topLevelToUse = topLevel ?? GetTopLevel(headings);
+        return GenerateTocItems(headings, topLevelToUse, maxLevel);
+    }
+
+    protected virtual List<TocItem> BuildHierarchicalStructure(List<TocHeading> headings, int topLevel)
+    {
+        var result = new List<TocItem>();
+
+        for (var i = 0; i < headings.Count; i++)
+        {
+            var currentHeading = headings[i];
+
+            if (currentHeading.Level != topLevel)
+            {
+                continue;
+            }
+
+            result.Add(new TocItem(currentHeading, GetDirectChildren(headings, i, currentHeading.Level)));
+        }
+
+        return result;
+    }
+
+    protected virtual List<TocItem> GetDirectChildren(List<TocHeading> allHeadings, int parentIndex, int parentLevel)
+    {
+        var children = new List<TocItem>();
+        var targetChildLevel = parentLevel + 1;
+
+        for (var i = parentIndex + 1; i < allHeadings.Count; i++)
+        {
+            var heading = allHeadings[i];
+            
+            if (heading.Level <= parentLevel)
+            {
+                break;
+            }
+
+            if (heading.Level != targetChildLevel)
+            {
+                continue;
+            }
+
+            children.Add(new TocItem(heading, GetDirectChildren(allHeadings, i, heading.Level)));
+        }
+
+        return children;
+    }
+
+    protected virtual string GetPlainText(ContainerInline container)
     {
         if (container == null)
         {

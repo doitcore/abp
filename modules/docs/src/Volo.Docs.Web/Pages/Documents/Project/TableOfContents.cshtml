@@ -1,74 +1,41 @@
 ﻿@using Volo.Docs.TableOfContents
-@model List<TocHeading>
+@model List<TocItem>
 @{
     if (Model == null || Model.Count == 0)
     {
         return;
     }
-
-    var relevantHeadings = Model
-        .Where(h => h.Level is 2 or 3)
-        .ToList();
-
-    if (relevantHeadings.Count == 0)
-    {
-        relevantHeadings = Model
-            .Where(h => h.Level == 1)
-            .ToList();
-    }
-
-    if (relevantHeadings.Count == 0)
-    {
-        return;
-    }
-
-    var baseLevel = relevantHeadings.Min(h => h.Level);
-    var normalizedHeadings = relevantHeadings
-        .Select(h => h with { Level = h.Level - baseLevel + 1 })
-        .ToList();
-
-    var levelStack = new Stack<int>();
-    levelStack.Push(0);
 }
 
-@for (var i = 0; i < normalizedHeadings.Count; i++)
-{
-    var heading = normalizedHeadings[i];
-    var previousLevel = levelStack.Peek();
-
-    if (heading.Level < previousLevel)
+<ul class="nav nav-pills flex-column">
+    @foreach (var item in Model)
     {
-        @while (heading.Level < levelStack.Peek())
-        {
-            @:</li></ul>
-            levelStack.Pop();
-        }
-        @:</li>
+        <li class="nav-item @(item.Children.Any() ? "toc-item-has-children" : "")">
+            <a class="nav-link" href="#@item.Heading.Id">@item.Heading.Text</a>
+            
+            @if (item.Children.Any())
+            {
+                RenderChildrenRecursive(item.Children, 1);
+            }
+        </li>
     }
-    else if (heading.Level > previousLevel)
+</ul>
+
+@{
+    void RenderChildrenRecursive(List<TocItem> children, int depth)
     {
-        @:<ul class="nav nav-pills flex-column">
-        levelStack.Push(heading.Level);
+        <ul class="nav nav-pills flex-column toc-depth-@depth">
+            @foreach (var child in children)
+            {
+                <li class="nav-item @(child.Children.Any() ? "toc-item-has-children" : "")">
+                    <a class="nav-link" href="#@child.Heading.Id">@child.Heading.Text</a>
+                
+                    @if (child.Children.Any())
+                    {
+                        RenderChildrenRecursive(child.Children, depth + 1);
+                    }
+                </li>
+            }
+        </ul>
     }
-    else if (i > 0)
-    {
-        @:</li>
-    }
-
-    var hasChildren = (i + 1 < normalizedHeadings.Count) &&
-                      (normalizedHeadings[i + 1].Level > heading.Level);
-
-    var liClass = hasChildren ? "nav-item toc-item-has-children" : "nav-item";
-
-    @:<li class="@liClass"><a class="nav-link" href="#@heading.Id">@heading.Text</a>
-}
-
-@if (normalizedHeadings.Any())
-{
-    @:</li>
-}
-@while (levelStack.Count > 1)
-{
-    @:</ul>
-    levelStack.Pop();
 }

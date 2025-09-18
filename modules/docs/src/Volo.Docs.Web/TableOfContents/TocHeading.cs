@@ -1,8 +1,7 @@
-﻿namespace Volo.Docs.TableOfContents;
+﻿using System.Collections.Generic;
 
-public record TocHeading
-{
-    public int Level { get; set; }
-    public string Text { get; set; }
-    public string Id { get; set; }
-}
+namespace Volo.Docs.TableOfContents;
+
+public record TocHeading(int Level, string Text, string Id);
+
+public record TocItem(TocHeading Heading, List<TocItem> Children);

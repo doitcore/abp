@@ -19,8 +19,8 @@ describe('PermissionDirective', () => {
   });
 
   beforeEach(() => {
-    spectator = createDirective('<div [abpPermission]="permission" [abpPermissionRequiresAll]="requiresAll"></div>', {
-      hostProps: { permission: 'test', requiresAll: false },
+    spectator = createDirective('<div [abpPermission]="permission" [abpPermissionRunChangeDetection]="runCD"></div>', {
+      hostProps: { permission: 'test', runCD: false },
     });
     directive = spectator.directive;
   });
@@ -35,8 +35,8 @@ describe('PermissionDirective', () => {
     expect(directive).toBeTruthy();
   });
 
-  it('should handle requiresAll input', () => {
-    spectator.setHostInput({ requiresAll: true });
+  it('should handle runChangeDetection input', () => {
+    spectator.setHostInput({ runCD: true });
     spectator.detectChanges();
     expect(directive).toBeTruthy();
   });

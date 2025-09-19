@@ -2,14 +2,9 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { provideRouter, Route, Router, RouterModule } from '@angular/router';
-import {
-  createServiceFactory,
-  createSpyObject,
-  SpectatorService,
-  SpyObject,
-} from '@ngneat/spectator/jest';
+import { createSpyObject, SpyObject } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
-import { permissionGuard, PermissionGuard } from '../guards/permission.guard';
+import { permissionGuard } from '../guards/permission.guard';
 import { HttpErrorReporterService } from '../services/http-error-reporter.service';
 import { PermissionService } from '../services/permission.service';
 import { RoutesService } from '../services/routes.service';
@@ -24,121 +19,7 @@ import { AuthService } from '../abstracts';
 @Component({ template: '' })
 class DummyComponent {}
 
-describe('PermissionGuard', () => {
-  let spectator: SpectatorService<PermissionGuard>;
-  let guard: PermissionGuard;
-  let routes: SpyObject<RoutesService>;
-  let httpErrorReporter: SpyObject<HttpErrorReporterService>;
-  let permissionService: SpyObject<PermissionService>;
-
-  const mockOAuthService = {
-    isAuthenticated: true,
-  };
-
-  const createService = createServiceFactory({
-    service: PermissionGuard,
-    mocks: [PermissionService],
-    imports: [
-      HttpClientTestingModule,
-      RouterModule.forRoot([
-        {
-          path: 'test',
-          component: DummyComponent,
-          data: {
-            requiredPolicy: 'TestPolicy',
-          },
-        },
-      ]),
-      DummyComponent,
-    ],
-    providers: [
-      {
-        provide: APP_BASE_HREF,
-        useValue: '/',
-      },
-      { provide: AuthService, useValue: mockOAuthService },
-      { 
-        provide: CORE_OPTIONS, 
-        useValue: { 
-          skipGetAppConfiguration: true,
-          environment: {
-            apis: {
-              default: {
-                url: 'http://localhost:4200',
-              },
-            },
-            application: {
-              baseUrl: 'http://localhost:4200',
-              name: 'TestApp',
-            },
-            remoteEnv: {},
-          },
-        } 
-      },
-      { provide: OTHERS_GROUP, useValue: 'AbpUi::OthersGroup' },
-      { provide: SORT_COMPARE_FUNC, useValue: compareFuncFactory },
-      IncludeLocalizationResourcesProvider,
-    ],
-  });
-
-  beforeEach(() => {
-    spectator = createService();
-    guard = spectator.service;
-    routes = spectator.inject(RoutesService);
-    httpErrorReporter = spectator.inject(HttpErrorReporterService);
-    permissionService = spectator.inject(PermissionService);
-  });
-
-  it('should return true when the grantedPolicy is true', done => {
-    permissionService.getGrantedPolicy$.andReturn(of(true));
-    const spy = jest.spyOn(httpErrorReporter, 'reportError');
-    guard.canActivate({ data: { requiredPolicy: 'test' } } as any, null).subscribe(res => {
-      expect(res).toBe(true);
-      expect(spy.mock.calls).toHaveLength(0);
-      done();
-    });
-  });
-
-  it('should return false and report an error when the grantedPolicy is false', () => {
-    permissionService.getGrantedPolicy$.andReturn(of(false));
-    const spy = jest.spyOn(httpErrorReporter, 'reportError');
-    guard.canActivate({ data: { requiredPolicy: 'test' } } as any, null).subscribe(res => {
-      expect(res).toBe(false);
-      expect(spy.mock.calls[0][0]).toEqual({
-        status: 403,
-      });
-    });
-    expect(guard).toBeTruthy();
-  });
-
-  it('should check the requiredPolicy from RoutesService', done => {
-    routes.add([
-      {
-        path: '/test',
-        name: 'Test',
-        requiredPolicy: 'TestPolicy',
-      },
-    ]);
-    permissionService.getGrantedPolicy$.mockImplementation(policy => of(policy === 'TestPolicy'));
-    guard.canActivate({ data: {} } as any, { url: 'test' } as any).subscribe(result => {
-      expect(result).toBe(true);
-      done();
-    });
-  });
-
-  it('should return Observable<true> if RoutesService does not have requiredPolicy for given URL', done => {
-    routes.add([
-      {
-        path: '/test',
-        name: 'Test',
-      },
-    ]);
-    guard.canActivate({ data: {} } as any, { url: 'test' } as any).subscribe(result => {
-      expect(result).toBe(true);
-      done();
-    });
-  });
-});
+// Removed deprecated class-based PermissionGuard tests; function-based guard is covered below.
 
 describe('authGuard', () => {
   let permissionService: SpyObject<PermissionService>;

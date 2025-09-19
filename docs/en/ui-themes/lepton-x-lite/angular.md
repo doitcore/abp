@@ -131,15 +131,16 @@ The **Layout components** and all the replacable components are predefined in `e
 ```js
 import { ReplaceableComponentsService } from '@abp/ng.core'; // imported ReplaceableComponentsService
 import { eIdentityComponents } from '@abp/ng.identity'; // imported eIdentityComponents enum
-import { eThemeLeptonXComponents } from '@abp/ng.theme.lepton-x';   // imported eThemeLeptonXComponents enum
+import { eThemeLeptonXComponents } from '@abp/ng.theme.lepton-x'; // imported eThemeLeptonXComponents enum
+import { Component, inject } from '@angular/core';
 
 //...
 
 @Component(/* component metadata */)
 export class AppComponent {
-  constructor(
-    private replaceableComponents: ReplaceableComponentsService, // injected the service
-  ) {
+  private replaceableComponents = inject(ReplaceableComponentsService);
+
+  constructor() {
     this.replaceableComponents.add({
       component: YourNewApplicationLayoutComponent,
       key: eThemeLeptonXComponents.ApplicationLayout,

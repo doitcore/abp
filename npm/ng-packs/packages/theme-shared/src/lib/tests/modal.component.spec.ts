@@ -1,6 +1,6 @@
 import { ConfirmationService } from '@abp/ng.theme.shared';
 import { CoreTestingModule } from '@abp/ng.core/testing';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
 import { Confirmation } from '@abp/ng.theme.shared';
 import { Subject, timer } from 'rxjs';
@@ -11,7 +11,6 @@ import { ModalComponent } from '../components/modal/modal.component';
     <abp-modal
       [visible]="visible"
       [busy]="busy"
-      [ngDirty]="ngDirty"
       (visibleChange)="visibleChange.emit($event)"
     >
       <ng-template #abpHeader>Header</ng-template>
@@ -25,8 +24,7 @@ import { ModalComponent } from '../components/modal/modal.component';
 class TestHostComponent {
   @Input() visible = false;
   @Input() busy = false;
-  @Input() ngDirty = false;
-  visibleChange = new Subject<boolean>();
+  visibleChange = new EventEmitter<boolean>();
 }
 
 const mockConfirmation$ = new Subject<Confirmation.Status>();
@@ -69,13 +67,7 @@ describe('ModalComponent', () => {
     expect(spectator.component.busy).toBe(true);
   });
 
-  it('should handle ngDirty input', () => {
-    spectator.setInput('ngDirty', true);
-    spectator.detectChanges();
-    expect(spectator.component.ngDirty).toBe(true);
-  });
-
-  it('should have visibleChange subject', () => {
+  it('should have visibleChange emitter', () => {
     expect(spectator.component.visibleChange).toBeDefined();
   });
 });

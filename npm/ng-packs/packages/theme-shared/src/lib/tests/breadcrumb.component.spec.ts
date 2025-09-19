@@ -14,8 +14,8 @@ import { OTHERS_GROUP } from '@abp/ng.core';
 import { SORT_COMPARE_FUNC } from '@abp/ng.core';
 
 const mockRoutes: ABP.Route[] = [
-  { name: 'Identity', path: '/identity' },
-  { name: 'Users', path: '/identity/users', parentName: 'Identity' },
+  { name: '_::Identity', path: '/identity' },
+  { name: '_::Users', path: '/identity/users', parentName: '_::Identity' },
 ];
 
 // Simple compare function that doesn't use inject()

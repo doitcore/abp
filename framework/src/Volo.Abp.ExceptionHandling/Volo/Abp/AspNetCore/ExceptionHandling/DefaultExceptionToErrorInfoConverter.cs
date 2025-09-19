@@ -195,7 +195,7 @@ public class DefaultExceptionToErrorInfoConverter : IExceptionToErrorInfoConvert
     {
         if (exception.EntityType != null)
         {
-            var message = exception.Id == null
+            var message = exception.Id != null
                 ? string.Format(L["EntityNotFoundErrorMessage"], exception.EntityType.Name, exception.Id)
                 : string.Format(L["EntityNotFoundErrorMessageWithoutId"], exception.EntityType.Name);
             return new RemoteServiceErrorInfo(message);

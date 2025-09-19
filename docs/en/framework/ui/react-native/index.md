@@ -20,7 +20,9 @@ Please follow the steps below to prepare your development environment for React 
 1. **Install Node.js:** Please visit [Node.js downloads page](https://nodejs.org/en/download/) and download proper Node.js v20.11+ installer for your OS. An alternative is to install [NVM](https://github.com/nvm-sh/nvm) and use it to have multiple versions of Node.js in your operating system.
 2. **[Optional] Install Yarn:** You may install Yarn v1 (not v2) following the instructions on [the installation page](https://classic.yarnpkg.com/en/docs/install). Yarn v1 delivers an arguably better developer experience compared to npm v6 and below. You may skip this step and work with npm, which is built-in in Node.js, instead.
 3. **[Optional] Install VS Code:** [VS Code](https://code.visualstudio.com/) is a free, open-source IDE which works seamlessly with TypeScript. Although you can use any IDE including Visual Studio or Rider, VS Code will most likely deliver the best developer experience when it comes to React Native projects.
-4. **Install an Emulator:** React Native applications need an Android emulator or an iOS simulator to run on your OS. See the [Android Studio Emulator](https://docs.expo.dev/workflow/android-studio-emulator/) or [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) on expo.io documentation to learn how to set up an emulator.
+4. **Install an Emulator/Simulator:** React Native applications need an Android emulator or an iOS simulator to run on your OS. If you do not have Android Studio installed and configured on your system, we recommend [setting up android emulator without android studio](setting-up-android-emulator.md).
+
+If you prefer the other way, you can check the [Android Studio Emulator](https://docs.expo.dev/workflow/android-studio-emulator/) or [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) on expo.io documentation to learn how to set up an emulator.
 
 ## How to Start a New React Native Project
 

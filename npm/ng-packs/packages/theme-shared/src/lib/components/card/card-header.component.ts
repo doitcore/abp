@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'abp-card-header',
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
   styles: [],
-  imports: [CommonModule],
+  imports: [NgClass, NgStyle],
 })
 export class CardHeaderComponent {
   @HostBinding('class') componentClass = 'card-header';

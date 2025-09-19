@@ -19,7 +19,7 @@ You have created two modules so far: the **Catalog** module to store and manage 
 In this part and next two pars, you will learn to implement three common patterns for integrating these modules:
 
 1. The Order module will make a request to the Catalog module to get product information when needed.
-2. The Product module will listen to events from the Ordering module, so it can decrease a product's stock count when an order is placed.
+2. The Catalog module will listen to events from the Ordering module, so it can decrease a product's stock count when an order is placed.
 3. Finally, you will execute a database query that includes product and order data.
 
 Let's begin from the first one: The Integration Services.
@@ -217,21 +217,17 @@ public class OrderDto
 }
 ````
 
-Lastly, open the `OrderingAutoMapperProfile` class (the `OrderingAutoMapperProfile.cs` file under the `Services` folder of the `ModularCrm.Ordering` project of the `ModularCrm.Ordering` .NET solution) and ignore the `ProductName` property in the mapping configuration:
+Lastly, open the `OrderingApplicationMappers` class (the `OrderingApplicationMappers.cs` file under the `Services` folder of the `ModularCrm.Ordering` project of the `ModularCrm.Ordering` .NET solution) and add the following mapping class:
 
 ````csharp
-using AutoMapper;
-using Volo.Abp.AutoMapper;
-
-namespace ModularCrm.Ordering;
-
-public class OrderingApplicationAutoMapperProfile : Profile
+[Mapper]
+public partial class OrderToOrderDtoMapper : MapperBase<Order, OrderDto>
 {
-    public OrderingApplicationAutoMapperProfile()
-    {
-        CreateMap<Order, OrderDto>()
-            .Ignore(x => x.ProductName); // New line
-    }
+    [MapperIgnoreTarget(nameof(OrderDto.ProductName))]
+    public override partial OrderDto Map(Order source);
+
+    [MapperIgnoreTarget(nameof(OrderDto.ProductName))]
+    public override partial void Map(Order source, OrderDto destination);
 }
 ````
 

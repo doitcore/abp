@@ -31,45 +31,68 @@ yarn add bootstrap-icons
 Note: You should remove the old theme styles from "angular.json" if you are switching from "ThemeBasic" or "Lepton."
 Look at the [Theme Configurations](../../framework/ui/angular/theme-configurations.md) list of styles. Depending on your theme, you can alter your styles in angular.json.
 
-- Finally, remove `ThemeBasicModule`, `provideThemeBasicConfig` from `app.module.ts`, and import the related modules in `app.module.ts`
+- Finally, remove `provideThemeBasicConfig` from `app.config.ts`, and import the related providers in `app.config.ts`
 
 ```js
-import { ThemeLeptonXModule } from "@abp/ng.theme.lepton-x";
+import { provideThemeLeptonX } from "@abp/ng.theme.lepton-x";
+import { provideSideMenuLayout } from "@abp/ng.theme.lepton-x/layouts";
 
-@NgModule({
-  imports: [
-    // ...
-    // do not forget to remove ThemeBasicModule or other old theme module
-    //  ThemeBasicModule
-    ThemeLeptonXModule.forRoot()
-  ],
+export const appConfig: ApplicationConfig = {
   providers: [
-    // do not forget to remove provideThemeBasicConfig or other old theme providers
-    // provideThemeBasicConfig
+    // ...
+    provideSideMenuLayout(),
+    provideThemeLeptonX(),
   ],
-  // ...
-})
-export class AppModule {}
+};
 ```
 
-Note: If you employ [Resource Owner Password Flow](../../framework/ui/angular/authorization.md#resource-owner-password-flow) for authorization, you should import the following module as well:
+Note: If you employ [Resource Owner Password Flow](../../framework/ui/angular/authorization.md#resource-owner-password-flow) for authorization, you should provide the following provider as well:
 
 ```js
-import { AccountLayoutModule } from "@abp/ng.theme.lepton-x/account";
+import { provideAccountLayout } from "@abp/ng.theme.lepton-x/account";
 
-@NgModule({
-  // ...
-  imports: [
+export const appConfig: ApplicationConfig = {
+  providers: [
     // ...
-    AccountLayoutModule.forRoot(),
-    // ...
+    provideAccountLayout()
   ],
-  // ...
-})
-export class AppModule {}
+};
+
 ```
 
-To change the logos and brand color of `LeptonX`, simply add the following CSS to the `styles.scss`
+To change the logos and brand color of `LeptonX`, you have two options:
+
+1) Provide logo and application name via the Theme Shared provider (recommended)
+
+```ts
+// app.config.ts
+import { provideLogo, withEnvironmentOptions } from '@abp/ng.theme.shared';
+import { environment } from './environments/environment';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...
+    provideLogo(withEnvironmentOptions(environment)),
+  ],
+};
+```
+
+Ensure your environment contains the logo url and app name:
+
+```ts
+// environment.ts
+export const environment = {
+  // ...
+  application: {
+    name: 'MyProjectName',
+    logoUrl: '/assets/images/logo.png',
+  },
+};
+```
+
+The LeptonX brand component reads these values automatically from `@abp/ng.theme.shared`.
+
+2) Or override via CSS variables in `styles.scss`
 
 ```css
 :root {
@@ -82,6 +105,8 @@ To change the logos and brand color of `LeptonX`, simply add the following CSS t
 - `--lpx-logo` is used to place the logo in the menu.
 - `--lpx-logo-icon` is a square icon used when the menu is collapsed.
 - `--lpx-brand` is a color used throughout the application, especially on active elements.
+
+Tip: You can combine both approaches. For example, provide the main logo via `provideLogo(...)` and still fine-tune visuals (sizes, colors) with CSS.
 
 ### Server Side
 

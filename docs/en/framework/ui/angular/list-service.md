@@ -152,7 +152,6 @@ import { Component, inject } from '@angular/core';
 import { BookDto, BooksService } from './books.service';
 
 @Component({
-  standalone: true,
   selector: 'app-books',
   templateUrl: './books.component.html',
   providers: [ListService, BooksService],

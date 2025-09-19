@@ -5,7 +5,7 @@ The menu is inside the `ApplicationLayoutComponent` in the @abp/ng.theme.basic p
 
 ## How to Add a Logo
 
-The `logoUrl` property in the environment variables is the url of the logo. 
+The `logoUrl` property in the environment variables is the url of the logo.
 
 You can add your logo to `src/assets` folder and set the `logoUrl` as shown below:
 
@@ -19,6 +19,25 @@ export const environment = {
   // other configurations
 };
 ```
+
+Then provide the logo at application startup using the Theme Shared provider. This makes the logo (and application name) available to all ABP/Theme components (including LeptonX brand component) via injection tokens.
+
+```ts
+// app.config.ts
+import { provideLogo, withEnvironmentOptions } from '@abp/ng.theme.shared';
+import { environment } from './environments/environment';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ... other providers
+    provideLogo(withEnvironmentOptions(environment)),
+  ],
+};
+```
+
+Notes
+- This approach works across themes. If you are using LeptonX, the brand logo component reads these values automatically; you don't need any theme-specific code.
+- You can still override visuals with CSS variables if desired. See the LeptonX section for CSS overrides.
 
 ## How to Add a Navigation Element
 
@@ -61,32 +80,33 @@ An alternative and probably cleaner way is to use a route provider. First create
 ```js
 // route.provider.ts
 import { RoutesService, eLayoutType } from '@abp/ng.core';
-import { APP_INITIALIZER } from '@angular/core';
+import { provideAppInitializer } from '@angular/core';
 
 export const APP_ROUTE_PROVIDER = [
-  { provide: APP_INITIALIZER, useFactory: configureRoutes, deps: [RoutesService], multi: true },
+  provideAppInitializer(() => {
+    configureRoutes();
+  }),
 ];
 
-function configureRoutes(routes: RoutesService) {
-  return () => {
-    routes.add([
-      {
-        path: '/your-path',
-        name: 'Your navigation',
-        requiredPolicy: 'permission key here',
-        order: 101,
-        iconClass: 'fas fa-question-circle',
-        layout: eLayoutType.application,
-      },
-      {
-        path: '/your-path/child',
-        name: 'Your child navigation',
-        parentName: 'Your navigation',
-        requiredPolicy: 'permission key here',
-        order: 1,
-      },
-    ]);
-  };
+function configureRoutes() {
+  const routesService = inject(RoutesService);
+  routes.add([
+    {
+      path: '/your-path',
+      name: 'Your navigation',
+      requiredPolicy: 'permission key here',
+      order: 101,
+      iconClass: 'fas fa-question-circle',
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/your-path/child',
+      name: 'Your child navigation',
+      parentName: 'Your navigation',
+      requiredPolicy: 'permission key here',
+      order: 1,
+    },
+  ]);
 }
 ```
 
@@ -97,22 +117,21 @@ We can also define a group for navigation elements. It's an optional property
 // route.provider.ts
 import { RoutesService } from '@abp/ng.core';
 
-function configureRoutes(routes: RoutesService) {  
-  return () => {
-    routes.add([
-      {
-        //etc..
-        group: 'ModuleName::GroupName'
-      },
-      {
-        path: '/your-path/child',
-        name: 'Your child navigation',
-        parentName: 'Your navigation',
-        requiredPolicy: 'permission key here',
-        order: 1,
-      },
-    ]);
-  };
+function configureRoutes() {  
+  const routesService = inject(RoutesService);
+  routes.add([
+    {
+      //etc..
+      group: 'ModuleName::GroupName'
+    },
+    {
+      path: '/your-path/child',
+      name: 'Your child navigation',
+      parentName: 'Your navigation',
+      requiredPolicy: 'permission key here',
+      order: 1,
+    },
+  ]);
 }
 ```
 
@@ -134,25 +153,23 @@ export class AppComponent {
 }
 ```
 
-...and then in app.module.ts...
+...and then in app.config.ts...
  - The `groupedVisible` method will return the `Others` group for ungrouped items, the default key is `AbpUi::OthersGroup`, we can change this `key` via the `OTHERS_GROUP` injection token
 
 ```js
-import { NgModule } from '@angular/core';
 import { OTHERS_GROUP } from '@abp/ng.core';
 import { APP_ROUTE_PROVIDER } from './route.provider';
 
-@NgModule({
+export const appConfig: ApplicationConfig = {
   providers: [
+    // ...
     APP_ROUTE_PROVIDER,
     {
       provide: OTHERS_GROUP,
       useValue: 'ModuleName::MyOthersGroupKey',
     },
   ],
-  // imports, declarations, and bootstrap
-})
-export class AppModule {}
+};
 ```
 
 ### Singularize Route Item
@@ -187,9 +204,9 @@ Here is what every property works as:
 - `invisible` makes the item invisible in the menu. (default: `false`)
 - `group` is an optional property that is used to group together related routes in an application. (type: `string`, default: `AbpUi::OthersGroup`)
 
-### Via `routes` Property in `AppRoutingModule`
+### Via `routes` Property in `APP_ROUTES`
 
-You can define your routes by adding `routes` as a child property to `data` property of a route configuration in the `app-routing.module`. The `@abp/ng.core` package organizes your routes and stores them in the `RoutesService`.
+You can define your routes by adding `routes` as a child property to `data` property of a route configuration in the `app.routes.ts`. The `@abp/ng.core` package organizes your routes and stores them in the `RoutesService`.
 
 You can add the `routes` property like below:
 
@@ -276,7 +293,12 @@ this.routes.remove(['Your navigation']);
 // or
 this.routes.removeByParam({ name: 'Your navigation' });
 ```
+**Method Parameters:**
+- `remove(routeNames: string[])`: Takes an array of route names to remove.
+- `removeByParam(routeProperty: Partial<ABP.Route>)`: Takes any route property (name, path, parentName, etc.) to match and remove routes.
+<br>
 
+**Results of the operations above:**
 - Moved the _Home_ navigation under the _Administration_ dropdown based on given `parentName`.
 - Added an icon to _Home_.
 - Specified the order and made _Home_ the first item in list.

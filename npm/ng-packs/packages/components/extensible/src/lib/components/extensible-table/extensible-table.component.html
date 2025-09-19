@@ -1,4 +1,5 @@
-<ngx-datatable
+@if (isBrowser) {
+  <ngx-datatable
   default
   [rows]="data"
   [count]="recordsTotal"
@@ -7,10 +8,15 @@
   (activate)="tableActivate.emit($event)"
   (select)="onSelect($event)"
   [selected]="selected"
+  (scroll)="onScroll($event)"
+  [scrollbarV]="infiniteScroll"
+  [style.height]="getTableHeight()"
+  [loadingIndicator]="infiniteScroll && isLoading"
+  [footerHeight]="infiniteScroll ? false : 50"
 >
 @if(selectable) {
   <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
-  
+
     <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
       let-selectFn="selectFn">
       @if (_selectionType !== 'single') {
@@ -20,7 +26,7 @@
       </div>
       }
     </ng-template>
-  
+
     <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-isSelected="isSelected"
       let-onCheckboxChangeFn="onCheckboxChangeFn">
       @if(_selectionType === 'single') {
@@ -34,14 +40,15 @@
       </div>
       }
     </ng-template>
-  
+
   </ngx-datatable-column>
   }
   @if (actionsTemplate || (actionList.length && hasAtLeastOnePermittedAction)) {
     <ngx-datatable-column
       [name]="actionsText | abpLocalization"
-      [maxWidth]="columnWidths[0]"
-      [width]="columnWidths[0]"
+      [maxWidth]="columnWidths[0] ?? undefined"
+      [width]="columnWidths[0] ?? 200"
+      [canAutoResize]="!columnWidths[0]"
       [sortable]="false"
     >
       <ng-template let-row="row" let-i="rowIndex" ngx-datatable-cell-template>
@@ -59,7 +66,8 @@
   @for (prop of propList; track prop.name; let i = $index) {
     <ngx-datatable-column
       *abpVisible="prop.columnVisible(getInjected)"
-      [width]="columnWidths[i + 1] || 200"
+      [width]="columnWidths[i + 1] ?? 200"
+      [canAutoResize]="!columnWidths[i + 1]"
       [name]="(prop.isExtra ? '::' + prop.displayName : prop.displayName) | abpLocalization"
       [prop]="prop.name"
       [sortable]="prop.sortable"
@@ -129,3 +137,4 @@
     </ngx-datatable-column>
   }
 </ngx-datatable>
+}

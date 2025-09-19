@@ -6,7 +6,7 @@ The reason that you **can replace** but **cannot customize** default ABP compone
 
 ## How to Replace a Component
 
-Create a new component that you want to use instead of an ABP component. Add that component to `declarations` and `entryComponents` in the `AppModule`.
+Create a new component that you want to use instead of an ABP component.
 
 Then, open the `app.component.ts` and execute the `add` method of `ReplaceableComponentsService` to replace your component with an ABP component as shown below:
 
@@ -33,7 +33,7 @@ export class AppComponent {
 
 ## How to Replace a Layout
 
-Each ABP theme module has 3 layouts named `ApplicationLayoutComponent`, `AccountLayoutComponent`, `EmptyLayoutComponent`. These layouts can be replaced the same way.
+Each ABP theme package has 3 layouts named `ApplicationLayoutComponent`, `AccountLayoutComponent`, `EmptyLayoutComponent`. These layouts can be replaced the same way.
 
 > A layout component template should contain `<router-outlet></router-outlet>` element.
 
@@ -72,7 +72,7 @@ export class AppComponent {
 }
 ```
 
-> If you like to replace a layout component at runtime (e.g: changing the layout by pressing a button), pass the second parameter of the `add` method of `ReplaceableComponentsService` as true. DynamicLayoutComponent loads content using a router-outlet. When the second parameter of the `add` method is true, the route will be refreshed, so use it with caution. Your component state will be gone and any initiation logic (including HTTP requests) will be repeated.
+> If you would like to replace a layout component at runtime (e.g: changing the layout by pressing a button), pass the second parameter of the `add` method of `ReplaceableComponentsService` as true. DynamicLayoutComponent loads content using a router-outlet. When the second parameter of the `add` method is true, the route will be refreshed, so use it with caution. Your component state will be gone and any initiation logic (including HTTP requests) will be repeated.
 
 ### Layout Components
 
@@ -98,8 +98,6 @@ This command will create a new component named `new-layout`. Now, open the new-l
 
 This 'router-outlet' will act as a placeholder that Angular dynamically fills based on the current router state.
 
-note: (don't forget: you should add the app in the app.module.ts file)
-
 #### Step 2: Define a Variable for the Layout Component
 
 Although this step is optional, it can be useful if you're going to use the layout component's value multiple times. You can define a variable for the layout component like this:
@@ -118,33 +116,29 @@ You can use this variable when you need to refer to the layout component.
 
 Next, you need to add the new layout component to the `ReplaceableComponentsService`. This service allows you to replace a component with another one dynamically.
 
-You can do this by defining a provider for `APP_INITIALIZER` that uses a factory function. In this function, you inject the `ReplaceableComponentsService` and use its `add` method to add the new layout component.
+You can do this by defining a provider for `provideAppInitializer` that uses a factory function. In this function, you inject the `ReplaceableComponentsService` and use its `add` method to add the new layout component.
 
 Here's how you can do it:
 
 ```javascript
 export const CUSTOM_LAYOUT_PROVIDERS = [
-  {
-    provide: APP_INITIALIZER,
-    useFactory: configureLayoutFn,
-    deps: [ReplaceableComponentsService],
-    multi: true,
-  },
+  provideAppInitializer(()=>{
+    configureLayoutFn();
+  }),
 ];
+
 function configureLayoutFn() {
   const service = inject(ReplaceableComponentsService);
-  return () => {
-    service.add({
-      key: eCustomLayout.component,
-      component: CustomLayoutComponent,
-    });
-  };
+  service.add({
+    key: eCustomLayout.component,
+    component: CustomLayoutComponent,
+  });
 }
 ```
 
-In this code, `configureLayoutFn` is a factory function that adds the new layout component to the `ReplaceableComponentsService`. The `APP_INITIALIZER` provider runs this function when the application starts.
+In this code, `configureLayoutFn` is a factory function that adds the new layout component to the `ReplaceableComponentsService`. The `provideAppInitializer` provider runs this function when the application starts.
 
-note: (don't forget: you should add the CUSTOM_LAYOUT_PROVIDERS in the app.module.ts file)
+note: (don't forget: you should add the CUSTOM_LAYOUT_PROVIDERS in the app.config.ts file)
 
 #### Step 4: Define the Application's Dynamic Layouts
 
@@ -156,14 +150,14 @@ You can add the new layout to the existing layouts like this:
 export const myDynamicLayouts = new Map<string, string>([...DEFAULT_DYNAMIC_LAYOUTS, [eCustomLayout.key, eCustomLayout.component]]);
 ```
 
-#### Step 5: Pass the Dynamic Layouts to the CoreModule
+#### Step 5: Pass the Dynamic Layouts to the Core Provider
 
-The final step is to pass the dynamic layouts to the `provideAbpCore` using the `withOptions` method. This method allows you to configure the module with a static method.
+The final step is to pass the dynamic layouts to the `provideAbpCore` using the `withOptions` method. This method allows you to configure the provider with a static method.
 
 Here's how you can do it:
 
 ```ts
-@NgModule({
+export const appConfig: ApplicationConfig = {
   providers: [
     // ...
     provideAbpCore(
@@ -174,8 +168,7 @@ Here's how you can do it:
       }),
     ),
   ],
-})
-export class AppModule {}
+};
 ```
 
 In this code, `myDynamicLayouts` is the map of dynamic layouts you defined earlier. We pass this map to the `provideAbpCore` using the `withOptions` method.
@@ -188,38 +181,56 @@ Here's how you can do it:
 // route.provider.ts
 import { eCustomLayout } from './custom-layout/custom-layout.provider';
 import { RoutesService, eLayoutType } from '@abp/ng.core';
-import { APP_INITIALIZER } from '@angular/core';
+import { provideAppInitializer } from '@angular/core';
 
 export const APP_ROUTE_PROVIDER = [
-  { provide: APP_INITIALIZER, useFactory: configureRoutes, deps: [RoutesService], multi: true },
+  provideAppInitializer(() => {
+    configureRoutes();
+  }),
 ];
 
-function configureRoutes(routes: RoutesService) {
-  return () => {
-    routes.add([
-      {
-        path: '/',
-        name: '::Menu:Home',
-        iconClass: 'fas fa-home',
-        order: 1,
-        layout: eLayoutType.application,
-      },
-      {
-        path: '/dashboard',
-        name: '::Menu:Dashboard',
-        iconClass: 'fas fa-chart-line',
-        order: 2,
-        layout: eCustomLayout.key as eLayoutType,
-        requiredPolicy: 'MyProjectName.Dashboard.Host  || MyProjectName.Dashboard.Tenant',
-      },
-    ]);
-  };
+function configureRoutes() {
+  const routes = inject(RoutesService);
+  routes.add([
+    {
+      path: '/',
+      name: '::Menu:Home',
+      iconClass: 'fas fa-home',
+      order: 1,
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/dashboard',
+      name: '::Menu:Dashboard',
+      iconClass: 'fas fa-chart-line',
+      order: 2,
+      layout: eCustomLayout.key as eLayoutType,
+      requiredPolicy: 'MyProjectName.Dashboard.Host  || MyProjectName.Dashboard.Tenant',
+    },
+  ]);
 }
 ```
 
 #### How to Replace LogoComponent
 
 ![LogoComponent](./images/logo-component.png)
+
+Note
+- If your goal is only to change the logo image or application name, you don't need to replace the component. Prefer providing the logo via `@abp/ng.theme.shared` so all themes/components consume it consistently:
+
+```ts
+// app.config.ts
+import { provideLogo, withEnvironmentOptions } from '@abp/ng.theme.shared';
+import { environment } from './environments/environment';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideLogo(withEnvironmentOptions(environment)),
+  ],
+};
+```
+
+If you still want to completely replace the logo component UI, follow the steps below:
 
 Run the following command in `angular` folder to create a new component called `LogoComponent`.
 
@@ -290,10 +301,23 @@ Open the generated `routes.component.ts` in `src/app/routes` folder and replace 
 
 ```js
 import { Component, HostBinding } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { LocalizationPipe, PermissionDirective } from "@abp/ng.core";
+import { EllipsisDirective } from '@abp/ng.theme.shared';
 
 @Component({
   selector: "app-routes",
   templateUrl: "routes.component.html",
+  imports: [
+    CommonModule,
+    RouterModule,
+    NgbDropdownModule,
+    PermissionDirective,
+    EllipsisDirective,
+    LocalizationPipe,
+  ]
 })
 export class RoutesComponent {
   @HostBinding("class.mx-auto")
@@ -303,21 +327,6 @@ export class RoutesComponent {
     return window.innerWidth < 992;
   }
 }
-```
-
-Import the `SharedModule` to the `imports` array of `AppModule`:
-
-```js
-// app.module.ts
-
-import { SharedModule } from './shared/shared.module';
-
-@NgModule({
-  imports: [
-    //...
-    SharedModule
-  ]
-)}
 ```
 
 Open the generated `routes.component.html` in `src/app/routes` folder and replace its content with the following:
@@ -484,8 +493,12 @@ import {
   LanguageInfo,
   NAVIGATE_TO_MANAGE_PROFILE,
   SessionStateService,
+  LocalizationPipe
 } from '@abp/ng.core';
 import { Component, inject, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import snq from 'snq';
@@ -493,6 +506,12 @@ import snq from 'snq';
 @Component({
   selector: 'app-nav-items',
   templateUrl: 'nav-items.component.html',
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbDropdownModule,
+    LocalizationPipe
+  ]
 })
 export class NavItemsComponent {
   private configState = inject(ConfigStateService);
@@ -546,21 +565,6 @@ export class NavItemsComponent {
     this.authService.logout().subscribe();
   }
 }
-```
-
-Import the `SharedModule` to the `imports` array of `AppModule`:
-
-```js
-// app.module.ts
-
-import { SharedModule } from './shared/shared.module';
-
-@NgModule({
-  imports: [
-    //...
-    SharedModule
-  ]
-)}
 ```
 
 Open the generated `nav-items.component.html` in `src/app/nav-items` folder and replace the content with the following:

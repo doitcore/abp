@@ -3,20 +3,24 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   EventEmitter,
   inject,
   Injector,
   Input,
   LOCALE_ID,
   OnChanges,
+  OnDestroy,
   Output,
+  PLATFORM_ID,
+  signal,
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
 } from '@angular/core';
-import { AsyncPipe, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
-import { Observable, filter, map } from 'rxjs';
+import { Observable, filter, map, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
@@ -25,7 +29,7 @@ import {
   ABP,
   ConfigStateService,
   ListService,
-  LocalizationModule,
+  LocalizationPipe,
   PermissionDirective,
   PermissionService,
   TimezoneService,
@@ -63,7 +67,7 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
     NgxDatatableDefaultDirective,
     NgxDatatableListDirective,
     PermissionDirective,
-    LocalizationModule,
+    LocalizationPipe,
     UtcToLocalPipe,
     AsyncPipe,
     NgTemplateOutlet,
@@ -72,7 +76,7 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
   templateUrl: './extensible-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit {
+export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit, OnDestroy {
   readonly #injector = inject(Injector);
   readonly getInjected = this.#injector.get.bind(this.#injector);
   protected readonly cdr = inject(ChangeDetectorRef);
@@ -81,6 +85,8 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   protected readonly timeZoneService = inject(TimezoneService);
   protected readonly entityPropTypeClasses = inject(ENTITY_PROP_TYPE_CLASSES);
   protected readonly permissionService = inject(PermissionService);
+  private platformId = inject(PLATFORM_ID);
+  protected isBrowser = isPlatformBrowser(this.platformId);
 
   protected _actionsText!: string;
   @Input()
@@ -89,7 +95,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   }
 
   get actionsText(): string {
-    return this._actionsText ?? (this.actionList.length > 1 ? 'AbpUi::Actions' : '');
+    return this._actionsText ?? (this.actionList.length >= 1 ? 'AbpUi::Actions' : '');
   }
 
   @Input() data!: R[];
@@ -97,7 +103,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Input() recordsTotal!: number;
 
   @Input() set actionsColumnWidth(width: number) {
-    this.setColumnWidths(width ? Number(width) : undefined);
+    this._actionsColumnWidth.set(width ? Number(width) : undefined);
   }
 
   @Input() actionsTemplate?: TemplateRef<any>;
@@ -110,20 +116,42 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     this._selectionType = typeof value === 'string' ? SelectionType[value] : value;
   }
   _selectionType: SelectionType = SelectionType.multiClick;
-  
-  
+
   @Input() selected: any[] = [];
   @Output() selectionChange = new EventEmitter<any[]>();
 
-  hasAtLeastOnePermittedAction: boolean;
+  // Infinite scroll configuration
+  @Input() infiniteScroll = false;
+  @Input() isLoading = false;
+  @Input() scrollThreshold = 10;
+  @Output() loadMore = new EventEmitter<void>();
+  @Input() tableHeight: number;
 
-  readonly columnWidths!: number[];
+  hasAtLeastOnePermittedAction: boolean;
 
   readonly propList: EntityPropList<R>;
 
   readonly actionList: EntityActionList<R>;
 
   readonly trackByFn: TrackByFunction<EntityProp<R>> = (_, item) => item.name;
+
+  // Signal for actions column width
+  private readonly _actionsColumnWidth = signal<number | undefined>(DEFAULT_ACTIONS_COLUMN_WIDTH);
+
+  // Infinite scroll: debounced load more subject
+  private readonly loadMoreSubject = new Subject<void>();
+  private readonly loadMoreSubscription = this.loadMoreSubject
+    .pipe(debounceTime(100), distinctUntilChanged())
+    .subscribe(() => this.triggerLoadMore());
+
+  readonly columnWidths = computed(() => {
+    const actionsColumn = this._actionsColumnWidth();
+    const widths = [actionsColumn];
+    this.propList.forEach(({ value: prop }) => {
+      widths.push(prop.columnWidth);
+    });
+    return widths;
+  });
 
   constructor() {
     const extensions = this.#injector.get(ExtensionsService);
@@ -136,15 +164,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
       this.permissionService.filterItemsByPolicy(
         this.actionList.toArray().map(action => ({ requiredPolicy: action.permission })),
       ).length > 0;
-    this.setColumnWidths(DEFAULT_ACTIONS_COLUMN_WIDTH);
-  }
-
-  private setColumnWidths(actionsColumn: number | undefined) {
-    const widths = [actionsColumn];
-    this.propList.forEach(({ value: prop }) => {
-      widths.push(prop.columnWidth);
-    });
-    (this.columnWidths as any) = widths;
   }
 
   private getIcon(value: boolean) {
@@ -242,10 +261,50 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     this.selectionChange.emit(selected);
   }
 
+  onScroll(scrollEvent: Event): void {
+    if (!this.shouldHandleScroll()) {
+      return;
+    }
+
+    const target = scrollEvent.target as HTMLElement;
+    if (!target) {
+      return;
+    }
+
+    if (this.isNearScrollBottom(target)) {
+      this.loadMoreSubject.next();
+    }
+  }
+
+  private shouldHandleScroll(): boolean {
+    return this.infiniteScroll && !this.isLoading;
+  }
+
+  private isNearScrollBottom(element: HTMLElement): boolean {
+    const { offsetHeight, scrollTop, scrollHeight } = element;
+    return offsetHeight + scrollTop >= scrollHeight - this.scrollThreshold;
+  }
+
+  private triggerLoadMore(): void {
+    this.loadMore.emit();
+  }
+
+  getTableHeight() {
+    if (!this.infiniteScroll) return 'auto';
+
+    return this.tableHeight ? `${this.tableHeight}px` : 'auto';
+  }
+
   ngAfterViewInit(): void {
-    this.list?.requestStatus$?.pipe(filter(status => status === 'loading')).subscribe(() => {
+    if (!this.infiniteScroll) {
+      this.list?.requestStatus$?.pipe(filter(status => status === 'loading')).subscribe(() => {
         this.data = [];
         this.cdr.markForCheck();
       });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.loadMoreSubscription.unsubscribe();
   }
 }

@@ -10,9 +10,13 @@
 }
 ````
 
-ABP Studio offers a comprehensive centralized monitoring solution, enabling you to oversee all applications from a single interface. To see the monitoring tabs you can select the [Solution Runner](./running-applications.md) or *Kubernetes* from the left menu, monitoring tabs are automatically opened in the center. You can start the applications for monitoring. Various monitoring options are available, including [Overall](#overall), [Browse](#browse), [HTTP Requests](#http-requests), [Events](#events), [Exceptions](#exceptions), [Logs](#logs). 
+ABP Studio offers a comprehensive centralized monitoring solution, enabling you to oversee all applications from a single interface. To see the monitoring tabs you can select the [Solution Runner](./running-applications.md) or *Kubernetes* from the left menu, monitoring tabs are automatically opened in the center. You can start the applications for monitoring. Various monitoring options are available, including [Overall](#overall), [Browse](#browse), [HTTP Requests](#http-requests), [Events](#events), [Exceptions](#exceptions), [Logs](#logs), [Tools](#tools). 
 
 ![monitoring](./images/monitoring-applications/monitoring.png)
+
+If you want to open any of these tabs in separate window, just drag it from the header a little bit and it will pop-up in a new window. In this way you can monitor multiple tabs at once:
+
+![monitoring-window-hint](./images/monitoring-applications/monitoring-window-hint.png)
 
 ## Collecting Telemetry Information
 
@@ -130,3 +134,16 @@ Click on a row to inspect the details of each exception; `Application`, `Excepti
 The *Logs* tab allows you to view all logs for both CLI and C# applications. To access logs, simply select an application. You can also apply filters using the search textbox by log text or by selecting a specific *Log Level*. When you select a *Log Level* it shows selected log level and higher log levels. For example, if you select *Warning* it shows *Warning*, *Error* and *Critical* logs. To clear selected application logs, use the *Clear Logs* button. If *Auto Scroll* is checked, the display automatically scrolls when new logs are received.
 
 ![logs](./images/monitoring-applications/logs.png)
+
+## Tools
+
+The *Tools* tab allows you to easily access to the user interfaces of the tools you are using. A *tool* may be related with a docker container, or independent. If it is related with a container (ex: *grafana*), the tool is opened when the container is up. If the tool is independent, it will be always opened.
+
+![tools](./images/monitoring-applications/tools-overview.png)
+
+The microservice template comes with pre-defined tools to display related container user interfaces. You can edit existing tools, add new tools or delete existing tools.
+
+In the example below, a new tool named `My Application Status` will be added to the tools and it will display the URL in the input:
+
+![tools-create](./images/monitoring-applications/tools-create.png)
+

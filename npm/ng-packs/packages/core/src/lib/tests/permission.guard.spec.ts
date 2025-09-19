@@ -21,7 +21,7 @@ import { OTHERS_GROUP } from '../tokens';
 import { SORT_COMPARE_FUNC, compareFuncFactory } from '../tokens/compare-func.token';
 import { AuthService } from '../abstracts';
 
-@Component({ standalone: true, template: '' })
+@Component({ template: '' })
 class DummyComponent {}
 
 describe('PermissionGuard', () => {

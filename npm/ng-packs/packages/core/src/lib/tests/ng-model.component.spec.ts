@@ -14,7 +14,6 @@ import { AbstractNgModelComponent } from '../abstracts';
       multi: true,
     },
   ],
-  standalone: true,
   imports: [FormsModule],
 })
 export class TestComponent extends AbstractNgModelComponent implements OnInit {

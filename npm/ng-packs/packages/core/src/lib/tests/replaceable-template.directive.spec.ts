@@ -9,8 +9,7 @@ import { ReplaceableComponentsService } from '../services/replaceable-components
 @Component({
   selector: 'abp-default-component',
   template: ' <p>default</p> ',
-  exportAs: 'abpDefaultComponent',
-  standalone: true,
+  exportAs: 'abpDefaultComponent'
 })
 class DefaultComponent {
   @Input()
@@ -33,8 +32,7 @@ class DefaultComponent {
 
 @Component({
   selector: 'abp-external-component',
-  template: ' <p>external</p> ',
-  standalone: true,
+  template: ' <p>external</p> '
 })
 class ExternalComponent {
   data = inject<ReplaceableComponents.ReplaceableTemplateData<any, any>>('REPLACEABLE_DATA' as any, { optional: true })!;

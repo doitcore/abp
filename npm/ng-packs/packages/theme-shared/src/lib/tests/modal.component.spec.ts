@@ -18,8 +18,7 @@ import { ModalComponent } from '../components/modal/modal.component';
       <ng-template #abpFooter>Footer</ng-template>
     </abp-modal>
   `,
-  imports: [ModalComponent],
-  standalone: true,
+  imports: [ModalComponent]
 })
 class TestHostComponent {
   @Input() visible = false;

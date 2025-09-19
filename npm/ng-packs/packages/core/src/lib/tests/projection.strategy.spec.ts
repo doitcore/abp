@@ -20,7 +20,6 @@ import { CONTEXT_STRATEGY } from '../strategies/context.strategy';
 describe('ComponentProjectionStrategy', () => {
   @Component({
     template: '<div class="foo">{{ bar || baz }}</div>',
-    standalone: true,
   })
   class TestComponent {
     bar: string;
@@ -29,7 +28,6 @@ describe('ComponentProjectionStrategy', () => {
 
   @Component({
     template: '<ng-container #container></ng-container>',
-    standalone: true,
     imports: [],
   })
   class HostComponent {
@@ -69,7 +67,6 @@ describe('ComponentProjectionStrategy', () => {
 describe('RootComponentProjectionStrategy', () => {
   @Component({
     template: '<div class="foo">{{ bar || baz }}</div>',
-    standalone: true,
   })
   class TestComponent {
     bar: string;
@@ -78,7 +75,6 @@ describe('RootComponentProjectionStrategy', () => {
 
   @Component({ 
     template: '',
-    standalone: true,
     imports: [],
   })
   class HostComponent {}

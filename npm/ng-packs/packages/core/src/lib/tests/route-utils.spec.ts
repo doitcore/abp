@@ -6,8 +6,7 @@ import { RoutesService } from '../services/routes.service';
 import { findRoute, getRoutePath } from '../utils/route-utils';
 
 @Component({ 
-  template: '',
-  standalone: true
+  template: ''
 })
 class DummyComponent {}
 

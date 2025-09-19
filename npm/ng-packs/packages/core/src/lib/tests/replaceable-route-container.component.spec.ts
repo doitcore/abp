@@ -7,15 +7,13 @@ import { ReplaceableComponentsService } from '../services/replaceable-components
 
 @Component({
   selector: 'abp-external-component',
-  template: '<p>external</p>',
-  standalone: true,
+  template: '<p>external</p>'
 })
 export class ExternalComponent {}
 
 @Component({
   selector: 'abp-default-component',
-  template: '<p>default</p>',
-  standalone: true,
+  template: '<p>default</p>'
 })
 export class DefaultComponent {}
 

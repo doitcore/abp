@@ -11,28 +11,24 @@ import { ReplaceableComponentsService, RoutesService } from '../services';
 @Component({
   selector: 'abp-layout-application',
   template: '<router-outlet></router-outlet>',
-  standalone: true,
 })
 class DummyApplicationLayoutComponent {}
 
 @Component({
   selector: 'abp-layout-account',
   template: '<router-outlet></router-outlet>',
-  standalone: true,
 })
 class DummyAccountLayoutComponent {}
 
 @Component({
   selector: 'abp-layout-empty',
   template: '<router-outlet></router-outlet>',
-  standalone: true,
 })
 class DummyEmptyLayoutComponent {}
 
 @Component({
   selector: 'abp-dummy',
   template: '{{route.snapshot.data?.name}} works!',
-  standalone: true,
   imports: [],
 })
 class DummyComponent {

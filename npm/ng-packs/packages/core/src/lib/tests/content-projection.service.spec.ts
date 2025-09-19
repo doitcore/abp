@@ -6,7 +6,6 @@ import { PROJECTION_STRATEGY } from '../strategies';
 describe('ContentProjectionService', () => {
   @Component({ 
     template: '<div class="foo">bar</div>',
-    standalone: true,
   })
   class TestComponent {}
 

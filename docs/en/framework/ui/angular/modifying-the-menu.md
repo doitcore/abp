@@ -5,7 +5,7 @@ The menu is inside the `ApplicationLayoutComponent` in the @abp/ng.theme.basic p
 
 ## How to Add a Logo
 
-The `logoUrl` property in the environment variables is the url of the logo. 
+The `logoUrl` property in the environment variables is the url of the logo.
 
 You can add your logo to `src/assets` folder and set the `logoUrl` as shown below:
 
@@ -19,6 +19,25 @@ export const environment = {
   // other configurations
 };
 ```
+
+Then provide the logo at application startup using the Theme Shared provider. This makes the logo (and application name) available to all ABP/Theme components (including LeptonX brand component) via injection tokens.
+
+```ts
+// app.config.ts
+import { provideLogo, withEnvironmentOptions } from '@abp/ng.theme.shared';
+import { environment } from './environments/environment';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ... other providers
+    provideLogo(withEnvironmentOptions(environment)),
+  ],
+};
+```
+
+Notes
+- This approach works across themes. If you are using LeptonX, the brand logo component reads these values automatically; you don't need any theme-specific code.
+- You can still override visuals with CSS variables if desired. See the LeptonX section for CSS overrides.
 
 ## How to Add a Navigation Element
 

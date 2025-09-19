@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { AbpApplicationConfigurationService } from '../proxy/volo/abp/asp-net-core/mvc/application-configurations/abp-application-configuration.service';
@@ -15,6 +15,10 @@ import { InternalStore } from '../utils/internal-store-utils';
   providedIn: 'root',
 })
 export class ConfigStateService {
+  private abpConfigService = inject(AbpApplicationConfigurationService);
+  private abpApplicationLocalizationService = inject(AbpApplicationLocalizationService);
+  private readonly includeLocalizationResources = inject(INCUDE_LOCALIZATION_RESOURCES_TOKEN, { optional: true });
+
   private updateSubject = new Subject<void>();
   private readonly store = new InternalStore({} as ApplicationConfigurationDto);
 
@@ -27,13 +31,7 @@ export class ConfigStateService {
   get createOnUpdateStream() {
     return this.store.sliceUpdate;
   }
-  constructor(
-    private abpConfigService: AbpApplicationConfigurationService,
-    private abpApplicationLocalizationService: AbpApplicationLocalizationService,
-    @Optional()
-    @Inject(INCUDE_LOCALIZATION_RESOURCES_TOKEN)
-    private readonly includeLocalizationResources: boolean | null,
-  ) {
+  constructor() {
     this.initUpdateStream();
   }
 

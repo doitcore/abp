@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Optional, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/jest';
 import { BehaviorSubject } from 'rxjs';
@@ -34,12 +34,8 @@ class DefaultComponent {
   selector: 'abp-external-component',
   template: ' <p>external</p> ',
 })
-class ExternalComponent {
-  constructor(
-    @Optional()
-    @Inject('REPLACEABLE_DATA')
-    public data: ReplaceableComponents.ReplaceableTemplateData<any, any>,
-  ) {}
+class ExternalComponent {  data = inject<ReplaceableComponents.ReplaceableTemplateData<any, any>>('REPLACEABLE_DATA' as any, { optional: true })!;
+
 }
 
 describe('ReplaceableTemplateDirective', () => {

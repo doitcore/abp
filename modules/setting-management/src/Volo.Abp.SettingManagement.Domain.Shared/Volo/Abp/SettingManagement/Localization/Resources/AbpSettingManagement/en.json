@@ -17,6 +17,7 @@
     "SentSuccessfully": "Sent successfully",
     "MailSendingFailed": "Mail sending failed, please check your email configuration and try again.",
     "Send": "Send",
+    "Menu:Settings": "Settings",
     "Menu:Emailing": "Emailing",
     "Menu:TimeZone": "Time Zone",
     "DisplayName:Timezone": "Time zone",

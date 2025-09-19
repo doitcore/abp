@@ -124,7 +124,7 @@ export default function BookStoreStackNavigator() {
 
 Add the `BookStoreStack` to the screens object in the `./src/components/DrawerContent/DrawerContent.tsx` file. The DrawerContent component will be used to render the menu items.
 
-```js
+```tsx
 // Imports..
 const screens = {
   HomeStack: { label: "::Menu:Home", iconName: "home" },
@@ -1731,7 +1731,7 @@ export default CreateUpdateAuthorForm;
 
 Update BookAPI proxy file and include `getAuthorLookup` method
 
-```js
+```ts
 import api from "./API";
 
 export const getList = () => api.get("/api/app/book").then(({ data }) => data);
@@ -1756,9 +1756,9 @@ export const remove = (id) =>
 
 ### Add `AuthorName` to the Book List
 
-Open `BooksScreen.js` file under the `./src/screens/BookStore/Books` and update code below.
+Open `BooksScreen.tsx` file under the `./src/screens/BookStore/Books` and update code below.
 
-```js
+```tsx
 //Improts
 
 function BooksScreen({ navigation }) {
@@ -1800,7 +1800,7 @@ function BooksScreen({ navigation }) {
 
 ### Pass authors to the `CreateUpdateBookForm`
 
-```js
+```tsx
 import {
   getAuthorLookup, //Add this line
   get,
@@ -1834,7 +1834,7 @@ function CreateUpdateBookScreen({
 
 ### Add `authorId` field to Book Form
 
-```js
+```tsx
 const validations = {
   authorId: Yup.string()
     .nullable()
@@ -1889,7 +1889,7 @@ function CreateUpdateBookForm({ submit, book = null, authors = [] }) {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "margin"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.input.container}>
@@ -1933,4 +1933,4 @@ export default CreateUpdateBookForm;
 
 ![Authors in Book Form](../../../images/authors-in-book-form.png)
 
-That's all. Just run the application and try to create or edit an author.
+That is all. Just run the application and try to create or edit an author.

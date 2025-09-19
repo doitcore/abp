@@ -28,9 +28,6 @@ import api from './API';
 
 export const getList = () => api.get('/api/app/book').then(({ data }) => data);
 
-export const getAuthorLookup = () =>
-  api.get('/api/app/book/author-lookup').then(({ data }) => data);
-
 export const get = id => api.get(`/api/app/book/${id}`).then(({ data }) => data);
 
 export const create = input => api.post('/api/app/book', input).then(({ data }) => data);
@@ -867,7 +864,6 @@ import CreateUpdateBookForm from './CreateUpdateBookForm';
 function CreateUpdateBookScreen({ navigation, route, startLoading, clearLoading }) {
   const { bookId } = route.params || {};
   const [book, setBook] = useState(null);
-  const [authors, setAuthors] = useState([]);
 
   const submit = (data: any) => {
     startLoading({ key: 'save' });
@@ -887,11 +883,7 @@ function CreateUpdateBookScreen({ navigation, route, startLoading, clearLoading 
     }
   }, [bookId]);
 
-  useEffect(() => {
-    getAuthorLookup().then(({ items } = {}) => setAuthors(items));
-  }, []);
-
-  return <CreateUpdateBookForm submit={submit} book={book} authors={authors} />;
+  return <CreateUpdateBookForm submit={submit} book={book} />;
 }
 
 CreateUpdateBookScreen.propTypes = {

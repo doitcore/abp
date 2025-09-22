@@ -81,7 +81,7 @@
     <Project Path="src/Volo.Abp.DistributedLocking.Dapr/Volo.Abp.DistributedLocking.Dapr.csproj" />
     <Project Path="src/Volo.Abp.DistributedLocking/Volo.Abp.DistributedLocking.csproj" />
     <Project Path="src/Volo.Abp.Emailing/Volo.Abp.Emailing.csproj" />
-    <!-- <Project Path="src/Volo.Abp.EntityFrameworkCore.MySQL.Pomelo/Volo.Abp.EntityFrameworkCore.MySQL.Pomelo.csproj" /> -->
+    <Project Path="src/Volo.Abp.EntityFrameworkCore.MySQL.Pomelo/Volo.Abp.EntityFrameworkCore.MySQL.Pomelo.csproj" />
     <Project Path="src/Volo.Abp.EntityFrameworkCore.MySQL/Volo.Abp.EntityFrameworkCore.MySQL.csproj" />
     <Project Path="src/Volo.Abp.EntityFrameworkCore.Oracle.Devart/Volo.Abp.EntityFrameworkCore.Oracle.Devart.csproj" />
     <Project Path="src/Volo.Abp.EntityFrameworkCore.Oracle/Volo.Abp.EntityFrameworkCore.Oracle.csproj" />

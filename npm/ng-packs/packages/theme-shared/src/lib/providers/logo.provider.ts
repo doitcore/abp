@@ -6,19 +6,19 @@ import {
 } from '@angular/core';
 import { LOGO_APP_NAME_TOKEN, LOGO_URL_TOKEN } from '../tokens/logo.token';
 
-export enum LpxLogoFeatureKind {
+export enum LogoFeatureKind {
   Options,
 }
 
-export interface LpxLogoFeature<KindT extends LpxLogoFeatureKind> {
+export interface LogoFeature<KindT extends LogoFeatureKind> {
   ɵkind: KindT;
   ɵproviders: (Provider | EnvironmentProviders)[];
 }
 
-function makeLpxLogoFeature<KindT extends LpxLogoFeatureKind>(
+function makeLogoFeature<KindT extends LogoFeatureKind>(
   kind: KindT,
   providers: (Provider | EnvironmentProviders)[],
-): LpxLogoFeature<KindT> {
+): LogoFeature<KindT> {
   return {
     ɵkind: kind,
     ɵproviders: providers,
@@ -27,10 +27,10 @@ function makeLpxLogoFeature<KindT extends LpxLogoFeatureKind>(
 
 export function withEnvironmentOptions(
   options = {} as Environment,
-): LpxLogoFeature<LpxLogoFeatureKind.Options> {
+): LogoFeature<LogoFeatureKind.Options> {
   const { name, logoUrl } = options.application || {};
 
-  return makeLpxLogoFeature(LpxLogoFeatureKind.Options, [
+  return makeLogoFeature(LogoFeatureKind.Options, [
     {
       provide: LOGO_URL_TOKEN,
       useValue: logoUrl || '',
@@ -43,7 +43,7 @@ export function withEnvironmentOptions(
 }
 
 export function provideLogo(
-  ...features: LpxLogoFeature<LpxLogoFeatureKind>[]
+  ...features: LogoFeature<LogoFeatureKind>[]
 ): EnvironmentProviders {
   const providers: (Provider | EnvironmentProviders)[] = [];
   features.forEach(({ ɵproviders }) => providers.push(...ɵproviders));

@@ -29,7 +29,7 @@ public class MagickImageResizerContributor : IImageResizerContributor, ITransien
         {
             using var image = new MagickImage(memoryStream);
 
-            if (mimeType.IsNullOrWhiteSpace() && !CanResize(image.Format.ToString()))
+            if (mimeType.IsNullOrWhiteSpace() && !CanResize(image.Format))
             {
                 return new ImageResizeResult<Stream>(stream, ImageProcessState.Unsupported);
             }
@@ -63,7 +63,7 @@ public class MagickImageResizerContributor : IImageResizerContributor, ITransien
 
         using var image = new MagickImage(bytes);
 
-        if (mimeType.IsNullOrWhiteSpace() && !CanResize(image.Format.ToString()))
+        if (mimeType.IsNullOrWhiteSpace() && !CanResize(image.Format))
         {
             return Task.FromResult(new ImageResizeResult<byte[]>(bytes, ImageProcessState.Unsupported));
         }
@@ -75,10 +75,6 @@ public class MagickImageResizerContributor : IImageResizerContributor, ITransien
 
     protected virtual bool CanResize(string mimeType)
     {
-        if (!mimeType.StartsWith("image/"))
-        {
-            mimeType = "image/" + mimeType;
-        }
         return mimeType.ToLowerInvariant() switch {
             MimeTypes.Image.Jpeg => true,
             MimeTypes.Image.Png => true,
@@ -86,6 +82,19 @@ public class MagickImageResizerContributor : IImageResizerContributor, ITransien
             MimeTypes.Image.Bmp => true,
             MimeTypes.Image.Tiff => true,
             MimeTypes.Image.Webp => true,
+            _ => false
+        };
+    }
+
+    protected virtual bool CanResize(MagickFormat format)
+    {
+        return format switch {
+            MagickFormat.Jpeg => true,
+            MagickFormat.Png => true,
+            MagickFormat.Gif => true,
+            MagickFormat.Bmp => true,
+            MagickFormat.Tiff => true,
+            MagickFormat.WebP => true,
             _ => false
         };
     }

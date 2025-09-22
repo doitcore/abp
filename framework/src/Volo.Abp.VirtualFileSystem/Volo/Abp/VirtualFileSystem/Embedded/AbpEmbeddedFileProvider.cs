@@ -111,7 +111,7 @@ public class AbpEmbeddedFileProvider : DictionaryBasedFileProvider
         {
             // Fix NET 10 RC 1 Microsoft.Extensions.FileProviders.Embedded issue temporarily
             //https://github.com/dotnet/aspnetcore/issues/63719
-            string[] webContentFolders = ["Pages", "Views", "Themes", "Components"];
+            string[] webContentFolders = ["wwwroot", "Pages", "Views", "Themes", "Components"];
             foreach (var contentFolder in webContentFolders.Where(contentFolder => resourceName.Contains($".{contentFolder}.")))
             {
                 var index = resourceName.IndexOf(contentFolder, StringComparison.CurrentCultureIgnoreCase);

@@ -86,7 +86,11 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.5" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.5" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5" />    
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="9.7.1" />
+    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="9.7.1" />
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.61.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Abstractions" Version="1.61.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.5" />

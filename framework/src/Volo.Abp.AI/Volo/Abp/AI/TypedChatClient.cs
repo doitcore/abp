@@ -10,7 +10,7 @@ public class TypedChatClient<TWorkSpace> : DelegatingChatClient, IChatClient<TWo
     public TypedChatClient(IServiceProvider serviceProvider)
         : base(
             serviceProvider.GetRequiredKeyedService<IChatClient>(
-                AbpAIOptions.GetChatClientServiceKeyName(
+                AbpAIWorkspaceOptions.GetChatClientServiceKeyName(
                     WorkspaceNameAttribute.GetWorkspaceName<TWorkSpace>()))
         )
     {

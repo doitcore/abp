@@ -12,7 +12,7 @@ public class KernelAccessor<TWorkSpace> : IKernelAccessor<TWorkSpace>
     public KernelAccessor(IServiceProvider serviceProvider)
     {
         Kernel = serviceProvider.GetKeyedService<Kernel>(
-            AbpAIOptions.GetKernelServiceKeyName(
+            AbpAIWorkspaceOptions.GetKernelServiceKeyName(
                 WorkspaceNameAttribute.GetWorkspaceName<TWorkSpace>()));
     }
 }

@@ -25,6 +25,8 @@
         <Pack>true</Pack>
         <PackagePath>content\</PackagePath>
       </Content>
+      <None Remove="AngularInstallationInfo.json" />
+      <Content Include="AngularInstallationInfo.json" />
     </ItemGroup>
 
 </Project>

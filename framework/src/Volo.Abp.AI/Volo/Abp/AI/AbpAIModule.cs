@@ -5,7 +5,6 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
 using Volo.Abp.Modularity;
 
 namespace Volo.Abp.AI;
@@ -17,38 +16,43 @@ public class AbpAIModule : AbpModule
 {
     public const string DefaultWorkspaceName = "Default";
 
-    public override void PostConfigureServices(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var options = context.Services.ExecutePreConfiguredActions<AbpAIOptions>();
 
         context.Services.Configure<AbpAIWorkspaceOptions>(workspaceOptions =>
         {
-            workspaceOptions.ConfiguredWorkspaceNames.UnionWith(options.Workspaces.Select(x => x.Key).ToArray());
+            workspaceOptions.ConfiguredWorkspaceNames.AddIfNotContains(
+                options.Workspaces.Select(x => x.Key)
+            );
         });
+        
+        //TODO: Refactor & merge foreach loops
 
         foreach (var workspaceConfig in options.Workspaces.Values)
         {
-            if (workspaceConfig.ChatClient?.Builder is null)
+            if (workspaceConfig.ChatClient.Builder is null)
             {
                 continue;
             }
 
             foreach (var builderConfigurer in workspaceConfig.ChatClient.BuilderConfigurers)
             {
-                builderConfigurer.Action(workspaceConfig.ChatClient.Builder!);
+                builderConfigurer.Action(workspaceConfig.ChatClient.Builder);
             }
 
+            var serviceName = AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.Name);
+            
             context.Services.AddKeyedChatClient(
-                AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.Name),
-                provider => workspaceConfig.ChatClient.Builder!.Build(provider),
+                serviceName,
+                provider => workspaceConfig.ChatClient.Builder.Build(provider),
                 ServiceLifetime.Transient
             );
 
             if (workspaceConfig.Name == DefaultWorkspaceName)
             {
-                context.Services.AddTransient<IChatClient>(sp => sp.GetRequiredKeyedService<IChatClient>(
-                        AbpAIOptions.GetChatClientServiceKeyName(workspaceConfig.Name)
-                    )
+                context.Services.AddTransient<IChatClient>(
+                    sp => sp.GetRequiredKeyedService<IChatClient>(serviceName)
                 );
             }
         }
@@ -57,7 +61,7 @@ public class AbpAIModule : AbpModule
 
         foreach (var workspaceConfig in options.Workspaces.Values)
         {
-            if (workspaceConfig.Kernel?.Builder is null)
+            if (workspaceConfig.Kernel.Builder is null)
             {
                 continue;
             }
@@ -91,6 +95,6 @@ public class AbpAIModule : AbpModule
             }
         }
 
-        context.Services.TryAddTransient(typeof(IKernelAccessor<>), typeof(TypedKernelAccessor<>));
+        context.Services.TryAddTransient(typeof(IKernelAccessor<>), typeof(KernelAccessor<>));
     }
 }

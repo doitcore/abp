@@ -9,8 +9,6 @@ public class ChatClientConfiguration
     
     public BuilderConfigurerList BuilderConfigurers { get; } = new();
     
-    // TODO: Base chat client (for inheriting a chat client configuration from some other one) 
-
     public void ConfigureBuilder(Action<ChatClientBuilder> configureAction)
     {
         BuilderConfigurers.Add(configureAction);

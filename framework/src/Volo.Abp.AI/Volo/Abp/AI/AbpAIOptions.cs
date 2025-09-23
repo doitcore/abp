@@ -1,6 +1,6 @@
 namespace Volo.Abp.AI;
 
-public class AbpAIOptions
+public class AbpAIOptions //TODO: Rename to AbpAIWorkspaceOptions
 {
     public const string ChatClientServiceKeyNamePrefix = "Abp.AI.ChatClient_";
     public const string KernelServiceKeyNamePrefix = "Abp.AI.Kernel_";

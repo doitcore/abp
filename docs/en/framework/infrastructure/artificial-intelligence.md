@@ -43,7 +43,7 @@ public class MyProjectModule : AbpModule
 
 #### Default configuration (quick start)
 
-Configure the special workspace named `"Default"` to inject `IChatClient` by default.
+Configure the default workspace to inject `IChatClient` directly.
 
 ```csharp
 using Microsoft.Extensions.AI;
@@ -57,20 +57,13 @@ public class MyProjectModule : AbpModule
     {
         context.Services.PreConfigure<AbpAIOptions>(options =>
         {
-            options.Workspaces.Configure(AbpAIModule.DefaultWorkspaceName, configuration =>
+            options.Workspaces.ConfigureDefault(configuration =>
             {
                 configuration.ConfigureChatClient(chatClientConfiguration =>
                 {
                     chatClientConfiguration.Builder = new ChatClientBuilder(
                         sp => new OllamaApiClient("http://localhost:11434", "mistral")
                     );
-
-                    chatClientConfiguration.BuilderConfigurers.Add(builder =>
-                    {
-                        builder.UseSystemMessage(
-                            "You are a helpful assistant that greets users in a friendly manner with their names."
-                        );
-                    });
                 });
 
                 // Chat client only in this quick start
@@ -79,12 +72,6 @@ public class MyProjectModule : AbpModule
     }
 }
 ```
-
-Notes:
-
-- Prefer `ConfigureChatClient(...)` / `ConfigureKernel(...)` methods for configuration.
-- Set the `Builder` and then use `BuilderConfigurers.Add(...)` to apply incremental changes.
-- If a workspace configures only the Kernel, a chat client may still be exposed for that workspace through the Kernel’s service provider (when available).
 
 Once configured, inject the default chat client:
 
@@ -113,11 +100,6 @@ using Volo.Abp.AI;
 public class GreetingAssistant // ChatClient-only workspace
 {
 }
- 
-[WorkspaceName("ContentPlanner")]
-public class ContentPlanner // Kernel-only workspace
-{
-}
 ```
 
 Configure a ChatClient workspace:
@@ -139,9 +121,8 @@ public class MyProjectModule : AbpModule
 
                     chatClientConfiguration.BuilderConfigurers.Add(builder =>
                     {
-                        builder.UseSystemMessage(
-                            "You are a helpful assistant that greets users in a friendly manner with their names."
-                        );
+                        // Anything you want to do with the builder:
+                        // builder.UseFunctionInvocation().UseLogging(); // For example
                     });
                 });
             });
@@ -154,6 +135,7 @@ public class MyProjectModule : AbpModule
 
 #### Default configuration
 
+
 ```csharp
 public class MyProjectModule : AbpModule
 {
@@ -161,7 +143,7 @@ public class MyProjectModule : AbpModule
     {
         context.Services.PreConfigure<AbpAIOptions>(options =>
         {
-            options.Workspaces.Configure<ContentPlanner>(configuration =>
+            options.Workspaces.ConfigureDefault(configuration =>
             {
                 configuration.ConfigureKernel(kernelConfiguration =>
                 {
@@ -175,32 +157,52 @@ public class MyProjectModule : AbpModule
 }
 ```
 
-#### Workspace configuration
+Once configured, inject the default kernel:
 
 ```csharp
-using Microsoft.Extensions.AI;
+using System.Threading.Tasks;
 using Volo.Abp.AI;
 
-public class GreetingService
+public class MyService
 {
-    private readonly IChatClient<GreetingAssistant> _chatClient;
-
-    public GreetingService(IChatClient<GreetingAssistant> chatClient)
+    private readonly IKernelAccessor _kernelAccessor;
+    public MyService(IKernelAccessor kernelAccessor)
     {
-        _chatClient = chatClient;
+        _kernelAccessor = kernelAccessor;
     }
 
-    public async Task<string> GreetAsync(string name)
+    public async Task DoSomethingAsync()
     {
-        var response = await _chatClient.GetResponseAsync(
-            [new ChatMessage(ChatRole.User, $"Greet {name}")]
-        );
-        return response?.Message?.Text ?? string.Empty;
+        var kernel = _kernelAccessor.Kernel; // Kernel might be null if no workspace is configured.
+
+        var result = await kernel.InvokeAsync(/*... */);
     }
 }
 ```
 
-#### Resolve
+#### Workspace configuration
+
+```csharp
+public class MyProjectModule : AbpModule
+{
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.PreConfigure<AbpAIOptions>(options =>
+        {
+            options.Workspaces.Configure<ContentPlanner>(configuration =>
+            {
+                configuration.ConfigureKernel(kernelConfiguration =>
+                {
+                    kernelConfiguration.Builder = Kernel.CreateBuilder()
+                        .AddOpenAIChatCompletion("...", "...");
+                });
+            });
+        });
+    }
+}
+```
+
+#### Workspace usage
 
 ```csharp
 using Microsoft.Extensions.AI;
@@ -235,21 +237,12 @@ public class PlanningService
 
 ## Options
 
-- `AbpAIOptions.Workspaces`: A `WorkspaceConfigurationDictionary` used to configure workspaces.
-  - `Configure<TWorkspace>(Action<WorkspaceConfiguration>)`
-  - `Configure(string name, Action<WorkspaceConfiguration>)`
+`AbpAIOptions` configuration pattern offers `ConfigureChatClient(...)` and `ConfigureKernel(...)` methods for configuration. These methods are defined in the `WorkspaceConfiguration` class. They are used to configure the `ChatClient` and `Kernel` respectively.
 
-- `WorkspaceConfiguration` per workspace:
-  - `ChatClient`: `ChatClientConfiguration`
-    - `Builder`: `ChatClientBuilder?`
-    - `ConfigureBuilder(Action<ChatClientBuilder>)`
-    - `ConfigureBuilder(string name, Action<ChatClientBuilder>)` (named actions executed in order)
-  - `Kernel`: `KernelConfiguration`
-    - `Builder`: `IKernelBuilder?`
-    - `ConfigureBuilder(Action<IKernelBuilder>)`
-    - `ConfigureBuilder(string name, Action<IKernelBuilder>)`
+`Builder` is set once and is used to build the `ChatClient` or `Kernel` instance. `BuilderConfigurers` is a list of actions that are applied to the `Builder` instance for incremental changes. These actions are executed in the order they are added.
 
-- `AbpAIWorkspaceOptions.ConfiguredWorkspaceNames`: Automatically set of workspace names configured during startup. Useful for diagnostics.
+If a workspace configures only the Kernel, a chat client may still be exposed for that workspace through the Kernel’s service provider (when available).
+
 
 ## Advanced Usage and Customizations
 
@@ -262,9 +255,14 @@ Example sketch:
 ```csharp
 using Microsoft.Extensions.AI;
 
-public class MyPolicyChatClient : DelegatingChatClient
+public class SystemMessageChatClient : DelegatingChatClient
 {
-    public MyPolicyChatClient(IChatClient inner) : base(inner) { }
+    public SystemMessageChatClient(IChatClient inner, string systemMessage) : base(inner) 
+    {
+         SystemMessage = systemMessage;
+    }
+
+    public string SystemMessage { get; set; }
 
     public override Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken cancellationToken = default)
     {
@@ -273,24 +271,22 @@ public class MyPolicyChatClient : DelegatingChatClient
     }
 }
 
-public static class MyPolicyChatClientExtensions
+public static class SystemMessageChatClientExtensions
 {
-    public static ChatClientBuilder UseMyPolicy(this ChatClientBuilder builder)
+    public static ChatClientBuilder UseSystemMessage(this ChatClientBuilder builder, string systemMessage)
     {
-        return builder.Use(client => new MyPolicyChatClient(client));
+        return builder.Use(client => new SystemMessageChatClient(client, systemMessage));
     }
 }
 ```
 
-It'll have similar usage with `.UseSystemMessage(...)` extension while configuring a chat client (see configuration examples above).
 
 ```cs
 chatClientConfiguration.BuilderConfigurers.Add(builder =>
 {
-    builder.UseMyPolicy();
+    builder.UseSystemMessage("You are a helpful assistant that greets users in a friendly manner with their names.");
 });
 ```
-
 
 ## Technical Anatomy
 

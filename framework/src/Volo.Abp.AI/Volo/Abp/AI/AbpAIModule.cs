@@ -92,7 +92,5 @@ public class AbpAIModule : AbpModule
         }
 
         context.Services.TryAddTransient(typeof(IKernelAccessor<>), typeof(TypedKernelAccessor<>));
-
-        
     }
 }

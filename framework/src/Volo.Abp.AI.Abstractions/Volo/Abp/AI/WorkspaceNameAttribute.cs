@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 
 namespace Volo.Abp.AI;
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct)]
+[AttributeUsage(AttributeTargets.Class)]
 public class WorkspaceNameAttribute : Attribute
 {
     public string Name { get; }

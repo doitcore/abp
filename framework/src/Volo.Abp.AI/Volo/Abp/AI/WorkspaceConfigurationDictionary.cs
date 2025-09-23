@@ -21,4 +21,9 @@ public class WorkspaceConfigurationDictionary : Dictionary<string, WorkspaceConf
 
         configureAction?.Invoke(configuration);
     }
+
+    public void ConfigureDefault(Action<WorkspaceConfiguration>? configureAction = null)
+    {
+        Configure(AbpAIModule.DefaultWorkspaceName, configureAction);
+    }
 }

@@ -4,15 +4,15 @@ using Microsoft.SemanticKernel;
 
 namespace Volo.Abp.AI;
 
-public class TypedKernelAccessor<TWorkSpace> : IKernelAccessor<TWorkSpace>
+public class KernelAccessor<TWorkSpace> : IKernelAccessor<TWorkSpace>
     where TWorkSpace : class
 {
     public Kernel? Kernel { get; }
 
-    public TypedKernelAccessor(IServiceProvider serviceProvider)
+    public KernelAccessor(IServiceProvider serviceProvider)
     {
         Kernel = serviceProvider.GetKeyedService<Kernel>(
-            AbpAIOptions.GetKernelServiceKeyName(
+            AbpAIWorkspaceOptions.GetKernelServiceKeyName(
                 WorkspaceNameAttribute.GetWorkspaceName<TWorkSpace>()));
     }
 }

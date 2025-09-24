@@ -1911,6 +1911,7 @@
     "SupportCustomABPArchitecturesExplanation": "No. Support is only provided for standard ABP solution structures. On the other hand, you can always get support for your custom needs with a paid consultancy from the ABP Team.",
     "DoesABPCollectAnyPersonalOrTechnicalData": "Does ABP collect any personal or technical data?",
     "ABPCollectAnyDataExplanation": "The software may collect information about you and your use of the software, and send that to Volosoft. Volosoft as the software and service provider may use this information to provide services and improve its products & services. You may opt-out of these scenarios, as described in the <a href=\"{0}\">EULA</a> under PRIVACY AND COLLECTION OF PERSONAL DATA topic .",
-    "InThisDocument": "In this document"
+    "InThisDocument": "In this document",
+    "RecommendedArticles":  "Recommended Articles"
   }
 }

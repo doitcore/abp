@@ -62,6 +62,7 @@
     <Project Path="src/Volo.Abp.BlobStoring.Bunny/Volo.Abp.BlobStoring.Bunny.csproj" />
     <Project Path="src/Volo.Abp.BlobStoring.FileSystem/Volo.Abp.BlobStoring.FileSystem.csproj" />
     <Project Path="src/Volo.Abp.BlobStoring.Google/Volo.Abp.BlobStoring.Google.csproj" />
+    <Project Path="src/Volo.Abp.BlobStoring.Memory/Volo.Abp.BlobStoring.Memory.csproj" />
     <Project Path="src/Volo.Abp.BlobStoring.Minio/Volo.Abp.BlobStoring.Minio.csproj" />
     <Project Path="src/Volo.Abp.BlobStoring/Volo.Abp.BlobStoring.csproj" />
     <Project Path="src/Volo.Abp.Caching.StackExchangeRedis/Volo.Abp.Caching.StackExchangeRedis.csproj" />
@@ -163,7 +164,8 @@
     <Project Path="src/Volo.Abp.Validation/Volo.Abp.Validation.csproj" />
     <Project Path="src/Volo.Abp.VirtualFileSystem/Volo.Abp.VirtualFileSystem.csproj" />
     <Project Path="src/Volo.Abp/Volo.Abp.csproj" />
-    <Project Path="src/Volo.Abp.BlobStoring.Memory/Volo.Abp.BlobStoring.Memory.csproj" />
+    <Project Path="src/Volo.Abp.AI.Abstractions/Volo.Abp.AI.Abstractions.csproj" />
+    <Project Path="src/Volo.Abp.AI/Volo.Abp.AI.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/AbpTestBase/AbpTestBase.csproj" />
@@ -189,6 +191,7 @@
     <Project Path="test/Volo.Abp.BlobStoring.Bunny.Tests/Volo.Abp.BlobStoring.Bunny.Tests.csproj" />
     <Project Path="test/Volo.Abp.BlobStoring.FileSystem.Tests/Volo.Abp.BlobStoring.FileSystem.Tests.csproj" />
     <Project Path="test/Volo.Abp.BlobStoring.Google.Tests/Volo.Abp.BlobStoring.Google.Tests.csproj" />
+    <Project Path="test/Volo.Abp.BlobStoring.Memory.Tests/Volo.Abp.BlobStoring.Memory.Tests.csproj" />
     <Project Path="test/Volo.Abp.BlobStoring.Minio.Tests/Volo.Abp.BlobStoring.Minio.Tests.csproj" />
     <Project Path="test/Volo.Abp.BlobStoring.Tests/Volo.Abp.BlobStoring.Tests.csproj" />
     <Project Path="test/Volo.Abp.Caching.StackExchangeRedis.Tests/Volo.Abp.Caching.StackExchangeRedis.Tests.csproj" />
@@ -248,6 +251,5 @@
     <Project Path="test/Volo.Abp.Uow.Tests/Volo.Abp.Uow.Tests.csproj" />
     <Project Path="test/Volo.Abp.Validation.Tests/Volo.Abp.Validation.Tests.csproj" />
     <Project Path="test/Volo.Abp.VirtualFileSystem.Tests/Volo.Abp.VirtualFileSystem.Tests.csproj" />
-    <Project Path="test/Volo.Abp.BlobStoring.Memory.Tests/Volo.Abp.BlobStoring.Memory.Tests.csproj" />
   </Folder>
 </Solution>

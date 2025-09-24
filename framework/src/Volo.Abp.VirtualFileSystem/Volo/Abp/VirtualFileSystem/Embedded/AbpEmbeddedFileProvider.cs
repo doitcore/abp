@@ -107,6 +107,21 @@ public class AbpEmbeddedFileProvider : DictionaryBasedFileProvider
         {
             resourceName = resourceName.Substring(BaseNamespace!.Length + 1);
         }
+        else
+        {
+            // Fix NET 10 RC 1 Microsoft.Extensions.FileProviders.Embedded issue temporarily
+            //https://github.com/dotnet/aspnetcore/issues/63719
+            string[] webContentFolders = ["wwwroot", "Pages", "Views", "Themes", "Components"];
+            foreach (var contentFolder in webContentFolders.Where(contentFolder => resourceName.Contains($".{contentFolder}.")))
+            {
+                var index = resourceName.IndexOf(contentFolder, StringComparison.CurrentCultureIgnoreCase);
+                if (index > 0)
+                {
+                    resourceName = resourceName.Substring(index);
+                }
+                break;
+            }
+        }
 
         var pathParts = resourceName.Split('.');
         if (pathParts.Length <= 2)

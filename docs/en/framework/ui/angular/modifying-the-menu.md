@@ -47,12 +47,14 @@ You can add routes to the menu by calling the `add` method of `RoutesService`. I
 
 ```js
 import { RoutesService, eLayoutType } from '@abp/ng.core';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component(/* component metadata */)
 export class AppComponent {
-  constructor(routes: RoutesService) {
-    routes.add([
+  private routes = inject(RoutesService);
+
+  constructor() {
+    this.routes.add([
       {
         path: '/your-path',
         name: 'Your navigation',
@@ -138,15 +140,16 @@ To get the route items as grouped we can use the `groupedVisible` (or Observable
 
 ```js
 import { ABP, RoutesService, RouteGroup } from "@abp/ng.core";
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { Observable } from "rxjs";
 
 @Component(/* component metadata */)
 export class AppComponent {
+  private routes = inject(RoutesService);
+
   visible: RouteGroup<ABP.Route>[] | undefined = this.routes.groupedVisible;
-  //Or
-  visible$:Observable<RouteGroup<ABP.Route>[] | undefined> = this.routes.groupedVisible$;
-  
-  constructor(private routes: RoutesService) {}
+  // Or
+  visible$: Observable<RouteGroup<ABP.Route>[] | undefined> = this.routes.groupedVisible$;
 }
 ```
 
@@ -177,12 +180,14 @@ export const appConfig: ApplicationConfig = {
 
 ```typescript
 import { RoutesService } from '@abp/ng.core';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component(/* component metadata */)
 export class AppComponent {
-  constructor(private routes: RoutesService) {
-    routes.setSingularizeStatus(false);
+  private routes = inject(RoutesService);
+
+  constructor() {
+    this.routes.setSingularizeStatus(false);
   }
 }
 ```
@@ -311,7 +316,7 @@ You can add elements to the right part of the menu by calling the `addItems` met
 
 ```js
 import { NavItemsService } from '@abp/ng.theme.shared';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component({
   template: `
@@ -323,8 +328,10 @@ export class MySearchInputComponent {}
 
 @Component(/* component metadata */)
 export class AppComponent {
-  constructor(private navItems: NavItemsService) {
-    navItems.addItems([
+  private navItems = inject(NavItemsService);
+
+  constructor() {
+    this.navItems.addItems([
       {
         id: 'MySearchInput',
         order: 1,
@@ -353,13 +360,15 @@ The `patchItem` method of `NavItemsService` finds an element by its `id` propert
 
 ```js
 export class AppComponent {
-  constructor(private navItems: NavItemsService) {
-    navItems.patchItem(eThemeBasicComponents.Languages, {
+  private navItems = inject(NavItemsService);
+
+  constructor() {
+    this.navItems.patchItem(eThemeBasicComponents.Languages, {
       requiredPolicy: 'new policy here',
       order: 1,
     });
 
-    navItems.removeItem(eThemeBasicComponents.CurrentUser);
+    this.navItems.removeItem(eThemeBasicComponents.CurrentUser);
   }
 }
 ```

@@ -1,12 +1,6 @@
 import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
 setupZoneTestEnv();
 
-import { getTestBed } from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
-
 // Mock window.location for test environment
 Object.defineProperty(window, 'location', {
   value: {
@@ -17,9 +11,4 @@ Object.defineProperty(window, 'location', {
     hash: '',
   },
   writable: true,
-});
-
-getTestBed().resetTestEnvironment();
-getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting(), {
-  teardown: { destroyAfterEach: false },
 });

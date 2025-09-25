@@ -1,7 +1,6 @@
 import { CoreTestingModule } from '@abp/ng.core/testing';
 import { NgModule } from '@angular/core';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
-import { firstValueFrom, timer } from 'rxjs';
 import { ToastContainerComponent } from '../components/toast-container/toast-container.component';
 import { ToastComponent } from '../components/toast/toast.component';
 import { ToasterService } from '../services/toaster.service';

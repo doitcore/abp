@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
-import { timer } from 'rxjs';
 import { AbstractNgModelComponent } from '../abstracts';
 
 @Component({

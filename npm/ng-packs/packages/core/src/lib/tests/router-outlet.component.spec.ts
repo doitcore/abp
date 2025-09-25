@@ -1,12 +1,12 @@
 import { Spectator, createComponentFactory } from '@ngneat/spectator/jest';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 import { RouterOutletComponent } from '../components/router-outlet.component';
 
 describe('RouterOutletComponent', () => {
   let spectator: Spectator<RouterOutletComponent>;
   const createComponent = createComponentFactory({
     component: RouterOutletComponent,
-    imports: [RouterTestingModule],
+    providers: [provideRouter([{ path: '' }])],
   });
 
   it('should have a router-outlet element', () => {

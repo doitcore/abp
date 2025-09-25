@@ -6,7 +6,8 @@ import {
   RoutesService,
   LocalizationService,
 } from '@abp/ng.core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterModule } from '@angular/router';
 import { createRoutingFactory, SpectatorRouting } from '@ngneat/spectator/jest';
 import { BreadcrumbComponent, BreadcrumbItemsComponent } from '../components';
@@ -33,8 +34,9 @@ describe('BreadcrumbComponent', () => {
     component: RouterOutletComponent,
     stubsEnabled: false,
     detectChanges: false,
-    mocks: [HttpClient],
     providers: [
+      provideHttpClient(),
+      provideHttpClientTesting(),
       { 
         provide: CORE_OPTIONS, 
         useValue: {
@@ -61,7 +63,6 @@ describe('BreadcrumbComponent', () => {
     declarations: [],
     imports: [
       RouterModule,
-      HttpClientModule,
       LocalizationPipe,
       BreadcrumbComponent,
       BreadcrumbItemsComponent,

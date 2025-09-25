@@ -2,12 +2,10 @@ import { AbpApplicationConfigurationService, ConfigStateService } from '@abp/ng.
 import { CoreTestingModule } from '@abp/ng.core/testing';
 import { HttpClient } from '@angular/common/http';
 import { Component, Injector } from '@angular/core';
-import { Validators } from '@angular/forms';
 import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { of } from 'rxjs';
 import { getPasswordValidators, validatePassword } from '../utils';
-import { PasswordRule } from '../models/validation';
 
 @Component({ template: '', selector: 'abp-dummy' })
 class DummyComponent {}

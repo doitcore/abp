@@ -1,19 +1,15 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { provideRouter, Route, Router, RouterModule } from '@angular/router';
+import { provideRouter, Route, Router } from '@angular/router';
 import { createSpyObject, SpyObject } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { permissionGuard } from '../guards/permission.guard';
 import { HttpErrorReporterService } from '../services/http-error-reporter.service';
 import { PermissionService } from '../services/permission.service';
-import { RoutesService } from '../services/routes.service';
-import { CORE_OPTIONS } from '../tokens/options.token';
-import { IncludeLocalizationResourcesProvider, provideAbpCore, withOptions } from '../providers';
+import { provideAbpCore, withOptions } from '../providers';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { OTHERS_GROUP } from '../tokens';
-import { SORT_COMPARE_FUNC, compareFuncFactory } from '../tokens/compare-func.token';
 import { AuthService } from '../abstracts';
 
 @Component({ template: '' })
@@ -50,8 +46,9 @@ describe('authGuard', () => {
     permissionService = createSpyObject(PermissionService);
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: AuthService, useValue: mockOAuthService },
         { provide: PermissionService, useValue: permissionService },
         { provide: HttpErrorReporterService, useValue: httpErrorReporter },

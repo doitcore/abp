@@ -1,4 +1,5 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
 import { of } from 'rxjs';
 import { AbpApplicationConfigurationService } from '../proxy/volo/abp/asp-net-core/mvc/application-configurations/abp-application-configuration.service';
@@ -121,8 +122,9 @@ describe('ConfigStateService', () => {
 
   const createService = createServiceFactory({
     service: ConfigStateService,
-    imports: [HttpClientTestingModule],
     providers: [
+      provideHttpClient(),
+      provideHttpClientTesting(),
       { provide: CORE_OPTIONS, useValue: { skipGetAppConfiguration: true } },
       {
         provide: AbpApplicationConfigurationService,

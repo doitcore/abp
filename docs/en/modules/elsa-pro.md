@@ -22,7 +22,7 @@ If you modified your solution structure, adding module using ABP CLI might not w
 
 In order to do that, add packages listed below to matching project on your solution. For example, `Volo.Abp.Elsa.Application` package to your **{ProjectName}.Application.csproj** like below;
 
-```json
+```xml
 <PackageReference Include="Volo.Abp.Elsa.Application" Version="x.x.x" />
 ```
 

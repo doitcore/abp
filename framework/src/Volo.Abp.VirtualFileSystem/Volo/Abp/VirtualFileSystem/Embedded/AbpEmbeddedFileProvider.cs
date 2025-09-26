@@ -130,7 +130,7 @@ public class AbpEmbeddedFileProvider : DictionaryBasedFileProvider
             return resourceName;
         }
 
-        if (pathParts.Length >= 4 && pathParts[pathParts.Length - 2] == "min")
+        if (pathParts.Length >= 4 && (pathParts[pathParts.Length - 2] == "min" || pathParts[pathParts.Length - 2] == "rtl"))
         {
             // Fix NET 10 RC 1 Microsoft.Extensions.FileProviders.Embedded issue temporarily
             //https://github.com/dotnet/aspnetcore/issues/63719

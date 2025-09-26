@@ -2444,6 +2444,10 @@
           "path": "modules/docs.md"
         },
         {
+          "text": "Elsa (Pro)",
+          "path": "modules/elsa-pro.md"
+        },
+        {
           "text": "Feature Management",
           "path": "modules/feature-management.md"
         },

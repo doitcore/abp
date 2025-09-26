@@ -66,6 +66,10 @@ ABP Elsa module defines all permissions that are used in the Elsa workflow, You 
 
 ![Elsa Permissions](../images/elsa-permissions.png)
 
+You can also grant parts of the permissions to a role or user. It will add the `permissions` claims to the current user's `Cookies` or `Token`. Elsa Server will read the claims and allow or deny the access.
+
+![Elsa Part Permissions](../images/elsa-part-permissions.png)
+
 ### Elsa Studio
 
 Elsa Studio is a **independent** web application that allows you to design, manage, and execute workflows. It is built using **Blazor Server/WebAssembly**.

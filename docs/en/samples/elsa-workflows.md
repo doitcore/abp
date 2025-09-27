@@ -53,11 +53,11 @@ public class OrderWorkflow : WorkflowBase
 Please follow the steps below to run the demo application.
 
 > The demo application uses SQL Server LocalDB as the database provider and Redis and RabbitMQ, Please make sure you have them installed and running on your machine.
-1. Change the connection string in all `appsettings.json` file if needed. The default connection string uses a local SQL Server instance.
-2. Run `ElsaDemoApp.Server` project to migrate the database(`dotnet run --migrate-database`) and start the server.
-3. Run `ElsaDemoApp.Studio.WASM` project to start the Elsa Studio client application.
-4. Run `ElsaDemoApp.Ordering` project to start the Ordering microservice.
-5. Run `ElsaDemoApp.Payment` project to start the Payment microservice.
+
+1. Run `ElsaDemoApp.Server` project to migrate the database(`dotnet run --migrate-database`) and start the server.
+2. Run `ElsaDemoApp.Studio.WASM` project to start the Elsa Studio client application.
+3. Run `ElsaDemoApp.Ordering` project to start the Ordering microservice.
+4. Run `ElsaDemoApp.Payment` project to start the Payment microservice.
 
 You can login into `ElsaDemoApp.Server` application and navigate to the `https://localhost:5001/Ordering` page to create an order. 
 

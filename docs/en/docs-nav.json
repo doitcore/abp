@@ -2659,6 +2659,10 @@
         {
           "text": "Easy CRM",
           "path": "samples/easy-crm.md"
+        },
+        {
+          "text": "ElsaWorkflows",
+          "path": "samples/elsa-workflows.md"
         }
       ]
     },

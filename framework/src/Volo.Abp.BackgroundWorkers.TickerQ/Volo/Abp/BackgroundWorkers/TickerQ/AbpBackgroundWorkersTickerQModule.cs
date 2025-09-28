@@ -15,7 +15,12 @@ public class AbpBackgroundWorkersTickerQModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        // Register TickerQ-specific services
+        // Register TickerQ-specific services and configure options
+        context.Services.Configure<AbpBackgroundWorkerTickerQOptions>(options =>
+        {
+            // Set up default options - users can override these in their modules
+        });
+        
         // The TickerQBackgroundWorkerManager will automatically replace the default manager
         // due to the [Dependency(ReplaceServices = true)] attribute
     }

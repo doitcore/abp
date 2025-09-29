@@ -2,7 +2,7 @@
 
 > You must have an ABP Team or a higher license to use this module.
 
-This module is used integrate [Elsa Workflows](https://docs.elsaworkflows.io/) into ABP Framework applications. 
+This module is used to integrate [Elsa Workflows](https://docs.elsaworkflows.io/) into ABP Framework applications. 
 
 ## How to install
 

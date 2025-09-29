@@ -16,7 +16,7 @@ The Elsa module demo application is a sample application that demonstrates how t
 
 ## Running the Demo Application
 
-The `ElsaDemoApp.Server` has a pre-defined Elsa workflow that creates an order and processes the payment using Elsa workflows, and use ABP distributed event bus to coordinate the workflow.
+The `ElsaDemoApp.Server` has a pre-defined Elsa workflow that creates an order and processes the payment using Elsa workflows, and uses ABP distributed event bus to coordinate the workflow.
 
 ```cs
 public class OrderWorkflow : WorkflowBase

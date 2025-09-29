@@ -35,7 +35,7 @@ After adding the package reference, open the module class of the project (eg: `{
 )]
 ```
 
-> If you are using Blazor Web App, you need to add the `Volo.Elsa.Admin.Blazor.WebAssembly` package to the **{ProjectName}.Blazor.Client.csproj** project and ad the `Volo.Elsa.Admin.Blazor.Server` package to the **{ProjectName}.Blazor.csproj** project.
+> If you are using Blazor Web App, you need to add the `Volo.Elsa.Admin.Blazor.WebAssembly` package to the **{ProjectName}.Blazor.Client.csproj** project and add the `Volo.Elsa.Admin.Blazor.Server` package to the **{ProjectName}.Blazor.csproj** project.
 
 ## The Elsa Module
 

@@ -58,7 +58,7 @@ The rest of the projects/modules are basically empty and will be implemented in 
 
 ### Elsa Module Permissions
 
-The Elsa workflow API points will check the permissions, It also have a `*` wildcard permission to allow all permissions.
+The Elsa workflow API points will check the permissions. It also has a `*` wildcard permission to allow all permissions.
 
 ABP Elsa module defines all permissions that are used in the Elsa workflow, You can use ABP Permission Management module to manage the permissions.
 

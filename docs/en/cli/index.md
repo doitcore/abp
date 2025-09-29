@@ -288,10 +288,15 @@ abp new-package --name Acme.BookStore.Domain --template lib.domain
 * `--template` or `-t`: Specifies the template name. This parameter doesn't have a default value and must be set. Available templates and their sub-options:
 	* `lib.class-library`
 	* `lib.domain-shared`
+		* `--add-localization`: Includes default localization configuration & language files. 
 	* `lib.domain`
+		* `--add-settings`: Includes default settings configuration. 
+		* `--add-db-properties`:  Includes default Database Properties class. 
+		* `--add-domain-shared`:  Includes addtional Domain Shared package. 
 	* `lib.application-contracts`
 	* `lib.application`
-		* `--with-automapper`:  Adds automapper configuration. 
+		* `--add-mapperly`:  Adds Mapperly configuration. 
+		* `--add-application-contracts`:  Includes addtional contracts package. 
 	* `lib.ef`
 		* `--include-migrations`: Allows migration operations on this package.
 		* `--connection-string-name`: Default value is the last part of the package's namespace (or package name simply).
@@ -300,15 +305,18 @@ abp new-package --name Acme.BookStore.Domain --template lib.domain
 	* `lib.http-api`
 	* `lib.http-api-client`
 	* `lib.mvc`
+		* `--add-mapperly`:  Adds Mapperly configuration. 
 	* `lib.blazor`
+		* `--add-mapperly`:  Adds Mapperly configuration. 
+		* `--add-menu-contributors`: Includes default menu contributors.
 	* `lib.blazor-wasm`
 	* `lib.blazor-server`
 	* `host.http-api`
-		* `--with-serilog`: Includes Serilog configuration.
-		* `--with-swagger`: Includes Swagger configuration.
+		* `--add-serilog`: Includes Serilog configuration.
+		* `--add-swagger`: Includes Swagger configuration.
 	* `host.mvc`
-		* `--with-serilog`: Includes Serilog configuration.
-		* `--with-swagger`: Includes Swagger configuration.
+		* `--add-serilog`: Includes Serilog configuration.
+		* `--add-swagger`: Includes Swagger configuration.
 	* `host.blazor-wasm`
 		* `--backend`: Name of the backend project in the module (not path).
 	* `host.blazor-server`

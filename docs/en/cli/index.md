@@ -320,6 +320,7 @@ abp new-package --name Acme.BookStore.Domain --template lib.domain
 	* `host.blazor-wasm`
 		* `--backend`: Name of the backend project in the module (not path).
 	* `host.blazor-server`
+	* `abp.console`
 	* `csharp.console`
 	* `csharp.library`
 * `--module-file` or `-m`: If set, the new package will be added to the given module. Otherwise the new package will added to the closest module in the file system. If no module found, it will throw an error.

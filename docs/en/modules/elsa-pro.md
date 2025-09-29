@@ -39,7 +39,7 @@ After adding the package reference, open the module class of the project (eg: `{
 
 ## The Elsa Module
 
-The Elsa Workflows have own database provider, also have Tenant/Role/User system, they are under active development, So, the ABP Elsa module is not fully integrated yet. Below is the current status of each module in the ABP Elsa module.
+The Elsa Workflows have their own database provider, and also have a Tenant/Role/User system. They are under active development, so the ABP Elsa module is not fully integrated yet. Below is the current status of each module in the ABP Elsa module.
 
 - `AbpElsaAspNetCoreModule(Volo.Elsa.Abp.AspNetCore)` module is used to integrate Elsa authentication.
 - `AbpElsaIdentityModule(Volo.Elsa.Abp.Identity)` module is used to integrate ABP Identity authentication.

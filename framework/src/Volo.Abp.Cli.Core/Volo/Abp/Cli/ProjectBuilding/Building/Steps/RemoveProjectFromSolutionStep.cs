@@ -43,7 +43,7 @@ public class RemoveProjectFromSolutionStep : ProjectBuildPipelineStep
 
     private void RemoveProjectFromAbpmdlFile(ProjectBuildContext context)
     {
-        var abpmdlFile = context.FindFile(_solutionFilePath.RemovePostFix(".sln") + ".abpmdl");
+        var abpmdlFile = context.FindFile(_solutionFilePath.RemovePostFix(".slnx").RemovePostFix(".sln") + ".abpmdl");
 
         if (abpmdlFile == null)
         {
@@ -109,8 +109,11 @@ public class RemoveProjectFromSolutionStep : ProjectBuildPipelineStep
         if (_solutionFilePath == null)
         {
             _solutionFilePath = context.FindFile("/aspnet-core/MyCompanyName.MyProjectName.sln")?.Name ??
+                                context.FindFile("/aspnet-core/MyCompanyName.MyProjectName.slnx")?.Name ??
                                 context.FindFile("/MyCompanyName.MyProjectName.sln")?.Name ??
-                                context.FindFile("/MyCompanyName.MyProjectName.MicroserviceName.sln")?.Name;
+                                context.FindFile("/MyCompanyName.MyProjectName.slnx")?.Name ??
+                                context.FindFile("/MyCompanyName.MyProjectName.MicroserviceName.sln")?.Name ??
+                                context.FindFile("/MyCompanyName.MyProjectName.MicroserviceName.slnx")?.Name;
         }
         if (_projectFolderPath == null)
         {

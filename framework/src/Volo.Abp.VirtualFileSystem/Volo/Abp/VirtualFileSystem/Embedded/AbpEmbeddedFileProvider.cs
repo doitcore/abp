@@ -47,6 +47,8 @@ public class AbpEmbeddedFileProvider : DictionaryBasedFileProvider
 
             var fullPath = ConvertToRelativePath(resourcePath).EnsureStartsWith('/');
 
+            fullPath = fullPath.Replace("client_proxies", "client-proxies");
+
             if (fullPath.Contains("/"))
             {
                 AddDirectoriesRecursively(files, fullPath.Substring(0, fullPath.LastIndexOf('/')), lastModificationTime);

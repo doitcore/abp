@@ -291,7 +291,7 @@ public class ProfileService : ApplicationService
 }
 ```
 
-With this approach, you documents and profile pictures are stored in different containers and different providers. This is useful when you need to store different types of files using different providers and need scalability and performance.
+With this approach, your documents and profile pictures are stored in different containers and different providers. This is useful when you need to store different types of files using different providers and need scalability and performance.
 
 ## Conclusion
 

@@ -176,7 +176,7 @@ namespace BlobStoringDemo
 Here, we are doing the followings:
 
 - Injecting the `IBlobContainer` service.
-- Saving the BLOB data to the database with the `SaveAsync` method. (_it allows to use byte arrays or streams_)	
+- Saving the BLOB data to the database with the `SaveAsync` method. (_it allows you to use byte arrays or streams_)	
 - Retrieving the BLOB data from the database with the `GetAllBytesAsync` method.
 - Checking if the BLOB exists with the `ExistsAsync` method.
 - Deleting the BLOB data from the database with the `DeleteAsync` method.

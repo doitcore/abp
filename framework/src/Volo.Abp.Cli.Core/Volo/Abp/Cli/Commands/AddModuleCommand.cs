@@ -168,7 +168,7 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
         }
 
         var foundSolutionFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln")
-            .Concat(Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln")).ToList();
+            .Concat(Directory.GetFiles(Directory.GetCurrentDirectory(), "*.slnx")).ToList();
         if (foundSolutionFiles.Count == 1)
         {
             return foundSolutionFiles[0];

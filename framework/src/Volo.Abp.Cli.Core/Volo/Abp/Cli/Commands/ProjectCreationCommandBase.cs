@@ -176,7 +176,7 @@ public abstract class ProjectCreationCommandBase
             if (slnPath == null)
             {
                 slnPath = Directory.GetFiles(outputFolderRoot, "*.sln")
-                    .Concat(Directory.GetFiles(outputFolderRoot, "*.sln")).FirstOrDefault();
+                    .Concat(Directory.GetFiles(outputFolderRoot, "*.slnx")).FirstOrDefault();
             }
             else if (slnPath.EndsWith(".sln") || slnPath.EndsWith(".slnx"))
             {

@@ -62,19 +62,19 @@ Let's see how to use the Database provider in your application step by step.
 
 ### Demo: Storing BLOBs in Database in an ABP-Based Application
 
-First, create a new ABP-based application if you don't have one yet. The UI is not important for this demo, so you can use any UI framework you want, we will only focus on the services and will see the `IBlobContainer` service in action and also will see the database tables that are created for the BLOB Storing.
+In this demo, we'll walk through a practical example of storing BLOBs in a database using ABP's BLOB Storing infrastructure. We'll focus on the backend implementation using the `IBlobContainer` service and examine the database structure that ABP creates automatically. The UI framework choice doesn't matter for this demonstration, as we're concentrating on the core BLOB storage functionality.
 
-I assume that you have already created a new ABP-based application, if you haven't yet, you can create a new one using the following command:
+If you don't have an ABP application yet, create one using the ABP CLI:
 
 ```bash
 abp new BlobStoringDemo
 ```
 
-This will create a new ABP-based layered application with the name `BlobStoringDemo`. (UI as **MVC** and database as **SQL Server** by default).
+This command generates a new ABP layered application named `BlobStoringDemo` with **MVC** as the default UI and **SQL Server** as the default database provider.
 
-#### Using the Database Provider
+#### Understanding the Database Provider Setup
 
-Since, you created a layered application, it uses the BLOB Storing infrastructure and the Database Provider by default. If you check your *Domain, *DomainShared and *EntityFrameworkCore modules, you will see the relevant depends on statements:
+When you create a layered ABP application, it automatically includes the BLOB Storing infrastructure with the Database Provider pre-configured. You can verify this by examining the module dependencies in your `*Domain`, `*DomainShared`, and `*EntityFrameworkCore` modules:
 
 ```csharp
 [DependsOn(
@@ -87,7 +87,9 @@ public class BlobStoringDemoDomainModule : AbpModule
 }
 ```
 
-Since, we are only using the Database Provider, and it's already added to the relevant modules, we don't need to make any configuration changes in the module. If you want to use multiple providers, you need to explicitly make the configuration in your project, for example, even it's not necessary, you can add the following configuration to your *EntityFrameworkCore module to configure the Database Provider:
+Since the Database Provider is already included through module dependencies, no additional configuration is required to start using it. The provider is ready to use out of the box.
+
+However, if you're working with multiple BLOB storage providers or want to explicitly configure the Database Provider, you can add the following configuration to your `*EntityFrameworkCore` module:
 
 ```csharp
 Configure<AbpBlobStoringOptions>(options =>
@@ -99,23 +101,32 @@ Configure<AbpBlobStoringOptions>(options =>
 });
 ```
 
-After this configuration (it's optional, because we are only using the Database Provider), now, we can run the `DbMigrator` project to create the database and seed the initial data:
+> **Note:** This explicit configuration is optional when using only the Database Provider, but becomes necessary when managing multiple providers or custom container configurations.
+
+#### Running Database Migrations
+
+Now, let's apply the database migrations to create the necessary BLOB storage tables. Run the `DbMigrator` project:
 
 ```bash
 cd src/BlobStoringDemo.DbMigrator
 dotnet run
 ```
 
-Once the migration is applied, you can check your database to see the relevant tables:
+Once the migration completes successfully, open your database management tool and you'll see two new tables:
 
 ![](blob-tables.png)
 
-- `AbpBlobContainers` table is used to store the BLOB containers configurations. (You can have multiple containers and manage them separately)
-- `AbpBlobs` table is used to store the BLOB data.
+**Understanding the BLOB Storage Tables:**
 
-So, whenever we save a BLOB, it will be stored in the `AbpBlobs` table (the content of the BLOB) and the container configuration will be stored in the `AbpBlobContainers` table (the name of the container, TenantId, extra properties, etc.).
+- **`AbpBlobContainers`**: Stores metadata about BLOB containers, including container names, tenant information, and any custom properties.
 
-Now, we can use the `IBlobContainer` service to store and retrieve the BLOB data. For that purpose, let's create a new application service to store and retrieve the BLOB data:
+- **`AbpBlobs`**: Stores the actual BLOB content (the binary data) along with references to their parent containers. Each BLOB is associated with a container through a foreign key relationship.
+
+When you save a BLOB, ABP automatically handles the database operations: the binary content goes into `AbpBlobs`, while the container configuration and metadata are managed in `AbpBlobContainers`.
+
+#### Creating a File Management Service
+
+Let's implement a practical application service that demonstrates common BLOB operations. Create a new application service class:
 
 ```csharp
 using System.Threading.Tasks;
@@ -168,9 +179,9 @@ Here, we are doing the following:
 - Checking if the BLOB exists with the `ExistsAsync` method.
 - Deleting the BLOB data from the database with the `DeleteAsync` method.
 
-Now, the only thing you need to do is to use this service in your application to save and retrieve the BLOB data, ABP will handle the rest for you, and also you don't need to worry about the underlying storage implementation and the provider.
+With this service in place, you can now manage BLOBs throughout your application without worrying about the underlying storage implementation. Simply inject `IFileAppService` wherever you need file operations, and ABP handles all the provider-specific details behind the scenes.
 
-> The good point of this approach is that you can start with a provider and then switch to another provider without changing your application code. We will see that in the next section.
+The beauty of this approach is **provider independence**: you can start with database storage and later switch to Azure Blob Storage, AWS S3, or any other provider without modifying a single line of your application code. We'll explore this powerful feature in the next section.
 
 ### Switching Between Providers
 

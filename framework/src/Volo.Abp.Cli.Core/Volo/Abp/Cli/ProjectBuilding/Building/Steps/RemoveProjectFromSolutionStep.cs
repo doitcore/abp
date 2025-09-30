@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using Newtonsoft.Json.Linq;
@@ -80,7 +81,7 @@ public class RemoveProjectFromSolutionStep : ProjectBuildPipelineStep
             }
 
             var normalized = pathAttr.Replace('\\', '/');
-            var fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(normalized);
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(normalized);
 
             if (string.Equals(fileNameWithoutExtension, _projectName, StringComparison.OrdinalIgnoreCase))
             {

@@ -4,15 +4,82 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using Volo.Abp.Cli.Utils;
 using Volo.Abp.DependencyInjection;
 
 namespace Volo.Abp.Cli.ProjectModification;
 
 public class SolutionFileModifier : ITransientDependency
 {
+    private readonly ICmdHelper _cmdHelper;
     public static Encoding DefaultEncoding = Encoding.UTF8;
 
+    public SolutionFileModifier(ICmdHelper cmdHelper)
+    {
+        _cmdHelper = cmdHelper;
+    }
+    
     public async Task RemoveProjectFromSolutionFileAsync(string solutionFile, string projectName)
+    {
+        if (solutionFile.EndsWith(".sln"))
+        {
+            await RemoveProjectFromSlnFileAsync(solutionFile, projectName);
+        }
+        else
+        {
+            await RemoveProjectFromSlnxFileAsync(solutionFile, projectName);
+        }
+    }
+
+    public async Task AddModuleToSolutionFileAsync(ModuleWithMastersInfo module, string solutionFile)
+    {
+        await AddModuleAsync(module, solutionFile);
+    }
+
+    public async Task AddPackageToSolutionFileAsync(NugetPackageInfo package, string solutionFile)
+    {
+        await AddPackageAsync(package, solutionFile);
+    }
+
+    private async Task RemoveProjectFromSlnxFileAsync(string solutionFile, string projectName)
+    {
+        var document = new XmlDocument { PreserveWhitespace = true };
+        document.Load(solutionFile);
+        var projectNodes = document.SelectNodes("/Solution/Folder/Project");
+
+        if (projectNodes == null || projectNodes.Count < 1)
+        {
+            return;
+        }
+        
+        var nodesToBeRemoved = new List<XmlNode>();
+        foreach (XmlNode projectNode in projectNodes)
+        {
+            var pathAttr = projectNode.Attributes?["Path"]?.Value;
+            if (string.IsNullOrWhiteSpace(pathAttr))
+            {
+                continue;
+            }
+
+            var normalized = pathAttr.Replace('\\', '/');
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(normalized);
+
+            if (string.Equals(fileNameWithoutExtension, projectName, StringComparison.OrdinalIgnoreCase))
+            {
+                nodesToBeRemoved.Add(projectNode);
+            }
+        }
+
+        foreach (var node in nodesToBeRemoved)
+        {
+            node.ParentNode!.RemoveChild(node);
+        }
+        
+        await File.WriteAllTextAsync(solutionFile, document.OuterXml);
+    }
+    
+    private async Task RemoveProjectFromSlnFileAsync(string solutionFile, string projectName)
     {
         using (var fileStream = File.Open(solutionFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
         {
@@ -34,16 +101,6 @@ public class SolutionFileModifier : ITransientDependency
                 }
             }
         }
-    }
-
-    public async Task AddModuleToSolutionFileAsync(ModuleWithMastersInfo module, string solutionFile)
-    {
-        await AddModuleAsync(module, solutionFile);
-    }
-
-    public async Task AddPackageToSolutionFileAsync(NugetPackageInfo package, string solutionFile)
-    {
-        await AddPackageAsync(package, solutionFile);
     }
 
     private async Task AddPackageAsync(NugetPackageInfo package, string solutionFile)

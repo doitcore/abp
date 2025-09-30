@@ -200,7 +200,7 @@ public abstract class ProjectCreationCommandBase
                 throw new CliUsageException($"This command should be run inside a folder that contains a microservice solution! Or use -{Options.MainSolution.Short} parameter.");
             }
 
-            var microserviceSolutionName = Path.GetFileName(slnPath).RemovePostFix(".slnx").RemovePostFix(".sln");
+            var microserviceSolutionName = Path.GetFileName(slnPath).RemovePostFix(".slnx", ".sln");
 
             version ??= SolutionPackageVersionFinder.FindByCsprojVersion(slnPath);
             solutionName = SolutionName.Parse(microserviceSolutionName, projectName);

@@ -29,6 +29,11 @@ public class RemoveProjectFromSolutionStep : ProjectBuildPipelineStep
         {
             _solutionFilePathWithoutFileExtension = solutionFilePathWithoutFileExtension.RemovePostFix(".sln");
         }
+        
+        if (solutionFilePathWithoutFileExtension != null && solutionFilePathWithoutFileExtension.EndsWith(".slnx"))
+        {
+            _solutionFilePathWithoutFileExtension = solutionFilePathWithoutFileExtension.RemovePostFix(".slnx");
+        }
         else
         {
             _solutionFilePathWithoutFileExtension = solutionFilePathWithoutFileExtension;

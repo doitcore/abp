@@ -77,7 +77,7 @@ public class UpdateCommand : IConsoleCommand, ITransientDependency
         {
             foreach (var solution in solutions)
             {
-                var solutionName = Path.GetFileName(solution).RemovePostFix(".slnx").RemovePostFix(".sln");
+                var solutionName = Path.GetFileName(solution).RemovePostFix(".slnx", ".sln");
 
                 await _nugetPackagesVersionUpdater.UpdateSolutionAsync(solution, checkAll: checkAll, version: version, leptonXVersion: leptonXVersion);
 

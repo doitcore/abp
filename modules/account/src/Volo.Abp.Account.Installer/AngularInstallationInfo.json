@@ -26,6 +26,12 @@
 					"paths": [
 						"angular/projects/account/src/public-api.ts"
 					]
+				},
+				{
+					"name": "@abp/ng.account/config",
+					"paths": [
+						"angular/projects/account/config/src/public-api.ts"
+					]
 				}
 			]
 		}

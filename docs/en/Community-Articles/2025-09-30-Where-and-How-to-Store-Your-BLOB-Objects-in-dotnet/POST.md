@@ -1,8 +1,10 @@
 # Where and How to Store Your BLOB Objects in .NET?
 
-When building modern web applications, managing BLOBs (Binary Large Objects) such as images, videos, documents, or any other file types is a common requirement. Whether you're developing a CMS, an e-commerce platform, or almost any other kind of application, you'll eventually ask yourself: **"Where should I store these files?"**
+When building modern web applications, managing [BLOBs (Binary Large Objects)](https://cloud.google.com/discover/what-is-binary-large-object-storage) such as images, videos, documents, or any other file types is a common requirement. Whether you're developing a CMS, an e-commerce platform, or almost any other kind of application, you'll eventually ask yourself: **"Where should I store these files?"**
 
-In this article, we'll explore different approaches to storing BLOBs in .NET applications and demonstrate how the ABP Framework simplifies this process with its flexible [BLOB Storing infrastructure](https://abp.io/docs/latest/framework/infrastructure/blob-storing). ABP Provides [multiple storage providers](https://abp.io/docs/latest/framework/infrastructure/blob-storing#blob-storage-providers) such as Azure, AWS, Google, Minio, Bunny etc. But for the simplicity of this article, we will only focus on the **Database Provider**, showing you how to store BLOBs in database tables step-by-step.
+In this article, we'll explore different approaches to storing BLOBs in .NET applications and demonstrate how the ABP Framework simplifies this process with its flexible [BLOB Storing infrastructure](https://abp.io/docs/latest/framework/infrastructure/blob-storing). 
+
+ABP Provides [multiple storage providers](https://abp.io/docs/latest/framework/infrastructure/blob-storing#blob-storage-providers) such as Azure, AWS, Google, Minio, Bunny etc. But for the simplicity of this article, we will only focus on the **Database Provider**, showing you how to store BLOBs in database tables step-by-step.
 
 ## Understanding BLOB Storage Options
 
@@ -89,7 +91,7 @@ public class BlobStoringDemoDomainModule : AbpModule
 
 Since the Database Provider is already included through module dependencies, no additional configuration is required to start using it. The provider is ready to use out of the box.
 
-However, if you're working with multiple BLOB storage providers or want to explicitly configure the Database Provider, you can add the following configuration to your `*EntityFrameworkCore` module:
+However, if you're working with multiple BLOB storage providers or want to explicitly configure the Database Provider, you can add the following configuration to your `*EntityFrameworkCore` module's `ConfigureServices` method:
 
 ```csharp
 Configure<AbpBlobStoringOptions>(options =>
@@ -101,7 +103,7 @@ Configure<AbpBlobStoringOptions>(options =>
 });
 ```
 
-> **Note:** This explicit configuration is optional when using only the Database Provider, but becomes necessary when managing multiple providers or custom container configurations.
+> **Note:** This explicit configuration is optional when using only one BLOB provider (Database Provider in this case), but becomes necessary when managing multiple providers or custom container configurations.
 
 #### Running Database Migrations
 
@@ -171,7 +173,7 @@ namespace BlobStoringDemo
 }
 ```
 
-Here, we are doing the following:
+Here, we are doing the followings:
 
 - Injecting the `IBlobContainer` service.
 - Saving the BLOB data to the database with the `SaveAsync` method. (_it allows to use byte arrays or streams_)	
@@ -181,7 +183,7 @@ Here, we are doing the following:
 
 With this service in place, you can now manage BLOBs throughout your application without worrying about the underlying storage implementation. Simply inject `IFileAppService` wherever you need file operations, and ABP handles all the provider-specific details behind the scenes.
 
-The beauty of this approach is **provider independence**: you can start with database storage and later switch to Azure Blob Storage, AWS S3, or any other provider without modifying a single line of your application code. We'll explore this powerful feature in the next section.
+> Also, it's good to highlight that, the beauty of this approach is **provider independence**: you can start with database storage and later switch to Azure Blob Storage, AWS S3, or any other provider without modifying a single line of your application code. We'll explore this powerful feature in the next section.
 
 ### Switching Between Providers
 

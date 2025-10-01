@@ -69,7 +69,7 @@ public class RemoveProjectFromSolutionStep : ProjectBuildPipelineStep
     {
         var document = new XmlDocument { PreserveWhitespace = true };
         document.LoadXml(solutionFile.Content);
-        var projectNodes = document.SelectNodes("/Solution/Folder/Project");
+        var projectNodes = document.SelectNodes("//Project");
 
         if (projectNodes == null || projectNodes.Count < 1)
         {

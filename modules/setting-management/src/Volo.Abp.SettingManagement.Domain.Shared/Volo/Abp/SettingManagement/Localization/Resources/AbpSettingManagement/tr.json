@@ -17,6 +17,7 @@
     "SentSuccessfully": "Gönderildi",
     "MailSendingFailed": "E-posta gönderme başarısız, lütfen e-posta yapılandırmanızı kontrol edin ve tekrar deneyin.",
     "Send": "Gönder",
+    "Menu:Settings": "Ayarlar",
     "Menu:Emailing": "Email",
     "Menu:TimeZone": "Zaman Dilimi",
     "DisplayName:Timezone": "Zaman dilimi",

@@ -255,21 +255,20 @@ public class OrderAppService : ApplicationService, IOrderAppService
 
 In this code snippet, we inject the `IRepository<Order, Guid>` into the `OrderAppService` class. We use this repository to interact with the `Order` entity. The `GetListAsync` method retrieves a list of orders from the database and maps them to the `OrderDto` class. The `CreateAsync` method creates a new order entity and inserts it into the database.
 
-Afterward, we need to configure the *AutoMapper* object to map the `Order` entity to the `OrderDto` class. Open the `OrderingServiceApplicationAutoMapperProfile` class in the `CloudCrm.OrderingService` project, located in the `ObjectMapping` folder, and add the following code:
+Afterward, we need to configure the *Mapperly* object to map the `Order` entity to the `OrderDto` class. Open the `OrderingServiceApplicationMappers` class in the `CloudCrm.OrderingService` project, located in the `ObjectMapping` folder, and add the following code:
 
 ```csharp
-using AutoMapper;
-using CloudCrm.OrderingService.Entities;
-using CloudCrm.OrderingService.Services;
+using Riok.Mapperly.Abstractions;
+using Volo.Abp.Mapperly;
 
 namespace CloudCrm.OrderingService.ObjectMapping;
 
-public class OrderingServiceApplicationAutoMapperProfile : Profile
+[Mapper]
+public partial class OrderingServiceApplicationMappers : MapperBase<Order, OrderDto>
 {
-    public OrderingServiceApplicationAutoMapperProfile()
-    {
-        CreateMap<Order, OrderDto>();
-    }
+    public override partial OrderDto Map(Order source);
+
+    public override partial void Map(Order source, OrderDto destination);
 }
 ```
 
@@ -644,7 +643,7 @@ export const ORDER_SERVICE_ROUTES: Routes = [
 * Create `order.component.ts` file under the `projects/ordering-service/src/lib/order` folder as following code:
 
 ```typescript
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderDto, OrderService } from './proxy/ordering-service/services';
 
@@ -658,12 +657,13 @@ export class OrderComponent {
 
   items: OrderDto[] = [];
 
-  constructor(private readonly proxy: OrderService) {
+  private readonly proxy = inject(OrderService);
+
+  constructor() {
     this.proxy.getList().subscribe((res) => {
       this.items = res;
     });
   }
-  
 }
 ```
 

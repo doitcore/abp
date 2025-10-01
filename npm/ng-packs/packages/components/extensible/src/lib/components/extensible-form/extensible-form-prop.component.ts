@@ -1,7 +1,7 @@
 import { EXTENSIONS_FORM_PROP, EXTENSIONS_FORM_PROP_DATA } from './../../tokens/extensions.token';
 import {
   ABP,
-  LocalizationModule,
+  LocalizationPipe,
   PermissionDirective,
   ShowPasswordDirective,
   TrackByService,
@@ -20,6 +20,8 @@ import {
   SimpleChanges,
   SkipSelf,
   ViewChild,
+  signal,
+  effect,
 } from '@angular/core';
 import {
   ControlContainer,
@@ -47,7 +49,7 @@ import { eExtensibleComponents } from '../../enums/components';
 import { ExtensibleDateTimePickerComponent } from '../date-time-picker/extensible-date-time-picker.component';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { ExtensibleFormPropService } from '../../services/extensible-form-prop.service';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgClass, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-form-multiselect.component';
 
@@ -66,8 +68,11 @@ import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-f
     NgbTypeaheadModule,
     ShowPasswordDirective,
     PermissionDirective,
-    LocalizationModule,
-    CommonModule,
+    LocalizationPipe,
+    AsyncPipe,
+    NgClass,
+    NgComponentOutlet,
+    NgTemplateOutlet,
     FormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,6 +101,9 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   @Input() isFirstGroup?: boolean;
   @ViewChild('field') private fieldRef!: ElementRef<HTMLElement>;
 
+  private shouldFocus = signal(false);
+  private isViewReady = signal(false);
+
   injectorForCustomComponent?: Injector;
   asterisk = '';
   containerClassName = 'mb-2';
@@ -110,6 +118,15 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
 
   get disabled() {
     return this.disabledFn(this.data);
+  }
+
+  constructor() {
+    // Effect to handle focus when both conditions are met
+    effect(() => {
+      if (this.shouldFocus() && this.isViewReady() && this.fieldRef?.nativeElement) {
+        this.focusElement();
+      }
+    });
   }
 
   setTypeaheadValue(selectedOption: ABP.Option<string>) {
@@ -153,9 +170,20 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
     this.asterisk = this.service.calcAsterisks(this.validators);
   }
 
-  ngAfterViewInit() {
-    if (this.isFirstGroup && this.first && this.fieldRef) {
+  private focusElement() {
+    try {
       this.fieldRef.nativeElement.focus();
+      this.shouldFocus.set(false);
+    } catch (error) {
+      console.error('Error focusing field:', error);
+    }
+  }
+
+  ngAfterViewInit() {
+    this.isViewReady.set(true);
+
+    if (this.isFirstGroup && this.first) {
+      this.shouldFocus.set(true);
     }
   }
 

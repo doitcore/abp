@@ -28,7 +28,7 @@ import { of } from 'rxjs';
 import { DISABLE_TREE_STYLE_LOADING_TOKEN } from '../disable-tree-style-loading.token';
 import { TreeNodeTemplateDirective } from '../templates/tree-node-template.directive';
 import { ExpandedIconTemplateDirective } from '../templates/expanded-icon-template.directive';
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core/no-animation';
 
 export type DropEvent = NzFormatEmitEvent & { pos: number };
@@ -41,7 +41,7 @@ export type DropEvent = NzFormatEmitEvent & { pos: number };
   providers: [SubscriptionService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
+    NgTemplateOutlet,
     NzTreeComponent,
     NgbDropdown,
     NgbDropdownMenu,

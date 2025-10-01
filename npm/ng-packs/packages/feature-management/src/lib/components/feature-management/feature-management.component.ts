@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { Component, EventEmitter, Input, Output, inject, DOCUMENT } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfigStateService, LocalizationPipe, TrackByService } from '@abp/ng.core';
 import {
@@ -35,14 +35,13 @@ const DEFAULT_PROVIDER_NAME = 'D';
   templateUrl: './feature-management.component.html',
   exportAs: 'abpFeatureManagement',
   imports: [
-    CommonModule,
+    NgTemplateOutlet,
     ButtonComponent,
     ModalComponent,
     LocalizationPipe,
     FormsModule,
     NgbNavModule,
     FreeTextInputDirective,
-    NgTemplateOutlet,
     ModalCloseDirective,
   ],
 })
@@ -56,6 +55,7 @@ export class FeatureManagementComponent
   protected readonly service = inject(FeaturesService);
   protected readonly configState = inject(ConfigStateService);
   protected readonly confirmationService = inject(ConfirmationService);
+  private document = inject(DOCUMENT);
 
   @Input()
   providerKey: string;
@@ -119,7 +119,7 @@ export class FeatureManagementComponent
       this.features = res.groups.reduce(
         (acc, val) => ({
           ...acc,
-          [val.name]: mapFeatures(val.features, document.body.dir as LocaleDirection),
+          [val.name]: mapFeatures(val.features, this.document.body?.dir as LocaleDirection),
         }),
         {},
       );

@@ -1,4 +1,5 @@
-<ngx-datatable
+@if (isBrowser) {
+  <ngx-datatable
   default
   [rows]="data"
   [count]="recordsTotal"
@@ -7,10 +8,15 @@
   (activate)="tableActivate.emit($event)"
   (select)="onSelect($event)"
   [selected]="selected"
+  (scroll)="onScroll($event)"
+  [scrollbarV]="infiniteScroll"
+  [style.height]="getTableHeight()"
+  [loadingIndicator]="infiniteScroll && isLoading"
+  [footerHeight]="infiniteScroll ? false : 50"
 >
 @if(selectable) {
   <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false">
-  
+
     <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
       let-selectFn="selectFn">
       @if (_selectionType !== 'single') {
@@ -20,7 +26,7 @@
       </div>
       }
     </ng-template>
-  
+
     <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-isSelected="isSelected"
       let-onCheckboxChangeFn="onCheckboxChangeFn">
       @if(_selectionType === 'single') {
@@ -34,7 +40,7 @@
       </div>
       }
     </ng-template>
-  
+
   </ngx-datatable-column>
   }
   @if (actionsTemplate || (actionList.length && hasAtLeastOnePermittedAction)) {
@@ -66,17 +72,24 @@
       [prop]="prop.name"
       [sortable]="prop.sortable"
     >
-      <ng-template ngx-datatable-header-template let-column="column">
+      <ng-template ngx-datatable-header-template let-column="column" let-sortFn="sortFn">
         @if (prop.tooltip) {
           <span
             [ngbTooltip]="prop.tooltip.text | abpLocalization"
             [placement]="prop.tooltip.placement || 'auto'"
             container="body"
+            [class.pointer]="prop.sortable"
+            (click)="prop.sortable && sortFn(column)"
           >
             {{ column.name }} <i class="fa fa-info-circle" aria-hidden="true"></i>
           </span>
         } @else {
-          {{ column.name }}
+          <span
+            [class.pointer]="prop.sortable"
+            (click)="prop.sortable && sortFn(column)"
+          >
+            {{ column.name }}
+          </span>
         }
       </ng-template>
       <ng-template let-row="row" let-i="index" ngx-datatable-cell-template>
@@ -124,3 +137,4 @@
     </ngx-datatable-column>
   }
 </ngx-datatable>
+}

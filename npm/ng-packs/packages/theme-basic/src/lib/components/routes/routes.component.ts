@@ -16,17 +16,19 @@ import {
   TrackByFunction,
   ViewChildren,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgTemplateOutlet, NgClass, AsyncPipe } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { EllipsisDirective } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'abp-routes',
   templateUrl: 'routes.component.html',
   imports: [
-    CommonModule,
-    RouterModule,
+    NgTemplateOutlet,
+    NgClass,
+    AsyncPipe,
+    RouterLink,
     NgbDropdownModule,
     LazyLocalizationPipe,
     PermissionDirective,

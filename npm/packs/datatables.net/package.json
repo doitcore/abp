@@ -10,8 +10,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@abp/jquery": "~9.3.5",
-    "datatables.net": "^2.1.8"
+    "@abp/jquery": "~9.3.4",
+    "datatables.net": "^2.3.4"
   },
   "gitHead": "bb4ea17d5996f01889134c138d00b6c8f858a431",
   "homepage": "https://abp.io",

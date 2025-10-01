@@ -167,9 +167,9 @@ A React Native application running on an Android emulator or a physical phone **
         },
         "MobileGateway": {
           "RootUrl": "http://192.168.1.36:44347/"
-        },
+        }
         //...
-      },
+      }
       //...
     }
   }
@@ -249,7 +249,8 @@ A React Native application running on an Android emulator or a physical phone **
     }
   }
   ```
-{{ end }}
+
+  {{ end }}
 
 Run the backend application as described in the [getting started document](../../../get-started).
 
@@ -257,7 +258,7 @@ Run the backend application as described in the [getting started document](../..
 
 ## How to disable the Https-only settings of OpenIddict
 
-Open the {{ if Architecture == "Monolith" }}`MyProjectNameHttpApiHostModule`{{ if Architecture == "Tiered" }}`MyProjectNameAuthServerModule`{{ end }} project and copy-paste the below code-block to the `PreConfigureServices` method:
+Open the {{ if Architecture == "Monolith" }}`MyProjectNameHttpApiHostModule`{{ else if Architecture == "Tiered" }}`MyProjectNameAuthServerModule`{{ end }} project and copy-paste the below code-block to the `PreConfigureServices` method:
 
 ```csharp
 #if DEBUG

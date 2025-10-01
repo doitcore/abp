@@ -502,7 +502,7 @@ Now you can use **Scriban** syntax to create sections in your document.
 
 For example:
 
-````text
+```txt
 {{ if UI == "NG" }}
 
 * `-u` argument specifies the UI framework, `angular` in this case.
@@ -521,7 +521,7 @@ For example:
 
 {{ end }}
 
-````
+```
 
 You can also use variables in a text, adding **_Value** postfix to its key:
 

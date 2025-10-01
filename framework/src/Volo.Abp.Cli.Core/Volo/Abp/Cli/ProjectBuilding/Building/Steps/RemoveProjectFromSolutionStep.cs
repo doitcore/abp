@@ -99,7 +99,11 @@ public class RemoveProjectFromSolutionStep : ProjectBuildPipelineStep
             node.ParentNode!.RemoveChild(node);
         }
         
-        solutionFile.SetContent(document.OuterXml);
+        solutionFile.SetContent(
+            document.OuterXml
+            .SplitToLines()
+            .Where(x=> !x.Trim().Equals(string.Empty))
+            .JoinAsString(Environment.NewLine));
     }
 
     private void RemoveProjectFromSlnFile(FileEntry solutionFile)

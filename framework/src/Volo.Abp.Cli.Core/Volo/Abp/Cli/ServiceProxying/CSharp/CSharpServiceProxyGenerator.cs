@@ -9,6 +9,7 @@ using Volo.Abp.Cli.Commands;
 using Volo.Abp.Cli.Http;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Http.Modeling;
+using Volo.Abp.IO;
 using Volo.Abp.Json;
 
 namespace Volo.Abp.Cli.ServiceProxying.CSharp;
@@ -163,7 +164,7 @@ public class CSharpServiceProxyGenerator : ServiceProxyGeneratorBase<CSharpServi
     {
         var folder = args.Folder.IsNullOrWhiteSpace() ? ProxyDirectory : args.Folder;
         var directory = Path.Combine(args.WorkDirectory, folder);
-        Directory.CreateDirectory(directory);
+        DirectoryHelper.CreateIfNotExists(directory);
         
         var filePath = Path.Combine(directory, $"{args.Module}-generate-proxy.json");
         using (var writer = new StreamWriter(filePath))

@@ -36,6 +36,7 @@ public partial class PermissionManagementModal
     protected string _permissionGroupSearchText;
 
     protected bool GrantAll { get; set; }
+    protected bool GrantAny { get; set; }
 
     protected Dictionary<string, int> _permissionDepths = new Dictionary<string, int>();
 
@@ -61,6 +62,7 @@ public partial class PermissionManagementModal
             NormalizePermissionGroup();
 
             GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+            GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
 
             await InvokeAsync(_modal.Show);
         }
@@ -73,6 +75,7 @@ public partial class PermissionManagementModal
     protected virtual async Task GrantAllAsync(bool grantAll)
     {
         GrantAll = grantAll;
+        GrantAny = false;
 
         if (_allGroups == null)
         {
@@ -194,6 +197,7 @@ public partial class PermissionManagementModal
         }
 
         GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+        GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
         await InvokeAsync(StateHasChanged);
     }
 
@@ -216,6 +220,7 @@ public partial class PermissionManagementModal
         }
 
         GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+        GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
         await InvokeAsync(StateHasChanged);
     }
 

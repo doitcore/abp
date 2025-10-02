@@ -1,4 +1,13 @@
-import { Component, inject, isDevMode, OnInit, Optional, SkipSelf, Type } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  isDevMode,
+  OnInit,
+  Optional,
+  SkipSelf,
+  Type,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { eLayoutType } from '../enums/common';
 import { ABP } from '../models';
@@ -29,6 +38,7 @@ export class DynamicLayoutComponent implements OnInit {
   layoutKey?: eLayoutType;
   readonly layouts = inject(DYNAMIC_LAYOUTS_TOKEN);
   isLayoutVisible = true;
+  readonly defaultLayout = input<eLayoutType>(undefined);
 
   protected readonly router = inject(Router);
   protected readonly route = inject(ActivatedRoute);
@@ -96,7 +106,7 @@ export class DynamicLayoutComponent implements OnInit {
         break;
       }
     }
-    return expectedLayout;
+    return expectedLayout ?? this.defaultLayout();
   }
 
   showLayoutNotFoundError(layoutName: string) {

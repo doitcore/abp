@@ -162,7 +162,10 @@ public class CSharpServiceProxyGenerator : ServiceProxyGeneratorBase<CSharpServi
     private async Task CreateJsonFile(GenerateProxyArgs args, ApplicationApiDescriptionModel applicationApiDescriptionModel)
     {
         var folder = args.Folder.IsNullOrWhiteSpace() ? ProxyDirectory : args.Folder;
-        var filePath = Path.Combine(args.WorkDirectory, folder, $"{args.Module}-generate-proxy.json");
+        var directory = Path.Combine(args.WorkDirectory, folder);
+        Directory.CreateDirectory(directory);
+        
+        var filePath = Path.Combine(directory, $"{args.Module}-generate-proxy.json");
         using (var writer = new StreamWriter(filePath))
         {
             await writer.WriteAsync(JsonSerializer.Serialize(applicationApiDescriptionModel, indented: true));
@@ -187,7 +190,7 @@ public class CSharpServiceProxyGenerator : ServiceProxyGeneratorBase<CSharpServi
         classTemplateEmptyPart.Replace(NamespacePlaceholder, rootNamespace);
 
         var filePath = Path.Combine(args.WorkDirectory, folder, $"{clientProxyName}.cs");
-        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
         if (!File.Exists(filePath))
         {
             using (var writer = new StreamWriter(filePath))
@@ -223,7 +226,7 @@ public class CSharpServiceProxyGenerator : ServiceProxyGeneratorBase<CSharpServi
         classTemplate.Replace($"{Environment.NewLine}{Environment.NewLine}    {MethodPlaceholder}", string.Empty).Replace(MethodPlaceholder, string.Empty);
 
         filePath = Path.Combine(args.WorkDirectory, folder, $"{clientProxyName}.Generated.cs");
-        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
         using (var writer = new StreamWriter(filePath))
         {
             await writer.WriteAsync(classTemplate.ToString());
@@ -253,7 +256,7 @@ public class CSharpServiceProxyGenerator : ServiceProxyGeneratorBase<CSharpServi
             interfaceTemplate.Replace(NamespacePlaceholder, rootNamespace);
 
             filePath = Path.Combine(args.WorkDirectory, folder, $"{appServiceTypeName}.cs");
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
             using (var writer = new StreamWriter(filePath))
             {
                 await writer.WriteAsync(interfaceTemplate.ToString());

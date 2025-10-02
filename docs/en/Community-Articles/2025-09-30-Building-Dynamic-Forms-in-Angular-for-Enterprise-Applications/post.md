@@ -16,7 +16,7 @@ Dynamic forms are useful for enterprise applications where form structures need 
 
 ### 1. Form Configuration Model
 
-We define a model to represent the form configuration. This model includes field types, labels, validation rules, and other metadata.
+Define a model to represent the form configuration. This model includes field types, labels, validation rules, and other metadata.
 
 ```typescript
 export interface FormFieldConfig {
@@ -27,13 +27,14 @@ export interface FormFieldConfig {
     placeholder?: string;
     required?: boolean;
     disabled?: boolean;
-    options?: { key: string; value: any }[];
-    validators?: ValidatorConfig[];
-    conditionalLogic?: ConditionalRule[];
-    order?: number;
+    options?: { key: string; value: any }[]; 
+    validators?: ValidatorConfig[]; // Custom validators
+    conditionalLogic?: ConditionalRule[]; // For showing/hiding fields based on other field values
+    order?: number; // For ordering fields in the form
     gridSize?: number; // For layout purposes, e.g., Bootstrap grid size (1-12)
 }
 
+// Validator configuration for form fields
 export interface ValidatorConfig {
     type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
     value?: any;
@@ -279,3 +280,265 @@ export class DynamicFormComponent implements OnInit {
     }
 }
 ```
+
+### 4. Dynamic Form Field Component
+
+```typescript
+@Component({
+    selector: 'app-dynamic-form-field',
+    template: `
+    @if (isVisible) {
+      <div class="field-container" [formGroup]="form">
+
+        @if (field.type === 'text') {
+          <!-- Text Input -->
+          <div class="form-group">
+            <label [for]="field.key">{{ field.label }}</label>
+            <input
+              [id]="field.key"
+              [formControlName]="field.key"
+              [placeholder]="field.placeholder || ''"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid()">
+            @if (isFieldInvalid()) {
+              <div class="invalid-feedback">
+                {{ getErrorMessage() }}
+              </div>
+            }
+          </div>
+        } @else if (field.type === 'select') {
+          <!-- Select Dropdown -->
+          <div class="form-group">
+            <label [for]="field.key">{{ field.label }}</label>
+            <select
+              [id]="field.key"
+              [formControlName]="field.key"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid()">
+              <option value="">Please select...</option>
+              @for (option of field.options; track option.key) {
+                <option
+                  [value]="option.key">
+                  {{ option.value }}
+                </option>
+              }
+            </select>
+            @if (isFieldInvalid()) {
+              <div class="invalid-feedback">
+                {{ getErrorMessage() }}
+              </div>
+            }
+          </div>
+        } @else if (field.type === 'checkbox') {
+          <!-- Checkbox -->
+          <div class="form-group form-check">
+            <input
+              type="checkbox"
+              [id]="field.key"
+              [formControlName]="field.key"
+              class="form-check-input"
+              [class.is-invalid]="isFieldInvalid()">
+            <label class="form-check-label" [for]="field.key">
+              {{ field.label }}
+            </label>
+            @if (isFieldInvalid()) {
+              <div class="invalid-feedback">
+                {{ getErrorMessage() }}
+              </div>
+            }
+          </div>
+        } @else if (field.type === 'email') {
+          <!-- Email Input -->
+          <div class="form-group">
+            <label [for]="field.key">{{ field.label }}</label>
+            <input
+              type="email"
+              [id]="field.key"
+              [formControlName]="field.key"
+              [placeholder]="field.placeholder || ''"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid()">
+          @if (isFieldInvalid()) {
+            <div class="invalid-feedback">
+              {{ getErrorMessage() }}
+            </div>
+          }
+          </div>
+        } @else if (field.type === 'textarea') {
+          <!-- Textarea -->
+          <div class="form-group">
+            <label [for]="field.key">{{ field.label }}</label>
+            <textarea
+              [id]="field.key"
+              [formControlName]="field.key"
+              [placeholder]="field.placeholder || ''"
+              rows="4"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid()">
+        </textarea>
+          @if (isFieldInvalid()) {
+            <div class="invalid-feedback">
+              {{ getErrorMessage() }}
+            </div>
+          }
+          </div>
+        }
+      </div>
+<!--      Add more field types as needed-->
+    }
+  `,
+    imports: [ReactiveFormsModule],
+})
+export class DynamicFormFieldComponent implements OnInit {
+    @Input() field!: FormFieldConfig;
+    @Input() form!: FormGroup;
+    @Input() isVisible: boolean = true;
+    @Output() fieldChange = new EventEmitter<{ fieldKey: string; value: any }>();
+
+    ngOnInit() {
+        const control = this.form.get(this.field.key);
+        if (control) {
+            control.valueChanges.subscribe(value => {
+                this.fieldChange.emit({ fieldKey: this.field.key, value });
+            });
+        }
+    }
+
+    isFieldInvalid(): boolean {
+        const control = this.form.get(this.field.key);
+        return !!(control && control.invalid && (control.dirty || control.touched));
+    }
+
+    getErrorMessage(): string {
+        const control = this.form.get(this.field.key);
+        if (!control || !control.errors) return '';
+
+        const validators = this.field.validators || [];
+
+        for (const validator of validators) {
+            if (control.errors[validator.type]) {
+                return validator.message;
+            }
+        }
+
+        // Fallback error messages
+        if (control.errors['required']) return `${this.field.label} is required`;
+        if (control.errors['email']) return 'Please enter a valid email address';
+        if (control.errors['minlength']) return `Minimum length is ${control.errors['minlength'].requiredLength}`;
+        if (control.errors['maxlength']) return `Maximum length is ${control.errors['maxlength'].requiredLength}`;
+
+        return 'Invalid input';
+    }
+}
+
+```
+
+### 5. Usage Example
+
+```typescript
+
+@Component({
+    selector: 'app-home',
+    template: `
+    <div class="row">
+      <div class="col-4 offset-4">
+        <app-dynamic-form
+          [fields]="formFields"
+          submitButtonText="Save User"
+          (formSubmit)="onSubmit($event)"
+          (formCancel)="onCancel()">
+        </app-dynamic-form>
+      </div>
+    </div>
+  `,
+    imports: [DynamicFormComponent]
+})
+export class HomeComponent {
+    @Input() title: string = 'Home Component';
+    formFields: FormFieldConfig[] = [
+        {
+            key: 'firstName',
+            type: 'text',
+            label: 'First Name',
+            placeholder: 'Enter first name',
+            required: true,
+            validators: [
+                { type: 'required', message: 'First name is required' },
+                { type: 'minLength', value: 2, message: 'Minimum 2 characters required' }
+            ],
+            gridSize: 12,
+            order: 1
+        },
+        {
+            key: 'lastName',
+            type: 'text',
+            label: 'Last Name',
+            placeholder: 'Enter last name',
+            required: true,
+            validators: [
+                { type: 'required', message: 'Last name is required' }
+            ],
+            gridSize: 12,
+            order: 2
+        },
+        {
+            key: 'email',
+            type: 'email',
+            label: 'Email Address',
+            placeholder: 'Enter email',
+            required: true,
+            validators: [
+                { type: 'required', message: 'Email is required' },
+                { type: 'email', message: 'Please enter a valid email' }
+            ],
+            order: 3
+        },
+        {
+            key: 'userType',
+            type: 'select',
+            label: 'User Type',
+            required: true,
+            options: [
+                { key: 'admin', value: 'Administrator' },
+                { key: 'user', value: 'Regular User' },
+                { key: 'guest', value: 'Guest User' }
+            ],
+            validators: [
+                { type: 'required', message: 'Please select user type' }
+            ],
+            order: 4
+        },
+        {
+            key: 'adminNotes',
+            type: 'textarea',
+            label: 'Admin Notes',
+            placeholder: 'Enter admin-specific notes',
+            conditionalLogic: [
+                {
+                    dependsOn: 'userType',
+                    condition: 'equals',
+                    value: 'admin',
+                    action: 'show'
+                }
+            ],
+            order: 5
+        }
+    ];
+
+    onSubmit(formData: any) {
+        console.log('Form submitted:', formData);
+        // Handle form submission
+    }
+
+    onCancel() {
+        console.log('Form cancelled');
+        // Handle form cancellation
+    }
+}
+
+
+```
+
+## Conclusion
+
+Dynamic forms provide a powerful foundation for enterprise applications that need flexible, maintainable form solutions. By separating form configuration from implementation, teams can create scalable systems that adapt to changing business requirements without extensive code modifications. The key to success is building a robust architecture that handles validation, conditional logic, and user experience considerations while maintaining performance and accessibility standards.

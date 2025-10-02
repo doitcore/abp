@@ -14,10 +14,12 @@ Dynamic forms are useful for enterprise applications where form structures need 
 
 ## Architecture
 
-### 1. Form Configuration Model
+### 1. Defining Form Configuration Models
 
-Define a model to represent the form configuration. This model includes field types, labels, validation rules, and other metadata.
+We will define form configuration model as a first step. This models stores field types, labels, validation rules, and other metadata.
 
+#### 1.1. Form Field Configuration
+Form field configuration interface represents individual form fields and contains properties like type, label, validation rules and conditional logic.
 ```typescript
 export interface FormFieldConfig {
     key: string;
@@ -33,26 +35,33 @@ export interface FormFieldConfig {
     order?: number; // For ordering fields in the form
     gridSize?: number; // For layout purposes, e.g., Bootstrap grid size (1-12)
 }
+```
+#### 1.2. Validator Configuration
 
-// Validator configuration for form fields
+Validator configuration interface defines validation rules for form fields.
+```typescript
 export interface ValidatorConfig {
     type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
     value?: any;
     message: string;
 }
+```
 
-// Conditional logic to show/hide or enable/disable fields based on other field values
+#### 1.3. Conditional Logic
+
+Conditional logic interface defines rules for showing/hiding or enabling/disabling fields based on other field values.
+```typescript
 export interface ConditionalRule {
     dependsOn: string;
     condition: 'equals' | 'notEquals' | 'contains' | 'greaterThan' | 'lessThan';
     value: any;
     action: 'show' | 'hide' | 'enable' | 'disable';
 }
-
 ```
+
 ### 2. Dynamic Form Service
 
-A service to handle form creation and validation processes.
+We will create dynamic form service to handle form creation and validation processes.
 
 ```typescript
 @Injectable({
@@ -60,6 +69,7 @@ A service to handle form creation and validation processes.
 })
 export class DynamicFormService {
 
+    // Create form group based on fields
     createFormGroup(fields: FormFieldConfig[]): FormGroup {
         const group: any = {};
 
@@ -76,6 +86,7 @@ export class DynamicFormService {
         return new FormGroup(group);
     }
 
+    // Returns an array of form field validators based on the validator configurations
     private buildValidators(validatorConfigs: ValidatorConfig[]): ValidatorFn[] {
         return validatorConfigs.map(config => {
             switch (config.type) {
@@ -111,6 +122,7 @@ export class DynamicFormService {
 
 ### 3. Dynamic Form Component
 
+The main component that renders the form based on the configuration it receives as input.
 ```typescript
 @Component({
     selector: 'app-dynamic-form',
@@ -283,6 +295,7 @@ export class DynamicFormComponent implements OnInit {
 
 ### 4. Dynamic Form Field Component
 
+This component renders individual form fields, handling different types and validation messages based on the configuration.
 ```typescript
 @Component({
     selector: 'app-dynamic-form-field',
@@ -539,6 +552,10 @@ export class HomeComponent {
 
 ```
 
+## Result
+
+![example_form](./form.png)
+
 ## Conclusion
 
-Dynamic forms provide a powerful foundation for enterprise applications that need flexible, maintainable form solutions. By separating form configuration from implementation, teams can create scalable systems that adapt to changing business requirements without extensive code modifications. The key to success is building a robust architecture that handles validation, conditional logic, and user experience considerations while maintaining performance and accessibility standards.
+These kinds of components are essential for large applications because they allow for rapid development and easy maintenance. By defining forms through configuration, developers can quickly adapt to changing requirements without extensive code changes. This approach also promotes consistency across the application, as the same form components can be reused in different contexts.

@@ -17,7 +17,7 @@ Sure, you could switch to int or long identity columns, but then you lose the di
 
 ## Sequential GUIDs to the Rescue
 
-Sequential GUIDs keep the uniqueness but add a predictable ordering component — usually by embedding a timestamp in part of the GUID.This means:
+Sequential GUIDs keep the uniqueness but add a predictable ordering component, usually by embedding a timestamp in part of the GUID.This means:
 
 * Inserts happen at the “end” of the index, not all over the place.
 
@@ -30,7 +30,7 @@ Think of it as **GUIDs with manners**.
 ## ABP Framework’s Secret Sauce
 
 
-Here’s where ABP Framework flexes: it **uses sequential GUIDs by default** for entity IDs. No ceremony, no “remember to call this helper method” — it’s baked in.
+Here’s where ABP Framework flexes: it **uses sequential GUIDs by default** for entity IDs. No ceremony, no “remember to call this helper method”, it’s baked in.
 
 Under the hood:
 
@@ -82,7 +82,7 @@ Let’s say you’re inserting 1M rows into a table with a clustered primary key
 
 * **Sequential GUIDs** → fragmentation stays low, inserts fly.
 
-In high-volume systems, this difference is **not** academic — it’s the difference between smooth scaling and spending weekends rebuilding indexes.
+In high-volume systems, this difference is **not** academic, it’s the difference between smooth scaling and spending weekends rebuilding indexes.
 
 ## When to Use Sequential GUIDs
 
@@ -94,13 +94,13 @@ In high-volume systems, this difference is **not** academic — it’s the diffe
 
 ## When Random GUIDs Still Make Sense
 
-* Security through obscurity — if you don’t want IDs to hint at creation order.
+* Security through obscurity, if you don’t want IDs to hint at creation order.
 
-* Non-indexed identifiers — fragmentation isn’t a concern.
+* Non-indexed identifiers, fragmentation isn’t a concern.
 
 ## The Final Take
 
-ABP’s default sequential GUID generation is one of those “**small but huge**” features. It’s the kind of thing you don’t notice until you benchmark — and then you wonder why you ever lived without it.
+ABP’s default sequential GUID generation is one of those “**small but huge**” features. It’s the kind of thing you don’t notice until you benchmark, and then you wonder why you ever lived without it.
 
 ## Links
 You may want to check the following references to learn more about sequential GUIDs:

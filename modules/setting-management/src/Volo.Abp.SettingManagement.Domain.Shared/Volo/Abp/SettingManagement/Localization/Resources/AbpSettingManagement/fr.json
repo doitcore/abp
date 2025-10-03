@@ -17,6 +17,7 @@
     "SentSuccessfully": "Envoyé avec succès",
     "MailSendingFailed": "L'envoi de courrier a échoué, veuillez vérifier votre configuration de courrier électronique et réessayer.",
     "Send": "Envoyer",
+    "Menu:Settings": "Paramètres",
     "Menu:Emailing": "Envoi par e-mail",
     "Menu:TimeZone": "Fuseau Horaire",
     "DisplayName:Timezone": "Fuseau horaire",

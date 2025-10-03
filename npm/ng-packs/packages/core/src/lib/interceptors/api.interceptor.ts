@@ -5,7 +5,7 @@ import {
   HttpRequest,
   HttpEvent,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { HttpWaitService } from '../services';
@@ -14,7 +14,7 @@ import { HttpWaitService } from '../services';
   providedIn: 'root',
 })
 export class ApiInterceptor implements IApiInterceptor {
-  constructor(private httpWaitService: HttpWaitService) {}
+  private httpWaitService = inject(HttpWaitService);
 
   getAdditionalHeaders(existingHeaders?: HttpHeaders) {
     return existingHeaders || new HttpHeaders();

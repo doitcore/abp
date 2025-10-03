@@ -1,8 +1,8 @@
 # ABP Platform 10.0 RC Has Been Released
 
-We are happy to release [ABP](https://abp.io) version **9.3 RC** (Release Candidate). This blog post introduces the new features and important changes in this new version.
+We are happy to release [ABP](https://abp.io) version **10.0 RC** (Release Candidate). This blog post introduces the new features and important changes in this new version.
 
-Try this version and provide feedback for a more stable version of ABP v9.3! Thanks to you in advance.
+Try this version and provide feedback for a more stable version of ABP v10.0! Thanks to you in advance.
 
 ## Get Started with the 10.0 RC
 
@@ -14,7 +14,7 @@ By default, ABP Studio uses stable versions to create solutions. Therefore, if y
 
 ## Migration Guide
 
-There are a few breaking changes in this version that may affect your application. Please read the migration guide carefully, if you are upgrading from v9.3 or earlier: [ABP Version 10.0 Migration Guide](https://abp.io/docs/10.0/release-info/migration-guides/abp-10-0).
+There are a few breaking changes in this version that may affect your application. Please read the migration guide carefully, if you are upgrading from v10.0 or earlier: [ABP Version 10.0 Migration Guide](https://abp.io/docs/10.0/release-info/migration-guides/abp-10-0).
 
 ## What's New with ABP v10.0?
 
@@ -256,6 +256,6 @@ Thanks to the ABP Community for all the content they have published. You can als
 
 ## Conclusion
 
-This version comes with some new features and a lot of enhancements to the existing features. You can see the [Road Map](https://abp.io/docs/9.3/release-info/road-map) documentation to learn about the release schedule and planned features for the next releases. Please try ABP v9.3 RC and provide feedback to help us release a more stable version.
+This version comes with some new features and a lot of enhancements to the existing features. You can see the [Road Map](https://abp.io/docs/10.0/release-info/road-map) documentation to learn about the release schedule and planned features for the next releases. Please try ABP v10.0 RC and provide feedback to help us release a more stable version.
 
 Thanks for being a part of this community!

@@ -17,7 +17,7 @@ Sure, you could switch to int or long identity columns, but then you lose the di
 
 ## Sequential GUIDs to the Rescue
 
-Sequential GUIDs keep the uniqueness but add a predictable ordering component, usually by embedding a timestamp in part of the GUID.This means:
+Sequential GUIDs keep the uniqueness but add a predictable ordering component, usually by embedding a timestamp in part of the GUID. This means:
 
 * Inserts happen at the “end” of the index, not all over the place.
 

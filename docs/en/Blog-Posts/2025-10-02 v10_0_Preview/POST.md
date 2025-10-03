@@ -128,9 +128,19 @@ Key updates in templates/config:
 - `main` option replaced by `browser`; `polyfills` moved to array form.
 - TypeScript updated to `es2020` with `esModuleInterop: true`; module target `esnext`.
 
+More Angular updates:
+- Unit tests have been updated for the new builder and configuration: [#23460](https://github.com/abpframework/abp/pull/23460).
+
+Warnings:
+- Constructor injections migrated to Angular's `inject()` function. If you extend a class and previously called `super(...)` with injected params, remove those parameters. See: [Angular inject() migration](https://angular.dev/reference/migrations/inject-function).
+- `provideLogo` and `withEnvironmentOptions` have moved from LeptonX packages to `@abp/ng.theme-shared`.
+- If you use the new application builder and have `tsconfig.json` path mappings that point into `node_modules`, remove those mappings and prefer symlinks instead. See a symlink reference: [Creating symbolic links](https://hostman.com/tutorials/creating-symbolic-links-in-linux/).
+
 ### Angular SSR support
 
 ABP Angular templates now support Server-Side Rendering (SSR) with the Angular Application Builder, enabling hybrid rendering (SSR + CSR) for improved first paint, SEO and perceived performance. This includes SSR-safe platform checks (no direct `window`/`location`/`localStorage`), OIDC auth compatibility via cookie-backed storage, and `TransferState` to prevent duplicate HTTP GETs during hydration. For implementation highlights and usage (including how to run the SSR dev server and the `transferStateInterceptor`), see the issue and PR: [Angular SSR](https://github.com/abpframework/abp/issues/23055), [Hybrid Rendering & Application Builder](https://github.com/abpframework/abp/pull/23416).
+
+See Angular's official guide for details on hybrid rendering (prerender + SSR + CSR): [Angular SSR](https://angular.dev/guide/ssr) and on the builder migration: [Angular build system migration](https://angular.dev/tools/cli/build-system-migration).
 
 
 ## Community News

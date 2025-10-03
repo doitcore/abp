@@ -35,7 +35,7 @@ Here is a brief list of titles explained in the next sections:
 
 We've upgraded ABP to .NET 10.0, so you need to move your solutions to .NET 10.0 if you want to use ABP 10.0. 
 
-> Since the stable version of .NET 10 hasn't been released yet, we upgraded ABP to .NET v10.0-rc.1. Stable NET 10 is scheduled to launch as a Long-Term Support (LTS) release during .NET Conf 2025, which takes place November 11?13, 2025. We'll update the ABP Platform to the .NET 10 as soon as possible official .NET 10 release is completed.
+> Since the stable version of .NET 10 hasn't been released yet, we upgraded ABP to .NET v10.0-rc.1. Stable NET 10 is scheduled to launch as a Long-Term Support (LTS) release during .NET Conf 2025, which takes place November 11-13, 2025. We'll update the ABP Platform to the .NET 10 as soon as possible official .NET 10 release is completed.
 
 ### Upgraded to Blazorise v1.8.2
 

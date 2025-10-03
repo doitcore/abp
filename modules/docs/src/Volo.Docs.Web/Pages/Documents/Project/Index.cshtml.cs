@@ -542,11 +542,6 @@ namespace Volo.Docs.Pages.Documents.Project
                     DocumentNameWithExtension = Document.Name;
                     SetDocumentPageTitle();
 
-                    if (Document != null && !Document.Content.IsNullOrEmpty())
-                    {
-                        TocItems = _tocGeneratorService.GenerateTocItems(Document.Content, TocLevelCount);
-                    }
-
                     await ConvertDocumentContentToHtmlAsync();
 
                     return true;
@@ -605,6 +600,11 @@ namespace Volo.Docs.Pages.Documents.Project
             else
             {
                 DocumentNavigationsDto = new DocumentNavigationsDto();
+            }
+
+            if (Document != null && !Document.Content.IsNullOrEmpty())
+            {
+                TocItems = _tocGeneratorService.GenerateTocItems(Document.Content, TocLevelCount);
             }
 
             var converter = _documentToHtmlConverterFactory.Create<DocumentToHtmlConverterContext>(Document.Format ?? Project.Format);

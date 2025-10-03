@@ -14,7 +14,7 @@ By default, ABP Studio uses stable versions to create solutions. Therefore, if y
 
 ## Migration Guide
 
-There are a few breaking changes in this version that may affect your application. Please read the migration guide carefully, if you are upgrading from v10.0 or earlier: [ABP Version 10.0 Migration Guide](https://abp.io/docs/10.0/release-info/migration-guides/abp-10-0).
+There are a few breaking changes in this version that may affect your application. Please read the migration guide carefully, if you are upgrading from v9.3 or earlier: [ABP Version 10.0 Migration Guide](https://abp.io/docs/10.0/release-info/migration-guides/abp-10-0).
 
 ## What's New with ABP v10.0?
 
@@ -22,7 +22,7 @@ In this section, I will introduce some major features released in this version.
 Here is a brief list of titles explained in the next sections:
 
 * Upgraded to .NET 10.0
-* Update to Blazorise 1.8.2
+* Upgraded to Blazorise 1.8.2
 * New Module: **Workflow (Elsa)**
 * New Object Mapper: **Mapperly**
 * Localization: Nested object support in JSON files
@@ -35,7 +35,7 @@ Here is a brief list of titles explained in the next sections:
 
 We've upgraded ABP to .NET 10.0, so you need to move your solutions to .NET 10.0 if you want to use ABP 10.0. 
 
-> Since the stable version of .NET 10 hasn't been released yet, we upgraded ABP to .NET v10.0-rc.1. Stable NET 10 is scheduled to launch as a Long-Term Support (LTS) release during .NET Conf 2025, which takes place November 11-13, 2025. We'll update the ABP Platform to the .NET 10 as soon as possible official .NET 10 release is completed.
+> Since the stable version of .NET 10 hasn't been released yet, we upgraded ABP to .NET v10.0-rc.1. Stable NET 10 is scheduled to launch as a **Long-Term Support (LTS)** release during .NET Conf 2025, which takes place November 11-13, 2025. We'll update the ABP Platform to the .NET 10 as soon as possible official .NET 10 release is completed.
 
 ### Upgraded to Blazorise v1.8.2
 
@@ -43,10 +43,11 @@ Upgraded the [Blazorise](https://blazorise.com/) library to v1.8.2 for Blazor UI
 
 > See [#23717](https://github.com/abpframework/abp/issues/23717) for the updated NuGet packages.
 
-
 ### New Module: **Workflow (Elsa)**
 
-ABP now ships a Workflow module that integrates [Elsa Workflows] to build visual, long-running, event-driven workflows in your ABP solutions (monolith or microservices). It provides seamless integration with ABP authentication/authorization, distributed event bus, persistence, background processing and includes support for hybrid UIs via Elsa Studio. For a hands-on reference showcasing an end-to-end order/payment workflow across services, see the sample: [Elsa Workflows - Sample Workflow Demo](https://abp.io/docs/10.0/samples/elsa-workflows-demo). For capabilities, installation and configuration details (activities, storage, hosting, dashboard), see the module docs: [Workflow (Elsa) module](https://abp.io/docs/10.0/modules/elsa-pro).
+ABP now ships a Workflow module that integrates [Elsa Workflows](https://github.com/elsa-workflows/elsa-core) to build visual, long-running, event-driven workflows in your ABP solutions (monolith or microservices). It provides seamless integration with ABP authentication/authorization, distributed event bus, persistence, background processing and includes support for hybrid UIs via Elsa Studio. 
+
+For a hands-on reference showcasing an end-to-end order/payment workflow across services, see the sample: [Elsa Workflows - Sample Workflow Demo](https://abp.io/docs/10.0/samples/elsa-workflows-demo). For capabilities, installation and configuration details (activities, storage, hosting, dashboard), see the module docs: [Workflow (Elsa) module](https://abp.io/docs/10.0/modules/elsa-pro).
 
 ![Workflow (Elsa) module](./elsa-workflow-instances.png)
 
@@ -54,15 +55,15 @@ ABP now ships a Workflow module that integrates [Elsa Workflows] to build visual
 
 ABP modules now use Mapperly as the default object-to-object mapper. Mapperly is a compile-time, source generator–based mapper that removes runtime reflection and offers better performance with simpler maintenance. For background and implementation details, see the planning issue and the PR: [Switch to another object mapping library](https://github.com/abpframework/abp/issues/23243) and [Use Mapperly to replace AutoMapper in all modules](https://github.com/abpframework/abp/pull/23277).
 
-The `Volo.Abp.AutoMapper` package remains available for backward compatibility. You can keep using AutoMapper in your solutions, but you are responsible for obtaining and managing its license if needed. For upgrade guidance and practical steps, follow the migration guide: [AutoMapper to Mapperly](https://github.com/abpframework/abp/blob/dev/docs/en/release-info/migration-guides/AutoMapper-To-Mapperly.md).
-
-
+The `Volo.Abp.AutoMapper` package remains available for backward compatibility. You can keep using AutoMapper in your solutions, but you are responsible for obtaining and managing its license if needed. For upgrade guidance and practical steps, follow the migration guide: [AutoMapper to Mapperly](https://abp.io/docs/10.0/release-info/migration-guides/AutoMapper-To-Mapperly).
 
 ### Localization: Nested object support in JSON files
 
-ABP now supports nested objects (and arrays) in JSON localization files, allowing you to organize translations hierarchically and access them using the double underscore (`__`) separator. This improves maintainability for larger resource files and aligns lookups with familiar key paths. See the PR for details: [feat(l8n): add support for nested objects in localization files](https://github.com/abpframework/abp/pull/23701).
+ABP now supports nested objects (and arrays) in JSON localization files, allowing you to organize translations hierarchically and access them using the double underscore (`__`) separator. This improves maintainability for larger resource files and aligns lookups with familiar key paths. 
 
-Declaration (nested objects):
+> See the PR for details: [feat(l8n): add support for nested objects in localization files](https://github.com/abpframework/abp/pull/23701).
+
+**Declaration (nested objects)**:
 ```json
 {
   "culture": "en",
@@ -75,13 +76,13 @@ Declaration (nested objects):
 }
 ```
 
-Usage:
+**Usage**:
 ```csharp
 L["MyNestedTranslation__SomeKey"];
 L["MyNestedTranslation__SomeOtherKey"];
 ```
 
-Declaration (arrays):
+**Declaration (arrays)**:
 ```json
 {
   "culture": "en",
@@ -93,7 +94,7 @@ Declaration (arrays):
 }
 ```
 
-Usage:
+**Usage**:
 ```csharp
 L["Menu__Items__0"]; // Home
 L["Menu__Items__2"]; // Contact
@@ -103,7 +104,7 @@ L["Menu__Items__2"]; // Contact
 
 ABP repositories now support EF Core **shared-type entity** types by allowing a custom entity name to be set on a repository before performing operations. Internally, this uses EF Core's `DbContext.Set<T>(string name)` to target the correct `DbSet`/table for the same CLR type, enabling scenarios like per-tenant tables, archives, or partitioning, and you can switch the target at runtime. See the PR: [Support EF Core Shared Entity Types on Repositories](https://github.com/abpframework/abp/pull/23588) and the EF Core documentation on [shared-type entity types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations#shared-type-entity-types).
 
-Example:
+**Example**:
 ```csharp
 // Set the shared entity name so repository operations target that table
 var repo = serviceProvider.GetRequiredService<IRepository<MyEntity, Guid>>();
@@ -117,21 +118,23 @@ await repo.InsertAsync(new MyEntity { /* ... */ });
 
 ### Add failure retry policy to InboxProcessor
 
-`InboxProcessor` now supports configurable failure handling strategies per event: **Retry** (default; reprocess in the next cycle), **RetryLater** (skip the failing event and retry it later with exponential backoff; the backoff factor and maximum retries are configurable), and **Discard** (drop the failing event). This prevents a single failing handler from blocking subsequent events and improves resiliency. Note: this is a breaking change because `IncomingEvent` entity properties were updated. See the PR for details: [Add failure retry policy to InboxProcessor](https://github.com/abpframework/abp/pull/23563).
+`InboxProcessor` now supports configurable failure handling strategies per event: **Retry** (default; reprocess in the next cycle), **RetryLater** (skip the failing event and retry it later with exponential backoff; the backoff factor and maximum retries are configurable), and **Discard** (drop the failing event). This prevents a single failing handler from blocking subsequent events and improves resiliency. 
+
+> **Note**: This is a breaking change because `IncomingEvent` entity properties were updated. See the PR for details: [Add failure retry policy to InboxProcessor](https://github.com/abpframework/abp/pull/23563).
 
 ### Migrate to New Esbuild-based Angular Builder
 
 We've migrated ABP Angular templates and packages to Angular's new esbuild-based build system (introduced in Angular 17+ and fully supported in Angular 20) to deliver faster builds, modern ESM support, built-in SSR/prerender capabilities, and a better development experience. This change is non-breaking for existing apps. See the tracking issue and PR: [Angular - Migrate to New Esbuild-based Angular Builder](https://github.com/abpframework/abp/issues/23242), [feat: Update Angular templates to Angular 20 new build system](https://github.com/abpframework/abp/pull/23363).
 
-Key updates in templates/config:
+**Key updates in templates/config**:
 - Builder switched from `@angular-devkit/build-angular:browser` to `@angular-devkit/build-angular:application`.
 - `main` option replaced by `browser`; `polyfills` moved to array form.
 - TypeScript updated to `es2020` with `esModuleInterop: true`; module target `esnext`.
 
-More Angular updates:
+**More Angular updates**:
 - Unit tests have been updated for the new builder and configuration: [#23460](https://github.com/abpframework/abp/pull/23460).
 
-Warnings:
+**Warnings**:
 - Constructor injections migrated to Angular's `inject()` function. If you extend a class and previously called `super(...)` with injected params, remove those parameters. See: [Angular inject() migration](https://angular.dev/reference/migrations/inject-function).
 - `provideLogo` and `withEnvironmentOptions` have moved from LeptonX packages to `@abp/ng.theme-shared`.
 - If you use the new application builder and have `tsconfig.json` path mappings that point into `node_modules`, remove those mappings and prefer symlinks instead. See a symlink reference: [Creating symbolic links](https://hostman.com/tutorials/creating-symbolic-links-in-linux/).
@@ -140,45 +143,40 @@ Warnings:
 
 ABP Angular templates now support Server-Side Rendering (SSR) with the Angular Application Builder, enabling hybrid rendering (SSR + CSR) for improved first paint, SEO and perceived performance. This includes SSR-safe platform checks (no direct `window`/`location`/`localStorage`), OIDC auth compatibility via cookie-backed storage, and `TransferState` to prevent duplicate HTTP GETs during hydration. For implementation highlights and usage (including how to run the SSR dev server and the `transferStateInterceptor`), see the issue and PR: [Angular SSR](https://github.com/abpframework/abp/issues/23055), [Hybrid Rendering & Application Builder](https://github.com/abpframework/abp/pull/23416).
 
-See Angular's official guide for details on hybrid rendering (prerender + SSR + CSR): [Angular SSR](https://angular.dev/guide/ssr) and on the builder migration: [Angular build system migration](https://angular.dev/tools/cli/build-system-migration).
+> See Angular's official guide for details on hybrid rendering (prerender + SSR + CSR): [Angular SSR](https://angular.dev/guide/ssr) and on the builder migration: [Angular build system migration](https://angular.dev/tools/cli/build-system-migration).
 
 
 ## Community News
-
-### Announcing ABP Studio 1.0 General Availability ?
-
-![](abp-studio.png)
-
-We are thrilled to announce that ABP Studio has reached version 1.0 and is now generally available! This marks a significant milestone for our integrated development environment designed specifically for ABP developers. The stable release brings several powerful features including:
-
-* Enhanced Solution Runner with health monitoring capabilities
-* Theme style selection during project creation (Basic, LeptonX Lite, and LeptonX Themes)
-* New "Container" application type for better Docker container management
-* Improved handling of multiple DbContexts for migration operations
-
-> For a detailed overview of these features and to learn more about what's coming next, check out our [announcement post](https://abp.io/community/articles/announcing-abp-studio-1-0-general-availability-82yw62bt).
 
 ### Recent Events
 
 We recently hosted two sessions of ABP Community Talks:
 
 #### Community Talks 2025.06: Microservices with ABP Template
+
 The Easiest Way to Get Started with Microservices on .NET Using ABP Microservice Solution Template: a deep dive into ABP’s microservice template, showing how ABP Studio streamlines creating, running, and scaling distributed systems. See the event page: [Community Talks: Microservices with ABP Template](https://abp.io/community/events/community-talks/the-easiest-way-to-get-started-with-microservices-on-.net-using-abp-microservice-solution-template-fd2comfn).
 
 <img src="./community-talk-2025-06.png" alt="ABP Community Talks: Microservices with ABP Template" width="360">
 
 #### Community Talks 2025.07: Developer-Friendly CMS for .NET
+
 Beyond WordPress: A Developer-Friendly CMS for .NET: an overview of building custom web apps with ABP CMS Kit, integrating content management with your application code. Learn more: [Community Talks: Developer-Friendly CMS for .NET](https://abp.io/community/events/community-talks/beyond-wordpress-a-developerfriendly-cms-for-.net-mubtips6).
 
 <img src="./community-talk-2025-07.png" alt="ABP Community Talks: Developer-Friendly CMS for .NET" width="360">
 
 ### Weekly Webinar: Discover ABP Platform
 
-We’ve launched a regular weekly webinar covering the ABP Platform end-to-end—framework, tools, and best practices—with live Q&A and demos. Register here and join an upcoming session: [Discover ABP Platform](https://abp.io/webinars/discover-abp-platform).
+We’ve started a **weekly live webinar series** designed for developers who want to get the most out of the **ABP Platform**. This event is designed for those new to ABP to help you understand its core features, capabilities, and licensing models.
 
-![ABP Weekly Webinar - Discover ABP Platform](./discover-abp.svg)
+![ABP Weekly Webinar - Discover ABP Platform](./abp-webinar.png)
+
+Every webinar features live coding demos, practical examples, and an open Q&A segment where you can get your questions answered directly by the ABP team. Whether you’re just starting with ABP or looking to explore advanced scenarios, these sessions will help you build better apps faster.
+
+[👉 Register here to join an upcoming session!](https://abp.io/webinars/discover-abp-platform)
 
 ### New ABP Community Articles
+
+There are exciting articles contributed by the ABP community as always. I will highlight some of them here:
 
 - [Alper Ebiçoğlu](https://abp.io/community/members/alper):
   - [High-Performance .NET Libraries You Didn’t Know You Needed](https://abp.io/community/articles/high-performance-net-libraries-you-did-not-know-nu5t88sz)
@@ -249,8 +247,6 @@ We’ve launched a regular weekly webinar covering the ABP Platform end-to-end�
   - [New in ABP Studio: Docker Container Management](https://abp.io/community/articles/abp-studio-docker-container-management-ex7r27y8)
 - [Burak Demir](https://abp.io/community/members/burakdemir):
   - [Solving MongoDB GUID Issues After an ABP Framework Upgrade](https://abp.io/community/articles/solving-mongodb-guid-issues-after-an-abp-framework-upgrade-tv8waw1n)
-
-See the latest pages for links and more articles: [Latest Articles — Page 1](https://abp.io/community/articles?CurrentPage=1&tab=Latest), [Page 2](https://abp.io/community/articles?CurrentPage=2&tab=Latest), [Page 3](https://abp.io/community/articles?CurrentPage=3&tab=Latest).
 
 Thanks to the ABP Community for all the content they have published. You can also [post your ABP-related (text or video) content](https://abp.io/community/posts/create) to the ABP Community.
 

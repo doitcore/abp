@@ -72,9 +72,9 @@ public class MyProductService : ITransientDependency
 }
 ```
 
-No `Guid.NewGuid()` here, \`_guidGenerator.Create()` gives you a sequential GUID every time.
+No `Guid.NewGuid()` here, `_guidGenerator.Create()` gives you a sequential GUID every time.
 
-## Benefits of Squential GUIDs
+## Benefits of Sequential GUIDs
 
 Let’s say you’re inserting 1M rows into a table with a clustered primary key:
 

@@ -55,7 +55,7 @@ jobs:
     - uses: actions/setup-dotnet@master
       with:
         dotnet-version: 10.0.x
-
+    - uses: jlumbroso/free-disk-space@main
     - name: Build All
       run: ./build-all.ps1
       working-directory: ./build

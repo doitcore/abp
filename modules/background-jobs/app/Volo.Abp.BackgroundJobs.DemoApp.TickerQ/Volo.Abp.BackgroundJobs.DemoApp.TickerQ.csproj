@@ -8,6 +8,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.Autofac\Volo.Abp.Autofac.csproj" />
         <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.BackgroundJobs.TickerQ\Volo.Abp.BackgroundJobs.TickerQ.csproj" />
+        <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.BackgroundWorkers.TickerQ\Volo.Abp.BackgroundWorkers.TickerQ.csproj" />
         <ProjectReference Include="..\Volo.Abp.BackgroundJobs.DemoApp.Shared\Volo.Abp.BackgroundJobs.DemoApp.Shared.csproj" />
         <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.AspNetCore\Volo.Abp.AspNetCore.csproj" />
     </ItemGroup>

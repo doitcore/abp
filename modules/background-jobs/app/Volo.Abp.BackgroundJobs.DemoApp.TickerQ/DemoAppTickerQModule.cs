@@ -11,12 +11,15 @@ using Volo.Abp.Autofac;
 using Volo.Abp.BackgroundJobs.DemoApp.Shared;
 using Volo.Abp.BackgroundJobs.DemoApp.Shared.Jobs;
 using Volo.Abp.BackgroundJobs.TickerQ;
+using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.BackgroundWorkers.TickerQ;
 using Volo.Abp.Modularity;
 
 namespace Volo.Abp.BackgroundJobs.DemoApp.TickerQ;
 
 [DependsOn(
     typeof(AbpBackgroundJobsTickerQModule),
+    typeof(AbpBackgroundWorkersTickerQModule),
     typeof(DemoAppSharedModule),
     typeof(AbpAutofacModule),
     typeof(AbpAspNetCoreModule)
@@ -48,6 +51,9 @@ public class DemoAppTickerQModule : AbpModule
 
     public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
     {
+        var backgroundWorkerManager = context.ServiceProvider.GetRequiredService<IBackgroundWorkerManager>();
+        await backgroundWorkerManager.AddAsync(context.ServiceProvider.GetRequiredService<MyBackgroundWorker>());
+
         var app = context.GetApplicationBuilder();
         app.UseAbpTickerQ();
 

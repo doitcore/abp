@@ -41,11 +41,7 @@ public class TickerQBackgroundWorkerManager : BackgroundWorkerManager, ISingleto
                 throw new AbpException($"Both 'Period' and 'CronExpression' are not set for {worker.GetType().FullName}. You must set at least one of them.");
             }
 
-            if (period != null && cronExpression.IsNullOrWhiteSpace())
-            {
-                cronExpression = GetCron(period.Value);
-            }
-
+            cronExpression = cronExpression ?? GetCron(period!.Value);
             var name = BackgroundWorkerNameAttribute.GetNameOrNull(worker.GetType()) ?? worker.GetType().FullName;
             AbpTickerQFunctionProvider.Functions.TryAdd(name!, (cronExpression!, TickerTaskPriority.LongRunning, async (tickerQCancellationToken, serviceProvider, tickerFunctionContext) =>
             {

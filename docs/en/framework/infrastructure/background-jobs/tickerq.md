@@ -42,4 +42,29 @@ public class YourModule : AbpModule
 
 ## Configuration
 
-TODO:
+### AbpBackgroundJobsTickerQOptions
+
+You can configure the `TimeTicker` properties for specific jobs. For example, Change `Priority`, `Retries` and `RetryIntervals` properties:
+
+```csharp
+Configure<AbpBackgroundJobsTickerQOptions>(options =>
+{
+	options.AddJobConfiguration<MyJob>(new AbpBackgroundJobsTimeTickerConfiguration()
+	{
+		Retries = 3,
+		RetryIntervals = new[] {30, 60, 120}, // Retry after 30s, 60s, then 2min
+		Priority = TickerTaskPriority.High
+	});
+
+	options.AddJobConfiguration<MyJob2>(new AbpBackgroundJobsTimeTickerConfiguration()
+	{
+		Retries = 5,
+		RetryIntervals = new[] {30, 60, 120}, // Retry after 30s, 60s, then 2min
+		Priority = TickerTaskPriority.Normal
+	});
+});
+```
+
+### TickerQ Dashboard and EF Core Integration
+
+You can install the [TickerQ dashboard](https://tickerq.net/setup/dashboard.html) and [Entity Framework Core](https://tickerq.net/setup/tickerq-ef-core.html) integration by its documentation. There is no specific configuration needed for the ABP integration.

@@ -34,6 +34,6 @@ public class TickerQBackgroundJobManager : IBackgroundJobManager, ITransientDepe
             RetryIntervals = [30, 60, 120], // Retry after 30s, 60s, then 2min
         });
 
-        return result.Result.Id.ToString();
+        return !result.IsSucceded ? throw result.Exception : result.Result.Id.ToString();
     }
 }

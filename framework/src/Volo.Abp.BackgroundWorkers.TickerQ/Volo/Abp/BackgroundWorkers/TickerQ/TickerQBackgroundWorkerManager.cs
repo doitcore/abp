@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using TickerQ.Utilities.Enums;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.TickerQ;
@@ -12,11 +11,11 @@ namespace Volo.Abp.BackgroundWorkers.TickerQ;
 [ExposeServices(typeof(IBackgroundWorkerManager), typeof(TickerQBackgroundWorkerManager))]
 public class TickerQBackgroundWorkerManager : BackgroundWorkerManager, ISingletonDependency
 {
-    protected IObjectAccessor<IServiceCollection> ObjectAccessor { get; }
+    protected AbpTickerQFunctionProvider AbpTickerQFunctionProvider { get; }
 
-    public TickerQBackgroundWorkerManager(IObjectAccessor<IServiceCollection> objectAccessor)
+    public TickerQBackgroundWorkerManager(AbpTickerQFunctionProvider abpTickerQFunctionProvider)
     {
-        ObjectAccessor = objectAccessor;
+        AbpTickerQFunctionProvider = abpTickerQFunctionProvider;
     }
 
     public override async Task AddAsync(IBackgroundWorker worker, CancellationToken cancellationToken = default)
@@ -47,15 +46,12 @@ public class TickerQBackgroundWorkerManager : BackgroundWorkerManager, ISingleto
                 cronExpression = GetCron(period.Value);
             }
 
-            ObjectAccessor.Value!.PreConfigure<AbpTickerQOptions>(options =>
+            var name = BackgroundWorkerNameAttribute.GetNameOrNull(worker.GetType()) ?? worker.GetType().FullName;
+            AbpTickerQFunctionProvider.Functions.TryAdd(name!, (cronExpression!, TickerTaskPriority.Normal, async (tickerQCancellationToken, serviceProvider, tickerFunctionContext) =>
             {
-                var name = BackgroundWorkerNameAttribute.GetNameOrNull(worker.GetType()) ?? worker.GetType().FullName;
-                options.Functions.TryAdd(name!, (cronExpression!, TickerTaskPriority.Normal, async (tickerQCancellationToken, serviceProvider, tickerFunctionContext) =>
-                {
-                    var workerInvoker = new TickerQPeriodicBackgroundWorkerInvoker(worker, serviceProvider);
-                    await workerInvoker.DoWorkAsync(tickerFunctionContext, tickerQCancellationToken);
-                }));
-            });
+                var workerInvoker = new TickerQPeriodicBackgroundWorkerInvoker(worker, serviceProvider);
+                await workerInvoker.DoWorkAsync(tickerFunctionContext, tickerQCancellationToken);
+            }));
         }
 
         await base.AddAsync(worker, cancellationToken);

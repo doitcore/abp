@@ -29,18 +29,16 @@ public class AbpBackgroundJobsTickerQModule : AbpModule
             requestTypes.TryAdd(jobConfiguration.JobName, (jobConfiguration.ArgsType.FullName, jobConfiguration.ArgsType)!);
         }
 
-        PreConfigure<AbpTickerQOptions>(options =>
+        var abpTickerQFunctionProvider = context.ServiceProvider.GetRequiredService<AbpTickerQFunctionProvider>();
+        foreach (var functionDelegate in tickerFunctionDelegates)
         {
-            foreach (var functionDelegate in tickerFunctionDelegates)
-            {
-                options.Functions.TryAdd(functionDelegate.Key, functionDelegate.Value);
-            }
+            abpTickerQFunctionProvider.Functions.TryAdd(functionDelegate.Key, functionDelegate.Value);
+        }
 
-            foreach (var requestType in requestTypes)
-            {
-                options.RequestTypes.TryAdd(requestType.Key, requestType.Value);
-            }
-        });
+        foreach (var requestType in requestTypes)
+        {
+            abpTickerQFunctionProvider.RequestTypes.TryAdd(requestType.Key, requestType.Value);
+        }
     }
 
     private static TickerFunctionDelegate GetTickerFunctionDelegate<TArgs>(Type argsType)

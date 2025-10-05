@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using TickerQ.DependencyInjection;
 using TickerQ.Utilities.Interfaces.Managers;
 using TickerQ.Utilities.Models.Ticker;
 using Volo.Abp.AspNetCore;
@@ -23,6 +23,14 @@ namespace Volo.Abp.BackgroundJobs.DemoApp.TickerQ;
 )]
 public class DemoAppTickerQModule : AbpModule
 {
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddTickerQ(options =>
+        {
+            options.UpdateMissedJobCheckDelay(TimeSpan.FromSeconds(30));
+        });
+    }
+
     public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
@@ -43,9 +51,10 @@ public class DemoAppTickerQModule : AbpModule
     private async Task CancelableBackgroundJobAsync(IServiceProvider serviceProvider)
     {
         var backgroundJobManager = serviceProvider.GetRequiredService<IBackgroundJobManager>();
-        var jobId = await backgroundJobManager.EnqueueAsync(new LongRunningJobArgs { Value = "test-1" });
-        await backgroundJobManager.EnqueueAsync(new LongRunningJobArgs { Value = "test-2" });
-        Thread.Sleep(1000);
+        var jobId = await backgroundJobManager.EnqueueAsync(new LongRunningJobArgs { Value = "test-cancel-job" });
+        await backgroundJobManager.EnqueueAsync(new LongRunningJobArgs { Value = "test-3" });
+
+        await Task.Delay(1000);
 
         var timeTickerManager = serviceProvider.GetRequiredService<ITimeTickerManager<TimeTicker>>();
         var result = await timeTickerManager.DeleteAsync(Guid.Parse(jobId));

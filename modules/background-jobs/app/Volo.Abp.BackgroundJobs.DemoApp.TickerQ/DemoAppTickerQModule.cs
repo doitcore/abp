@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using TickerQ.Dashboard.DependencyInjection;
 using TickerQ.DependencyInjection;
 using TickerQ.Utilities.Interfaces.Managers;
 using TickerQ.Utilities.Models.Ticker;
@@ -31,6 +31,13 @@ public class DemoAppTickerQModule : AbpModule
         context.Services.AddTickerQ(options =>
         {
             options.UpdateMissedJobCheckDelay(TimeSpan.FromSeconds(30));
+
+            options.AddDashboard(x =>
+            {
+                x.BasePath = "/tickerq-dashboard";
+
+                x.UseHostAuthentication = true;
+            });
         });
 
         Configure<AbpBackgroundJobsTickerQOptions>(options =>
@@ -62,7 +69,7 @@ public class DemoAppTickerQModule : AbpModule
         {
             endpoints.MapGet("/", async httpContext =>
             {
-                await httpContext.Response.WriteAsync("Hello TickerQ!");
+                httpContext.Response.Redirect("/tickerq-dashboard", true);
             });
         });
 

@@ -11,6 +11,7 @@
         <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.BackgroundWorkers.TickerQ\Volo.Abp.BackgroundWorkers.TickerQ.csproj" />
         <ProjectReference Include="..\Volo.Abp.BackgroundJobs.DemoApp.Shared\Volo.Abp.BackgroundJobs.DemoApp.Shared.csproj" />
         <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.AspNetCore\Volo.Abp.AspNetCore.csproj" />
+        <PackageReference Include="TickerQ.Dashboard" />
     </ItemGroup>
 
     <ItemGroup>

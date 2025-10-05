@@ -12,14 +12,14 @@ public class AbpBackgroundWorkersTickerQOptions
         _onfigurations = new Dictionary<Type, AbpBackgroundWorkersCronTickerConfiguration>();
     }
 
-    public void AddConfiguration<TJob>(AbpBackgroundWorkersCronTickerConfiguration configuration)
+    public void AddConfiguration<TWorker>(AbpBackgroundWorkersCronTickerConfiguration configuration)
     {
-        AddConfiguration(typeof(TJob), configuration);
+        AddConfiguration(typeof(TWorker), configuration);
     }
 
-    public void AddConfiguration(Type jobType, AbpBackgroundWorkersCronTickerConfiguration configuration)
+    public void AddConfiguration(Type workerType, AbpBackgroundWorkersCronTickerConfiguration configuration)
     {
-        _onfigurations[jobType] = configuration;
+        _onfigurations[workerType] = configuration;
     }
 
     public AbpBackgroundWorkersCronTickerConfiguration? GetConfigurationOrNull<TJob>()
@@ -27,8 +27,8 @@ public class AbpBackgroundWorkersTickerQOptions
         return GetConfigurationOrNull(typeof(TJob));
     }
 
-    public AbpBackgroundWorkersCronTickerConfiguration? GetConfigurationOrNull(Type jobType)
+    public AbpBackgroundWorkersCronTickerConfiguration? GetConfigurationOrNull(Type workerType)
     {
-        return _onfigurations.GetValueOrDefault(jobType);
+        return _onfigurations.GetValueOrDefault(workerType);
     }
 }

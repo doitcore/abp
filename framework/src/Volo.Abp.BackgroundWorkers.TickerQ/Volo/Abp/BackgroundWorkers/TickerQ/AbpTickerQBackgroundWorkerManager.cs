@@ -10,7 +10,6 @@ using Volo.Abp.TickerQ;
 namespace Volo.Abp.BackgroundWorkers.TickerQ;
 
 [Dependency(ReplaceServices = true)]
-[ExposeServices(typeof(IBackgroundWorkerManager), typeof(AbpTickerQBackgroundWorkerManager))]
 public class AbpTickerQBackgroundWorkerManager : BackgroundWorkerManager, ISingletonDependency
 {
     protected AbpTickerQFunctionProvider AbpTickerQFunctionProvider { get; }

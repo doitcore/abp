@@ -19,13 +19,15 @@ public class AbpBackgroundJobsTickerQModule : AbpModule
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var abpBackgroundJobOptions = context.ServiceProvider.GetRequiredService<IOptions<AbpBackgroundJobOptions>>();
+        var abpBackgroundJobsTickerQOptions = context.ServiceProvider.GetRequiredService<IOptions<AbpBackgroundJobsTickerQOptions>>();
         var tickerFunctionDelegates = new Dictionary<string, (string, TickerTaskPriority, TickerFunctionDelegate)>();
         var requestTypes = new Dictionary<string, (string, Type)>();
         foreach (var jobConfiguration in abpBackgroundJobOptions.Value.GetJobs())
         {
             var genericMethod = GetTickerFunctionDelegateMethod.MakeGenericMethod(jobConfiguration.ArgsType);
             var tickerFunctionDelegate = (TickerFunctionDelegate)genericMethod.Invoke(null, [jobConfiguration.ArgsType])!;
-            tickerFunctionDelegates.TryAdd(jobConfiguration.JobName, (string.Empty, TickerTaskPriority.Normal, tickerFunctionDelegate));
+            var config = abpBackgroundJobsTickerQOptions.Value.GetJobConfigurationOrNull(jobConfiguration.JobType);
+            tickerFunctionDelegates.TryAdd(jobConfiguration.JobName, (string.Empty, config?.Priority ?? TickerTaskPriority.Normal, tickerFunctionDelegate));
             requestTypes.TryAdd(jobConfiguration.JobName, (jobConfiguration.ArgsType.FullName, jobConfiguration.ArgsType)!);
         }
 

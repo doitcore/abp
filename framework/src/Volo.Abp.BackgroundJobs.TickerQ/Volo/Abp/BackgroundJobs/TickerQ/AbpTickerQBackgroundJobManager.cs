@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using TickerQ.Utilities;
 using TickerQ.Utilities.Interfaces.Managers;
@@ -9,17 +11,21 @@ using Volo.Abp.DependencyInjection;
 namespace Volo.Abp.BackgroundJobs.TickerQ;
 
 [Dependency(ReplaceServices = true)]
-public class TickerQBackgroundJobManager : IBackgroundJobManager, ITransientDependency
+public class AbpTickerQBackgroundJobManager : IBackgroundJobManager, ITransientDependency
 {
+    public ILogger<AbpTickerQBackgroundJobManager> Logger { get; set; }
+
     protected ITimeTickerManager<TimeTicker> TimeTickerManager { get; }
     protected AbpBackgroundJobOptions Options { get; }
     protected AbpBackgroundJobsTickerQOptions TickerQOptions { get; }
 
-    public TickerQBackgroundJobManager(
+    public AbpTickerQBackgroundJobManager(
         ITimeTickerManager<TimeTicker> timeTickerManager,
         IOptions<AbpBackgroundJobOptions> options,
         IOptions<AbpBackgroundJobsTickerQOptions> tickerQOptions)
     {
+        Logger = NullLogger<AbpTickerQBackgroundJobManager>.Instance;
+
         TimeTickerManager = timeTickerManager;
         Options = options.Value;
         TickerQOptions = tickerQOptions.Value;
@@ -36,14 +42,23 @@ public class TickerQBackgroundJobManager : IBackgroundJobManager, ITransientDepe
             Request = TickerHelper.CreateTickerRequest<TArgs>(args),
         };
 
-        var config = TickerQOptions.GetJobConfigurationOrNull(job.JobType);
+        var config = TickerQOptions.GetConfigurationOrNull(job.JobType);
         if (config != null)
         {
             timeTicker.Retries = config.Retries ?? timeTicker.Retries;
             timeTicker.RetryIntervals = config.RetryIntervals ?? timeTicker.RetryIntervals;
+            timeTicker.BatchParent = config.BatchParent ?? timeTicker.BatchParent;
+            timeTicker.BatchRunCondition = config.BatchRunCondition ?? timeTicker.BatchRunCondition;
         }
 
         var result = await TimeTickerManager.AddAsync(timeTicker);
-        return !result.IsSucceded ? throw result.Exception : result.Result.Id.ToString();
+
+        if (!result.IsSucceded)
+        {
+            Logger.LogException(result.Exception);
+            return timeTicker.Id.ToString();
+        }
+
+        return result.Result.Id.ToString();
     }
 }

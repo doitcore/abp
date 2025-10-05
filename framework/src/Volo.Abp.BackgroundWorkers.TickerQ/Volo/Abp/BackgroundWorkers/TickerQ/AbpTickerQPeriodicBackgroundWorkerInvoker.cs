@@ -7,7 +7,7 @@ using TickerQ.Utilities.Models;
 namespace Volo.Abp.BackgroundWorkers.TickerQ;
 
 //TODO: Use lambda expression to improve performance.
-public class TickerQPeriodicBackgroundWorkerInvoker
+public class AbpTickerQPeriodicBackgroundWorkerInvoker
 {
     private readonly MethodInfo _doWorkAsyncMethod;
     private readonly MethodInfo _doWorkMethod;
@@ -15,7 +15,7 @@ public class TickerQPeriodicBackgroundWorkerInvoker
     protected IBackgroundWorker Worker { get; }
     protected IServiceProvider ServiceProvider { get; }
 
-    public TickerQPeriodicBackgroundWorkerInvoker(IBackgroundWorker worker, IServiceProvider serviceProvider)
+    public AbpTickerQPeriodicBackgroundWorkerInvoker(IBackgroundWorker worker, IServiceProvider serviceProvider)
     {
         _doWorkAsyncMethod = worker.GetType().GetMethod("DoWorkAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
         _doWorkMethod = worker.GetType().GetMethod("DoWork", BindingFlags.Instance | BindingFlags.NonPublic)!;

@@ -5,30 +5,30 @@ namespace Volo.Abp.BackgroundJobs.TickerQ;
 
 public class AbpBackgroundJobsTickerQOptions
 {
-    private readonly Dictionary<Type, AbpBackgroundJobsTimeTickerConfiguration> _jobConfigurations;
+    private readonly Dictionary<Type, AbpBackgroundJobsTimeTickerConfiguration> _configurations;
 
     public AbpBackgroundJobsTickerQOptions()
     {
-        _jobConfigurations = new Dictionary<Type, AbpBackgroundJobsTimeTickerConfiguration>();
+        _configurations = new Dictionary<Type, AbpBackgroundJobsTimeTickerConfiguration>();
     }
 
-    public void AddJobConfiguration<TJob>(AbpBackgroundJobsTimeTickerConfiguration configuration)
+    public void AddConfiguration<TJob>(AbpBackgroundJobsTimeTickerConfiguration configuration)
     {
-        AddJobConfiguration(typeof(TJob), configuration);
+        AddConfiguration(typeof(TJob), configuration);
     }
 
-    public void AddJobConfiguration(Type jobType, AbpBackgroundJobsTimeTickerConfiguration configuration)
+    public void AddConfiguration(Type jobType, AbpBackgroundJobsTimeTickerConfiguration configuration)
     {
-        _jobConfigurations[jobType] = configuration;
+        _configurations[jobType] = configuration;
     }
 
-    public AbpBackgroundJobsTimeTickerConfiguration? GetJobConfigurationOrNull<TJob>()
+    public AbpBackgroundJobsTimeTickerConfiguration? GetConfigurationOrNull<TJob>()
     {
-        return GetJobConfigurationOrNull(typeof(TJob));
+        return GetConfigurationOrNull(typeof(TJob));
     }
 
-    public AbpBackgroundJobsTimeTickerConfiguration? GetJobConfigurationOrNull(Type jobType)
+    public AbpBackgroundJobsTimeTickerConfiguration? GetConfigurationOrNull(Type jobType)
     {
-        return _jobConfigurations.GetValueOrDefault(jobType);
+        return _configurations.GetValueOrDefault(jobType);
     }
 }

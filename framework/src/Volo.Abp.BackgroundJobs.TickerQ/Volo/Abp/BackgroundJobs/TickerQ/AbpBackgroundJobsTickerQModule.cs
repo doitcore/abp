@@ -26,7 +26,7 @@ public class AbpBackgroundJobsTickerQModule : AbpModule
         {
             var genericMethod = GetTickerFunctionDelegateMethod.MakeGenericMethod(jobConfiguration.ArgsType);
             var tickerFunctionDelegate = (TickerFunctionDelegate)genericMethod.Invoke(null, [jobConfiguration.ArgsType])!;
-            var config = abpBackgroundJobsTickerQOptions.Value.GetJobConfigurationOrNull(jobConfiguration.JobType);
+            var config = abpBackgroundJobsTickerQOptions.Value.GetConfigurationOrNull(jobConfiguration.JobType);
             tickerFunctionDelegates.TryAdd(jobConfiguration.JobName, (string.Empty, config?.Priority ?? TickerTaskPriority.Normal, tickerFunctionDelegate));
             requestTypes.TryAdd(jobConfiguration.JobName, (jobConfiguration.ArgsType.FullName, jobConfiguration.ArgsType)!);
         }

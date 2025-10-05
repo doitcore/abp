@@ -29,6 +29,21 @@ public class DemoAppTickerQModule : AbpModule
         {
             options.UpdateMissedJobCheckDelay(TimeSpan.FromSeconds(30));
         });
+
+        Configure<AbpBackgroundJobsTickerQOptions>(options =>
+        {
+            options.AddJobConfiguration<WriteToConsoleGreenJob>(new AbpBackgroundJobsTimeTickerConfiguration()
+            {
+                Retries = 3,
+                RetryIntervals = new[] {30, 60, 120}, // Retry after 30s, 60s, then 2min
+            });
+
+            options.AddJobConfiguration<WriteToConsoleYellowJob>(new AbpBackgroundJobsTimeTickerConfiguration()
+            {
+                Retries = 5,
+                RetryIntervals = new[] {30, 60, 120}, // Retry after 30s, 60s, then 2min
+            });
+        });
     }
 
     public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)

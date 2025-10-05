@@ -47,7 +47,7 @@ public class TickerQBackgroundWorkerManager : BackgroundWorkerManager, ISingleto
             }
 
             var name = BackgroundWorkerNameAttribute.GetNameOrNull(worker.GetType()) ?? worker.GetType().FullName;
-            AbpTickerQFunctionProvider.Functions.TryAdd(name!, (cronExpression!, TickerTaskPriority.Normal, async (tickerQCancellationToken, serviceProvider, tickerFunctionContext) =>
+            AbpTickerQFunctionProvider.Functions.TryAdd(name!, (cronExpression!, TickerTaskPriority.LongRunning, async (tickerQCancellationToken, serviceProvider, tickerFunctionContext) =>
             {
                 var workerInvoker = new TickerQPeriodicBackgroundWorkerInvoker(worker, serviceProvider);
                 await workerInvoker.DoWorkAsync(tickerFunctionContext, tickerQCancellationToken);

@@ -21,7 +21,7 @@
       "@abp/ng.account/config": ["packages/account/config/src/public-api.ts"],
       "@abp/ng.components": ["packages/components/src/public-api.ts"],
       "@abp/ng.components/chart.js": ["packages/components/chart.js/src/public-api.ts"],
-      "@abp/ng.components/dynamic-form": ["packages/components/dynamic-form/src/index.ts"],
+      "@abp/ng.components/dynamic-form": ["packages/components/dynamic-form/src/public-api.ts"],
       "@abp/ng.components/extensible": ["packages/components/extensible/src/public-api.ts"],
       "@abp/ng.components/page": ["packages/components/page/src/public-api.ts"],
       "@abp/ng.components/tree": ["packages/components/tree/src/public-api.ts"],

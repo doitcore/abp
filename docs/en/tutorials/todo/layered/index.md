@@ -756,6 +756,7 @@ import { TodoItemDto, TodoService } from '@proxy';
 
 @Component({
   selector: 'app-home',
+  standalone: false,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

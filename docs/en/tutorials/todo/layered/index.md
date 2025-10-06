@@ -115,7 +115,7 @@ abp install-libs
 
 {{if UI=="MVC" || UI=="BlazorServer" || UI=="BlazorWebApp"}}
 
-It is good to run the application before starting the development. Ensure the {{if UI=="BlazorServer"}}`TodoApp.Blazor`{{else}}`TodoApp.Web`{{end}} project is the startup project, then run the application (Ctrl+F5 in Visual Studio) to see the initial UI:
+It is good to run the application before starting the development. Ensure the {{if UI=="Blazor" || UI=="BlazorServer" || UI=="BlazorWebApp"}}`TodoApp.Blazor`{{else}}`TodoApp.Web`{{end}} project is the startup project, then run the application (Ctrl+F5 in Visual Studio) to see the initial UI:
 
 {{else if UI=="Blazor" || UI=="MAUIBlazor"}}
 
@@ -165,7 +165,7 @@ All ready. We can start coding!
 
 ## Domain Layer
 
-This application has a single [entity](../../../framework/architecture/domain-driven-design/entities.md) and we'll start by creating it. Create a new `TodoItem` class inside the *TodoApp.Domain* project:
+This application has a single [entity](../../../framework/architecture/domain-driven-design/entities.md) and we'll start by creating it. Create a new `TodoItem` class inside the *TodoApp.Domain* project under the `Entities` folder, as shown below:
 
 ````csharp
 using System;
@@ -578,7 +578,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 {{if UI=="Blazor" || UI=="BlazorWebApp"}}
-namespace TodoApp.Blazor.Client.Pages;
+amespace TodoApp.Blazor.Client.Pages
 {{else if UI=="BlazorServer"}}
 namespace TodoApp.Blazor.Pages;
 {{else if UI=="MAUIBlazor"}}

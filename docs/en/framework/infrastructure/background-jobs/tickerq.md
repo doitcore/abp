@@ -69,7 +69,7 @@ app.UseAbpTickerQ(startMode: ...);
 
 ### AbpBackgroundJobsTickerQOptions
 
-You can configure the `TimeTicker` properties for specific jobs. For example, Change `Priority`, `Retries` and `RetryIntervals` properties:
+You can configure the `TimeTicker` properties for specific jobs. For example, you can change `Priority`, `Retries` and `RetryIntervals` properties as shown below:
 
 ```csharp
 Configure<AbpBackgroundJobsTickerQOptions>(options =>

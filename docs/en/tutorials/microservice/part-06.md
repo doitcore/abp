@@ -252,6 +252,8 @@ It opens the *Generate C# proxies* window. Select the `CloudCrm.CatalogService` 
 
 Proxy classes for the `IProductIntegrationService` interface have been generated.
 
+### Adding Static HTTP Client Proxies
+
 Lastly, open the `CloudCrmOrderingServiceModule` class (the `CloudCrmOrderingServiceModule.cs` file under the `CloudCrm.OrderingService` project of the `CloudCrm.OrderingService` .NET solution) and add the following code to the `ConfigureServices` method:
 
 ```csharp
@@ -260,10 +262,31 @@ public override void ConfigureServices(ServiceConfigurationContext context)
     // Other configurations...
     context.Services.AddStaticHttpClientProxies(
         typeof(CloudCrmCatalogServiceContractsModule).Assembly,
-        "CatalogService");
+        "CatalogService"
+    );
 }
-
 ```
+
+Notice that `CatalogService` is the remote service name for the HTTP Client proxy.
+
+### Note for the Kubernetes Deployment Configuration
+
+ABP Studio automatically adds the base URL of the catalog service to the `appsettings.json` file of the `CloudCrm.OrderingService` project when you generate the C# client proxies:
+
+````json
+"RemoteServices": {
+  "CatalogService": {
+    "BaseUrl": "http://localhost:..."
+  }
+}
+````
+
+If you will deploy your solution to Kubernetes, you should add that configuration to the `env` section of your `ordering` Helm chart's pod definition file (default location in the file system: `/etc/helm/cloudcrm/charts/ordering/templates/ordering.yaml`). Example configuration:
+
+````yaml
+- name: "RemoteServices__CatalogService__BaseUrl"
+  value: "http://{{ .Release.Name }}-catalog"
+````
 
 ### Updating the UI to Display the Product Name
 

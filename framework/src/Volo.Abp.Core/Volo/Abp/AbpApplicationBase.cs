@@ -45,6 +45,7 @@ public abstract class AbpApplicationBase : IAbpApplication
 
         StartupModuleType = startupModuleType;
         Services = services;
+
         services.TryAddObjectAccessor<IServiceProvider>();
 
         var options = new AbpApplicationCreationOptions(services);

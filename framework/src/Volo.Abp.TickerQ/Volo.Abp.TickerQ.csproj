@@ -18,7 +18,6 @@
 
 <ItemGroup>
     <PackageReference Include="TickerQ" />
-    <PackageReference Include="TickerQ.Dashboard" />
 </ItemGroup>
 
 <ItemGroup>

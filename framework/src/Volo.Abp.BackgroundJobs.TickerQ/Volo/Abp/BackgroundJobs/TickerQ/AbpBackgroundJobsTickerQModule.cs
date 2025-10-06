@@ -10,7 +10,10 @@ using Volo.Abp.TickerQ;
 
 namespace Volo.Abp.BackgroundJobs.TickerQ;
 
-[DependsOn(typeof(AbpBackgroundJobsAbstractionsModule), typeof(AbpTickerQModule))]
+[DependsOn(
+    typeof(AbpBackgroundJobsAbstractionsModule),
+    typeof(AbpTickerQModule)
+)]
 public class AbpBackgroundJobsTickerQModule : AbpModule
 {
     private static readonly MethodInfo GetTickerFunctionDelegateMethod =

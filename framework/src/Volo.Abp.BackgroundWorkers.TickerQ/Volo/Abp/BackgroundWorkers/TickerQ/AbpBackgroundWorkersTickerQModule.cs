@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TickerQ.Utilities.Interfaces.Managers;
 using TickerQ.Utilities.Models.Ticker;
@@ -32,12 +31,7 @@ public class AbpBackgroundWorkersTickerQModule : AbpModule
                 cronTicker.RetryIntervals = config.RetryIntervals ?? cronTicker.RetryIntervals;
             }
 
-            var result = await cronTickerManager.AddAsync(cronTicker);
-            if (!result.IsSucceded)
-            {
-                var logger = context.ServiceProvider.GetRequiredService<ILogger<AbpBackgroundWorkersTickerQModule>>();
-                logger.LogException(result.Exception);
-            }
+            await cronTickerManager.AddAsync(cronTicker);
         }
     }
 }

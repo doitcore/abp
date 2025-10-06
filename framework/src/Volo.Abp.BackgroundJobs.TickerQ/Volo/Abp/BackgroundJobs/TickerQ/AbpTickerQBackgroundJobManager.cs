@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using TickerQ.Utilities;
 using TickerQ.Utilities.Interfaces.Managers;
@@ -13,8 +11,6 @@ namespace Volo.Abp.BackgroundJobs.TickerQ;
 [Dependency(ReplaceServices = true)]
 public class AbpTickerQBackgroundJobManager : IBackgroundJobManager, ITransientDependency
 {
-    public ILogger<AbpTickerQBackgroundJobManager> Logger { get; set; }
-
     protected ITimeTickerManager<TimeTicker> TimeTickerManager { get; }
     protected AbpBackgroundJobOptions Options { get; }
     protected AbpBackgroundJobsTickerQOptions TickerQOptions { get; }
@@ -24,8 +20,6 @@ public class AbpTickerQBackgroundJobManager : IBackgroundJobManager, ITransientD
         IOptions<AbpBackgroundJobOptions> options,
         IOptions<AbpBackgroundJobsTickerQOptions> tickerQOptions)
     {
-        Logger = NullLogger<AbpTickerQBackgroundJobManager>.Instance;
-
         TimeTickerManager = timeTickerManager;
         Options = options.Value;
         TickerQOptions = tickerQOptions.Value;
@@ -52,13 +46,6 @@ public class AbpTickerQBackgroundJobManager : IBackgroundJobManager, ITransientD
         }
 
         var result = await TimeTickerManager.AddAsync(timeTicker);
-
-        if (!result.IsSucceded)
-        {
-            Logger.LogException(result.Exception);
-            return timeTicker.Id.ToString();
-        }
-
-        return result.Result.Id.ToString();
+        return !result.IsSucceded ? timeTicker.Id.ToString() : result.Result.Id.ToString();
     }
 }

@@ -22,4 +22,6 @@ public interface IIdentityDbContext : IEfCoreDbContext
     DbSet<IdentityUserDelegation> UserDelegations { get; }
 
     DbSet<IdentitySession> Sessions { get; }
+
+    DbSet<IdentityUserPasswordHistory> UserPasswordHistories { get; }
 }

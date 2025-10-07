@@ -82,7 +82,7 @@ public partial class PermissionManagementModal
             return;
         }
 
-        await OnPermissionGroupSearchTextChangedAsync(string.Empty);
+        await ResetSearchTextAsync();
 
         foreach (var permission in _allGroups.SelectMany(x => x.Permissions))
         {
@@ -310,6 +310,16 @@ public partial class PermissionManagementModal
         var grantedProviders = permissions.SelectMany(x => x.GrantedProviders);
 
         return permissions.All(x => x.IsGranted) && grantedProviders.Any(p => p.ProviderName != _providerName);
+    }
+
+    protected virtual async Task ResetSearchTextAsync()
+    {
+        _permissionGroupSearchText = string.Empty;
+        _groups = _permissionGroupSearchText.IsNullOrWhiteSpace() ? _allGroups.ToList() : _allGroups.Where(x => x.DisplayName.Contains(_permissionGroupSearchText, StringComparison.OrdinalIgnoreCase) || x.Permissions.Any(permission => permission.DisplayName.Contains(_permissionGroupSearchText, StringComparison.OrdinalIgnoreCase))).ToList();
+
+        NormalizePermissionGroup(false);
+
+        await InvokeAsync(StateHasChanged);
     }
 
     protected virtual async Task OnPermissionGroupSearchTextChangedAsync(string value)

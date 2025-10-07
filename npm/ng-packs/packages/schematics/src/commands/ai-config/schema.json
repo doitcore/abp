@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "SchematicsABPAiConfig",
+  "title": "ABP AI Configuration Generator Schema",
+  "type": "object",
+  "properties": {
+    "tool": {
+      "description": "Specifies which AI tools to generate configuration files for",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["claude", "copilot", "cursor", "gemini", "junie", "windsurf"]
+      },
+      "default": [],
+      "x-prompt": {
+        "message": "Which AI tools would you like to generate configuration files for?",
+        "type": "list",
+        "multiselect": true,
+        "items": [
+          { "value": "claude", "label": "Claude (Anthropic) - AI assistant with deep code understanding" },
+          { "value": "copilot", "label": "GitHub Copilot - AI pair programmer" },
+          { "value": "cursor", "label": "Cursor - AI-first code editor" },
+          { "value": "gemini", "label": "Google Gemini - AI assistant by Google" },
+          { "value": "junie", "label": "Junie AI - Development assistant" },
+          { "value": "windsurf", "label": "Windsurf - AI development environment" }
+        ]
+      }
+    },
+    "targetProject": {
+      "description": "The target project name to generate AI configuration files for",
+      "type": "string",
+      "x-prompt": {
+        "message": "Which project would you like to generate AI config for?",
+        "type": "input"
+      }
+    },
+    "overwrite": {
+      "description": "Overwrite existing AI configuration files",
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": []
+}

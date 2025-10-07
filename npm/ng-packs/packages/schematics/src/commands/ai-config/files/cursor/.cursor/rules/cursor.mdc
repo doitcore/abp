@@ -1,0 +1,271 @@
+# Cursor AI Rules for Angular & ABP Framework Development
+
+## Core Principles
+- Write clean, maintainable, and testable code
+- Follow Angular style guide and ABP conventions
+- Use TypeScript strict mode
+- Prioritize code readability over cleverness
+
+## Angular Component Guidelines
+
+### Component Structure
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
+
+@Component({
+  selector: 'app-feature-name',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './feature-name.component.html',
+  styleUrls: ['./feature-name.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class FeatureNameComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
+  ngOnInit(): void {
+    // Initialization logic
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+}
+```
+
+### Always:
+- Use OnPush change detection strategy
+- Implement OnDestroy for cleanup
+- Use standalone components for new code
+- Type everything properly, avoid `any`
+- Use async pipe in templates
+
+### Never:
+- Mutate state directly
+- Forget to unsubscribe from observables
+- Use nested subscriptions
+- Put business logic in components
+
+## Service Patterns
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Observable, catchError, map, shareReplay } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({ providedIn: 'root' })
+export class DataService {
+  private cache$ = new Map<string, Observable<any>>();
+
+  constructor(private http: HttpClient) {}
+
+  getData(id: string): Observable<Data> {
+    if (!this.cache$.has(id)) {
+      this.cache$.set(
+        id,
+        this.http.get<Data>(`/api/data/${id}`).pipe(
+          shareReplay(1),
+          catchError(this.handleError)
+        )
+      );
+    }
+    return this.cache$.get(id)!;
+  }
+
+  private handleError(error: any): Observable<never> {
+    console.error('An error occurred:', error);
+    throw error;
+  }
+}
+```
+
+## RxJS Best Practices
+
+### Use Proper Operators
+- `switchMap`: Cancel previous request (search, navigation)
+- `mergeMap`: Parallel requests (batch operations)
+- `concatMap`: Sequential requests (ordered operations)
+- `exhaustMap`: Ignore new requests until current completes (form submit)
+
+### Memory Management
+```typescript
+// Good: Using takeUntil
+this.dataService.getData()
+  .pipe(takeUntil(this.destroy$))
+  .subscribe(data => this.data = data);
+
+// Better: Using async pipe
+data$ = this.dataService.getData();
+// Template: {{ data$ | async }}
+```
+
+## ABP Framework Integration
+
+### Service Injection
+```typescript
+import { 
+  ConfigStateService, 
+  LocalizationService,
+  PermissionService 
+} from '@abp/ng.core';
+
+constructor(
+  private config: ConfigStateService,
+  private localization: LocalizationService,
+  private permission: PermissionService
+) {}
+```
+
+### Localization Usage
+```typescript
+// Component
+readonly localizationKeys = {
+  title: this.localization.instant('::PageTitle'),
+  save: this.localization.instant('::Save'),
+  cancel: this.localization.instant('::Cancel')
+};
+
+// Template
+<h1>{{ '::PageTitle' | abpLocalization }}</h1>
+```
+
+### Permission Checks
+```typescript
+// Template
+<button 
+  *abpPermission="'MyApp.Users.Create'"
+  (click)="create()">
+  New User
+</button>
+
+// Component
+canCreate$ = this.config.getGrantedPolicy$('MyApp.Users.Create');
+```
+
+### Using ABP Proxy Services
+```typescript
+import { UserService } from '@proxy/users';
+
+constructor(private userService: UserService) {}
+
+ngOnInit(): void {
+  this.users$ = this.userService.getList({ maxResultCount: 10 });
+}
+```
+
+## State Management (NGXS)
+
+```typescript
+import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { tap } from 'rxjs';
+
+export class GetUsers {
+  static readonly type = '[Users] Get Users';
+}
+
+export interface UsersStateModel {
+  users: User[];
+  loading: boolean;
+}
+
+@State<UsersStateModel>({
+  name: 'users',
+  defaults: {
+    users: [],
+    loading: false
+  }
+})
+@Injectable()
+export class UsersState {
+  constructor(private userService: UserService) {}
+
+  @Selector()
+  static getUsers(state: UsersStateModel) {
+    return state.users;
+  }
+
+  @Action(GetUsers)
+  getUsers(ctx: StateContext<UsersStateModel>) {
+    ctx.patchState({ loading: true });
+    return this.userService.getList().pipe(
+      tap(response => {
+        ctx.patchState({ 
+          users: response.items,
+          loading: false 
+        });
+      })
+    );
+  }
+}
+```
+
+## Form Handling
+
+```typescript
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+export class FormComponent implements OnInit {
+  form!: FormGroup;
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      age: [null, [Validators.min(18), Validators.max(100)]]
+    });
+  }
+
+  onSubmit(): void {
+    if (this.form.valid) {
+      const formValue = this.form.getRawValue();
+      // Submit logic
+    }
+  }
+}
+```
+
+## Template Best Practices
+
+```html
+<!-- Use async pipe -->
+<div *ngIf="data$ | async as data">
+  {{ data.name }}
+</div>
+
+<!-- Use trackBy with ngFor -->
+<div *ngFor="let item of items; trackBy: trackByFn">
+  {{ item.name }}
+</div>
+
+<!-- Accessibility -->
+<button 
+  type="button"
+  [attr.aria-label]="'::Close' | abpLocalization"
+  (click)="close()">
+  <i class="fa fa-times"></i>
+</button>
+```
+
+## Common Patterns to Avoid
+❌ Manual subscriptions without cleanup
+❌ Logic in templates
+❌ Mutating input properties
+❌ Using `any` type
+❌ Nested subscriptions
+❌ Missing error handling
+
+## Common Patterns to Use
+✅ Async pipe in templates
+✅ OnPush change detection
+✅ Reactive forms
+✅ Smart/dumb components
+✅ Dependency injection
+✅ RxJS operators
+✅ Proper typing
+
+Follow these rules consistently to maintain high code quality.

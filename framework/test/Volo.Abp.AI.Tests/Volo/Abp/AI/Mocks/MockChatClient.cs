@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.AI;
 
 namespace Volo.Abp.AI.Mocks;
@@ -10,18 +11,24 @@ namespace Volo.Abp.AI.Mocks;
 public class MockChatClient : IChatClient
 {
     public const int StreamingResponseParts = 12;
+
+    public const string MockResponse = "This is a mock response.";
     public void Dispose()
     {
 
     }
 
-    public Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions options = null, CancellationToken cancellationToken = default)
+    public Task<ChatResponse> GetResponseAsync(
+        IEnumerable<ChatMessage> messages,
+        ChatOptions options = null,
+        CancellationToken cancellationToken = default)
     {
         var responseMessages = messages.ToList();
-        responseMessages.Add(new ChatMessage(ChatRole.Assistant, "This is a mock response."));
+        responseMessages.Add(new ChatMessage(ChatRole.Assistant, MockResponse));
         return Task.FromResult(new ChatResponse
         {
-           Messages = responseMessages,
+            Messages = responseMessages,
+            RawRepresentation = MockResponse
         });
     }
 
@@ -30,14 +37,24 @@ public class MockChatClient : IChatClient
         return null;
     }
 
-    public async IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions options = null, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
+        IEnumerable<ChatMessage> messages,
+        ChatOptions options = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         for (var i = 0; i < StreamingResponseParts; i++)
         {
             await Task.Delay(25, cancellationToken);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+
             yield return new ChatResponseUpdate
             {
-                RawRepresentation = "This is a mock streaming response part " + (i + 1)
+                Role = ChatRole.Assistant,
+                RawRepresentation = MockResponse + " " + (i + 1),
             };
         }
     }

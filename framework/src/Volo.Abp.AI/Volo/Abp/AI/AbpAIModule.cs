@@ -99,5 +99,19 @@ public class AbpAIModule : AbpModule
                 sp => sp.GetRequiredKeyedService<IChatClient>(serviceName)
             );
         }
+
+        if (workspaceConfig.Kernel.Builder is null)
+        {
+            context.Services.AddKeyedTransient<Kernel>(
+                AbpAIWorkspaceOptions.GetKernelServiceKeyName(workspaceConfig.Name),
+                (sp, _) =>
+                {
+                    var chatClient = sp.GetRequiredKeyedService<IChatClient>(serviceName);
+                    var builder = Kernel.CreateBuilder();
+                    builder.Services.AddSingleton<IChatClient>(chatClient);
+                    return builder.Build();
+                }
+            );
+        }
     }
 }

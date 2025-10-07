@@ -224,6 +224,17 @@ public static class IdentityDbContextModelBuilderExtensions
             b.ApplyObjectExtensionMappings();
         });
 
+        builder.Entity<IdentityUserPasswordHistory>(b =>
+        {
+            b.ToTable(AbpIdentityDbProperties.DbTablePrefix + "UserPasswordHistories", AbpIdentityDbProperties.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Password).HasMaxLength(IdentityUserPasswordHistoriesConsts.MaxPasswordLength).IsRequired();
+
+            b.ApplyObjectExtensionMappings();
+        });
+
         builder.Entity<IdentitySecurityLog>(b =>
         {
             b.ToTable(AbpIdentityDbProperties.DbTablePrefix + "SecurityLogs", AbpIdentityDbProperties.DbSchema);

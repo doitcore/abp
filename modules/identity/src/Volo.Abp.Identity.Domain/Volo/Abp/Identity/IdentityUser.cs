@@ -154,6 +154,11 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser, IHasEntityVer
     /// </summary>
     public virtual ICollection<IdentityUserOrganizationUnit> OrganizationUnits { get; protected set; }
 
+    /// <summary>
+    /// Navigation property for this users password history.
+    /// </summary>
+    public virtual ICollection<IdentityUserPasswordHistory> PasswordHistories { get; protected set; }
+
     protected IdentityUser()
     {
     }
@@ -182,6 +187,7 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser, IHasEntityVer
         Logins = new Collection<IdentityUserLogin>();
         Tokens = new Collection<IdentityUserToken>();
         OrganizationUnits = new Collection<IdentityUserOrganizationUnit>();
+        PasswordHistories = new Collection<IdentityUserPasswordHistory>();
     }
 
     public virtual void AddRole(Guid roleId)

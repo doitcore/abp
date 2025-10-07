@@ -67,6 +67,13 @@ public class AbpIdentitySettingDefinitionProvider : SettingDefinitionProvider
                 true),
 
             new SettingDefinition(
+                IdentitySettingNames.Password.PreventPasswordReuseCount,
+                6.ToString(),
+                L("DisplayName:Abp.Identity.Password.PreventPasswordReuseCount"),
+                L("Description:Abp.Identity.Password.PreventPasswordReuseCount"),
+                true),
+
+            new SettingDefinition(
                 IdentitySettingNames.Lockout.AllowedForNewUsers,
                 true.ToString(),
                 L("DisplayName:Abp.Identity.Lockout.AllowedForNewUsers"),

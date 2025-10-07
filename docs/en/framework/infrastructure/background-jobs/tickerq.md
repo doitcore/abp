@@ -18,28 +18,6 @@ abp add-package Volo.Abp.BackgroundJobs.TickerQ
 
 >  If you haven't done it yet, you first need to install the [ABP CLI](../../../cli). For other installation options, see [the package description page](https://abp.io/package-detail/Volo.Abp.BackgroundJobs.TickerQ).
 
-### Manual Installation
-
-If you want to manually install;
-
-1. Add the [Volo.Abp.BackgroundJobs.TickerQ](https://www.nuget.org/packages/Volo.Abp.BackgroundJobs.TickerQ) NuGet package to your project:
-
-   ````
-   dotnet add package Volo.Abp.BackgroundJobs.TickerQ
-   ````
-
-2. Add the `AbpBackgroundJobsTickerQModule` to the dependency list of your module:
-
-````csharp
-[DependsOn(
-	//...other dependencies
-	typeof(AbpBackgroundJobsTickerQModule) //Add the new module dependency
-	)]
-public class YourModule : AbpModule
-{
-}
-````
-
 ## Configuration
 
 ### AddTickerQ

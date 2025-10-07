@@ -14,29 +14,7 @@ Open a command line window in the folder of the project (.csproj file) and type 
 abp add-package Volo.Abp.BackgroundWorkers.TickerQ
 ````
 
-### Manual Installation
-
-If you want to manually install;
-
-1. Add the [Volo.Abp.BackgroundWorkers.TickerQ](https://www.nuget.org/packages/Volo.Abp.BackgroundWorkers.TickerQ) NuGet package to your project:
-
-   ````
-   dotnet add package Volo.Abp.BackgroundWorkers.TickerQ
-   ````
-
-2. Add the `AbpBackgroundWorkersTickerQModule` to the dependency list of your module:
-
-````csharp
-[DependsOn(
-	//...other dependencies
-	typeof(AbpBackgroundWorkersTickerQModule) //Add the new module dependency
-	)]
-public class YourModule : AbpModule
-{
-}
-````
-
-> TickerQ background worker integration provides an adapter `TickerQPeriodicBackgroundWorkerAdapter` to automatically load any `PeriodicBackgroundWorkerBase` and `AsyncPeriodicBackgroundWorkerBase` derived classes as `ITickerQBackgroundWorker` instances. This allows you to still to easily switch over to use TickerQ as the background manager even you have existing background workers that are based on the [default background workers implementation](../background-workers).
+>  If you haven't done it yet, you first need to install the [ABP CLI](../../../cli). For other installation options, see [the package description page](https://abp.io/package-detail/Volo.Abp.BackgroundWorkers.TickerQ).
 
 ## Configuration
 

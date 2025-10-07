@@ -351,6 +351,15 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser, IHasEntityVer
         );
     }
 
+    public virtual void AddPasswordHistory(string password)
+    {
+        PasswordHistories.Add(new IdentityUserPasswordHistory(
+            Id,
+            password,
+            TenantId)
+        );
+    }
+
     /// <summary>
     /// Use <see cref="IdentityUserManager.ConfirmEmailAsync"/> for regular email confirmation.
     /// Using this skips the confirmation process and directly sets the <see cref="EmailConfirmed"/>.

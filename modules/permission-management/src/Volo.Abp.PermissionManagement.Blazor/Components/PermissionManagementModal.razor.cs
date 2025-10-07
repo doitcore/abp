@@ -322,6 +322,9 @@ public partial class PermissionManagementModal
         _permissionGroupSearchText = value;
         _groups = _permissionGroupSearchText.IsNullOrWhiteSpace() ? _allGroups.ToList() : _allGroups.Where(x => x.DisplayName.Contains(_permissionGroupSearchText, StringComparison.OrdinalIgnoreCase) || x.Permissions.Any(permission => permission.DisplayName.Contains(_permissionGroupSearchText, StringComparison.OrdinalIgnoreCase))).ToList();
 
+        GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+        GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
+
         NormalizePermissionGroup(false);
 
         await InvokeAsync(StateHasChanged);

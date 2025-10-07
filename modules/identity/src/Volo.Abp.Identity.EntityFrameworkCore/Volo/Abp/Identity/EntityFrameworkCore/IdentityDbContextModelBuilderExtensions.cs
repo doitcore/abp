@@ -230,6 +230,8 @@ public static class IdentityDbContextModelBuilderExtensions
 
             b.ConfigureByConvention();
 
+            b.HasKey(x => new { x.UserId, x.Password });
+
             b.Property(x => x.Password).HasMaxLength(IdentityUserPasswordHistoriesConsts.MaxPasswordLength).IsRequired();
 
             b.ApplyObjectExtensionMappings();

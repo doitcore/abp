@@ -26,8 +26,6 @@ public class IdentityDbContext : AbpDbContext<IdentityDbContext>, IIdentityDbCon
 
     public DbSet<IdentitySession> Sessions { get; set; }
 
-    public DbSet<IdentityUserPasswordHistory> UserPasswordHistories { get; set; }
-
     public IdentityDbContext(DbContextOptions<IdentityDbContext> options)
         : base(options)
     {

@@ -34,6 +34,7 @@ public class AbpAIModule : AbpModule
         }
 
         context.Services.TryAddTransient(typeof(IChatClient<>), typeof(TypedChatClient<>));
+        context.Services.TryAddTransient(typeof(IChatClientAccessor<>), typeof(ChatClientAccessor<>));
         context.Services.TryAddTransient(typeof(IKernelAccessor<>), typeof(KernelAccessor<>));
     }
 

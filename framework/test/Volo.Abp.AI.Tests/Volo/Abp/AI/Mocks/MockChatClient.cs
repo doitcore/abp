@@ -10,7 +10,7 @@ namespace Volo.Abp.AI.Mocks;
 
 public class MockChatClient : IChatClient
 {
-    public const int StreamingResponseParts = 12;
+    public const int StreamingResponseParts = 4;
 
     public const string MockResponse = "This is a mock response.";
     public void Dispose()

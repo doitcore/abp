@@ -10,6 +10,7 @@
           [placeholder]="field().placeholder || ''"
           [ngModel]="value"
           (ngModelChange)="onValueChange($event)"
+          [class.is-invalid]="isValid"
           class="form-control">
         <!--      @if (isFieldInvalid()) {
                 <div class="invalid-feedback">
@@ -25,6 +26,7 @@
           [id]="field().key"
           [ngModel]="value"
           (ngModelChange)="onValueChange($event)"
+          [class.is-invalid]="isValid"
           class="form-control">
           <option value="">Please select...</option>
           @for (option of field().options; track option.key) {
@@ -48,6 +50,7 @@
           [id]="field().key"
           [ngModel]="value"
           (ngModelChange)="onValueChange($event)"
+          [class.is-invalid]="isValid"
           class="form-check-input">
         <label class="form-check-label" [for]="field().key">
           {{ field().label }}
@@ -68,6 +71,7 @@
           [ngModel]="value"
           (ngModelChange)="onValueChange($event)"
           [placeholder]="field().placeholder || ''"
+          [class.is-invalid]="isValid"
           class="form-control">
         <!--      @if (isFieldInvalid()) {
                 <div class="invalid-feedback">
@@ -84,6 +88,7 @@
           [ngModel]="value"
           (ngModelChange)="onValueChange($event)"
           [placeholder]="field().placeholder || ''"
+          [class.is-invalid]="isValid"
           rows="4"
           class="form-control">
         </textarea>

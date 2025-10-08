@@ -1,9 +1,18 @@
-import { ChangeDetectionStrategy, Component, input, output, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  inject,
+  OnInit,
+  DestroyRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DynamicFormService } from './dynamic-form.service';
 import { FormFieldConfig } from './dynamic-form.models';
 import { DynamicFormFieldComponent } from './dynamic-form-field';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'abp-dynamic-form',
@@ -17,9 +26,10 @@ export class DynamicFormComponent implements OnInit {
   submitButtonText = input<string>('Submit');
   submitInProgress = input<boolean>(false);
   showCancelButton = input<boolean>(false);
-  formSubmit = output<any>();
+  formSubmit = output<void>();
   formCancel = output<void>();
   private dynamicFormService = inject(DynamicFormService);
+  readonly destroyRef = inject(DestroyRef);
 
   dynamicForm!: FormGroup;
   fieldVisibility: { [key: string]: boolean } = {};
@@ -35,7 +45,6 @@ export class DynamicFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.dynamicForm.getRawValue());
     if (this.dynamicForm.valid) {
       this.formSubmit.emit(this.dynamicForm.value);
     } else {
@@ -67,7 +76,7 @@ export class DynamicFormComponent implements OnInit {
         field.conditionalLogic.forEach(rule => {
           const dependentControl = this.dynamicForm.get(rule.dependsOn);
           if (dependentControl) {
-            dependentControl.valueChanges.subscribe(() => {
+            dependentControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
               this.evaluateConditionalLogic(field.key);
             });
           }

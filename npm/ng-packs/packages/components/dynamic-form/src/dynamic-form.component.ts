@@ -15,12 +15,13 @@ import { DynamicFormFieldComponent } from './dynamic-form-field';
 export class DynamicFormComponent implements OnInit {
   fields = input<FormFieldConfig[]>([]);
   submitButtonText = input<string>('Submit');
+  submitInProgress = input<boolean>(false);
+  showCancelButton = input<boolean>(false);
   formSubmit = output<any>();
   formCancel = output<void>();
   private dynamicFormService = inject(DynamicFormService);
 
   dynamicForm!: FormGroup;
-  isSubmitting = false;
   fieldVisibility: { [key: string]: boolean } = {};
 
   ngOnInit() {
@@ -34,8 +35,8 @@ export class DynamicFormComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.dynamicForm.getRawValue());
     if (this.dynamicForm.valid) {
-      this.isSubmitting = true;
       this.formSubmit.emit(this.dynamicForm.value);
     } else {
       this.markAllFieldsAsTouched();

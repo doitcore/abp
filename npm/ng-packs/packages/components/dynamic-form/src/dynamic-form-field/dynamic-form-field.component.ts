@@ -39,6 +39,11 @@ export class DynamicFormFieldComponent implements ControlValueAccessor {
   value: any;
   readonly changeDetectorRef = inject(ChangeDetectorRef);
 
+  onValueChange(value: any) {
+    console.log(value);
+    this.onChange(value);
+  }
+
   writeValue(value: any[]): void {
     this.value = value;
     this.changeDetectorRef.markForCheck();

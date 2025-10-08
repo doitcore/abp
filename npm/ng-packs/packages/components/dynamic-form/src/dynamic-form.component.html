@@ -11,16 +11,18 @@
     </div>
   }
   <div class="form-actions">
-    <button
-      type="button"
-      class="btn btn-secondary"
-      (click)="onCancel()">
-      Cancel
-    </button>
+    @if (showCancelButton()) {
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onCancel()">
+        Cancel
+      </button>
+    }
     <button
       type="submit"
       class="btn btn-primary"
-      [disabled]="!dynamicForm.valid || isSubmitting">
+      [disabled]="!dynamicForm.valid || submitInProgress()">
       {{ submitButtonText() }}
     </button>
   </div>

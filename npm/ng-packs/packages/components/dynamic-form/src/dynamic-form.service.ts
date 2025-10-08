@@ -44,6 +44,9 @@ export class DynamicFormService {
   }
 
   private getInitialValue(field: FormFieldConfig): any {
+    if (field.value) {
+      return field.value;
+    }
     switch (field.type) {
       case 'checkbox':
         return false;

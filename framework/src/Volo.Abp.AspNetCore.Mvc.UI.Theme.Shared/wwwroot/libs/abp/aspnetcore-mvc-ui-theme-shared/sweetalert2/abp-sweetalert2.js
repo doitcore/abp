@@ -29,6 +29,12 @@ var abp = abp || {};
                 title: 'Are you sure?',
                 showCancelButton: true,
                 reverseButtons: true
+			},
+			prompt: {
+				icon: 'question',
+				input: 'text',
+				showCancelButton: true,
+				reverseButtons: true
             }
         }
     };
@@ -98,6 +104,36 @@ var abp = abp || {};
             })
         });
     };
+
+	abp.message.prompt = function (message, titleOrOptionsOrCallback, callback) {
+
+		var userOpts = {
+			html: abp.utils.htmlEscape(message).replace(/\n/g, '<br>')
+		};
+
+		if ($.isFunction(titleOrOptionsOrCallback)) {
+			callback = titleOrOptionsOrCallback;
+		} else if (typeof titleOrOptionsOrCallback === 'string') {
+			userOpts.title = titleOrOptionsOrCallback;
+		} else if ($.isPlainObject(titleOrOptionsOrCallback)) {
+			userOpts = $.extend(userOpts, titleOrOptionsOrCallback);
+		}
+
+		var opts = $.extend(
+			{},
+			abp.libs.sweetAlert.config['default'],
+			abp.libs.sweetAlert.config.prompt,
+			userOpts
+		);
+
+		return $.Deferred(function ($dfd) {
+			Swal.fire(opts).then(function (result) {
+				var value = result && result.isConfirmed ? result.value : null;
+				callback && callback(value);
+				$dfd.resolve(value);
+			});
+		});
+	};
 
     abp.event.on('abp.configurationInitialized', function () {
         var l = abp.localization.getResource('AbpUi');

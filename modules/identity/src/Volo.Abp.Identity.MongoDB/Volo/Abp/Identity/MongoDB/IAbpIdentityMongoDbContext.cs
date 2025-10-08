@@ -22,6 +22,4 @@ public interface IAbpIdentityMongoDbContext : IAbpMongoDbContext
     IMongoCollection<IdentityUserDelegation> UserDelegations { get; }
 
     IMongoCollection<IdentitySession> Sessions { get; }
-
-    IMongoCollection<IdentityUserPasswordHistory> UserPasswordHistories { get; }
 }

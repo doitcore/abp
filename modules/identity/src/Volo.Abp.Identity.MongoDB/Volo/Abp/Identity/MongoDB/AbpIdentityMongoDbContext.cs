@@ -23,8 +23,6 @@ public class AbpIdentityMongoDbContext : AbpMongoDbContext, IAbpIdentityMongoDbC
 
     public IMongoCollection<IdentitySession> Sessions => Collection<IdentitySession>();
 
-    public IMongoCollection<IdentityUserPasswordHistory> UserPasswordHistories => Collection<IdentityUserPasswordHistory>();
-
     protected override void CreateModel(IMongoModelBuilder modelBuilder)
     {
         base.CreateModel(modelBuilder);

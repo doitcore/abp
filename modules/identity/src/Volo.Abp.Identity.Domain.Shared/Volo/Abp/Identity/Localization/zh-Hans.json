@@ -57,6 +57,7 @@
     "Volo.Abp.Identity:PasswordRequiresUpper": "密码至少包含一位大写字母 ('A'-'Z')。",
     "Volo.Abp.Identity:PasswordTooShort": "密码至少为{0}个字符。",
     "Volo.Abp.Identity:PasswordRequiresUniqueChars": "密码至少包含{0}个唯一字符。",
+    "Volo.Abp.Identity:PasswordInHistory": "密码不能与最近{0}次使用的密码相同。",
     "Volo.Abp.Identity:RoleNotFound": "角色 {0} 不存在。",
     "Volo.Abp.Identity:UserAlreadyHasPassword": "用户已设置密码。",
     "Volo.Abp.Identity:UserAlreadyInRole": "用户已具有角色 '{0}'。",

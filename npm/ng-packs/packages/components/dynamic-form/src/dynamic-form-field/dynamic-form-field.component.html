@@ -7,6 +7,7 @@
       <input
         [id]="field().key"
         [placeholder]="field().placeholder || ''"
+        [(value)]="value"
         class="form-control">
 <!--      @if (isFieldInvalid()) {
         <div class="invalid-feedback">
@@ -20,6 +21,7 @@
       <label [for]="field().key">{{ field().label }}</label>
       <select
         [id]="field().key"
+        [(value)]="value"
         class="form-control">
         <option value="">Please select...</option>
         @for (option of field().options; track option.key) {
@@ -41,6 +43,7 @@
       <input
         type="checkbox"
         [id]="field().key"
+        [(value)]="value"
         class="form-check-input">
       <label class="form-check-label" [for]="field().key">
         {{ field().label }}
@@ -58,6 +61,7 @@
       <input
         type="email"
         [id]="field().key"
+        [(value)]="value"
         [placeholder]="field().placeholder || ''"
         class="form-control">
 <!--      @if (isFieldInvalid()) {
@@ -72,6 +76,7 @@
       <label [for]="field().key">{{ field().label }}</label>
       <textarea
         [id]="field().key"
+        [(value)]="value"
         [placeholder]="field().placeholder || ''"
         rows="4"
         class="form-control">

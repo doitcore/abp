@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormFieldConfig } from '../dynamic-form.models';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export const ABP_DYNAMIC_FORM_FIELD = new InjectionToken<DynamicFormFieldComponent>('AbpDynamicFormField');
 
@@ -25,6 +25,7 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    FormsModule,
     NgTemplateOutlet
   ]
 })
@@ -33,6 +34,7 @@ export class DynamicFormFieldComponent implements ControlValueAccessor {
   field = input.required<FormFieldConfig>();
   isVisible = input<boolean>(true);
   disabled = false;
+  value: any;
 
   writeValue(value: any[]): void {
     //

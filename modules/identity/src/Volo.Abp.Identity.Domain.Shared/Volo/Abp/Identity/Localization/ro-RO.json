@@ -57,6 +57,7 @@
     "Volo.Abp.Identity:PasswordRequiresUpper": "Parolele trebuie să conţină cel puţin o majusculă ('A'-'Z').",
     "Volo.Abp.Identity:PasswordTooShort": "Parolele trebuie să aibă cel puţin {0} caractere.",
     "Volo.Abp.Identity:PasswordRequiresUniqueChars": "Parolele trebuie să conţină cel puţin {0} caractere diferite.",
+    "Volo.Abp.Identity:PasswordInHistory": "Parolele nu trebuie să se potrivească cu ultimele {0} parole ale dvs.",
     "Volo.Abp.Identity:RoleNotFound": "Rolul {0} nu există does not exist.",
     "Volo.Abp.Identity:UserAlreadyHasPassword": "Utilizatorul şi-a setat deja o parolă.",
     "Volo.Abp.Identity:UserAlreadyInRole": "Utilizatorul are deja rolul '{0}'.",

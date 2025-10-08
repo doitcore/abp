@@ -57,6 +57,7 @@
     "Volo.Abp.Identity:PasswordRequiresUpper": "Şifre en az bir büyük harf içermeli ('A'-'Z').",
     "Volo.Abp.Identity:PasswordTooShort": "Şifre en az {0} karakter uzunluğunda olmalı.",
     "Volo.Abp.Identity:PasswordRequiresUniqueChars": "Şifre en az {0} farklı karakter içermeli.",
+    "Volo.Abp.Identity:PasswordInHistory": "Şifre son {0} şifrenizle eşleşmemelidir.",
     "Volo.Abp.Identity:RoleNotFound": "{0} rolü bulunamadı.",
     "Volo.Abp.Identity:UserAlreadyHasPassword": "Kullanıcının zaten bir şifresi var.",
     "Volo.Abp.Identity:UserAlreadyInRole": "Kullanıcı zaten '{0}' rolünde.",

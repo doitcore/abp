@@ -57,6 +57,7 @@
     "Volo.Abp.Identity:PasswordRequiresUpper": "Les mots de passe doivent avoir au moins une majuscule ('A'-'Z').",
     "Volo.Abp.Identity:PasswordTooShort": "Les mots de passe doivent être au moins {0} caractères.",
     "Volo.Abp.Identity:PasswordRequiresUniqueChars": "Les mots de passe doivent utiliser au moins {0} caractères différents.",
+    "Volo.Abp.Identity:PasswordInHistory": "Les mots de passe ne doivent pas correspondre à vos {0} derniers mots de passe.",
     "Volo.Abp.Identity:RoleNotFound": "La {0} de rôle n’existe pas.",
     "Volo.Abp.Identity:UserAlreadyHasPassword": "L’utilisateur dispose déjà d’un jeu de mots de passe.",
     "Volo.Abp.Identity:UserAlreadyInRole": "Utilisateur déjà dans le rôle '{0}'.",

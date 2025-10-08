@@ -57,6 +57,7 @@
     "Volo.Abp.Identity:PasswordRequiresUpper": "Lösenord måste innehålla minst en versal ('A'-'Z').",
     "Volo.Abp.Identity:PasswordTooShort": "Lösenord måste innehålla minst {0} tecken.",
     "Volo.Abp.Identity:PasswordRequiresUniqueChars": "Lösenord måste innehålla minst {0} olika tecken.",
+    "Volo.Abp.Identity:PasswordInHistory": "Lösenord får inte matcha dina senaste {0} lösenord.",
     "Volo.Abp.Identity:RoleNotFound": "Roll {0} finns inte.",
     "Volo.Abp.Identity:UserAlreadyHasPassword": "Användaren har redan ett lösenord inställt.",
     "Volo.Abp.Identity:UserAlreadyInRole": "Användaren har redan rollen '{0}'.",

@@ -57,6 +57,7 @@
     "Volo.Abp.Identity:PasswordRequiresUpper": "Salasanoissa on oltava vähintään yksi isot kirjaimet ('A'-'Z').",
     "Volo.Abp.Identity:PasswordTooShort": "Salasanojen on oltava vähintään {0} merkkiä.",
     "Volo.Abp.Identity:PasswordRequiresUniqueChars": "Salasanojen on käytettävä vähintään {0} erilaista merkkiä.",
+    "Volo.Abp.Identity:PasswordInHistory": "Salasanojen ei saa täsmätä viimeisten {0} salasanasi kanssa.",
     "Volo.Abp.Identity:RoleNotFound": "Roolia {0} ei ole olemassa.",
     "Volo.Abp.Identity:UserAlreadyHasPassword": "Käyttäjällä on jo asetettu salasana.",
     "Volo.Abp.Identity:UserAlreadyInRole": "Käyttäjä on jo roolissa {0}.",

@@ -22,7 +22,7 @@ public class IdentityUserPasswordHistory : Entity, IMultiTenant
     /// </summary>
     public virtual string Password { get; protected set; }
 
-    public virtual DateTime CreatedAt { get; protected set; }
+    public virtual DateTimeOffset CreatedAt { get; protected set; }
 
     protected IdentityUserPasswordHistory()
     {
@@ -38,7 +38,7 @@ public class IdentityUserPasswordHistory : Entity, IMultiTenant
 
         UserId = userId;
         Password = password;
-        CreatedAt = DateTime.UtcNow;
+        CreatedAt = DateTimeOffset.UtcNow;
         TenantId = tenantId;
     }
 

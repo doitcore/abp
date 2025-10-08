@@ -13,7 +13,7 @@ public class IdentityUserPasswordHistory : Entity, IMultiTenant
     public virtual Guid? TenantId { get; protected set; }
 
     /// <summary>
-    /// Gets or sets the of the primary key of the user associated with this password history entry.
+    /// Gets or sets the primary key of the user associated with this password history entry.
     /// </summary>
     public virtual Guid UserId { get; protected set; }
 

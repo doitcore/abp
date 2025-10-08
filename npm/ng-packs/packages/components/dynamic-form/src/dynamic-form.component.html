@@ -1,0 +1,27 @@
+<form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" class="dynamic-form">
+  @for (field of sortedFields; track field.key) {
+    <div class="row">
+      <div [ngClass]="'col-md-' + (field.gridSize || 12)">
+        <abp-dynamic-form-field
+          [field]="field"
+          [formControlName]="field.key"
+          [visible]="isFieldVisible(field)">
+        </abp-dynamic-form-field>
+      </div>
+    </div>
+  }
+  <div class="form-actions">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="onCancel()">
+      Cancel
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="!dynamicForm.valid || isSubmitting">
+      {{ submitButtonText() }}
+    </button>
+  </div>
+</form>

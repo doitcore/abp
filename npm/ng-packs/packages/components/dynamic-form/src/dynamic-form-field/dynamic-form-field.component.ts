@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   forwardRef,
+  inject,
   InjectionToken,
   input,
 } from '@angular/core';
@@ -32,12 +34,14 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
 
 export class DynamicFormFieldComponent implements ControlValueAccessor {
   field = input.required<FormFieldConfig>();
-  isVisible = input<boolean>(true);
+  visible = input<boolean>(true);
   disabled = false;
   value: any;
+  readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   writeValue(value: any[]): void {
-    //
+    this.value = value;
+    this.changeDetectorRef.markForCheck();
   }
 
   registerOnChange(fn: any): void {
@@ -50,6 +54,7 @@ export class DynamicFormFieldComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    this.changeDetectorRef.markForCheck();
   }
 
   private onChange: (value: any) => void = () => {};

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input, output, inject } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, input, output, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DynamicFormService } from './dynamic-form.service';
 import { FormFieldConfig } from './dynamic-form.models';
@@ -7,11 +7,12 @@ import { DynamicFormFieldComponent } from './dynamic-form-field';
 
 @Component({
   selector: 'abp-dynamic-form',
-  template: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './dynamic-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, DynamicFormFieldComponent, ReactiveFormsModule],
 })
 
-export class DynamicFormComponent {
+export class DynamicFormComponent implements OnInit {
   fields = input<FormFieldConfig[]>([]);
   submitButtonText = input<string>('Submit');
   formSubmit = output<any>();

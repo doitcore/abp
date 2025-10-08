@@ -22,7 +22,7 @@ public class IdentityUserPasswordHistory : Entity, IMultiTenant
     /// </summary>
     public virtual string Password { get; protected set; }
 
-    public virtual DateTime CreatedAt { get; set; }
+    public virtual DateTime CreatedAt { get; protected set; }
 
     protected IdentityUserPasswordHistory()
     {

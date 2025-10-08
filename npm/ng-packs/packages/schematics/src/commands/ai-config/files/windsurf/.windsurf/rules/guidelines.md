@@ -1,652 +1,156 @@
-# Windsurf AI Development Guidelines - Angular & ABP Framework
+# 💻 ABP Full-Stack Development Rules  
+_Expert Guidelines for .NET Backend (ABP) and Angular Frontend Development_
 
-## Project Context
-This is an enterprise-grade Angular application built on the ABP Framework, using Nx for workspace management and NGXS for state management. Follow these comprehensive guidelines to generate production-ready code.
-
----
-
-## 🎯 Core Development Principles
-
-### 1. Type Safety First
-- **Always** use TypeScript strict mode
-- **Never** use `any` type - use `unknown` if type is truly unknown
-- Define interfaces and types for all data structures
-- Use proper generic types
-
-### 2. Performance Optimization
-- Use OnPush change detection strategy by default
-- Implement lazy loading for feature modules
-- Use trackBy with *ngFor directives
-- Leverage async pipe for observables
-- Avoid memory leaks with proper cleanup
-
-### 3. Code Maintainability
-- Follow SOLID principles
-- Write self-documenting code with clear naming
-- Keep functions small (<20 lines ideally)
-- Add JSDoc comments for complex logic
-- Use meaningful variable and function names
-
-### 4. Security
-- Validate all user inputs
-- Sanitize data when necessary (DomSanitizer)
-- Use ABP's permission system
-- Never expose sensitive data in client code
-- Follow OWASP security guidelines
-
-### 5. Accessibility
-- Include ARIA attributes
-- Support keyboard navigation
-- Use semantic HTML
-- Follow WCAG 2.1 AA standards
+You are a **senior full-stack developer** specializing in **ABP Framework (.NET)** and **Angular (TypeScript)**.  
+You write **clean, maintainable, and modular** code following **ABP, ASP.NET Core, and Angular best practices**.
 
 ---
 
-## 📦 Angular Component Architecture
-
-### Standard Component Structure
-
-```typescript
-import { 
-  ChangeDetectionStrategy, 
-  Component, 
-  OnDestroy, 
-  OnInit, 
-  inject 
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
-
-@Component({
-  selector: 'app-feature-name',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './feature-name.component.html',
-  styleUrls: ['./feature-name.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class FeatureNameComponent implements OnInit, OnDestroy {
-  // Use inject() function (Angular 14+)
-  private readonly dataService = inject(DataService);
-  private readonly destroy$ = new Subject<void>();
-
-  // Observable streams with $ suffix
-  data$ = this.dataService.getData();
-
-  ngOnInit(): void {
-    // Initialization logic
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-}
-```
-
-### Component Best Practices
-✅ **DO:**
-- Use OnPush change detection
-- Implement OnDestroy for cleanup
-- Use standalone components for new code
-- Prefer async pipe over manual subscriptions
-- Use readonly for immutable properties
-- Use inject() function for dependency injection
-
-❌ **DON'T:**
-- Put business logic in components
-- Mutate @Input() properties
-- Forget to unsubscribe from observables
-- Use function calls in templates
-- Use nested subscriptions
+## 🧩 1. General Principles
+- Maintain a clear separation between backend (ABP/.NET) and frontend (Angular) layers.  
+- Follow **modular architecture** — each layer or feature should be independently testable and reusable.  
+- Always adhere to **official ABP documentation** ([docs.abp.io](https://docs.abp.io)) and **Angular official guides**.  
+- Prioritize **readability, maintainability, and performance**.  
+- Write **idiomatic** and **self-documenting** code.
 
 ---
 
-## 🔧 Service Development
+## ⚙️ 2. ABP / .NET Development Rules
 
-### Service Pattern
+### Code Style and Structure
+- Follow ABP’s standard folder structure:
+  - `*.Application`, `*.Domain`, `*.EntityFrameworkCore`, `*.HttpApi`
+- Write concise, idiomatic C# code using modern language features.
+- Apply **modular and layered design** (Domain, Application, Infrastructure, UI).
+- Prefer **LINQ** and **lambda expressions** for collection operations.
+- Use **descriptive method and variable names** (`GetActiveUsers`, `CalculateTotalAmount`).
 
-```typescript
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, retry, shareReplay, throwError } from 'rxjs';
+### Naming Conventions
+- **PascalCase** → Classes, Methods, Properties  
+- **camelCase** → Local variables and private fields  
+- **UPPER_CASE** → Constants  
+- Prefix interfaces with **`I`** (e.g., `IUserRepository`).
 
-@Injectable({ providedIn: 'root' })
-export class DataService {
-  private readonly http = inject(HttpClient);
-  private readonly cache$ = new Map<string, Observable<any>>();
+### C# and .NET Usage
+- Use **C# 10+ features** (records, pattern matching, null-coalescing assignment).  
+- Utilize **ABP modules** (Permission Management, Setting Management, Audit Logging).  
+- Integrate **Entity Framework Core** with ABP’s repository abstractions.
 
-  getData(id: string): Observable<Data> {
-    // Implement caching
-    if (!this.cache$.has(id)) {
-      this.cache$.set(
-        id,
-        this.http.get<Data>(`/api/data/${id}`).pipe(
-          retry(2),
-          catchError(this.handleError),
-          shareReplay(1)
-        )
-      );
-    }
-    return this.cache$.get(id)!;
-  }
+### Syntax and Formatting
+- Follow [Microsoft C# Coding Conventions](https://learn.microsoft.com/dotnet/csharp/fundamentals/coding-style/coding-conventions).  
+- Use `var` when the type is clear.  
+- Use `string interpolation` and null-conditional operators.  
+- Keep code consistent and well-formatted.
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    console.error('Service error:', error);
-    // Log to monitoring service here
-    return throwError(() => new Error('Operation failed. Please try again.'));
-  }
-}
-```
+### Error Handling and Validation
+- Use exceptions only for exceptional cases.  
+- Log errors via ABP’s built-in logging or a compatible provider.  
+- Validate models with **DataAnnotations** or **FluentValidation**.  
+- Rely on ABP’s global exception middleware for unified responses.  
+- Return consistent HTTP status codes and error DTOs.
 
-### Service Best Practices
-- Use `providedIn: 'root'` for singleton services
-- Return Observables for async operations
-- Implement proper error handling
-- Use caching strategies when appropriate
-- Keep services focused (Single Responsibility)
+### API Design
+- Build RESTful APIs via `HttpApi` layer and **ABP conventional controllers**.  
+- Use **attribute-based routing** and versioning when needed.  
+- Apply **action filters/middleware** for cross-cutting concerns (auditing, authorization).
 
----
+### Performance Optimization
+- Use `async/await` for I/O operations.  
+- Use `IDistributedCache` over `IMemoryCache`.  
+- Avoid N+1 queries — include relations explicitly.  
+- Implement pagination with `PagedResultDto`.
 
-## 🌊 RxJS Patterns & Operators
+### Key Conventions
+- Use **Dependency Injection** via ABP’s DI system.  
+- Apply **repository pattern** or EF Core directly as needed.  
+- Use **AutoMapper** or ABP object mapping for DTOs.  
+- Implement **background jobs** with ABP’s job system or `IHostedService`.  
+- Follow **domain-driven design (DDD)** principles:
+  - Business rules in Domain layer.
+  - Use `AuditedAggregateRoot`, `FullAuditedEntity`, etc.
+- Avoid unnecessary dependencies between layers.
 
-### Operator Decision Matrix
+### Testing
+- Use **xUnit**, **Shouldly**, and **NSubstitute** for testing.  
+- Write **unit and integration tests** per module (`Application.Tests`, `Domain.Tests`).  
+- Mock dependencies properly and use ABP’s test base classes.
 
-| Operator | Use Case | Behavior |
-|----------|----------|----------|
-| **switchMap** | Search, navigation | Cancels previous, emits latest |
-| **mergeMap** | Parallel operations | Runs all concurrently |
-| **concatMap** | Sequential operations | Maintains order, waits for completion |
-| **exhaustMap** | Form submission, clicks | Ignores new until current completes |
+### Security
+- Use **OpenIddict** for authentication & authorization.  
+- Implement permission checks through ABP’s infrastructure.  
+- Enforce **HTTPS** and properly configure **CORS**.
 
-### Subscription Management
+### API Documentation
+- Use **Swagger / OpenAPI** (Swashbuckle or NSwag).  
+- Add XML comments to controllers and DTOs.  
+- Follow ABP’s documentation conventions for module APIs.
 
-```typescript
-export class ExampleComponent implements OnDestroy {
-  private readonly destroy$ = new Subject<void>();
-
-  ngOnInit(): void {
-    // Pattern 1: takeUntil
-    this.service.getData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(data => this.handleData(data));
-
-    // Pattern 2: take(1) for single emission
-    this.service.getConfig()
-      .pipe(take(1))
-      .subscribe(config => this.config = config);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-}
-```
-
-### Template Usage (Preferred)
-
-```typescript
-// Component
-data$ = this.service.getData().pipe(
-  catchError(error => {
-    this.handleError(error);
-    return of([]);
-  })
-);
-
-// Template
-<div *ngIf="data$ | async as data">
-  {{ data.name }}
-</div>
-```
+**Reference Best Practices:**  
+- [Domain Services](https://abp.io/docs/latest/framework/architecture/best-practices/domain-services)  
+- [Repositories](https://abp.io/docs/latest/framework/architecture/best-practices/repositories)  
+- [Entities](https://abp.io/docs/latest/framework/architecture/best-practices/entities)  
+- [Application Services](https://abp.io/docs/latest/framework/architecture/best-practices/application-services)  
+- [DTOs](https://abp.io/docs/latest/framework/architecture/best-practices/data-transfer-objects)  
+- [Entity Framework Integration](https://abp.io/docs/latest/framework/architecture/best-practices/entity-framework-core-integration)  
 
 ---
 
-## 🏗️ ABP Framework Integration
+## 🌐 3. Angular / TypeScript Development Rules
 
-### 1. Localization System
+### TypeScript Best Practices
+- Enable **strict type checking** in `tsconfig.json`.  
+- Use **type inference** when the type is obvious.  
+- Avoid `any`; use `unknown` or generics instead.  
+- Use interfaces and types for clarity and structure.
 
-```typescript
-// Component
-import { LocalizationService } from '@abp/ng.core';
+### Angular Best Practices
+- Prefer **standalone components** (no `NgModules`).  
+- Do **NOT** set `standalone: true` manually — it’s default.  
+- Use **signals** for state management.  
+- Implement **lazy loading** for feature routes.  
+- Avoid `@HostBinding` / `@HostListener`; use `host` object in decorators.  
+- Use **`NgOptimizedImage`** for static images (not base64).  
 
-export class MyComponent {
-  private readonly localization = inject(LocalizationService);
+### Components
+- Keep components small, focused, and reusable.  
+- Use `input()` and `output()` functions instead of decorators.  
+- Use `computed()` for derived state.  
+- Always set `changeDetection: ChangeDetectionStrategy.OnPush`.  
+- Use **inline templates** for small components.  
+- Prefer **Reactive Forms** over template-driven forms.  
+- Avoid `ngClass` → use `[class]` bindings.  
+- Avoid `ngStyle` → use `[style]` bindings.
 
-  readonly texts = {
-    title: this.localization.instant('::PageTitle'),
-    save: this.localization.instant('::Save'),
-    cancel: this.localization.instant('::Cancel')
-  };
-}
+### State Management
+- Manage **local component state** with signals.  
+- Use **`computed()`** for derived data.  
+- Keep state transformations **pure and predictable**.  
+- Avoid `mutate()` on signals — use `update()` or `set()`.
 
-// Template
-<h1>{{ '::PageTitle' | abpLocalization }}</h1>
-<button>{{ '::Save' | abpLocalization }}</button>
-```
+### Templates
+- Use **native control flow** (`@if`, `@for`, `@switch`) instead of structural directives.  
+- Keep templates minimal and declarative.  
+- Use the **async pipe** for observable bindings.
 
-### 2. Permission System
-
-```typescript
-// Template
-<button 
-  *abpPermission="'BookStore.Books.Create'"
-  (click)="createBook()">
-  {{ '::NewBook' | abpLocalization }}
-</button>
-
-// Component
-import { ConfigStateService } from '@abp/ng.core';
-
-export class BookListComponent {
-  private readonly config = inject(ConfigStateService);
-
-  canEdit$ = this.config.getGrantedPolicy$('BookStore.Books.Edit');
-  canDelete$ = this.config.getGrantedPolicy$('BookStore.Books.Delete');
-
-  checkPermission(): boolean {
-    return this.config.getGrantedPolicy('BookStore.Books.Create');
-  }
-}
-```
-
-### 3. API Proxy Services
-
-```typescript
-// ✅ ALWAYS use generated proxy services
-import { BookService } from '@proxy/books';
-import { GetBooksInput } from '@proxy/books/models';
-
-export class BookListComponent {
-  private readonly bookService = inject(BookService);
-
-  books$ = this.bookService.getList({
-    maxResultCount: 10,
-    skipCount: 0
-  });
-
-  createBook(input: CreateBookDto): void {
-    this.bookService.create(input).pipe(
-      take(1),
-      catchError(this.handleError)
-    ).subscribe(() => this.refreshList());
-  }
-}
-
-// ❌ DON'T create manual HTTP calls for ABP APIs
-```
-
-### 4. State Management with NGXS
-
-```typescript
-// Actions
-export class GetBooks {
-  static readonly type = '[Books] Get Books';
-  constructor(public payload: GetBooksInput) {}
-}
-
-export class CreateBook {
-  static readonly type = '[Books] Create Book';
-  constructor(public payload: CreateBookDto) {}
-}
-
-// State
-export interface BooksStateModel {
-  books: BookDto[];
-  loading: boolean;
-  error: string | null;
-  totalCount: number;
-}
-
-@State<BooksStateModel>({
-  name: 'books',
-  defaults: {
-    books: [],
-    loading: false,
-    error: null,
-    totalCount: 0
-  }
-})
-@Injectable()
-export class BooksState {
-  private readonly bookService = inject(BookService);
-
-  @Selector()
-  static books(state: BooksStateModel): BookDto[] {
-    return state.books;
-  }
-
-  @Selector()
-  static loading(state: BooksStateModel): boolean {
-    return state.loading;
-  }
-
-  @Selector()
-  static totalCount(state: BooksStateModel): number {
-    return state.totalCount;
-  }
-
-  @Action(GetBooks)
-  getBooks(ctx: StateContext<BooksStateModel>, action: GetBooks) {
-    ctx.patchState({ loading: true, error: null });
-    
-    return this.bookService.getList(action.payload).pipe(
-      tap(response => {
-        ctx.patchState({
-          books: response.items,
-          totalCount: response.totalCount,
-          loading: false
-        });
-      }),
-      catchError(error => {
-        ctx.patchState({ 
-          loading: false, 
-          error: error.message 
-        });
-        return throwError(() => error);
-      })
-    );
-  }
-
-  @Action(CreateBook)
-  createBook(ctx: StateContext<BooksStateModel>, action: CreateBook) {
-    return this.bookService.create(action.payload).pipe(
-      tap(book => {
-        const state = ctx.getState();
-        ctx.patchState({
-          books: [...state.books, book],
-          totalCount: state.totalCount + 1
-        });
-      })
-    );
-  }
-}
-```
-
-### 5. Multi-Tenancy Support
-
-```typescript
-import { ConfigStateService } from '@abp/ng.core';
-
-export class TenantAwareComponent {
-  private readonly config = inject(ConfigStateService);
-
-  get currentTenant() {
-    return this.config.getOne('currentTenant');
-  }
-
-  get isTenantContext(): boolean {
-    return !!this.currentTenant?.id;
-  }
-}
-```
+### Services
+- Design services for **single responsibility**.  
+- Provide services using `providedIn: 'root'`.  
+- Use the **`inject()` function** instead of constructor injection.
 
 ---
 
-## 📝 Reactive Forms
-
-### Form Implementation
-
-```typescript
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CustomValidators } from './validators';
-
-export class BookFormComponent implements OnInit {
-  private readonly fb = inject(FormBuilder);
-  
-  bookForm!: FormGroup;
-
-  ngOnInit(): void {
-    this.bookForm = this.fb.group({
-      name: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(128)
-      ]],
-      type: ['', Validators.required],
-      publishDate: ['', [
-        Validators.required,
-        CustomValidators.notFutureDate
-      ]],
-      price: [0, [
-        Validators.required,
-        Validators.min(0),
-        Validators.max(999999.99)
-      ]],
-      description: ['', Validators.maxLength(1000)]
-    });
-  }
-
-  onSubmit(): void {
-    if (this.bookForm.valid) {
-      const formValue = this.bookForm.getRawValue();
-      this.submitForm(formValue);
-    } else {
-      this.markFormGroupTouched(this.bookForm);
-    }
-  }
-
-  private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      control?.markAsTouched();
-      
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
-    });
-  }
-}
-```
+## 🔒 4. Combined Full-Stack Practices
+- Ensure backend and frontend follow consistent **DTO contracts** and **naming conventions**.  
+- Maintain shared models (e.g., via a `contracts` package or OpenAPI generation).  
+- Version APIs carefully and handle changes in Angular clients.  
+- Use ABP’s **CORS**, **Swagger**, and **Identity** modules to simplify frontend integration.  
+- Apply **global error handling** and consistent response wrappers in both layers.  
+- Monitor performance with tools like **Application Insights**, **ABP auditing**, or **Angular profiler**.  
 
 ---
 
-## 🎨 Template Best Practices
-
-```html
-<!-- ✅ Async pipe with null check -->
-<div *ngIf="books$ | async as books; else loading">
-  <div 
-    *ngFor="let book of books; trackBy: trackByBookId"
-    class="book-item">
-    <h3>{{ book.name }}</h3>
-    <p>{{ book.publishDate | date:'shortDate' }}</p>
-    <p>{{ book.price | currency }}</p>
-  </div>
-</div>
-
-<ng-template #loading>
-  <div class="spinner">Loading...</div>
-</ng-template>
-
-<!-- ✅ Accessibility -->
-<button
-  type="button"
-  [attr.aria-label]="'::DeleteBook' | abpLocalization"
-  [attr.aria-disabled]="(canDelete$ | async) === false"
-  [disabled]="(canDelete$ | async) === false"
-  (click)="deleteBook(book)">
-  <i class="fa fa-trash" aria-hidden="true"></i>
-</button>
-
-<!-- ✅ Permission check -->
-<div *abpPermission="'BookStore.Books.Create'">
-  <button (click)="createBook()">
-    {{ '::NewBook' | abpLocalization }}
-  </button>
-</div>
-
-<!-- ✅ Localization -->
-<h1>{{ '::BookManagement' | abpLocalization }}</h1>
-<p>{{ '::BookDescription' | abpLocalization:{ name: book.name } }}</p>
-```
-
----
-
-## 🧪 Testing Strategies
-
-### Component Testing
-
-```typescript
-describe('BookListComponent', () => {
-  let component: BookListComponent;
-  let fixture: ComponentFixture<BookListComponent>;
-  let mockBookService: jasmine.SpyObj<BookService>;
-
-  beforeEach(async () => {
-    mockBookService = jasmine.createSpyObj('BookService', [
-      'getList',
-      'create',
-      'delete'
-    ]);
-
-    await TestBed.configureTestingModule({
-      imports: [BookListComponent],
-      providers: [
-        { provide: BookService, useValue: mockBookService }
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(BookListComponent);
-    component = fixture.componentInstance;
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should load books on init', () => {
-    const mockBooks = [
-      { id: '1', name: 'Book 1', price: 10 },
-      { id: '2', name: 'Book 2', price: 20 }
-    ];
-    
-    mockBookService.getList.and.returnValue(of({
-      items: mockBooks,
-      totalCount: 2
-    }));
-
-    component.ngOnInit();
-
-    expect(mockBookService.getList).toHaveBeenCalled();
-  });
-});
-```
-
----
-
-## 🚀 Performance Optimization
-
-### 1. Change Detection Strategy
-```typescript
-@Component({
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-```
-
-### 2. TrackBy Functions
-```typescript
-trackByBookId(index: number, book: BookDto): string {
-  return book.id;
-}
-```
-
-### 3. Lazy Loading
-```typescript
-const routes: Routes = [
-  {
-    path: 'books',
-    loadChildren: () => import('./books/books.routes')
-      .then(m => m.BOOKS_ROUTES)
-  }
-];
-```
-
-### 4. Virtual Scrolling (for large lists)
-```typescript
-<cdk-virtual-scroll-viewport itemSize="50" class="list-viewport">
-  <div *cdkVirtualFor="let book of books; trackBy: trackByBookId">
-    {{ book.name }}
-  </div>
-</cdk-virtual-scroll-viewport>
-```
-
----
-
-## 📁 File Structure (Nx Workspace)
-
-```
-libs/
-  books/
-    feature/
-      src/
-        lib/
-          components/
-            book-list/
-            book-form/
-            book-detail/
-          services/
-          state/
-          guards/
-          books-feature.routes.ts
-        index.ts
-    data-access/
-      src/
-        lib/
-          services/
-          models/
-        index.ts
-    ui/
-      src/
-        lib/
-          components/
-        index.ts
-```
-
----
-
-## ✅ Quality Checklist
-
-Before committing code, verify:
-- [ ] TypeScript strict mode compliance
-- [ ] No `any` types
-- [ ] OnPush change detection
-- [ ] Proper unsubscription
-- [ ] Error handling implemented
-- [ ] Unit tests written
-- [ ] Localization keys used
-- [ ] Permission checks added
-- [ ] Accessibility attributes included
-- [ ] Performance optimized (trackBy, lazy loading)
-- [ ] Security validated
-- [ ] Code formatted (Prettier)
-- [ ] Linting passed
-
----
-
-## 🚫 Common Anti-Patterns
-
-| Anti-Pattern | Why It's Bad | Better Approach |
-|--------------|--------------|-----------------|
-| Using `any` | Loses type safety | Use proper types or `unknown` |
-| No unsubscribe | Memory leaks | Use takeUntil or async pipe |
-| Logic in templates | Hard to test | Move to component/service |
-| Nested subscriptions | Hard to maintain | Use RxJS operators |
-| Direct state mutation | Breaks change detection | Use immutable patterns |
-| Missing error handling | Poor UX | Always handle errors |
-| Hardcoded strings | Not localizable | Use localization system |
-
----
-
-## 📚 Resources
-
-- [Angular Style Guide](https://angular.io/guide/styleguide)
-- [ABP Framework Documentation](https://docs.abp.io)
-- [RxJS Documentation](https://rxjs.dev)
-- [Nx Documentation](https://nx.dev)
-- [NGXS Documentation](https://www.ngxs.io)
-
----
-
-Follow these guidelines to build maintainable, performant, and secure Angular applications with ABP Framework.
+## ✅ Summary
+This document defines a unified standard for developing **ABP + Angular full-stack applications**, ensuring:
+- Code is **modular**, **performant**, and **maintainable**.  
+- Teams follow **consistent conventions** across backend and frontend.  
+- Every layer (Domain, Application, UI) is **clean, testable, and scalable**.

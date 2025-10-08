@@ -1,12 +1,26 @@
-import { ChangeDetectionStrategy, Component, InjectionToken } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  forwardRef,
+  InjectionToken,
+  input,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { FormFieldConfig } from '../dynamic-form.models';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export const ABP_DYNAMIC_FORM_FIELD = new InjectionToken<DynamicFormFieldComponent>('AbpDynamicFormField');
+
+const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => DynamicFormFieldComponent),
+  multi: true,
+};
 
 @Component({
   selector: 'abp-dynamic-form-field',
   templateUrl: './dynamic-form-field.component.html',
-  providers: [{ provide: ABP_DYNAMIC_FORM_FIELD, useExisting: DynamicFormFieldComponent }],
+  providers: [{ provide: ABP_DYNAMIC_FORM_FIELD, useExisting: DynamicFormFieldComponent }, DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR],
   host: { 'class': 'abp-dynamic-form-field' },
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,42 +29,27 @@ export const ABP_DYNAMIC_FORM_FIELD = new InjectionToken<DynamicFormFieldCompone
   ]
 })
 
-export class DynamicFormFieldComponent {
-  field = input<FormFieldConfig>();
-  @Input() isVisible: boolean = true;
+export class DynamicFormFieldComponent implements ControlValueAccessor {
+  field = input.required<FormFieldConfig>();
+  isVisible = input<boolean>(true);
+  disabled = false;
 
-  ngOnInit() {
-    const control = this.form.get(this.field.key);
-    if (control) {
-      control.valueChanges.subscribe(value => {
-        this.fieldChange.emit({ fieldKey: this.field.key, value });
-      });
-    }
+  writeValue(value: any[]): void {
+    //
   }
 
-  isFieldInvalid(): boolean {
-    const control = this.form.get(this.field.key);
-    return !!(control && control.invalid && (control.dirty || control.touched));
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
   }
 
-  getErrorMessage(): string {
-    const control = this.form.get(this.field.key);
-    if (!control || !control.errors) return '';
-
-    const validators = this.field.validators || [];
-
-    for (const validator of validators) {
-      if (control.errors[validator.type]) {
-        return validator.message;
-      }
-    }
-
-    // Fallback error messages
-    if (control.errors['required']) return `${this.field.label} is required`;
-    if (control.errors['email']) return 'Please enter a valid email address';
-    if (control.errors['minlength']) return `Minimum length is ${control.errors['minlength'].requiredLength}`;
-    if (control.errors['maxlength']) return `Maximum length is ${control.errors['maxlength'].requiredLength}`;
-
-    return 'Invalid input';
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
   }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
 }

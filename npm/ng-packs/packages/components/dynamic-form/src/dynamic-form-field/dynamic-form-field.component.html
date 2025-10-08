@@ -1,99 +1,87 @@
-@if (isVisible) {
-  <div class="field-container">
+<div class="field-container">
 
-    @if (field.type === 'text') {
-      <!-- Text Input -->
-      <div class="form-group">
-        <label [for]="field.key">{{ field.label }}</label>
-        <input
-          [id]="field.key"
-          [formControlName]="field.key"
-          [placeholder]="field.placeholder || ''"
-          class="form-control"
-          [class.is-invalid]="isFieldInvalid()">
-        @if (isFieldInvalid()) {
-          <div class="invalid-feedback">
-            {{ getErrorMessage() }}
-          </div>
+  @if (field().type === 'text') {
+    <!-- Text Input -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <input
+        [id]="field().key"
+        [placeholder]="field().placeholder || ''"
+        class="form-control">
+<!--      @if (isFieldInvalid()) {
+        <div class="invalid-feedback">
+          {{ getErrorMessage() }}
+        </div>
+      }-->
+    </div>
+  } @else if (field().type === 'select') {
+    <!-- Select Dropdown -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <select
+        [id]="field().key"
+        class="form-control">
+        <option value="">Please select...</option>
+        @for (option of field().options; track option.key) {
+          <option
+            [value]="option.key">
+            {{ option.value }}
+          </option>
         }
-      </div>
-    } @else if (field.type === 'select') {
-      <!-- Select Dropdown -->
-      <div class="form-group">
-        <label [for]="field.key">{{ field.label }}</label>
-        <select
-          [id]="field.key"
-          [formControlName]="field.key"
-          class="form-control"
-          [class.is-invalid]="isFieldInvalid()">
-          <option value="">Please select...</option>
-          @for (option of field.options; track option.key) {
-            <option
-              [value]="option.key">
-              {{ option.value }}
-            </option>
-          }
-        </select>
-        @if (isFieldInvalid()) {
-          <div class="invalid-feedback">
-            {{ getErrorMessage() }}
-          </div>
-        }
-      </div>
-    } @else if (field.type === 'checkbox') {
-      <!-- Checkbox -->
-      <div class="form-group form-check">
-        <input
-          type="checkbox"
-          [id]="field.key"
-          [formControlName]="field.key"
-          class="form-check-input"
-          [class.is-invalid]="isFieldInvalid()">
-        <label class="form-check-label" [for]="field.key">
-          {{ field.label }}
-        </label>
-        @if (isFieldInvalid()) {
-          <div class="invalid-feedback">
-            {{ getErrorMessage() }}
-          </div>
-        }
-      </div>
-    } @else if (field.type === 'email') {
-      <!-- Email Input -->
-      <div class="form-group">
-        <label [for]="field.key">{{ field.label }}</label>
-        <input
-          type="email"
-          [id]="field.key"
-          [formControlName]="field.key"
-          [placeholder]="field.placeholder || ''"
-          class="form-control"
-          [class.is-invalid]="isFieldInvalid()">
-        @if (isFieldInvalid()) {
-          <div class="invalid-feedback">
-            {{ getErrorMessage() }}
-          </div>
-        }
-      </div>
-    } @else if (field.type === 'textarea') {
-      <!-- Textarea -->
-      <div class="form-group">
-        <label [for]="field.key">{{ field.label }}</label>
-        <textarea
-          [id]="field.key"
-          [formControlName]="field.key"
-          [placeholder]="field.placeholder || ''"
-          rows="4"
-          class="form-control"
-          [class.is-invalid]="isFieldInvalid()">
+      </select>
+<!--      @if (isFieldInvalid()) {
+        <div class="invalid-feedback">
+          {{ getErrorMessage() }}
+        </div>
+      }-->
+    </div>
+  } @else if (field().type === 'checkbox') {
+    <!-- Checkbox -->
+    <div class="form-group form-check">
+      <input
+        type="checkbox"
+        [id]="field().key"
+        class="form-check-input">
+      <label class="form-check-label" [for]="field().key">
+        {{ field().label }}
+      </label>
+<!--      @if (isFieldInvalid()) {
+        <div class="invalid-feedback">
+          {{ getErrorMessage() }}
+        </div>
+      }-->
+    </div>
+  } @else if (field().type === 'email') {
+    <!-- Email Input -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <input
+        type="email"
+        [id]="field().key"
+        [placeholder]="field().placeholder || ''"
+        class="form-control">
+<!--      @if (isFieldInvalid()) {
+        <div class="invalid-feedback">
+          {{ getErrorMessage() }}
+        </div>
+      }-->
+    </div>
+  } @else if (field().type === 'textarea') {
+    <!-- Textarea -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <textarea
+        [id]="field().key"
+        [placeholder]="field().placeholder || ''"
+        rows="4"
+        class="form-control">
         </textarea>
-        @if (isFieldInvalid()) {
-          <div class="invalid-feedback">
-            {{ getErrorMessage() }}
-          </div>
-        }
-      </div>
-    }
-  </div>
-  <!--      Add more field types as needed-->
-}
+<!--      @if (isFieldInvalid()) {
+        <div class="invalid-feedback">
+          {{ getErrorMessage() }}
+        </div>
+      }-->
+    </div>
+  }
+</div>
+<!--      Add more field types as needed-->

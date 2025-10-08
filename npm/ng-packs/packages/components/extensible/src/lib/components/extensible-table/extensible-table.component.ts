@@ -130,12 +130,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   private readonly _actionsColumnWidth = signal<number | undefined>(DEFAULT_ACTIONS_COLUMN_WIDTH);
 
   readonly columnWidths = computed(() => {
-    const actionsColumn = this._actionsColumnWidth();
-    const widths = [actionsColumn];
-    this.propList.forEach(({ value: prop }) => {
-      widths.push(prop.columnWidth);
-    });
-    return widths;
+    return this.propList.toArray().map(prop => prop.columnWidth);
   });
 
   constructor() {

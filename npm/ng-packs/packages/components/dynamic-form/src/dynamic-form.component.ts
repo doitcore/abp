@@ -6,17 +6,21 @@ import {
   inject,
   OnInit,
   DestroyRef,
+  effect,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DynamicFormService } from './dynamic-form.service';
 import { FormFieldConfig } from './dynamic-form.models';
 import { DynamicFormFieldComponent } from './dynamic-form-field';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'abp-dynamic-form',
   templateUrl: './dynamic-form.component.html',
+  styleUrls: ['./dynamic-form.component.scss'],
+  host: { class: 'abp-dynamic-form' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, DynamicFormFieldComponent, ReactiveFormsModule],
 })
@@ -30,14 +34,13 @@ export class DynamicFormComponent implements OnInit {
   formCancel = output<void>();
   private dynamicFormService = inject(DynamicFormService);
   readonly destroyRef = inject(DestroyRef);
+  readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   dynamicForm!: FormGroup;
   fieldVisibility: { [key: string]: boolean } = {};
 
   ngOnInit() {
-    this.dynamicForm = this.dynamicFormService.createFormGroup(this.fields());
-    this.initializeFieldVisibility();
-    this.setupConditionalLogic();
+    this.setupFormAndLogic();
   }
 
   get sortedFields(): FormFieldConfig[] {
@@ -61,12 +64,15 @@ export class DynamicFormComponent implements OnInit {
   }
 
   isFieldVisible(field: FormFieldConfig): boolean {
+    if (field.key === 'adminNotes') {
+      console.log('adminNotes visibility:', this.fieldVisibility[field.key] !== false);
+    }
     return this.fieldVisibility[field.key] !== false;
   }
 
   private initializeFieldVisibility() {
     this.fields().forEach(field => {
-      this.fieldVisibility[field.key] = !field.conditionalLogic?.length;
+      this.fieldVisibility = { ...this.fieldVisibility, [field.key]: !field.conditionalLogic?.length };
     });
   }
 
@@ -76,6 +82,7 @@ export class DynamicFormComponent implements OnInit {
         field.conditionalLogic.forEach(rule => {
           const dependentControl = this.dynamicForm.get(rule.dependsOn);
           if (dependentControl) {
+            this.evaluateConditionalLogic(field.key);
             dependentControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
               this.evaluateConditionalLogic(field.key);
             });
@@ -119,10 +126,10 @@ export class DynamicFormComponent implements OnInit {
 
     switch (action) {
       case 'show':
-        this.fieldVisibility[fieldKey] = shouldApply;
+        this.fieldVisibility = { ...this.fieldVisibility, [fieldKey]: shouldApply };
         break;
       case 'hide':
-        this.fieldVisibility[fieldKey] = !shouldApply;
+        this.fieldVisibility = { ...this.fieldVisibility, [fieldKey]: !shouldApply };
         break;
       case 'enable':
         if (control) {
@@ -135,6 +142,13 @@ export class DynamicFormComponent implements OnInit {
         }
         break;
     }
+  }
+
+  private setupFormAndLogic() {
+    this.dynamicForm = this.dynamicFormService.createFormGroup(this.fields());
+    this.initializeFieldVisibility();
+    this.setupConditionalLogic();
+    this.changeDetectorRef.markForCheck();
   }
 
   private markAllFieldsAsTouched() {

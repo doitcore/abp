@@ -37,6 +37,7 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
 @Component({
   selector: 'abp-dynamic-form-field',
   templateUrl: './dynamic-form-field.component.html',
+  styleUrls: ['./dynamic-form-field.component.scss'],
   providers: [
     { provide: ABP_DYNAMIC_FORM_FIELD, useExisting: DynamicFormFieldComponent },
     DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR

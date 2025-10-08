@@ -10,6 +10,13 @@
       </div>
     </div>
   }
+  <ng-content select="[actions]">
+    <ng-container [ngTemplateOutlet]="defaultActions"></ng-container>
+  </ng-content>
+
+</form>
+
+<ng-template #defaultActions>
   <div class="form-actions">
     @if (showCancelButton()) {
       <button
@@ -26,4 +33,4 @@
       {{ submitButtonText() }}
     </button>
   </div>
-</form>
+</ng-template>

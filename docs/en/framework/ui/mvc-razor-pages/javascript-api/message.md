@@ -177,13 +177,3 @@ abp.libs.sweetAlert.config.warn.icon = 'error';
 ````
 
 See the [SweetAlert document](https://sweetalert.js.org/) for all the configuration options.
-
-There is also a `prompt` preset you can customize via `abp.libs.sweetAlert.config.prompt`:
-
-````js
-abp.libs.sweetAlert.config.prompt = {
-  icon: 'question',
-  input: 'text'
-};
-````
-

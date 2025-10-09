@@ -21,7 +21,7 @@
 					{
 						var formattedUrl = Model.UrlFormat.Replace("{TagId}", tag.Id.ToString()).Replace("{TagName}", tag.Name);
 						<li>
-							<a href="@formattedUrl"><span class="badge rounded-pill  badge-secondary text-bg-secondary rounded-pill cmskit-tag font-weight-normal">@tag.Name</span></a>
+							<a href="@formattedUrl"><span class="badge rounded-pill badge-secondary text-bg-secondary cmskit-tag font-weight-normal">@tag.Name</span></a>
 						</li>
 					}
 				}

@@ -12,12 +12,15 @@ import {
 import { FormFieldConfig } from '../dynamic-form.models';
 import {
   ControlValueAccessor,
+  FormBuilder,
   FormControl,
   FormControlName,
   FormGroupDirective,
   FormsModule,
   NG_VALUE_ACCESSOR,
-  NgControl
+  NgControl,
+  FormGroup,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
@@ -42,32 +45,36 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
   host: { class: 'abp-dynamic-form-field' },
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgTemplateOutlet, LocalizationPipe],
+  imports: [FormsModule, NgTemplateOutlet, LocalizationPipe, ReactiveFormsModule],
 })
 export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   field = input.required<FormFieldConfig>();
   visible = input<boolean>(true);
-  disabled = false;
-  value: any;
   control!: FormControl;
+  fieldFormGroup: FormGroup;
   readonly changeDetectorRef = inject(ChangeDetectorRef);
   readonly destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
+  private formBuilder = inject(FormBuilder);
+
+  constructor() {
+    this.fieldFormGroup = this.formBuilder.group({
+      value: [{ value: '' }]
+    });
+  }
 
   ngOnInit() {
     const ngControl = this.injector.get(NgControl, null);
     if (ngControl) {
       this.control = this.injector.get(FormGroupDirective).getControl(ngControl as FormControlName);
     }
-  }
-
-  onValueChange(value: any) {
-    this.onChange(value);
-    this.changeDetectorRef.markForCheck();
+    this.value.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+      this.onChange(value);
+    });
   }
 
   writeValue(value: any[]): void {
-    this.value = value;
+    this.value.setValue(value || '');
     this.changeDetectorRef.markForCheck();
   }
 
@@ -80,7 +87,11 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    if (isDisabled) {
+      this.value.disable();
+    } else {
+      this.value.enable();
+    }
     this.changeDetectorRef.markForCheck();
   }
 
@@ -109,7 +120,9 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
       });
     }
   }
-
+  get value() {
+    return this.fieldFormGroup.get('value');
+  }
   private onChange: (value: any) => void = () => {};
   private onTouched: () => void = () => {};
 }

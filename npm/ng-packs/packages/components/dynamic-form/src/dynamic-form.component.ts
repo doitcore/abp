@@ -6,10 +6,9 @@ import {
   inject,
   OnInit,
   DestroyRef,
-  effect,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DynamicFormService } from './dynamic-form.service';
@@ -22,15 +21,15 @@ import { DynamicFormFieldComponent } from './dynamic-form-field';
   styleUrls: ['./dynamic-form.component.scss'],
   host: { class: 'abp-dynamic-form' },
   changeDetection: ChangeDetectionStrategy.OnPush,
+  exportAs: 'abpDynamicForm',
   imports: [CommonModule, DynamicFormFieldComponent, ReactiveFormsModule],
 })
-
 export class DynamicFormComponent implements OnInit {
   fields = input<FormFieldConfig[]>([]);
   submitButtonText = input<string>('Submit');
   submitInProgress = input<boolean>(false);
   showCancelButton = input<boolean>(false);
-  formSubmit = output<void>();
+  onSubmit = output<any>();
   formCancel = output<void>();
   private dynamicFormService = inject(DynamicFormService);
   readonly destroyRef = inject(DestroyRef);
@@ -47,9 +46,10 @@ export class DynamicFormComponent implements OnInit {
     return this.fields().sort((a, b) => (a.order || 0) - (b.order || 0));
   }
 
-  onSubmit() {
+  submit() {
+    console.log(this.dynamicForm.valid, this.dynamicForm.value);
     if (this.dynamicForm.valid) {
-      this.formSubmit.emit(this.dynamicForm.value);
+      this.onSubmit.emit(this.dynamicForm.getRawValue());
     } else {
       this.markAllFieldsAsTouched();
     }
@@ -70,9 +70,22 @@ export class DynamicFormComponent implements OnInit {
     return this.fieldVisibility[field.key] !== false;
   }
 
+  resetForm() {
+    const initialValues: { [key: string]: any } = this.dynamicFormService.getInitialValues(
+      this.fields(),
+    );
+    this.dynamicForm.reset({...initialValues});
+    this.dynamicForm.markAsUntouched();
+    this.dynamicForm.markAsPristine();
+    this.changeDetectorRef.markForCheck();
+  }
+
   private initializeFieldVisibility() {
     this.fields().forEach(field => {
-      this.fieldVisibility = { ...this.fieldVisibility, [field.key]: !field.conditionalLogic?.length };
+      this.fieldVisibility = {
+        ...this.fieldVisibility,
+        [field.key]: !field.conditionalLogic?.length,
+      };
     });
   }
 
@@ -83,9 +96,11 @@ export class DynamicFormComponent implements OnInit {
           const dependentControl = this.dynamicForm.get(rule.dependsOn);
           if (dependentControl) {
             this.evaluateConditionalLogic(field.key);
-            dependentControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-              this.evaluateConditionalLogic(field.key);
-            });
+            dependentControl.valueChanges
+              .pipe(takeUntilDestroyed(this.destroyRef))
+              .subscribe(() => {
+                this.evaluateConditionalLogic(field.key);
+              });
           }
         });
       }

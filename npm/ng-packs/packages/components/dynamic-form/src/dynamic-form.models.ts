@@ -14,7 +14,7 @@ export interface FormFieldConfig {
 }
 
 export interface ValidatorConfig {
-  type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
+  type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom' | 'min' | 'max' | 'requiredTrue';
   value?: any;
   message: string;
 }

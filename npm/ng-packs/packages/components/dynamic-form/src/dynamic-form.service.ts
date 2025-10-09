@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {Injectable, inject} from '@angular/core';
+import {FormControl, FormGroup, ValidatorFn, Validators, FormBuilder} from '@angular/forms';
 import {FormFieldConfig, ValidatorConfig} from './dynamic-form.models';
 
 @Injectable({
@@ -7,6 +7,8 @@ import {FormFieldConfig, ValidatorConfig} from './dynamic-form.models';
 })
 
 export class DynamicFormService {
+
+  private formBuilder = inject(FormBuilder);
 
   createFormGroup(fields: FormFieldConfig[]): FormGroup {
     const group: any = {};
@@ -21,7 +23,15 @@ export class DynamicFormService {
       }, validators);
     });
 
-    return new FormGroup(group);
+    return this.formBuilder.group(group);
+  }
+
+  getInitialValues(fields: FormFieldConfig[]): any {
+    const initialValues: any = {};
+    fields.forEach(field => {
+      initialValues[field.key] = this.getInitialValue(field);
+    });
+    return initialValues;
   }
 
   private buildValidators(validatorConfigs: ValidatorConfig[]): ValidatorFn[] {
@@ -37,6 +47,12 @@ export class DynamicFormService {
           return Validators.maxLength(config.value);
         case 'pattern':
           return Validators.pattern(config.value);
+        case 'min':
+          return Validators.min(config.value);
+        case 'max':
+          return Validators.max(config.value);
+        case 'requiredTrue':
+          return Validators.requiredTrue;
         default:
           return Validators.nullValidator;
       }

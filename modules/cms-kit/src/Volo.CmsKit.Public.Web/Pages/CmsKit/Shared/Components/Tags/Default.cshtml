@@ -6,12 +6,12 @@
 	<div class="cms-tags-area">
 		@if (Model.Tags != null)
 		{
-			<ul class="d-flex flex-wrap">
+			<ul class="d-flex flex-wrap gap-1">
 				@foreach (var tag in Model.Tags)
 				{
 					if (Model.UrlFormat.IsNullOrWhiteSpace())
 					{
-						<li class="me-1">
+						<li>
 							<span class="badge rounded-pill badge-secondary text-bg-secondary cmskit-tag font-weight-normal">
 								@tag.Name
 							</span>
@@ -20,7 +20,7 @@
 					else
 					{
 						var formattedUrl = Model.UrlFormat.Replace("{TagId}", tag.Id.ToString()).Replace("{TagName}", tag.Name);
-						<li class="me-1">
+						<li>
 							<a href="@formattedUrl"><span class="badge rounded-pill  badge-secondary text-bg-secondary rounded-pill cmskit-tag font-weight-normal">@tag.Name</span></a>
 						</li>
 					}

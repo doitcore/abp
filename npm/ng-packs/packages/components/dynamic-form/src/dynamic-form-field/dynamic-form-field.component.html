@@ -2,7 +2,7 @@
   @if (field().type === 'text') {
     <!-- Text Input -->
     <div class="form-group">
-      <label [for]="field().key">{{ field().label }}</label>
+      <ng-container [ngTemplateOutlet]="labelTemplate" />
       <input
         [id]="field().key"
         [placeholder]="field().placeholder || ''"
@@ -17,7 +17,7 @@
   } @else if (field().type === 'select') {
     <!-- Select Dropdown -->
     <div class="form-group">
-      <label [for]="field().key">{{ field().label }}</label>
+    <ng-container [ngTemplateOutlet]="labelTemplate" />
       <select
         [id]="field().key"
         [ngModel]="value"
@@ -47,7 +47,7 @@
         [class.is-invalid]="isInvalid"
         class="form-check-input">
       <label class="form-check-label" [for]="field().key">
-        {{ field().label }}
+        {{ field().label | abpLocalization }}
       </label>
       @if (isInvalid) {
         <ng-container [ngTemplateOutlet]="errorTemplate"/>
@@ -88,6 +88,10 @@
     </div>
   }
 }
+
+<ng-template #labelTemplate>
+  <label [for]="field().key">{{ field().label | abpLocalization }}</label>
+</ng-template>
 
 <ng-template #errorTemplate>
   <div class="invalid-feedback">

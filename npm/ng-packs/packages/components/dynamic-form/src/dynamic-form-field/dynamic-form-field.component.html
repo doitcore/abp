@@ -92,7 +92,7 @@
 <ng-template #errorTemplate>
   <div class="invalid-feedback">
     @for (error of errors; track error) {
-      <div>{{ error }}</div>
+      <div>{{ error | abpLocalization }}</div>
     }
   </div>
 </ng-template>

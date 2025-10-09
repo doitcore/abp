@@ -21,6 +21,7 @@ import {
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
+import { LocalizationPipe } from '@abp/ng.core';
 
 export const ABP_DYNAMIC_FORM_FIELD = new InjectionToken<DynamicFormFieldComponent>('AbpDynamicFormField');
 
@@ -41,7 +42,7 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
   host: { class: 'abp-dynamic-form-field' },
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgTemplateOutlet],
+  imports: [FormsModule, NgTemplateOutlet, LocalizationPipe],
 })
 export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   field = input.required<FormFieldConfig>();

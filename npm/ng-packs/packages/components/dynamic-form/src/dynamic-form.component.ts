@@ -64,9 +64,6 @@ export class DynamicFormComponent implements OnInit {
   }
 
   isFieldVisible(field: FormFieldConfig): boolean {
-    if (field.key === 'adminNotes') {
-      console.log('adminNotes visibility:', this.fieldVisibility[field.key] !== false);
-    }
     return this.fieldVisibility[field.key] !== false;
   }
 

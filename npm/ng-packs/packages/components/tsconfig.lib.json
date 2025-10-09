@@ -10,6 +10,6 @@
     "lib": ["dom", "es2020"],
     "useDefineForClassFields": false
   },
-  "exclude": ["test-setup.ts", "**/*.spec.ts", "jest.config.ts"],
+  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "jest.config.ts"],
   "include": ["**/*.ts"]
 }

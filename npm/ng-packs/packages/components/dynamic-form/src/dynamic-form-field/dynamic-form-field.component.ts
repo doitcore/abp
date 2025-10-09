@@ -45,7 +45,7 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
   host: { class: 'abp-dynamic-form-field' },
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgTemplateOutlet, LocalizationPipe, ReactiveFormsModule],
+  imports: [NgTemplateOutlet, LocalizationPipe, ReactiveFormsModule],
 })
 export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   field = input.required<FormFieldConfig>();

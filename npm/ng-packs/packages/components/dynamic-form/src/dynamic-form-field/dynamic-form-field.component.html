@@ -1,100 +1,98 @@
 @if (visible()) {
-    @if (field().type === 'text') {
-      <!-- Text Input -->
-      <div class="form-group">
-        <label [for]="field().key">{{ field().label }}</label>
-        <input
-          [id]="field().key"
-          [placeholder]="field().placeholder || ''"
-          [ngModel]="value"
-          (ngModelChange)="onValueChange($event)"
-          [class.is-invalid]="isValid"
-          class="form-control">
-        <!--      @if (isFieldInvalid()) {
-                <div class="invalid-feedback">
-                  {{ getErrorMessage() }}
-                </div>
-              }-->
-      </div>
-    } @else if (field().type === 'select') {
-      <!-- Select Dropdown -->
-      <div class="form-group">
-        <label [for]="field().key">{{ field().label }}</label>
-        <select
-          [id]="field().key"
-          [ngModel]="value"
-          (ngModelChange)="onValueChange($event)"
-          [class.is-invalid]="isValid"
-          class="form-control">
-          <option value="">Please select...</option>
-          @for (option of field().options; track option.key) {
-            <option
-              [value]="option.key">
-              {{ option.value }}
-            </option>
-          }
-        </select>
-        <!--      @if (isFieldInvalid()) {
-                <div class="invalid-feedback">
-                  {{ getErrorMessage() }}
-                </div>
-              }-->
-      </div>
-    } @else if (field().type === 'checkbox') {
-      <!-- Checkbox -->
-      <div class="form-group form-check">
-        <input
-          type="checkbox"
-          [id]="field().key"
-          [ngModel]="value"
-          (ngModelChange)="onValueChange($event)"
-          [class.is-invalid]="isValid"
-          class="form-check-input">
-        <label class="form-check-label" [for]="field().key">
-          {{ field().label }}
-        </label>
-        <!--      @if (isFieldInvalid()) {
-                <div class="invalid-feedback">
-                  {{ getErrorMessage() }}
-                </div>
-              }-->
-      </div>
-    } @else if (field().type === 'email') {
-      <!-- Email Input -->
-      <div class="form-group">
-        <label [for]="field().key">{{ field().label }}</label>
-        <input
-          type="email"
-          [id]="field().key"
-          [ngModel]="value"
-          (ngModelChange)="onValueChange($event)"
-          [placeholder]="field().placeholder || ''"
-          [class.is-invalid]="isValid"
-          class="form-control">
-        <!--      @if (isFieldInvalid()) {
-                <div class="invalid-feedback">
-                  {{ getErrorMessage() }}
-                </div>
-              }-->
-      </div>
-    } @else if (field().type === 'textarea') {
-      <!-- Textarea -->
-      <div class="form-group">
-        <label [for]="field().key">{{ field().label }}</label>
-        <textarea
-          [id]="field().key"
-          [ngModel]="value"
-          (ngModelChange)="onValueChange($event)"
-          [placeholder]="field().placeholder || ''"
-          [class.is-invalid]="isValid"
-          rows="4"
-          class="form-control">
+  @if (field().type === 'text') {
+    <!-- Text Input -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <input
+        [id]="field().key"
+        [placeholder]="field().placeholder || ''"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        [class.is-invalid]="isInvalid"
+        class="form-control">
+      @if (isInvalid) {
+        <ng-container [ngTemplateOutlet]="errorTemplate"/>
+      }
+    </div>
+  } @else if (field().type === 'select') {
+    <!-- Select Dropdown -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <select
+        [id]="field().key"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        [class.is-invalid]="isInvalid"
+        class="form-control">
+        <option value="">Please select...</option>
+        @for (option of field().options; track option.key) {
+          <option
+            [value]="option.key">
+            {{ option.value }}
+          </option>
+        }
+      </select>
+      @if (isInvalid) {
+        <ng-container [ngTemplateOutlet]="errorTemplate"/>
+      }
+    </div>
+  } @else if (field().type === 'checkbox') {
+    <!-- Checkbox -->
+    <div class="form-group form-check">
+      <input
+        type="checkbox"
+        [id]="field().key"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        [class.is-invalid]="isInvalid"
+        class="form-check-input">
+      <label class="form-check-label" [for]="field().key">
+        {{ field().label }}
+      </label>
+      @if (isInvalid) {
+        <ng-container [ngTemplateOutlet]="errorTemplate"/>
+      }
+    </div>
+  } @else if (field().type === 'email') {
+    <!-- Email Input -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <input
+        type="email"
+        [id]="field().key"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        [placeholder]="field().placeholder || ''"
+        [class.is-invalid]="isInvalid"
+        class="form-control">
+      @if (isInvalid) {
+        <ng-container [ngTemplateOutlet]="errorTemplate"/>
+      }
+    </div>
+  } @else if (field().type === 'textarea') {
+    <!-- Textarea -->
+    <div class="form-group">
+      <label [for]="field().key">{{ field().label }}</label>
+      <textarea
+        [id]="field().key"
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        [placeholder]="field().placeholder || ''"
+        [class.is-invalid]="isInvalid"
+        rows="4"
+        class="form-control">
         </textarea>
-        <!--      @if (isFieldInvalid()) {
-                <div class="invalid-feedback">
-                  {{ getErrorMessage() }}
-                </div>
-              }-->
-      </div>
-    }
+      @if (isInvalid) {
+        <ng-container [ngTemplateOutlet]="errorTemplate"/>
+      }
+    </div>
+  }
 }
+
+<ng-template #errorTemplate>
+  <div class="invalid-feedback">
+    @for (error of errors; track error) {
+      <div>{{ error }}</div>
+    }
+  </div>
+</ng-template>

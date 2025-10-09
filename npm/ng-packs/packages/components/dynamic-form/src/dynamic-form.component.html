@@ -1,15 +1,15 @@
 <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" class="dynamic-form">
-  @for (field of sortedFields; track field.key) {
-    <div class="row">
-      <div [ngClass]="'col-md-' + (field.gridSize || 12)">
-        <abp-dynamic-form-field
-          [field]="field"
-          [formControlName]="field.key"
-          [visible]="isFieldVisible(field)">
-        </abp-dynamic-form-field>
-      </div>
-    </div>
-  }
+  <div class="row">
+    @for (field of sortedFields; track field.key) {
+        <div [ngClass]="'col-md-' + (field.gridSize || 12)">
+          <abp-dynamic-form-field
+            [field]="field"
+            [formControlName]="field.key"
+            [visible]="isFieldVisible(field)">
+          </abp-dynamic-form-field>
+        </div>
+    }
+  </div>
   <ng-content select="[actions]">
     <ng-container [ngTemplateOutlet]="defaultActions"></ng-container>
   </ng-content>

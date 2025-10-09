@@ -9,22 +9,18 @@ import {
   input,
   OnInit,
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
 import { FormFieldConfig } from '../dynamic-form.models';
 import {
-  AbstractControl,
   ControlValueAccessor,
   FormControl,
   FormControlName,
   FormGroupDirective,
   FormsModule,
-  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  NgControl,
-  ValidationErrors,
-  Validators,
+  NgControl
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgTemplateOutlet } from '@angular/common';
 
 export const ABP_DYNAMIC_FORM_FIELD = new InjectionToken<DynamicFormFieldComponent>('AbpDynamicFormField');
 
@@ -45,14 +41,13 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
   host: { class: 'abp-dynamic-form-field' },
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule],
+  imports: [FormsModule, NgTemplateOutlet],
 })
 export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   field = input.required<FormFieldConfig>();
   visible = input<boolean>(true);
   disabled = false;
   value: any;
-  isFieldInvalid: boolean = false;
   control!: FormControl;
   readonly changeDetectorRef = inject(ChangeDetectorRef);
   readonly destroyRef = inject(DestroyRef);
@@ -88,11 +83,30 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
     this.changeDetectorRef.markForCheck();
   }
 
-  get isValid(): boolean {
+  get isInvalid(): boolean {
     if (this.control) {
-      return this.control.invalid && (this.control.dirty || this.control.touched);
+      return (this.control.invalid && (this.control.dirty || this.control.touched));
     }
-    return true;
+    return false;
+  }
+
+  get errors(): string[] {
+    if (this.control && this.control.errors) {
+      const errorKeys = Object.keys(this.control.errors);
+      return errorKeys.map(key => {
+        const validator = this.field().validators.find(v => v.type.toLowerCase() === key.toLowerCase());
+        console.log(this.field().validators, key);
+        if (validator && validator.message) {
+          return validator.message;
+        }
+        // Fallback error messages
+        if (key === 'required') return `${this.field().label} is required`;
+        if (key === 'email') return 'Please enter a valid email address';
+        if (key === 'minlength') return `Minimum length is ${this.control.errors[key].requiredLength}`;
+        if (key === 'maxlength') return `Maximum length is ${this.control.errors[key].requiredLength}`;
+        return `${this.field().label} is invalid due to ${key} validation.`;
+      });
+    }
   }
 
   private onChange: (value: any) => void = () => {};

@@ -137,6 +137,36 @@ You write **clean, maintainable, and modular** code following **ABP, ASP.NET Cor
 - Provide services using `providedIn: 'root'`.  
 - Use the **`inject()` function** instead of constructor injection.
 
+### Component Replacement
+ABP Angular provides a powerful **component replacement** system via `ReplaceableComponentsService`:
+
+**Key Features:**
+- Replace ABP default components (Roles, Users, Tenants, etc.) with custom implementations
+- Replace layouts (Application, Account, Empty)
+- Replace UI elements (Logo, Routes, NavItems)
+
+**Basic Usage:**
+```typescript
+import { ReplaceableComponentsService } from '@abp/ng.core';
+import { eIdentityComponents } from '@abp/ng.identity';
+
+constructor(private replaceableComponents: ReplaceableComponentsService) {
+  this.replaceableComponents.add({
+    component: YourCustomComponent,
+    key: eIdentityComponents.Roles,
+  });
+}
+```
+
+**Important Notes:**
+- Component templates must include `<router-outlet></router-outlet>` for layouts
+- Use the second parameter as `true` for runtime replacement (refreshes route)
+- Runtime replacement clears component state and re-runs initialization logic
+
+**📚 Full Documentation:**  
+For detailed examples, layout replacement, and advanced scenarios:  
+[Component Replacement Guide](https://abp.io/docs/latest/framework/ui/angular/customization-user-interface)
+
 ---
 
 ## 🔒 4. Combined Full-Stack Practices

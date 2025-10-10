@@ -6,7 +6,8 @@ import {
   inject,
   OnInit,
   DestroyRef,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  effect,
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -26,6 +27,7 @@ import { DynamicFormFieldComponent } from './dynamic-form-field';
 })
 export class DynamicFormComponent implements OnInit {
   fields = input<FormFieldConfig[]>([]);
+  values = input<Record<string, any>>();
   submitButtonText = input<string>('Submit');
   submitInProgress = input<boolean>(false);
   showCancelButton = input<boolean>(false);
@@ -40,6 +42,10 @@ export class DynamicFormComponent implements OnInit {
 
   ngOnInit() {
     this.setupFormAndLogic();
+
+    effect(() => {
+      console.log(this.values());
+    });
   }
 
   get sortedFields(): FormFieldConfig[] {

@@ -291,16 +291,16 @@ abp new-package --name Acme.BookStore.Domain --template lib.domain
 		* `--add-localization`: Includes default localization configuration & language files. 
 	* `lib.domain`
 		* `--add-settings`: Includes default settings configuration. 
-		* `--add-db-properties`:  Includes default Database Properties class. 
-		* `--add-domain-shared`:  Includes addtional Domain Shared package. 
+		* `--add-db-properties`:  Includes the default Database Properties class. 
+		* `--add-domain-shared`:  Includes an additional Domain Shared package. 
 	* `lib.application-contracts`
 	* `lib.application`
 		* `--add-mapperly`:  Adds Mapperly configuration. 
-		* `--add-application-contracts`:  Includes addtional contracts package. 
+		* `--add-application-contracts`:  Includes an additional contracts package. 
 	* `lib.ef`
 		* `--include-migrations`: Allows migration operations on this package.
 		* `--connection-string-name`: Default value is the last part of the package's namespace (or package name simply).
-		* `--connection-string`: Connection string value. Defaut value is null. You can set it alter. **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
+		* `--connection-string`: Connection string value. The default value is null. You can set it later. **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
 	* `lib.mongodb`
 	* `lib.http-api`
 	* `lib.http-api-client`

@@ -5,25 +5,11 @@
   "type": "object",
   "properties": {
     "tool": {
-      "description": "Specifies which AI tools to generate configuration files for",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": ["claude", "copilot", "cursor", "gemini", "junie", "windsurf"]
-      },
-      "default": [],
+      "description": "Comma-separated list of AI tools (e.g., claude,cursor,gemini)",
+      "type": "string",
       "x-prompt": {
-        "message": "Which AI tools would you like to generate configuration files for?",
-        "type": "list",
-        "multiselect": true,
-        "items": [
-          { "value": "claude", "label": "Claude (Anthropic) - AI assistant with deep code understanding" },
-          { "value": "copilot", "label": "GitHub Copilot - AI pair programmer" },
-          { "value": "cursor", "label": "Cursor - AI-first code editor" },
-          { "value": "gemini", "label": "Google Gemini - AI assistant by Google" },
-          { "value": "junie", "label": "Junie AI - Development assistant" },
-          { "value": "windsurf", "label": "Windsurf - AI development environment" }
-        ]
+        "message": "Which AI tools would you like to generate configuration files for? (comma-separated)",
+        "type": "input"
       }
     },
     "targetProject": {

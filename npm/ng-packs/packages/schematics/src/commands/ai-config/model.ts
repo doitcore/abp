@@ -1,7 +1,7 @@
 export type AiTool = 'claude' | 'copilot' | 'cursor' | 'gemini' | 'junie' | 'windsurf';
 
 export interface AiConfigSchema {
-  tool: AiTool[];
+  tool?: string;
   targetProject?: string;
   overwrite?: boolean;
 }

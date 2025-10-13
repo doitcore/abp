@@ -16,7 +16,6 @@ import {
   FormControl,
   FormControlName,
   FormGroupDirective,
-  FormsModule,
   NG_VALUE_ACCESSOR,
   NgControl,
   FormGroup,
@@ -25,6 +24,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
 import { LocalizationPipe } from '@abp/ng.core';
+import { FormCheckboxComponent } from '@abp/ng.theme.shared';
 
 export const ABP_DYNAMIC_FORM_FIELD = new InjectionToken<DynamicFormFieldComponent>('AbpDynamicFormField');
 
@@ -40,12 +40,12 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
   styleUrls: ['./dynamic-form-field.component.scss'],
   providers: [
     { provide: ABP_DYNAMIC_FORM_FIELD, useExisting: DynamicFormFieldComponent },
-    DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR
+    DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR,
   ],
   host: { class: 'abp-dynamic-form-field' },
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTemplateOutlet, LocalizationPipe, ReactiveFormsModule],
+  imports: [NgTemplateOutlet, LocalizationPipe, ReactiveFormsModule, FormCheckboxComponent],
 })
 export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   field = input.required<FormFieldConfig>();
@@ -59,7 +59,7 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
 
   constructor() {
     this.fieldFormGroup = this.formBuilder.group({
-      value: [{ value: '' }]
+      value: [{ value: '' }],
     });
   }
 
@@ -97,7 +97,7 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
 
   get isInvalid(): boolean {
     if (this.control) {
-      return (this.control.invalid && (this.control.dirty || this.control.touched));
+      return this.control.invalid && (this.control.dirty || this.control.touched);
     }
     return false;
   }
@@ -106,7 +106,9 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
     if (this.control && this.control.errors) {
       const errorKeys = Object.keys(this.control.errors);
       return errorKeys.map(key => {
-        const validator = this.field().validators.find(v => v.type.toLowerCase() === key.toLowerCase());
+        const validator = this.field().validators.find(
+          v => v.type.toLowerCase() === key.toLowerCase(),
+        );
         console.log(this.field().validators, key);
         if (validator && validator.message) {
           return validator.message;
@@ -114,8 +116,10 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
         // Fallback error messages
         if (key === 'required') return `${this.field().label} is required`;
         if (key === 'email') return 'Please enter a valid email address';
-        if (key === 'minlength') return `Minimum length is ${this.control.errors[key].requiredLength}`;
-        if (key === 'maxlength') return `Maximum length is ${this.control.errors[key].requiredLength}`;
+        if (key === 'minlength')
+          return `Minimum length is ${this.control.errors[key].requiredLength}`;
+        if (key === 'maxlength')
+          return `Maximum length is ${this.control.errors[key].requiredLength}`;
         return `${this.field().label} is invalid due to ${key} validation.`;
       });
     }

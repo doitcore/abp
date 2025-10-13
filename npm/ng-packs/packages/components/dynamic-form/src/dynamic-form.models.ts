@@ -1,3 +1,5 @@
+import { Type } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 
 export interface FormFieldConfig {
   key: string;
@@ -12,7 +14,7 @@ export interface FormFieldConfig {
   conditionalLogic?: ConditionalRule[];
   order?: number;
   gridSize?: number;
-  component?: any;
+  component?: Type<ControlValueAccessor>;
 }
 
 export interface ValidatorConfig {

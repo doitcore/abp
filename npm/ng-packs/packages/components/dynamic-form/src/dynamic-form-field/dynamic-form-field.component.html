@@ -38,15 +38,7 @@
     } @else if (field().type === 'checkbox') {
       <!-- Checkbox -->
       <div class="form-group form-check">
-        <input
-          type="checkbox"
-          [id]="field().key"
-          formControlName="value"
-          [class.is-invalid]="isInvalid"
-          class="form-check-input">
-        <label class="form-check-label" [for]="field().key">
-          {{ field().label | abpLocalization }}
-        </label>
+        <abp-checkbox [label]="field().label" formControlName="value" [id]="field().key" />
         @if (isInvalid) {
           <ng-container [ngTemplateOutlet]="errorTemplate"/>
         }

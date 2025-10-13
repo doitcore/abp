@@ -2,8 +2,6 @@ import {
   Component,
   ViewChild,
   ViewContainerRef,
-  OnChanges,
-  SimpleChanges,
   ChangeDetectionStrategy,
   forwardRef,
   Type,
@@ -34,26 +32,28 @@ type acceptsFormControl = { formControl?: FormControl };
     multi: true
   }]
 })
-export class DynamicFieldHostComponent implements ControlValueAccessor, OnChanges {
-  component = input<Type<any>>();
+export class DynamicFieldHostComponent implements ControlValueAccessor {
+  component = input<Type<ControlValueAccessor>>();
   inputs = input<Record<string, any>>({});
 
   @ViewChild('vcRef', { read: ViewContainerRef, static: true }) viewContainerRef!: ViewContainerRef;
   private componentRef?: any;
 
-  private lastValue: any;
+  private value: any;
   private disabled = false;
 
   // if child has not implemented ControlValueAccessor. Create form control
   private innerControl = new FormControl<any>(null);
   readonly destroyRef = inject(DestroyRef);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['component']) {
-      this.createChild();
-    } else if (this.componentRef && changes['inputs']) {
-      this.applyInputs();
-    }
+  constructor() {
+    effect(() => {
+      if (this.component()) {
+        this.createChild();
+      } else if (this.componentRef && this.inputs()) {
+        this.applyInputs();
+      }
+    });
   }
 
   private createChild() {
@@ -72,25 +72,20 @@ export class DynamicFieldHostComponent implements ControlValueAccessor, OnChange
       if (this.disabled && instance.setDisabledState) {
         instance.setDisabledState(true);
       }
-      // İlk değeri ilet
-      if (this.lastValue !== undefined) {
-        instance.writeValue?.(this.lastValue);
+      // set initial value
+      if (this.value !== undefined) {
+        instance.writeValue?.(this.value);
       }
     } else {
-      // Child CVA değilse, formControl input’u varsa köprüle
+      // No CVA -> use form control
       if ('formControl' in instance) {
         instance.formControl = this.innerControl;
-        // son değeri uygula
-        if (this.lastValue !== undefined) {
-          this.innerControl.setValue(this.lastValue, { emitEvent: false });
+        // apply initial value/disabled state
+        if (this.value !== undefined) {
+          this.innerControl.setValue(this.value, { emitEvent: false });
         }
         this.innerControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(v => this.onChange(v));
         this.innerControl.disabled ? null : (this.disabled && this.innerControl.disable({ emitEvent: false }));
-      } else {
-        // Son çare: valueChange EventEmitter’ı varsa bağla (konvansiyonel)
-        if ('valueChange' in instance && instance['valueChange']?.subscribe) {
-          instance['valueChange'].pipe(takeUntilDestroyed(this.destroyRef)).subscribe((v: any) => this.onChange(v));
-        }
       }
     }
   }
@@ -108,10 +103,8 @@ export class DynamicFieldHostComponent implements ControlValueAccessor, OnChange
     return obj && typeof obj.writeValue === 'function' && typeof obj.registerOnChange === 'function';
   }
 
-  /* --------- CVA (wrapper) --------- */
-
   writeValue(obj: any): void {
-    this.lastValue = obj;
+    this.value = obj;
     if (!this.componentRef) return;
 
     const inst: any = this.componentRef.instance as controlValueAccessorLike & acceptsFormControl;

@@ -1,3 +1,4 @@
+
 export interface FormFieldConfig {
   key: string;
   value?: any;
@@ -11,6 +12,7 @@ export interface FormFieldConfig {
   conditionalLogic?: ConditionalRule[];
   order?: number;
   gridSize?: number;
+  component?: any;
 }
 
 export interface ValidatorConfig {

@@ -3,11 +3,19 @@
   <div class="row">
     @for (field of sortedFields; track field.key) {
         <div [ngClass]="'col-md-' + (field.gridSize || 12)">
+          @if (field.component) {
+            <app-dynamic-field-host
+              [component]="field.component"
+              [inputs]="{ field: field, visible: isFieldVisible(field) }"
+              formControlName="{{ field.key }}">
+            </app-dynamic-field-host>
+          } @else {
           <abp-dynamic-form-field
             [field]="field"
             [formControlName]="field.key"
             [visible]="isFieldVisible(field)">
           </abp-dynamic-form-field>
+          }
         </div>
     }
   </div>

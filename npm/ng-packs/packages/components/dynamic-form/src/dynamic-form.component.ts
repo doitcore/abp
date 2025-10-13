@@ -8,13 +8,18 @@ import {
   DestroyRef,
   ChangeDetectorRef,
   effect,
+  contentChild,
+  ContentChildren,
+  QueryList,
+  AfterContentInit,
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DynamicFormService } from './dynamic-form.service';
 import { FormFieldConfig } from './dynamic-form.models';
-import { DynamicFormFieldComponent } from './dynamic-form-field';
+import { DynamicFormFieldComponent, DynamicInputDirective } from './dynamic-form-field';
+import { DynamicFieldHostComponent } from './dynamic-form-field/dynamic-form-field-host.component';
 
 @Component({
   selector: 'abp-dynamic-form',
@@ -23,9 +28,15 @@ import { DynamicFormFieldComponent } from './dynamic-form-field';
   host: { class: 'abp-dynamic-form' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'abpDynamicForm',
-  imports: [CommonModule, DynamicFormFieldComponent, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    DynamicFormFieldComponent,
+    ReactiveFormsModule,
+    DynamicInputDirective,
+    DynamicFieldHostComponent,
+  ],
 })
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent implements OnInit, AfterContentInit {
   fields = input<FormFieldConfig[]>([]);
   values = input<Record<string, any>>();
   submitButtonText = input<string>('Submit');
@@ -36,6 +47,7 @@ export class DynamicFormComponent implements OnInit {
   private dynamicFormService = inject(DynamicFormService);
   readonly destroyRef = inject(DestroyRef);
   readonly changeDetectorRef = inject(ChangeDetectorRef);
+  @ContentChildren(DynamicInputDirective) dynamicInputs: QueryList<DynamicInputDirective>;
 
   dynamicForm!: FormGroup;
   fieldVisibility: { [key: string]: boolean } = {};
@@ -46,6 +58,10 @@ export class DynamicFormComponent implements OnInit {
     effect(() => {
       console.log(this.values());
     });
+  }
+
+  ngAfterContentInit() {
+    console.log(this.dynamicInputs.toArray());
   }
 
   get sortedFields(): FormFieldConfig[] {
@@ -77,7 +93,7 @@ export class DynamicFormComponent implements OnInit {
     const initialValues: { [key: string]: any } = this.dynamicFormService.getInitialValues(
       this.fields(),
     );
-    this.dynamicForm.reset({...initialValues});
+    this.dynamicForm.reset({ ...initialValues });
     this.dynamicForm.markAsUntouched();
     this.dynamicForm.markAsPristine();
     this.changeDetectorRef.markForCheck();

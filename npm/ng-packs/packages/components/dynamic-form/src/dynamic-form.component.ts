@@ -7,19 +7,14 @@ import {
   OnInit,
   DestroyRef,
   ChangeDetectorRef,
-  effect,
-  contentChild,
-  ContentChildren,
-  QueryList,
-  AfterContentInit,
+  effect
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DynamicFormService } from './dynamic-form.service';
-import { FormFieldConfig } from './dynamic-form.models';
-import { DynamicFormFieldComponent, DynamicInputDirective } from './dynamic-form-field';
-import { DynamicFieldHostComponent } from './dynamic-form-field/dynamic-form-field-host.component';
+import { ConditionalAction, FormFieldConfig } from './dynamic-form.models';
+import { DynamicFormFieldComponent, DynamicFieldHostComponent } from './dynamic-form-field';
 
 @Component({
   selector: 'abp-dynamic-form',
@@ -32,11 +27,10 @@ import { DynamicFieldHostComponent } from './dynamic-form-field/dynamic-form-fie
     CommonModule,
     DynamicFormFieldComponent,
     ReactiveFormsModule,
-    DynamicInputDirective,
     DynamicFieldHostComponent,
   ],
 })
-export class DynamicFormComponent implements OnInit, AfterContentInit {
+export class DynamicFormComponent implements OnInit {
   fields = input<FormFieldConfig[]>([]);
   values = input<Record<string, any>>();
   submitButtonText = input<string>('Submit');
@@ -47,21 +41,12 @@ export class DynamicFormComponent implements OnInit, AfterContentInit {
   private dynamicFormService = inject(DynamicFormService);
   readonly destroyRef = inject(DestroyRef);
   readonly changeDetectorRef = inject(ChangeDetectorRef);
-  @ContentChildren(DynamicInputDirective) dynamicInputs: QueryList<DynamicInputDirective>;
 
   dynamicForm!: FormGroup;
   fieldVisibility: { [key: string]: boolean } = {};
 
   ngOnInit() {
     this.setupFormAndLogic();
-
-    effect(() => {
-      console.log(this.values());
-    });
-  }
-
-  ngAfterContentInit() {
-    console.log(this.dynamicInputs.toArray());
   }
 
   get sortedFields(): FormFieldConfig[] {
@@ -159,18 +144,18 @@ export class DynamicFormComponent implements OnInit, AfterContentInit {
     const control = this.dynamicForm.get(fieldKey);
 
     switch (action) {
-      case 'show':
+      case ConditionalAction.SHOW:
         this.fieldVisibility = { ...this.fieldVisibility, [fieldKey]: shouldApply };
         break;
-      case 'hide':
+      case ConditionalAction.HIDE:
         this.fieldVisibility = { ...this.fieldVisibility, [fieldKey]: !shouldApply };
         break;
-      case 'enable':
+      case ConditionalAction.ENABLE:
         if (control) {
           shouldApply ? control.enable() : control.disable();
         }
         break;
-      case 'disable':
+      case ConditionalAction.DISABLE:
         if (control) {
           shouldApply ? control.disable() : control.enable();
         }

@@ -27,3 +27,10 @@ export interface ConditionalRule {
   value: any;
   action: 'show' | 'hide' | 'enable' | 'disable';
 }
+
+export enum ConditionalAction {
+  SHOW = 'show',
+  HIDE = 'hide',
+  ENABLE = 'enable',
+  DISABLE = 'disable'
+}

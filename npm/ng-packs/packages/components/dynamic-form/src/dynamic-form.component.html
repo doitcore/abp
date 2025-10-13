@@ -4,11 +4,11 @@
     @for (field of sortedFields; track field.key) {
         <div [ngClass]="'col-md-' + (field.gridSize || 12)">
           @if (field.component) {
-            <app-dynamic-field-host
+            <abp-dynamic-form-field-host
               [component]="field.component"
               [inputs]="{ field: field, visible: isFieldVisible(field) }"
               formControlName="{{ field.key }}">
-            </app-dynamic-field-host>
+            </abp-dynamic-form-field-host>
           } @else {
           <abp-dynamic-form-field
             [field]="field"

@@ -152,10 +152,20 @@ background-color: rgba(0, 0, 0, 0.6);
     max-width: 540px;
 }
 
-abp-chat-icon {
+abp-chat-icon,
+abp-back-to-impersonator-nav-item {
     margin-inline: 0.4rem;
+}
+
+abp-chat-icon {
     .fa-comments:before {
         color: var(--bs-navbar-color);
     }
-}  
+}
+
+abp-back-to-impersonator-nav-item {
+    .fa-undo {
+        color: var(--bs-navbar-color);
+    }
+}
 `;

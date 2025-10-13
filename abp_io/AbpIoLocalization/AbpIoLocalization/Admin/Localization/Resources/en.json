@@ -743,7 +743,7 @@
     "Enum:UiFramework:7": "Blazor MAUI",
     "Enum:DatabaseProvider:0": "Unknown",
     "Enum:DatabaseProvider:1": "None",
-    "Enum:DatabaseProvider:2": "EFCore",
+    "Enum:DatabaseProvider:2": "EfCore",
     "Enum:DatabaseProvider:3": "MongoDB",
     "Enum:Dbms:0": "Unknown",
     "Enum:Dbms:1": "None",

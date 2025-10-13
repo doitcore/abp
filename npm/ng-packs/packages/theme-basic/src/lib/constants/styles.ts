@@ -150,5 +150,12 @@ background-color: rgba(0, 0, 0, 0.6);
 
 .abp-md-form {
     max-width: 540px;
-  }
+}
+
+abp-chat-icon {
+    margin-inline: 0.4rem;
+    .fa-comments:before {
+        color: var(--bs-navbar-color);
+    }
+}  
 `;

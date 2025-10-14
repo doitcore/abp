@@ -6,10 +6,23 @@ from openai import OpenAI
 client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 def has_seo_description(content):
-    """Check if content already has SEO description"""
+    """Check if content already has SEO description with Description field"""
+    import json
+    
     # Match SEO description block with 3 or more backticks
-    pattern = r'```+json\s*//\[doc-seo\].*?```+'
-    return re.search(pattern, content, flags=re.DOTALL) is not None
+    pattern = r'```+json\s*//\[doc-seo\]\s*(\{.*?\})\s*```+'
+    match = re.search(pattern, content, flags=re.DOTALL)
+    
+    if not match:
+        return False
+    
+    # Check if Description field exists and is not empty
+    try:
+        json_str = match.group(1)
+        seo_data = json.loads(json_str)
+        return 'Description' in seo_data and seo_data['Description']
+    except json.JSONDecodeError:
+        return False
 
 def is_content_too_short(content):
     """Check if content is less than 200 characters"""
@@ -63,10 +76,41 @@ Generate only the description text, nothing else:"""}
         return f"Learn about {os.path.splitext(filename)[0]} in ABP Framework documentation."
 
 def add_seo_description(content, description):
-    """Add SEO description to content"""
+    """Add or update SEO description in content"""
+    import json
+    
     # Escape special characters for JSON
     escaped_desc = description.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
     
+    # Check if SEO block already exists
+    pattern = r'(```+)json\s*//\[doc-seo\]\s*(\{.*?\})\s*\1'
+    match = re.search(pattern, content, flags=re.DOTALL)
+    
+    if match:
+        # SEO block exists, update Description field
+        backticks = match.group(1)
+        json_str = match.group(2)
+        
+        try:
+            # Parse existing JSON
+            seo_data = json.loads(json_str)
+            # Update Description
+            seo_data['Description'] = description
+            # Convert back to formatted JSON
+            updated_json = json.dumps(seo_data, indent=4, ensure_ascii=False)
+            
+            # Replace the old block with updated one
+            new_block = f'''{backticks}json
+//[doc-seo]
+{updated_json}
+{backticks}'''
+            
+            return re.sub(pattern, new_block, content, count=1, flags=re.DOTALL)
+        except json.JSONDecodeError:
+            # If JSON is invalid, replace the whole block
+            pass
+    
+    # No existing block or invalid JSON, add new block at the beginning
     seo_tag = f'''```json
 //[doc-seo]
 {{

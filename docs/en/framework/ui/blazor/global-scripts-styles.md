@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to manage global scripts and styles in Blazor apps using ABP, simplifying references and dependency management effortlessly."
+}
+```
+
 # Blazor UI: Managing Global Scripts & Styles
 
 Some modules may require additional styles or scripts that need to be referenced in **index.html** file. It's not easy to find and update these types of references in Blazor apps. ABP offers a simple, powerful, and modular way to manage global style and scripts in Blazor apps.

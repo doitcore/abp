@@ -13,7 +13,7 @@ jobs:
   add-seo-descriptions:
     if: |
       github.event.pull_request.merged == true &&
-      !startsWith(github.event.pull_request.head.ref, 'auto-seo/')
+      !startsWith(github.event.pull_request.head.ref, 'auto-docs-seo/')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -45,7 +45,7 @@ jobs:
           git checkout ${{ github.event.pull_request.base.ref }}
           
           # Create new branch from base
-          BRANCH_NAME="auto-seo/${{ github.event.pull_request.number }}"
+          BRANCH_NAME="auto-docs-seo/${{ github.event.pull_request.number }}"
           git checkout -b $BRANCH_NAME
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
@@ -91,6 +91,7 @@ jobs:
         if: steps.changed-files.outputs.has_files == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          IGNORED_FOLDERS: ${{ vars.DOCS_SEO_IGNORED_FOLDERS }}
         run: |
           python3 << 'PYTHON_SCRIPT'
           import os
@@ -137,7 +138,7 @@ jobs:
                           {"role": "system", "content": """Create a short and engaging summary (1–2 sentences) for sharing this documentation link on Discord, LinkedIn, Reddit, Twitter and Facebook. Clearly describe what the page explains or teaches.
           Highlight the value for developers using ABP Framework.
           Be written in a friendly and professional tone.
-          Stay under 200 characters.
+          Stay under 150 characters.
           --> https://abp.io/docs/latest <--"""},
                           {"role": "user", "content": f"""Generate a concise, informative meta description for this documentation page.
 
@@ -146,7 +147,7 @@ jobs:
           {preview}
 
           Requirements:
-          - Maximum 200 characters
+          - Maximum 150 characters
 
           Generate only the description text, nothing else:"""}
                       ],
@@ -155,10 +156,6 @@ jobs:
                   )
                   
                   description = response.choices[0].message.content.strip()
-                  
-                  # Ensure max length
-                  if len(description) > 200:
-                      description = description[:197] + "..."
                   
                   return description
               except Exception as e:
@@ -180,8 +177,9 @@ jobs:
           '''
               return seo_tag + content
 
-          # Ignored folders from appsettings.json
-          IGNORED_FOLDERS = ['Blog-Posts', 'Community-Articles', '_deleted', '_resources']
+          # Ignored folders from GitHub variable (or default values)
+          IGNORED_FOLDERS_STR = os.environ.get('IGNORED_FOLDERS', 'Blog-Posts,Community-Articles,_deleted,_resources')
+          IGNORED_FOLDERS = [folder.strip() for folder in IGNORED_FOLDERS_STR.split(',') if folder.strip()]
           
           def is_file_ignored(filepath):
               """Check if file is in an ignored folder"""
@@ -337,12 +335,15 @@ jobs:
               
               console.log(`✅ Created PR: ${pr.html_url}`);
               
-              // Add reviewers to the PR
-              const reviewers = ['maliming']; //GitHub usernames
+              // Add reviewers to the PR (from GitHub variable)
+              const reviewersStr = '${{ vars.DOCS_SEO_REVIEWERS || '' }}';
+              const reviewers = reviewersStr.split(',').map(r => r.trim()).filter(r => r);
+              
               if (reviewers.length === 0) {
-                console.log('⚠️ No reviewers specified.');
+                console.log('⚠️ No reviewers specified in DOCS_SEO_REVIEWERS variable.');
                 return;
               }
+              
               try {
                 await github.rest.pulls.requestReviewers({
                   owner: context.repo.owner,
@@ -351,7 +352,7 @@ jobs:
                   reviewers: reviewers,
                   team_reviewers: []
                 });
-                console.log(`✅ Added reviewers to PR ${pr.number}`);
+                console.log(`✅ Added reviewers (${reviewers.join(', ')}) to PR ${pr.number}`);
               } catch (error) {
                 console.log(`⚠️ Could not add reviewers: ${error.message}`);
               }

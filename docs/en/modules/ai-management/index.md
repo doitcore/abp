@@ -9,7 +9,17 @@ This module implements AI (Artificial Intelligence) management capabilities on t
 
 ### New Solutions
 
-TODO: Add how to install in new solutions.
+AI Management module is not pre-installed in [the startup templates](../solution-templates/layered-web-application). You can install it using the ABP CLI or ABP Suite.
+
+**Using ABP CLI:**
+
+```bash
+abp add-module Volo.AIManagement
+```
+
+**Using ABP Suite:**
+
+Open ABP Suite, navigate to your solution, and install the AI Management module from the Modules page.
 
 ### Existing Solutions
 If you want to add the **AI Management** module to your existing solution, you can use the ABP CLI `add-module` command:
@@ -25,6 +35,167 @@ This module follows the [module development best practices guide](../framework/a
 You can visit [AI Management module package list page](https://abp.io/packages?moduleName=Volo.AIManagement) to see list of packages related with this module.
 
 AI Management module packages are designed for various usage scenarios. Packages are grouped by the usage scenario as `Volo.AIManagement.*` and `Volo.AIManagement.Client.*`. This structure helps to separate the use-cases clearly.
+
+## User Interface
+
+### Menu Items
+
+AI Management module adds the following items to the "Main" menu, under the "Administration" menu item:
+
+* **Workspaces**: Workspace management page.
+* **Chat**: AI chat interface for testing workspaces.
+
+`AIManagementMenus` class has the constants for the menu item names.
+
+### Pages
+
+#### Workspace Management
+
+Workspaces page is used to manage AI workspaces in the system. You can create, edit, duplicate, and delete workspaces.
+
+![ai-management-workspaces](../../images/ai-management-workspaces.png)
+
+You can create a new workspace or edit an existing workspace in this page. The workspace configuration includes:
+
+* **Name**: Unique identifier for the workspace (cannot contain spaces)
+* **Provider**: AI provider (OpenAI, Ollama, or custom providers)
+* **Model**: AI model name (e.g., gpt-4, mistral)
+* **API Key**: Authentication key (if required by provider)
+* **API Base URL**: Custom endpoint URL (optional)
+* **System Prompt**: Default system instructions
+* **Temperature**: Response randomness (0.0-1.0)
+* **Application Name**: Associate with specific application
+* **Required Permission**: Permission needed to use this workspace
+
+#### Chat Interface
+
+The AI Management module includes a built-in chat interface for testing workspaces. You can:
+
+* Select a workspace from available workspaces
+* Send messages and receive AI responses
+* Test streaming responses
+* Verify workspace configuration before using in production
+
+> Access the chat interface at: `/AIManagement/Chat`
+
+## Workspace Configuration
+
+Workspaces are the core concept of the AI Management module. A workspace represents an AI provider configuration that can be used throughout your application.
+
+### Workspace Properties
+
+When creating or managing a workspace, you can configure the following properties:
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `Name` | Yes | Unique workspace identifier (cannot contain spaces) |
+| `Provider` | Yes* | AI provider name (e.g., "OpenAI", "Ollama") |
+| `ModelName` | Yes* | Model identifier (e.g., "gpt-4", "mistral") |
+| `ApiKey` | No | API authentication key (required by some providers) |
+| `ApiBaseUrl` | No | Custom endpoint URL (defaults to provider's default) |
+| `SystemPrompt` | No | Default system prompt for all conversations |
+| `Temperature` | No | Response randomness (0.0-1.0, defaults to provider default) |
+| `Description` | No | Workspace description |
+| `IsActive` | No | Enable/disable the workspace (default: true) |
+| `ApplicationName` | No | Associate workspace with specific application (for multi-application scenarios) |
+| `RequiredPermissionName` | No | Permission required to use this workspace |
+| `IsSystem` | No | Whether it's a system workspace (read-only) |
+| `OverrideSystemConfiguration` | No | Allow database configuration to override code-defined settings |
+
+**\*Not required for system workspaces**
+
+### System vs Dynamic Workspaces
+
+The AI Management module supports two types of workspaces:
+
+#### System Workspaces
+
+* **Defined in code** using `PreConfigure<AbpAIWorkspaceOptions>`
+* **Cannot be deleted** through the UI
+* **Read-only by default**, but can be overridden when `OverrideSystemConfiguration` is enabled
+* **Useful for** application-critical AI features that must always be available
+* **Created automatically** when the application starts
+
+Example:
+
+```csharp
+PreConfigure<AbpAIWorkspaceOptions>(options =>
+{
+    options.Workspaces.Configure<MyAssistantWorkspace>(configuration =>
+    {
+        configuration.ConfigureChatClient(chatClientConfiguration =>
+        {
+            chatClientConfiguration.Builder = new ChatClientBuilder(
+                sp => new OpenAIClient(apiKey).AsChatClient("gpt-4")
+            );
+        });
+    });
+});
+```
+
+#### Dynamic Workspaces
+
+* **Created through the UI** or programmatically via `IWorkspaceRepository`
+* **Fully manageable** - can be created, updated, activated/deactivated, and deleted
+* **Stored in database** with all configuration
+* **Ideal for** user-customizable AI features and multi-tenant scenarios
+* **Supports multi-tenancy** - each tenant has isolated workspaces
+
+Example (data seeding):
+
+```csharp
+await _workspaceRepository.InsertAsync(new Workspace(
+    name: "CustomerSupportWorkspace",
+    provider: "OpenAI",
+    modelName: "gpt-4",
+    apiKey: "your-api-key",
+    systemPrompt: "You are a helpful customer support assistant.",
+    requiredPermissionName: "MyApp.CustomerSupport"
+));
+```
+
+### Workspace Naming Rules
+
+* Workspace names **must be unique**
+* Workspace names **cannot contain spaces** (use underscores or camelCase)
+* Workspace names are **case-sensitive**
+
+## Permissions
+
+The AI Management module defines the following permissions:
+
+### Workspace Management Permissions
+
+| Permission | Description | Default Granted To |
+|------------|-------------|-------------------|
+| `AIManagement.Workspaces` | View workspaces | Admin role |
+| `AIManagement.Workspaces.Create` | Create new workspaces | Admin role |
+| `AIManagement.Workspaces.Update` | Edit existing workspaces | Admin role |
+| `AIManagement.Workspaces.Delete` | Delete workspaces | Admin role |
+
+### Chat Permissions
+
+| Permission | Description | Default Granted To |
+|------------|-------------|-------------------|
+| `AIManagement.Chat` | Access chat interface | Admin role |
+
+### Workspace-Level Permissions
+
+In addition to module-level permissions, you can restrict access to individual workspaces by setting the `RequiredPermissionName` property:
+
+```csharp
+var workspace = new Workspace(
+    name: "PremiumWorkspace",
+    provider: "OpenAI",
+    modelName: "gpt-4",
+    requiredPermissionName: "MyApp.PremiumFeatures"
+);
+```
+
+When a workspace has a required permission:
+* Only users with that permission can access the workspace
+* Users without the permission will receive an authorization error
+* The workspace will not appear in the workspace selection dropdown for unauthorized users
 
 ## Usage Scenarios
 
@@ -412,8 +583,81 @@ await _workspaceRepository.InsertAsync(new Workspace(
 
 > **Tip**: The provider name you use in `AddFactory<TFactory>("ProviderName")` must match the provider name stored in the workspace configuration in the database.
 
-## Next Steps
+## Internals
 
-- Learn about [Workspace Management](../framework/infrastructure/artificial-intelligence.md) to understand how to configure and manage AI workspaces
-- Explore [AI Providers](../framework/infrastructure/artificial-intelligence.md) to see supported AI services
-- Check [Integration Examples](../framework/infrastructure/artificial-intelligence.md) for practical implementation patterns
+### Domain Layer
+
+The AI Management module follows Domain-Driven Design principles and has a well-structured domain layer.
+
+#### Aggregates
+
+- **Workspace**: The main aggregate root representing an AI workspace configuration.
+
+#### Repositories
+
+The following custom repositories are defined:
+
+- `IWorkspaceRepository`: Repository for workspace management with custom queries.
+
+#### Domain Services
+
+- `ApplicationWorkspaceManager`: Manages workspace operations and validations.
+- `WorkspaceConfigurationStore`: Retrieves workspace configuration with caching.
+- `ChatClientResolver`: Resolves the appropriate `IChatClient` implementation for a workspace.
+
+#### Integration Services
+
+The module exposes the following integration services for inter-service communication:
+
+- `IAIChatCompletionIntegrationService`: Executes AI chat completions remotely.
+- `IWorkspaceConfigurationIntegrationService`: Retrieves workspace configuration for remote setup.
+- `IWorkspaceIntegrationService`: Manages workspaces remotely.
+
+> Integration services are exposed at `/integration-api` prefix and marked with `[IntegrationService]` attribute.
+
+### Application Layer
+
+#### Application Services
+
+- `WorkspaceAppService`: CRUD operations for workspace management.
+- `ChatCompletionClientAppService`: Client-side chat completion services.
+- `AIChatCompletionIntegrationService`: Integration service for remote AI execution.
+
+### Caching
+
+Workspace configurations are cached for performance. The cache key format:
+
+```
+WorkspaceConfiguration:{ApplicationName}:{WorkspaceName}
+```
+
+The cache is automatically invalidated when workspaces are created, updated, or deleted.
+
+### Multi-Tenancy
+
+The AI Management module is **fully multi-tenant aware**:
+
+- **Workspaces are isolated per tenant**: Each tenant has their own set of workspaces.
+- **Independent configurations**: Tenants can configure their own AI providers and API keys.
+- **Secure credential separation**: API keys and configurations are never shared between tenants.
+- **System workspaces**: System workspaces defined in code are available to all tenants.
+
+When working with multi-tenant applications:
+
+```csharp
+// Create workspace for specific tenant
+using (_currentTenant.Change(tenantId))
+{
+    await _workspaceRepository.InsertAsync(new Workspace(
+        name: "TenantSpecificWorkspace",
+        provider: "OpenAI",
+        modelName: "gpt-4"
+    ));
+}
+```
+
+## See Also
+
+- [Artificial Intelligence Infrastructure](../framework/infrastructure/artificial-intelligence.md): Learn about the underlying AI workspace infrastructure
+- [Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/): Microsoft's unified AI abstractions
+- [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/): Microsoft's Semantic Kernel integration

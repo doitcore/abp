@@ -30,7 +30,7 @@ abp add-module Volo.AIManagement
 
 ## Packages
 
-This module follows the [module development best practices guide](../framework/architecture/best-practices) and consists of several NuGet and NPM packages. See the guide if you want to understand the packages and relations between them.
+This module follows the [module development best practices guide](../../framework/architecture/best-practices) and consists of several NuGet and NPM packages. See the guide if you want to understand the packages and relations between them.
 
 You can visit [AI Management module package list page](https://abp.io/packages?moduleName=Volo.AIManagement) to see list of packages related with this module.
 
@@ -658,6 +658,6 @@ using (_currentTenant.Change(tenantId))
 
 ## See Also
 
-- [Artificial Intelligence Infrastructure](../framework/infrastructure/artificial-intelligence.md): Learn about the underlying AI workspace infrastructure
+- [Artificial Intelligence Infrastructure](../../framework/infrastructure/artificial-intelligence.md): Learn about the underlying AI workspace infrastructure
 - [Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/): Microsoft's unified AI abstractions
 - [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/): Microsoft's Semantic Kernel integration

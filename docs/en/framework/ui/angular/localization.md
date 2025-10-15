@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to effectively implement localization in your ABP Framework project using the Localization Pipe and Service for seamless multilingual support."
+}
+```
+
 # Localization
 
 Before you read about _the Localization Pipe_ and _the Localization Service_, you should know about localization keys.

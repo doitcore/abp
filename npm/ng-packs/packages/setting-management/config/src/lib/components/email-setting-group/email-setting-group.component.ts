@@ -101,7 +101,7 @@ export class EmailSettingGroupComponent implements OnInit {
     }
 
     this.emailSettingsService.sendTestEmail(this.emailTestForm.value).subscribe(res => {
-      this.toasterService.success('AbpSettingManagement::SuccessfullySent');
+      this.toasterService.success('AbpSettingManagement::SentSuccessfully');
       this.isEmailTestModalOpen = false;
     });
   }

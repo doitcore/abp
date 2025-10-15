@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.Timing;
@@ -16,16 +18,19 @@ public class DefaultBackgroundJobManager : IBackgroundJobManager, ITransientDepe
     protected IBackgroundJobSerializer Serializer { get; }
     protected IGuidGenerator GuidGenerator { get; }
     protected IBackgroundJobStore Store { get; }
+    protected IOptions<AbpBackgroundJobWorkerOptions> BackgroundJobWorkerOptions { get; }
 
     public DefaultBackgroundJobManager(
         IClock clock,
         IBackgroundJobSerializer serializer,
         IBackgroundJobStore store,
-        IGuidGenerator guidGenerator)
+        IGuidGenerator guidGenerator,
+        IOptions<AbpBackgroundJobWorkerOptions> backgroundJobWorkerOptions)
     {
         Clock = clock;
         Serializer = serializer;
         GuidGenerator = guidGenerator;
+        BackgroundJobWorkerOptions = backgroundJobWorkerOptions;
         Store = store;
     }
 
@@ -41,6 +46,7 @@ public class DefaultBackgroundJobManager : IBackgroundJobManager, ITransientDepe
         var jobInfo = new BackgroundJobInfo
         {
             Id = GuidGenerator.Create(),
+            ApplicationName = BackgroundJobWorkerOptions.Value.ApplicationName,
             JobName = jobName,
             JobArgs = Serializer.Serialize(args),
             Priority = priority,

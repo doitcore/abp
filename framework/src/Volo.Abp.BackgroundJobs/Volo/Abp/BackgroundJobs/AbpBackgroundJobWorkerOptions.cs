@@ -3,6 +3,11 @@
 public class AbpBackgroundJobWorkerOptions
 {
     /// <summary>
+    /// Application name.
+    /// </summary>
+    public string? ApplicationName { get; set; }
+
+    /// <summary>
     /// Interval between polling jobs from <see cref="IBackgroundJobStore"/>.
     /// Default value: 5000 (5 seconds).
     /// </summary>

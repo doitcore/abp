@@ -58,7 +58,7 @@ public partial class PermissionManagementModal
             var result = await PermissionAppService.GetAsync(_providerName, _providerKey);
 
             _entityDisplayName = entityDisplayName ?? result.EntityDisplayName;
-            _allGroups = result.Groups;
+            _allGroups = result.Groups.OrderBy(x => x.DisplayName).ToList();
             _groups = _allGroups.ToList();
 
             NormalizePermissionGroup();

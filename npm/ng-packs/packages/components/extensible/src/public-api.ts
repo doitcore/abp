@@ -4,6 +4,7 @@ export * from './lib/components/extensible-form/extensible-form.component';
 export * from './lib/components/extensible-table/extensible-table.component';
 export * from './lib/components/grid-actions/grid-actions.component';
 export * from './lib/components/page-toolbar/page-toolbar.component';
+export * from './lib/components/multi-select';
 export * from './lib/constants/extra-properties';
 export * from './lib/directives/prop-data.directive';
 export * from './lib/enums/props.enum';

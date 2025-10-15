@@ -7,6 +7,7 @@
     "SelectAllInAllTabs": "Предоставить все разрешения",
     "SelectAllInThisTab": "Выбрать все",
     "SaveWithoutAnyPermissionsWarningMessage": "Вы уверены, что хотите сохранить без каких-либо разрешений?",
-    "PermissionGroup": "Группа разрешений"
+    "PermissionGroup": "Группа разрешений",
+    "Filter": "Фильтр"
   }
 }

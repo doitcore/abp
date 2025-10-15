@@ -16,6 +16,7 @@ import {
   GridActionsComponent,
   PageToolbarComponent,
   ExtensibleDateTimePickerComponent,
+  ExtensibleFormMultiselectComponent,
 } from './components';
 import { PropDataDirective } from './directives/prop-data.directive';
 import { CreateInjectorPipe } from './pipes/create-injector.pipe';
@@ -31,7 +32,9 @@ const importWithExport = [
   CreateInjectorPipe,
   ExtensibleFormComponent,
   ExtensibleTableComponent,
+  ExtensibleFormMultiselectComponent,
 ];
+
 @NgModule({
   declarations: [],
   imports: [

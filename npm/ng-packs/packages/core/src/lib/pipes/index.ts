@@ -5,4 +5,5 @@ export * from './to-injector.pipe';
 export * from './short-date.pipe';
 export * from './short-time.pipe';
 export * from './short-date-time.pipe';
+export * from './utc-to-local.pipe';
 export * from './lazy-localization.pipe';

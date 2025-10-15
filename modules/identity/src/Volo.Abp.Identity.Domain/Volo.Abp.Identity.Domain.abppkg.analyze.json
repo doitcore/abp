@@ -2748,6 +2748,45 @@
           ]
         },
         {
+          "returnType": "IdentityResult",
+          "namespace": "Volo.Abp.Identity",
+          "name": "CallValidateUserAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "IdentityUser",
+              "name": "user",
+              "isOptional": false
+            }
+          ]
+        },
+        {
+          "returnType": "IdentityResult",
+          "namespace": "Volo.Abp.Identity",
+          "name": "CallValidatePasswordAsync",
+          "summary": null,
+          "isAsync": true,
+          "isPublic": true,
+          "isPrivate": false,
+          "isStatic": false,
+          "parameters": [
+            {
+              "type": "IdentityUser",
+              "name": "user",
+              "isOptional": false
+            },
+            {
+              "type": "String",
+              "name": "password",
+              "isOptional": false
+            }
+          ]
+        },
+        {
           "returnType": "IdentityUser",
           "namespace": "Volo.Abp.Identity",
           "name": "GetByIdAsync",
@@ -5030,6 +5069,11 @@
               "isOptional": true
             },
             {
+              "type": "Nullable<Guid>",
+              "name": "id",
+              "isOptional": true
+            },
+            {
               "type": "String",
               "name": "userName",
               "isOptional": true
@@ -5244,6 +5288,11 @@
             {
               "type": "Nullable<Guid>",
               "name": "organizationUnitId",
+              "isOptional": true
+            },
+            {
+              "type": "Nullable<Guid>",
+              "name": "id",
               "isOptional": true
             },
             {
@@ -6301,8 +6350,8 @@
     },
     {
       "defaultValue": "False",
-      "displayName": "Require confirmed email",
-      "description": "Whether a confirmed email address is required to sign in.",
+      "displayName": "Enforce email verification to sign in",
+      "description": "Users can create accounts but cannot sign in until they verify their email address.",
       "isVisibleToClient": true,
       "isInherited": true,
       "isEncrypted": false,
@@ -6313,7 +6362,7 @@
     {
       "defaultValue": "True",
       "displayName": "Allow users to confirm their phone number",
-      "description": "Whether the phoneNumber can be confirmed by the user.",
+      "description": "Users can verify their phone numbers. SMS integration required.",
       "isVisibleToClient": true,
       "isInherited": true,
       "isEncrypted": false,
@@ -6323,8 +6372,19 @@
     },
     {
       "defaultValue": "False",
-      "displayName": "Require confirmed phone number",
-      "description": "Whether a confirmed telephone number is required to sign in.",
+      "displayName": "Enforce email verification to register",
+      "description": "User accounts will not be created unless they verify their email addresses.",
+      "isVisibleToClient": false,
+      "isInherited": true,
+      "isEncrypted": false,
+      "contentType": "setting",
+      "name": "Abp.Identity.SignIn.RequireEmailVerificationToRegister",
+      "summary": null
+    },
+    {
+      "defaultValue": "False",
+      "displayName": "Enforce phone number verification to sign in",
+      "description": "Users can create accounts but cannot sign in until they verify their phone numbers.",
       "isVisibleToClient": true,
       "isInherited": true,
       "isEncrypted": false,

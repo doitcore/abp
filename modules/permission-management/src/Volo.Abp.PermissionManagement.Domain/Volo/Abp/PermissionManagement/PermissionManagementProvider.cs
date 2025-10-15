@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Guids;
 using Volo.Abp.MultiTenancy;
 
@@ -34,21 +35,24 @@ public abstract class PermissionManagementProvider : IPermissionManagementProvid
 
     public virtual async Task<MultiplePermissionValueProviderGrantInfo> CheckAsync(string[] names, string providerName, string providerKey)
     {
-        var multiplePermissionValueProviderGrantInfo = new MultiplePermissionValueProviderGrantInfo(names);
-        if (providerName != Name)
+        using (PermissionGrantRepository.DisableTracking())
         {
+            var multiplePermissionValueProviderGrantInfo = new MultiplePermissionValueProviderGrantInfo(names);
+            if (providerName != Name)
+            {
+                return multiplePermissionValueProviderGrantInfo;
+            }
+
+            var permissionGrants = await PermissionGrantRepository.GetListAsync(names, providerName, providerKey);
+
+            foreach (var permissionName in names)
+            {
+                var isGrant = permissionGrants.Any(x => x.Name == permissionName);
+                multiplePermissionValueProviderGrantInfo.Result[permissionName] = new PermissionValueProviderGrantInfo(isGrant, providerKey);
+            }
+
             return multiplePermissionValueProviderGrantInfo;
         }
-
-        var permissionGrants = await PermissionGrantRepository.GetListAsync(names, providerName, providerKey);
-
-        foreach (var permissionName in names)
-        {
-            var isGrant = permissionGrants.Any(x => x.Name == permissionName);
-            multiplePermissionValueProviderGrantInfo.Result[permissionName] = new PermissionValueProviderGrantInfo(isGrant, providerKey);
-        }
-
-        return multiplePermissionValueProviderGrantInfo;
     }
 
     public virtual Task SetAsync(string name, string providerKey, bool isGranted)

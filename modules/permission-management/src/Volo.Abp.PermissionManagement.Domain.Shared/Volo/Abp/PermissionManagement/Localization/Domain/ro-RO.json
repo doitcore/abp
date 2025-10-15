@@ -7,6 +7,7 @@
     "SelectAllInAllTabs": "Acordă toate permisiunile",
     "SelectAllInThisTab": "Selectează toate",
     "SaveWithoutAnyPermissionsWarningMessage": "Sigur doriți să salvați fără nicio permisiune?",
-    "PermissionGroup": "Grup de permisiuni"
+    "PermissionGroup": "Grup de permisiuni",
+    "Filter": "Filtru"
   }
 }

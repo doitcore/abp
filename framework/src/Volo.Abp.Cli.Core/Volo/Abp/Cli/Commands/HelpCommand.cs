@@ -68,7 +68,7 @@ public class HelpCommand : IConsoleCommand, ITransientDependency
         sb.AppendLine("Command List:");
         sb.AppendLine("");
 
-        foreach (var command in AbpCliOptions.Commands.ToArray().Where(NotHiddenFromCommandList))
+        foreach (var command in AbpCliOptions.Commands.ToArray().Where(NotHiddenFromCommandList).OrderBy(x => x.Key))
         {
             var method = command.Value.GetMethod("GetShortDescription", BindingFlags.Static | BindingFlags.Public);
             if (method == null)

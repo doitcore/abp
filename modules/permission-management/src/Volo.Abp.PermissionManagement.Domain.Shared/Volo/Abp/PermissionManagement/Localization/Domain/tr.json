@@ -7,6 +7,7 @@
     "SelectAllInAllTabs": "Tüm izinleri ver",
     "SelectAllInThisTab": "Hepsini seç",
     "SaveWithoutAnyPermissionsWarningMessage": "Hiçbir izin olmadan kaydetmek istediğinize emin misiniz?",
-    "PermissionGroup": "İzin Grubu"
+    "PermissionGroup": "İzin Grubu",
+    "Filter": "Filtre"
   }
 }

@@ -68,6 +68,8 @@
     "AccessDenied": "Erişim reddedildi!",
     "AccessDeniedMessage": "Bu kaynağa erişiminiz yok.",
     "OrRegisterWith": "Veya bunlarla kayıt ol:",
-    "RegisterUsingYourProviderAccount": "{0} hesabınızla kayıt olun."
+    "RegisterUsingYourProviderAccount": "{0} hesabınızla kayıt olun.",
+    "RequireMigrateSeedTitle": "Yönetici kullanıcısı bulunamadı",
+    "RequireMigrateSeedMessage": "Lütfen veritabanı tohumunun yürütüldüğünden emin olun. Olası çözümler için <a target=\"_blank\" href=\"https://abp.io/kb/0003\">belgelere</a> bakın."
   }
 }

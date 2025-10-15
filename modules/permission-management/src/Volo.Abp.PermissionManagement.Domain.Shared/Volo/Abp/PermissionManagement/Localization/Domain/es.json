@@ -7,6 +7,7 @@
     "SelectAllInAllTabs": "Conceder todos los permisos",
     "SelectAllInThisTab": "Seleccionar todo",
     "SaveWithoutAnyPermissionsWarningMessage": "¿Estás seguro de que quieres guardar sin ningún permiso?",
-    "PermissionGroup": "Grupo de permisos"
+    "PermissionGroup": "Grupo de permisos",
+    "Filter": "Filtrar"
   }
 }

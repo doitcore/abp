@@ -118,8 +118,6 @@ For such cases, run the `abp install-libs` command on the root directory of your
 abp install-libs
 ````
 
-> We suggest you install [Yarn v1.22+ (not v2)](https://classic.yarnpkg.com/en/docs/install) to prevent possible package inconsistencies, if you haven't installed it yet.
-
 ### Run the Application
 
 {{if UI=="MVC" || UI=="BlazorServer" || UI=="BlazorWebApp"}}
@@ -166,7 +164,7 @@ This command takes time, but eventually runs and opens the application in your d
 
 {{end}}
 
-![todo-ui-initial](../images/todo-ui-initial.png)
+![todo-ui-initial](../images/todo-ui-initial-v2.png)
 
 You can click on the *Login* button, use `admin` as the username and `1q2w3E*` as the password to login to the application.
 
@@ -180,13 +178,13 @@ This application has a single [entity](../../../framework/architecture/domain-dr
 using System;
 using Volo.Abp.Domain.Entities;
 
-namespace TodoApp
+namespace TodoApp;
+
+public class TodoItem : BasicAggregateRoot<Guid>
 {
-    public class TodoItem : BasicAggregateRoot<Guid>
-    {
-        public string Text { get; set; } = string.Empty;
-    }
+    public string Text { get; set; } = string.Empty;
 }
+
 ````
 
 `BasicAggregateRoot` is the simplest base class to create root entities, and `Guid` is the primary key (`Id`) of the entity here.
@@ -290,15 +288,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 
-namespace TodoApp
+namespace TodoApp;
+
+public interface ITodoAppService : IApplicationService
 {
-    public interface ITodoAppService : IApplicationService
-    {
-        Task<List<TodoItemDto>> GetListAsync();
-        Task<TodoItemDto> CreateAsync(string text);
-        Task DeleteAsync(Guid id);
-    }
+    Task<List<TodoItemDto>> GetListAsync();
+    Task<TodoItemDto> CreateAsync(string text);
+    Task DeleteAsync(Guid id);
 }
+
 ````
 
 ### Data Transfer Object
@@ -308,14 +306,14 @@ namespace TodoApp
 ````csharp
 using System;
 
-namespace TodoApp
+namespace TodoApp;
+
+public class TodoItemDto
 {
-    public class TodoItemDto
-    {
-        public Guid Id { get; set; }
-        public string Text { get; set; } = string.Empty;
-    }
+    public Guid Id { get; set; }
+    public string Text { get; set; } = string.Empty;
 }
+
 ````
 
 This is a very simple DTO class that matches our `TodoItem` entity. We are ready to implement the `ITodoAppService`.
@@ -332,19 +330,18 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace TodoApp
-{
-    public class TodoAppService : ApplicationService, ITodoAppService
-    {
-        private readonly IRepository<TodoItem, Guid> _todoItemRepository;
+namespace TodoApp;
 
-        public TodoAppService(IRepository<TodoItem, Guid> todoItemRepository)
-        {
-            _todoItemRepository = todoItemRepository;
-        }
-        
-        // TODO: Implement the methods here...
+public class TodoAppService : ApplicationService, ITodoAppService
+{
+    private readonly IRepository<TodoItem, Guid> _todoItemRepository;
+
+    public TodoAppService(IRepository<TodoItem, Guid> todoItemRepository)
+    {
+        _todoItemRepository = todoItemRepository;
     }
+    
+    // TODO: Implement the methods here...
 }
 ````
 
@@ -421,8 +418,8 @@ Open the `Index.cshtml.cs` file in the `Pages` folder of the *TodoApp.Web* proje
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace TodoApp.Web.Pages
-{
+namespace TodoApp.Web.Pages;
+
     public class IndexModel : TodoAppPageModel
     {
         public List<TodoItemDto> TodoItems { get; set; }
@@ -439,7 +436,7 @@ namespace TodoApp.Web.Pages
             TodoItems = await _todoAppService.GetListAsync();
         }
     }
-}
+
 ````
 
 This class uses the `ITodoAppService` to get the list of todo items and assign the `TodoItems` property. We will use it to render the todo items on the razor page.
@@ -535,7 +532,7 @@ The interesting part here is how we communicate with the server. See the *Dynami
 
 ### Index.css
 
-As the final touch, Create a file named `Index.css` in the `Pages` folder of the *TodoApp.Web* project and replace it with the following content:
+As the final touch, Create a file named `Index.css` in the `Pages` folder of the *TodoApp.Web* project and add the following content:
 
 ```css
 #TodoList{
@@ -587,34 +584,39 @@ using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace TodoApp.Blazor.Pages
+{{if UI=="Blazor" || UI=="BlazorWebApp"}}
+namespace TodoApp.Blazor.Client.Pages;
+{{else if UI=="BlazorServer"}}
+namespace TodoApp.Blazor.Pages;
+{{else if UI=="MAUIBlazor"}}
+namespace TodoApp.MauiBlazor.Pages;
+{{end}}
+
+public partial class Index
 {
-    public partial class Index
+    [Inject]
+    private ITodoAppService TodoAppService { get; set; }
+
+    private List<TodoItemDto> TodoItems { get; set; } = new List<TodoItemDto>();
+    private string NewTodoText { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject]
-        private ITodoAppService TodoAppService { get; set; }
+        TodoItems = await TodoAppService.GetListAsync();
+    }
+    
+    private async Task Create()
+    {
+        var result = await TodoAppService.CreateAsync(NewTodoText);
+        TodoItems.Add(result);
+        NewTodoText = null;
+    }
 
-        private List<TodoItemDto> TodoItems { get; set; } = new List<TodoItemDto>();
-        private string NewTodoText { get; set; } = string.Empty;
-
-        protected override async Task OnInitializedAsync()
-        {
-            TodoItems = await TodoAppService.GetListAsync();
-        }
-        
-        private async Task Create()
-        {
-            var result = await TodoAppService.CreateAsync(NewTodoText);
-            TodoItems.Add(result);
-            NewTodoText = null;
-        }
-
-        private async Task Delete(TodoItemDto todoItem)
-        {
-            await TodoAppService.DeleteAsync(todoItem.Id);
-            await Notify.Info("Deleted the todo item.");
-            TodoItems.Remove(todoItem);
-        }
+    private async Task Delete(TodoItemDto todoItem)
+    {
+        await TodoAppService.DeleteAsync(todoItem.Id);
+        await Notify.Info("Deleted the todo item.");
+        TodoItems.Remove(todoItem);
     }
 }
 ```
@@ -671,7 +673,7 @@ Open the `Index.razor` file in the `Pages` folder of the {{if UI=="Blazor" || UI
 
 ### Index.razor.css
 
-As the final touch, open the `Index.razor.css` file in the `Pages` folder of the {{if UI=="Blazor" || UI=="BlazorWebApp"}}*TodoApp.Blazor.Client*{{else if UI=="BlazorServer"}} *TodoApp.Blazor* {{else if UI=="MAUIBlazor"}} *TodoApp.MauiBlazor* {{end}} project and replace it with the following content:
+As the final touch, open the `Index.razor.css` file in the `Pages` folder of the {{if UI=="Blazor" || UI=="BlazorWebApp"}}*TodoApp.Blazor.Client*{{else if UI=="BlazorServer"}} *TodoApp.Blazor* {{else if UI=="MAUIBlazor"}} *TodoApp.MauiBlazor* {{end}} project and add the following content:
 
 ```css
 #TodoList{
@@ -834,7 +836,7 @@ Open the `/angular/src/app/home/home.component.html` file and replace its conten
 
 ### home.component.scss
 
-As the final touch, open the `/angular/src/app/home/home.component.scss` file and replace its content with the following code block:
+As the final touch, open the `/angular/src/app/home/home.component.scss` file and add the following code block:
 
 ```css
 #TodoList{

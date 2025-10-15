@@ -57,11 +57,6 @@ public class AbpAccountWebModule : AbpModule
             options.MenuContributors.Add(new AbpAccountUserMenuContributor());
         });
 
-        Configure<AbpToolbarOptions>(options =>
-        {
-            options.Contributors.Add(new AccountModuleToolbarContributor());
-        });
-
         ConfigureProfileManagementPage();
 
         context.Services.AddAutoMapperObjectMapper<AbpAccountWebModule>();

@@ -79,11 +79,6 @@ public class CmsKitPublicWebModule : AbpModule
             options.DisableModule(CmsKitPublicRemoteServiceConsts.ModuleName);
         });
 
-        Configure<AbpDistributedCacheOptions>(options =>
-        {
-            options.KeyPrefix = "CmsKit:";
-        });
-
         if (GlobalFeatureManager.Instance.IsEnabled<PagesFeature>())
         {
             Configure<AbpEndpointRouterOptions>(options =>

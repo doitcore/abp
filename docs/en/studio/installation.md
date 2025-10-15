@@ -7,8 +7,7 @@
 
 # Installing ABP Studio
 
-> **Warning: Beta Version Information**\
-> Currently, ABP Studio is in its beta phase and available for everyone. To access the beta version, kindly visit [this web page](https://abp.io/studio).
+This document explains how to install the ABP Studio tool.
 
 ## Pre-requirements
 
@@ -17,7 +16,11 @@ Before you begin the installation process for ABP Studio, ensure that your syste
 ### Node
 Make sure [Node.js](https://nodejs.org/en) is installed on your system. If you have not installed Node.js, you can download the `v22+` version from the official [Node.js website](https://nodejs.org/en/download/prebuilt-installer).
 
+### Docker 
+ABP Studio needs [Docker](https://www.docker.com/) for [Kubernetes](https://kubernetes.io/) operations. Install Docker by following the guidelines on the official [Docker website](https://docs.docker.com/get-docker/).
+
 ### WireGuard (Optional) 
+
 ABP Studio needs [WireGuard](https://www.wireguard.com/) for Kubernetes operations. You can find the installation instructions for your specific operating system below:
 
 **For Windows:** 
@@ -25,9 +28,6 @@ Installation instructions for your Windows operating system are on the official 
 
 **For macOS:**
 Installation instructions for your macOS operating system are on the official [WireGuard website](https://www.wireguard.com/install/#macos-homebrew-and-macports-basic-cli-homebrew-userspace-go-homebrew-tools-macports-userspace-go-macports-tools).
-
-### Docker 
-ABP Studio needs [Docker](https://www.docker.com/) for [Kubernetes](https://kubernetes.io/) operations. Install Docker by following the guidelines on the official [Docker website](https://docs.docker.com/get-docker/).
 
 ## Installation
 Now you have met the pre-requirements, follow the steps below to install ABP Studio:

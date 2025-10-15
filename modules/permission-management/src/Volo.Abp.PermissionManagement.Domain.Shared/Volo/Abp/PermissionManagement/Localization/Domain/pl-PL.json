@@ -7,6 +7,7 @@
     "SelectAllInAllTabs": "Udziel wszystkich uprawnień",
     "SelectAllInThisTab": "Zaznacz wszystkie",
     "SaveWithoutAnyPermissionsWarningMessage": "Czy na pewno chcesz zapisać bez żadnych uprawnień?",
-    "PermissionGroup": "Grupa uprawnień"
+    "PermissionGroup": "Grupa uprawnień",
+    "Filter": "Filtr"
   }
 }

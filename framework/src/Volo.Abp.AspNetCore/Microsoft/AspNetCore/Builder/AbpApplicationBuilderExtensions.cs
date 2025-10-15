@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.RequestLocalization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticAssets;
+using Microsoft.AspNetCore.Timing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -268,5 +269,15 @@ public static class AbpApplicationBuilderExtensions
         });
 
         return app;
+    }
+
+    /// <summary>
+    /// Use this middleware after <see cref="UseMultiTenancy" /> middleware.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <returns></returns>
+    public static IApplicationBuilder UseAbpTimeZone(this IApplicationBuilder app)
+    {
+        return app.UseMiddleware<AbpTimeZoneMiddleware>();
     }
 }

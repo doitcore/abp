@@ -60,6 +60,7 @@
     "AddNew": "Nieuw toevoegen",
     "ProfilePicture": "Profielfoto",
     "Theme": "Thema",
-    "NotAssigned": "Niet toegekend"
+    "NotAssigned": "Niet toegekend",
+    "EntityActionsDisabledTooltip": "U hebt geen toegang tot deze acties."
   }
 }

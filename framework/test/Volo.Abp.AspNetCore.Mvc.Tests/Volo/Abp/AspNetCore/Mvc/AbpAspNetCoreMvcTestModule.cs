@@ -159,6 +159,7 @@ public class AbpAspNetCoreMvcTestModule : AbpModule
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseAbpTimeZone();
         app.UseAuditing();
         app.UseUnitOfWork();
         app.UseConfiguredEndpoints();

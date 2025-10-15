@@ -23,9 +23,14 @@ const FILES_TO_COPY_AFTER_BUILD: (FileCopy | string)[] = [
   { src: 'src/commands/create-lib/schema.json', dest: 'commands/create-lib/schema.json' },
   { src: 'src/commands/change-theme/schema.json', dest: 'commands/change-theme/schema.json' },
   { src: 'src/commands/create-lib/files-package', dest: 'commands/create-lib/files-package' },
+  { src: 'src/commands/create-lib/files-package-standalone', dest: 'commands/create-lib/files-package-standalone' },
   {
     src: 'src/commands/create-lib/files-secondary-entrypoint',
     dest: 'commands/create-lib/files-secondary-entrypoint',
+  },
+  {
+    src: 'src/commands/create-lib/files-secondary-entrypoint-standalone',
+    dest: 'commands/create-lib/files-secondary-entrypoint-standalone',
   },
   { src: 'src/commands/proxy-add/schema.json', dest: 'commands/proxy-add/schema.json' },
   { src: 'src/commands/proxy-index/schema.json', dest: 'commands/proxy-index/schema.json' },

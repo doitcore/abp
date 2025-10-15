@@ -49,12 +49,14 @@ import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { ExtensibleFormPropService } from '../../services/extensible-form-prop.service';
 import { CommonModule } from '@angular/common';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-form-multiselect.component';
 
 @Component({
   selector: 'abp-extensible-form-prop',
   templateUrl: './extensible-form-prop.component.html',
   imports: [
     ExtensibleDateTimePickerComponent,
+    ExtensibleFormMultiselectComponent,
     NgbDatepickerModule,
     NgbTimepickerModule,
     ReactiveFormsModule,

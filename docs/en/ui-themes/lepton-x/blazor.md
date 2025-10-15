@@ -276,6 +276,37 @@ Layout options of Blazor UI can be manageable via using **LeptonXThemeMvcOptions
     });
     ```
 
+### Toolbars
+
+LeptonX includes separeted toolbars for desktop & mobile. You can manage toolbars independently. Toolbar names can be accessible in the **LeptonXToolbars** class.
+
+- `LeptonXToolbars.Main`
+- `LeptonXToolbars.MainMobile`
+
+```csharp
+public async Task ConfigureToolbarAsync(IToolbarConfigurationContext context)
+{
+    if (context.Toolbar.Name == LeptonXToolbars.Main)
+    {
+        context.Toolbar.Items.Add(new ToolbarItem(typeof(MyDesktopComponent)));
+    }
+
+    if (context.Toolbar.Name == LeptonXToolbars.MainMobile)
+    {
+        context.Toolbar.Items.Add(new ToolbarItem(typeof(MyMobileComponent)));
+    }
+
+    return Task.CompletedTask;
+}
+```
+
+{{if UI == "BlazorServer"}}
+
+> _You can visit the [Toolbars Documentation](../../framework/ui/blazor/toolbars.md) for better understanding._
+
+{{end}}
+
+
 ## Layouts
 
 **LeptonX** offers two **ready-made layouts** for your web application. One of them is **placed** with the **menu items** on the **top** and the other with the **menu items** on the **sides**.

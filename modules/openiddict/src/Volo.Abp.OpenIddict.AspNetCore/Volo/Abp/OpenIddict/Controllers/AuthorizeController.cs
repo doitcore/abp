@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using Volo.Abp.AspNetCore.Security;
@@ -28,34 +30,22 @@ public class AuthorizeController : AbpOpenIdDictControllerBase
     {
         var request = await GetOpenIddictServerRequestAsync(HttpContext);
 
-        // If prompt=login was specified by the client application,
-        // immediately return the user agent to the login page.
-        if (request.HasPromptValue(OpenIddictConstants.PromptValues.Login))
-        {
-            // To avoid endless login -> authorization redirects, the prompt=login flag
-            // is removed from the authorization request payload before redirecting the user.
-            var prompt = string.Join(" ", request.GetPromptValues().Remove(OpenIddictConstants.PromptValues.Login));
-
-            var parameters = Request.HasFormContentType ?
-                Request.Form.Where(parameter => parameter.Key != OpenIddictConstants.Parameters.Prompt).ToList() :
-                Request.Query.Where(parameter => parameter.Key != OpenIddictConstants.Parameters.Prompt).ToList();
-
-            parameters.Add(KeyValuePair.Create(OpenIddictConstants.Parameters.Prompt, new StringValues(prompt)));
-
-            return Challenge(
-                authenticationSchemes: IdentityConstants.ApplicationScheme,
-                properties: new AuthenticationProperties
-                {
-                    RedirectUri = Request.PathBase + Request.Path + QueryString.Create(parameters)
-                });
-        }
-
-        // Retrieve the user principal stored in the authentication cookie.
-        // If a max_age parameter was provided, ensure that the cookie is not too old.
-        // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
+        // Try to retrieve the user principal stored in the authentication cookie and redirect
+        // the user agent to the login page (or to an external provider) in the following cases:
+        //
+        //  - If the user principal can't be extracted or the cookie is too old.
+        //  - If prompt=login was specified by the client application.
+        //  - If max_age=0 was specified by the client application (max_age=0 is equivalent to prompt=login).
+        //  - If a max_age parameter was provided and the authentication cookie is not considered "fresh" enough.
+        //
+        // For scenarios where the default authentication handler configured in the ASP.NET Core
+        // authentication options shouldn't be used, a specific scheme can be specified here.
         var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
-        if (result == null || !result.Succeeded || (request.MaxAge != null && result.Properties?.IssuedUtc != null &&
-            DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value)))
+        if (result is not { Succeeded: true } ||
+            ((request.HasPromptValue(OpenIddictConstants.PromptValues.Login) || request.MaxAge is 0 ||
+              (request.MaxAge != null && result.Properties?.IssuedUtc != null &&
+               TimeProvider.System.GetUtcNow() - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value))) &&
+             TempData["IgnoreAuthenticationChallenge"] is null or false))
         {
             // If the client application requested promptless authentication,
             // return an error indicating that the user is not logged in.
@@ -70,13 +60,33 @@ public class AuthorizeController : AbpOpenIdDictControllerBase
                     }));
             }
 
-            return Challenge(
-                authenticationSchemes: IdentityConstants.ApplicationScheme,
-                properties: new AuthenticationProperties
-                {
-                    RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                        Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
-                });
+            // To avoid endless login endpoint -> authorization endpoint redirects, a special temp data entry is
+            // used to skip the challenge if the user agent has already been redirected to the login endpoint.
+            //
+            // Note: this flag doesn't guarantee that the user has accepted to re-authenticate. If such a guarantee
+            // is needed, the existing authentication cookie MUST be deleted AND revoked (e.g using ASP.NET Core
+            // Identity's security stamp feature with an extremely short revalidation time span) before triggering
+            // a challenge to redirect the user agent to the login endpoint.
+            TempData["IgnoreAuthenticationChallenge"] = true;
+
+            // For scenarios where the default challenge handler configured in the ASP.NET Core
+            // authentication options shouldn't be used, a specific scheme can be specified here.
+            return Challenge(new AuthenticationProperties
+            {
+                RedirectUri = Request.PathBase + Request.Path + QueryString.Create(Request.HasFormContentType ? Request.Form : Request.Query)
+            });
+        }
+
+        // If prompt=select_account was specified by the client application,
+        // We will redirect the user to the select_account page.
+        if (request.HasPromptValue(OpenIddictConstants.PromptValues.SelectAccount) && TempData["IgnoreSelectAccount"] is null or false)
+        {
+            // To avoid endless select account endpoint -> authorization endpoint redirects, a special temp data entry is
+            // used to skip the redirect if the user agent has already been redirected to the select account endpoint.
+            TempData["IgnoreSelectAccount"] = true;
+
+            var selectAccountPath = HttpContext.RequestServices.GetRequiredService<IOptions<AbpOpenIddictAspNetCoreOptions>>().Value.SelectAccountPage.RemovePostFix("/");
+            return Redirect(Url.Content($"{selectAccountPath}?RedirectUri={UrlEncoder.Default.Encode(Request.PathBase + Request.Path + QueryString.Create(Request.HasFormContentType ? Request.Form : Request.Query))}"));
         }
 
         // Retrieve the profile of the logged in user.
@@ -90,8 +100,7 @@ public class AuthorizeController : AbpOpenIdDictControllerBase
                     authenticationSchemes: IdentityConstants.ApplicationScheme,
                     properties: new AuthenticationProperties
                     {
-                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                            Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
+                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(Request.HasFormContentType ? Request.Form : Request.Query)
                     });
             }
         }
@@ -103,8 +112,7 @@ public class AuthorizeController : AbpOpenIdDictControllerBase
                 authenticationSchemes: IdentityConstants.ApplicationScheme,
                 properties: new AuthenticationProperties
                 {
-                    RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                        Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
+                    RedirectUri = Request.PathBase + Request.Path + QueryString.Create(Request.HasFormContentType ? Request.Form : Request.Query)
                 });
         }
 

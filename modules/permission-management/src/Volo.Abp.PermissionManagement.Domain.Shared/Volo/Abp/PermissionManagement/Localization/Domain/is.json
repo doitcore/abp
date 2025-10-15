@@ -7,6 +7,7 @@
     "SelectAllInAllTabs": "Veita allar heimildir",
     "SelectAllInThisTab": "Velja allt",
     "SaveWithoutAnyPermissionsWarningMessage": "Ertu viss um að þú viljir vista án nokkurra heimilda?",
-    "PermissionGroup": "Heimildahópur"
+    "PermissionGroup": "Heimildahópur",
+    "Filter": "Sía"
   }
 }

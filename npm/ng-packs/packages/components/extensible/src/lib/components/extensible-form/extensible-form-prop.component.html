@@ -60,25 +60,13 @@
         </select>
       }
       @case ('multiselect') {
-        <ng-template [ngTemplateOutlet]="label" />
-        <select
-          #field
-          [id]="prop.id"
+        <ng-template [ngTemplateOutlet]="label"></ng-template>
+        <abp-extensible-form-multi-select
+          [prop]="prop"
+          [options]="options$ | async"
           [formControlName]="prop.name"
           [abpDisabled]="disabled"
-          multiple="multiple"
-          class="form-select form-control"
-        >
-          @for (option of options$ | async; track option.value) {
-            <option [ngValue]="option.value">
-              @if (prop.isExtra) {
-                {{ '::' + option.key | abpLocalization }}
-              } @else {
-                {{ option.key }}
-              }
-            </option>
-          }
-        </select>
+        />
       }
       @case ('typeahead') {
         <ng-template [ngTemplateOutlet]="label" />

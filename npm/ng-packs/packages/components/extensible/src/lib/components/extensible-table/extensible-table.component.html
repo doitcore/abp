@@ -49,18 +49,33 @@
         <ng-container *abpPermission="prop.permission; runChangeDetection: false">
           <ng-container *abpVisible="row['_' + prop.name]?.visible">
             @if (!row['_' + prop.name].component) {
-              <div
-                [innerHTML]="
+              @if (prop.type === 'datetime' || prop.type === 'date' || prop.type === 'time') {
+                <div
+                  [innerHTML]="
+                  !prop.isExtra
+                    ? (row['_' + prop.name]?.value | async | abpUtcToLocal:prop.type)
+                    : ('::' + (row['_' + prop.name]?.value | async | abpUtcToLocal:prop.type) | abpLocalization)
+                "
+                  (click)="
+                  prop.action && prop.action({ getInjected: getInjected, record: row, index: i })
+                "
+                  [ngClass]="entityPropTypeClasses[prop.type]"
+                  [class.pointer]="prop.action"
+                ></div>
+              } @else {
+                <div
+                  [innerHTML]="
                   !prop.isExtra
                     ? (row['_' + prop.name]?.value | async)
                     : ('::' + (row['_' + prop.name]?.value | async) | abpLocalization)
                 "
-                (click)="
+                  (click)="
                   prop.action && prop.action({ getInjected: getInjected, record: row, index: i })
                 "
-                [ngClass]="entityPropTypeClasses[prop.type]"
-                [class.pointer]="prop.action"
-              ></div>
+                  [ngClass]="entityPropTypeClasses[prop.type]"
+                  [class.pointer]="prop.action"
+                ></div>
+              }
             } @else {
               <ng-container
                 *ngComponentOutlet="

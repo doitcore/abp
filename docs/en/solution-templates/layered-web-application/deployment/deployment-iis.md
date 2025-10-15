@@ -261,6 +261,68 @@ We can visit the websites from a browser.
 
 ![Tiered IIS deployment](../../../images/iis-sample-tiered-deployment.gif)
 
+{{ if UI == "NG" }}
+## Rewrite for getEnvConfig
+
+Please add the following rewrite rules to your `web.config` file to redirect requests for `getEnvConfig` to `dynamic-env.json`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+<system.webServer>
+ <rewrite>
+  <rules>
+    <rule name="Redirect" stopProcessing="true">
+      <match url="getEnvConfig" />
+      <action type="Redirect" url="dynamic-env.json" />
+    </rule>
+    <rule name="Angular Routes" stopProcessing="true">
+      <match url=".*" />
+      <conditions logicalGrouping="MatchAll">
+        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+      </conditions>
+      <action type="Rewrite" url="./index.html" />
+    </rule>
+  </rules>
+ </rewrite>
+</system.webServer>
+</configuration>
+```
+
+> See [Angular RemoteEnvironment](https://abp.io/docs/latest/framework/ui/angular/environment#remoteenvironment) for more details.
+
+{{ end }}
+
+## Fix 405 Method Not Allowed Error
+
+Remove `WebDAV` modules and handlers from the `Web.config` file.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <system.webServer>
+    <modules>
+      <remove name="WebDAVModule" />
+    </modules>
+    <handlers>
+      <remove name="WebDAV" />
+    </handlers>
+  </system.webServer>
+</configuration>
+```
+
+Also remove the `WebDAV Publishing` feature from your computer if it's not being used. To do so, follow these steps:
+
+1. Select Start, type Turn Windows features on or off in the Start Search box, and then select Turn Windows features on or off.
+2. In the Windows Features window, expand Internet Information Services -> World Wide Web Services -> Common HTTP Features.
+3. Uncheck the WebDAV Publishing feature.
+
+See:
+
+- https://learn.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/troubleshooting-http-405-errors-after-publishing-web-api-applications#resolve-http-405-errors
+- https://learn.microsoft.com/en-us/troubleshoot/developer/webapps/iis/site-behavior-performance/http-error-405-website#resolution-for-cause-3
+
 ## How to get stdout-log
 
 If your application is running on IIS and getting errors like `502.5, 500.3x`, you can enable stdout logs to see the error details.

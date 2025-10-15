@@ -63,35 +63,35 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
     {
         var dbContext = await GetDbContextAsync();
         var userRoles = await (from userRole in dbContext.Set<IdentityUserRole>()
-            join role in dbContext.Roles on userRole.RoleId equals role.Id
-            where userIds.Contains(userRole.UserId)
-            group new
-            {
-                userRole.UserId,
-                role.Name
-            } by userRole.UserId
+                               join role in dbContext.Roles on userRole.RoleId equals role.Id
+                               where userIds.Contains(userRole.UserId)
+                               group new {
+                                   userRole.UserId,
+                                   role.Name
+                               } by userRole.UserId
             into gp
-            select new IdentityUserIdWithRoleNames
-            {
-                Id = gp.Key, RoleNames = gp.Select(x => x.Name).ToArray()
-            }).ToListAsync(cancellationToken: cancellationToken);
+                               select new IdentityUserIdWithRoleNames
+                               {
+                                   Id = gp.Key,
+                                   RoleNames = gp.Select(x => x.Name).ToArray()
+                               }).ToListAsync(cancellationToken: cancellationToken);
 
         var orgUnitRoles = await (from userOu in dbContext.Set<IdentityUserOrganizationUnit>()
-            join roleOu in dbContext.Set<OrganizationUnitRole>() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
-            join role in dbContext.Roles on roleOu.RoleId equals role.Id
-            where userIds.Contains(userOu.UserId)
-            group new
-            {
-                userOu.UserId,
-                role.Name
-            } by userOu.UserId
+                                  join roleOu in dbContext.Set<OrganizationUnitRole>() on userOu.OrganizationUnitId equals roleOu.OrganizationUnitId
+                                  join role in dbContext.Roles on roleOu.RoleId equals role.Id
+                                  where userIds.Contains(userOu.UserId)
+                                  group new {
+                                      userOu.UserId,
+                                      role.Name
+                                  } by userOu.UserId
             into gp
-            select new IdentityUserIdWithRoleNames
-            {
-                Id = gp.Key, RoleNames = gp.Select(x => x.Name).ToArray()
-            }).ToListAsync(cancellationToken: cancellationToken);
+                                  select new IdentityUserIdWithRoleNames
+                                  {
+                                      Id = gp.Key,
+                                      RoleNames = gp.Select(x => x.Name).ToArray()
+                                  }).ToListAsync(cancellationToken: cancellationToken);
 
-        return userRoles.Concat(orgUnitRoles).GroupBy(x => x.Id).Select(x => new IdentityUserIdWithRoleNames {Id = x.Key, RoleNames = x.SelectMany(y => y.RoleNames).Distinct().ToArray()}).ToList();
+        return userRoles.Concat(orgUnitRoles).GroupBy(x => x.Id).Select(x => new IdentityUserIdWithRoleNames { Id = x.Key, RoleNames = x.SelectMany(y => y.RoleNames).Distinct().ToArray() }).ToList();
     }
 
     public virtual async Task<List<string>> GetRoleNamesInOrganizationUnitAsync(
@@ -197,6 +197,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
         bool includeDetails = false,
         Guid? roleId = null,
         Guid? organizationUnitId = null,
+        Guid? id = null,
         string userName = null,
         string phoneNumber = null,
         string emailAddress = null,
@@ -216,6 +217,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
             filter,
             roleId,
             organizationUnitId,
+            id,
             userName,
             phoneNumber,
             emailAddress,
@@ -273,6 +275,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
         string filter = null,
         Guid? roleId = null,
         Guid? organizationUnitId = null,
+        Guid? id = null,
         string userName = null,
         string phoneNumber = null,
         string emailAddress = null,
@@ -292,6 +295,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
             filter,
             roleId,
             organizationUnitId,
+            id,
             userName,
             phoneNumber,
             emailAddress,
@@ -446,6 +450,7 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
         string filter = null,
         Guid? roleId = null,
         Guid? organizationUnitId = null,
+        Guid? id = null,
         string userName = null,
         string phoneNumber = null,
         string emailAddress = null,
@@ -463,6 +468,11 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
     {
         var upperFilter = filter?.ToUpperInvariant();
         var query = await GetQueryableAsync();
+        
+        if (id.HasValue)
+        {
+            return query.Where(x => x.Id == id);
+        }        
 
         if (roleId.HasValue)
         {

@@ -20,4 +20,9 @@ public class AbpOpenIddictAspNetCoreOptions
     /// Attach auth server current culture info to response.
     /// </summary>
     public bool AttachCultureInfo { get; set; } = true;
+
+    /// <summary>
+    /// Set the url of the select account page.
+    /// </summary>
+    public string SelectAccountPage { get; set; } = "~/Account/SelectAccount";
 }

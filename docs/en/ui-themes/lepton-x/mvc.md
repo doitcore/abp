@@ -54,7 +54,8 @@ Before starting to customize the theme, you can consider downloading the source 
 ---
 
 ### Appearance
-You can set a default theme, add or remove appearance styles by using **LeptonXThemeOptions**.
+
+You can set a default theme, add or remove appearance styles and layout background styles by using **LeptonXThemeOptions**.
 
 - `DefaultStyle`: Defines the default fallback theme. The default value is **Dim**
   
@@ -88,8 +89,32 @@ Configure<LeptonXThemeOptions>(options =>
 >
 > If your layout is **TopMenu**, then you have to add them under the **wwwroot/Themes/LeptonX/Global/top-menu/css/** folder.
 
+### Toolbars
 
-#### Handling Style Changes
+LeptonX includes separeted toolbars for desktop & mobile. You can manage toolbars independently. Toolbar names can be accessible in the **LeptonXToolbars** class.
+
+- `LeptonXToolbars.Main`
+- `LeptonXToolbars.MainMobile`
+
+```csharp
+public async Task ConfigureToolbarAsync(IToolbarConfigurationContext context)
+{
+    if (context.Toolbar.Name == LeptonXToolbars.Main)
+    {
+        context.Toolbar.Items.Add(new ToolbarItem(typeof(MyDesktopComponent)));
+    }
+
+    if (context.Toolbar.Name == LeptonXToolbars.MainMobile)
+    {
+        context.Toolbar.Items.Add(new ToolbarItem(typeof(MyMobileComponent)));
+    }
+
+    return Task.CompletedTask;
+}
+```
+
+> _You can visit the [Toolbars Documentation](../../framework/ui/mvc-razor-pages/toolbars.md) for better understanding._
+
 
 You can add extra logic by using javascript API when style is changed with the following event.
 ```js
@@ -116,14 +141,25 @@ Layout options of the MVC Razor Pages UI can be manageable by using **LeptonXThe
 
 - `MobileMenuSelector`: Defines items to be displayed at the mobile menu. The default value is the first 2 items from the main menu items.
 
-    ![leptonx-mobile-menu-preview](images/mobile-menu-preview.png)
-
     ```csharp
     Configure<LeptonXThemeMvcOptions>(options =>
     {
         options.MobileMenuSelector = items => items.Where(x => x.MenuItem.Name == "MyProjectName.Home" || x.MenuItem.Name == "MyProjectName.Dashboard");
     });
     ```
+
+    ![leptonx-mobile-menu-preview](images/mobile-menu-preview.png)
+
+- `AccountLayoutBackgroundStyle`: Defines the background style of the account layout.
+
+    ```csharp
+    Configure<LeptonXThemeMvcOptions>(options =>
+    {
+        options.AccountLayoutBackgroundStyle = "background-image: url('/images/login-background-image.svg') !important;";
+    });
+    ```
+
+    ![leptonx-account-layout-background-style](images/account-layout-background-style.png)
 
 ### Layouts
 

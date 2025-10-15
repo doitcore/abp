@@ -43,7 +43,7 @@ public class BackgroundJobWorker : AsyncPeriodicBackgroundWorkerBase, IBackgroun
             {
                 var store = workerContext.ServiceProvider.GetRequiredService<IBackgroundJobStore>();
 
-                var waitingJobs = await store.GetWaitingJobsAsync(WorkerOptions.MaxJobFetchCount);
+                var waitingJobs = await store.GetWaitingJobsAsync(WorkerOptions.ApplicationName, WorkerOptions.MaxJobFetchCount);
 
                 if (!waitingJobs.Any())
                 {

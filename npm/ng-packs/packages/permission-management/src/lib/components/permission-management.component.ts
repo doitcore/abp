@@ -40,25 +40,32 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
   exportAs: 'abpPermissionManagement',
   styles: [
     `
-      .overflow-scroll {
-        max-height: 70vh;
-        overflow-y: scroll;
-      }
-
       .scroll-in-modal {
         overflow: auto;
-        max-height: calc(100vh - 15rem);
+        /*
+        To maintain a 28px top margin and 28px bottom margin when the modal reaches full height, the scrollable area needs to be 100vh - 23.1rem
+         */
+        max-height: calc(100vh - 23.1rem);
+      }
+
+      .lpx-scroll-pills-container ul {
+        display: block;
+        overflow-y: auto;
+      }
+
+      /* Target mobile screens */
+      @media (max-width: 768px) {
+        .scroll-in-modal {
+          max-height: calc(100vh - 15rem);
+        }
+        .lpx-scroll-pills-container ul {
+          max-height: 500px;
+        }
       }
 
       fieldset legend {
         float: none;
         width: auto;
-      }
-
-      .lpx-scroll-pills-container ul {
-        display: block;
-        max-height: 500px;
-        overflow-y: auto;
       }
 
       .lpx-scroll-pills-container .tab-content {
@@ -317,9 +324,10 @@ export class PermissionManagementComponent
   }
 
   setTabCheckboxState() {
-    const selectablePermissions = this.permissions.filter(per =>
+    const selectablePermissions = this.selectedGroupPermissions.filter(per =>
       per.grantedProviders.every(p => p.providerName === this.providerName),
     );
+
     const selectedPermissions = selectablePermissions.filter(per => per.isGranted);
     const element = document.querySelector('#select-all-in-this-tabs') as any;
     if (!element) {

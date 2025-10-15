@@ -130,7 +130,7 @@
         {
           "text": "Book Store Application (with ABP Suite)",
           "isLazyExpandable": true,
-          "path": "tutorials/book-store-with-abp-suite/index.md",
+          "path": "tutorials/book-store-with-abp-suite",
           "items": [
             {
               "text": "Overview",
@@ -162,11 +162,11 @@
         {
           "text": "Modular Monolith Application",
           "isLazyExpandable": true,
-          "path": "tutorials/modular-crm/index.md",
+          "path": "tutorials/modular-crm",
           "items": [
             {
               "text": "Overview",
-              "path": "tutorials/modular-crm/index.md",
+              "path": "tutorials/modular-crm",
               "isIndex": true
             },
             {
@@ -174,11 +174,11 @@
               "path": "tutorials/modular-crm/part-01.md"
             },
             {
-              "text": "2: Creating the Initial Products Module",
+              "text": "2: Setting Up the Catalog Module",
               "path": "tutorials/modular-crm/part-02.md"
             },
             {
-              "text": "3: Building the Products Module",
+              "text": "3: Building the Catalog Module",
               "path": "tutorials/modular-crm/part-03.md"
             },
             {
@@ -206,11 +206,11 @@
         {
           "text": "Microservice Solution",
           "isLazyExpandable": true,
-          "path": "tutorials/microservice/index.md",
+          "path": "tutorials/microservice",
           "items": [
             {
               "text": "Overview",
-              "path": "tutorials/microservice/index.md",
+              "path": "tutorials/microservice",
               "isIndex": true
             },
             {
@@ -246,19 +246,19 @@
         {
           "text": "Mobile Application Development",
           "isLazyExpandable": true,
-          "path": "tutorials/mobile/index.md",
+          "path": "tutorials/mobile",
           "items": [
             {
               "text": "Overview",
-              "path": "tutorials/mobile/index.md"
+              "path": "tutorials/mobile"
             },
             {
               "text": "MAUI",
-              "path": "tutorials/mobile/maui/index.md"
+              "path": "tutorials/mobile/maui"
             },
             {
               "text": "React Native",
-              "path": "tutorials/mobile/react-native/index.md"
+              "path": "tutorials/mobile/react-native"
             }
           ]
         },
@@ -487,7 +487,8 @@
             },
             {
               "text": "Exception Handling",
-              "path": "framework/fundamentals/exception-handling.md"
+              "path": "framework/fundamentals/exception-handling.md",
+              "keywords": ["Error"]
             },
             {
               "text": "Localization",
@@ -611,6 +612,10 @@
                     {
                       "text": "Google Cloud Storage Provider",
                       "path": "framework/infrastructure/blob-storing/google.md"
+                    },
+                    {
+                      "text": "Bunny Provider",
+                      "path": "framework/infrastructure/blob-storing/bunny.md"
                     },
                     {
                       "text": "Create a Custom Provider",
@@ -2100,11 +2105,11 @@
         {
           "text": "Microservice Solution",
           "isLazyExpandable": true,
-          "path": "solution-templates/microservice",
+          "path": "solution-templates/microservice/index.md",
           "items":[
             {
               "text": "Overview",
-              "path": "solution-templates/microservice"
+              "path": "solution-templates/microservice/overview.md"
             },
             {
               "text": "Solution Structure",
@@ -2160,7 +2165,7 @@
                 },
                 {
                   "text": "Swagger integration",
-                  "path": "solution-templates/microservice/swagger.md"
+                  "path": "solution-templates/microservice/swagger-integration.md"
                 },
                 {
                   "text": "Permission management",
@@ -2620,7 +2625,7 @@
         },
         {
           "text": "Knowledge Base",
-          "path": "kb/index.md"
+          "path": "kb"
         },
         {
           "text": "Penetration Test Report",

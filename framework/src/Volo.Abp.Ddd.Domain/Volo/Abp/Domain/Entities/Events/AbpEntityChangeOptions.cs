@@ -10,8 +10,18 @@ public class AbpEntityChangeOptions
 
     public IEntitySelectorList IgnoredNavigationEntitySelectors { get; set; }
 
+    /// <summary>
+    /// Default: true.
+    /// Update the aggregate root when any navigation property changes.
+    /// Some properties like ConcurrencyStamp,LastModificationTime,LastModifierId etc. will be updated.
+    /// </summary>
+    public bool UpdateAggregateRootWhenNavigationChanges { get; set; } = true;
+
+    public IEntitySelectorList IgnoredUpdateAggregateRootSelectors { get; set; }
+
     public AbpEntityChangeOptions()
     {
         IgnoredNavigationEntitySelectors = new EntitySelectorList();
+        IgnoredUpdateAggregateRootSelectors = new EntitySelectorList();
     }
 }

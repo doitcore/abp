@@ -50,7 +50,7 @@ public class NpmPackagesUpdater : ITransientDependency
 
     public async Task Update(string rootDirectory, bool includePreviews = false,
         bool includeReleaseCandidates = false,
-        bool switchToStable = false, string version = null, bool includePreRc = false)
+        bool switchToStable = false, string version = null, string leptonXVersion = null, bool includePreRc = false)
     {
         var fileList = _packageJsonFileFinder.Find(rootDirectory);
 
@@ -80,6 +80,7 @@ public class NpmPackagesUpdater : ITransientDependency
             var updated = await UpdatePackagesInFile(file, includePreviews, includeReleaseCandidates,
                 switchToStable,
                 version,
+                leptonXVersion,
                 includePreRc);
 
             packagesUpdated.TryAdd(file, updated);
@@ -162,6 +163,7 @@ public class NpmPackagesUpdater : ITransientDependency
         bool includeReleaseCandidates = false,
         bool switchToStable = false,
         string specifiedVersion = null,
+        string specifiedLeptonXVersion = null,
         bool includePreRc = false)
     {
         var packagesUpdated = false;
@@ -177,7 +179,7 @@ public class NpmPackagesUpdater : ITransientDependency
         foreach (var abpPackage in abpPackages)
         {
             var updated = await TryUpdatingPackage(filePath, abpPackage, includePreviews, includeReleaseCandidates,
-                switchToStable, specifiedVersion, includePreRc);
+                switchToStable, specifiedVersion, specifiedLeptonXVersion, includePreRc);
 
             if (updated)
             {
@@ -188,7 +190,7 @@ public class NpmPackagesUpdater : ITransientDependency
         var updatedContent = packageJson.ToString(Formatting.Indented);
 
         File.WriteAllText(filePath, updatedContent);
-
+        
         return packagesUpdated;
     }
 
@@ -199,6 +201,7 @@ public class NpmPackagesUpdater : ITransientDependency
         bool includeReleaseCandidates = false,
         bool switchToStable = false,
         string specifiedVersion = null,
+        string specifiedLeptonXVersion = null,
         bool includePreRc = false)
     {
         var currentVersion = (string)package.Value;
@@ -207,18 +210,36 @@ public class NpmPackagesUpdater : ITransientDependency
 
         if (!specifiedVersion.IsNullOrWhiteSpace())
         {
-            if (!SpecifiedVersionExists(specifiedVersion, package))
+            if (IsLeptonXPackage(package) && !specifiedLeptonXVersion.IsNullOrWhiteSpace())
             {
-                return false;
-            }
+                if (!SpecifiedVersionExists(specifiedLeptonXVersion, package))
+                {
+                    return false;
+                }
 
-            if (SemanticVersion.Parse(specifiedVersion) <=
-                SemanticVersion.Parse(currentVersion.RemovePreFix("~", "^")))
+                if (SemanticVersion.Parse(specifiedLeptonXVersion) <=
+                    SemanticVersion.Parse(currentVersion.RemovePreFix("~", "^")))
+                {
+                    return false;
+                }
+
+                version = specifiedLeptonXVersion.EnsureStartsWith('^');
+            }
+            else
             {
-                return false;
-            }
+                if (!SpecifiedVersionExists(specifiedVersion, package))
+                {
+                    return false;
+                }
 
-            version = specifiedVersion.EnsureStartsWith('^');
+                if (SemanticVersion.Parse(specifiedVersion) <=
+                    SemanticVersion.Parse(currentVersion.RemovePreFix("~", "^")))
+                {
+                    return false;
+                }
+
+                version = specifiedVersion.EnsureStartsWith('^');
+            }
         }
         else
         {
@@ -266,6 +287,12 @@ public class NpmPackagesUpdater : ITransientDependency
         Logger.LogInformation(
             $"Updated {package.Name} to {version} in {filePath.Replace(Directory.GetCurrentDirectory(), "")}.");
         return true;
+    }
+
+    private static bool IsLeptonXPackage(JProperty package)
+    {
+        return package.Name.IndexOf("leptonx", StringComparison.InvariantCultureIgnoreCase) > 0
+            || package.Name.IndexOf("lepton-x", StringComparison.InvariantCultureIgnoreCase) > 0;
     }
 
     protected virtual bool IsPrerelease(string version)

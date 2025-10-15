@@ -111,6 +111,48 @@ If you use `Social / External Logins`, It is automatically called for authentica
 
 ![account-pro-module-local-login-setting](../images/account-pro-module-local-login-setting.png)
 
+### Switching users during OAuth login
+
+If you have an OAuth/Auth Server application using the Account Pro module, you can pass the `prompt=select_account` parameter to force the user to select an account.
+
+Example to pass `prompt=select_account` parameter in OpenIdConnect:
+
+```csharp
+.AddAbpOpenIdConnect("oidc", options =>
+{
+    // ...
+    options.Events = new OpenIdConnectEvents
+    {
+        OnRedirectToIdentityProvider = redirectContext =>
+        {
+            redirectContext.ProtocolMessage.Prompt = "select_account";
+            return Task.CompletedTask;
+        }
+    };
+    // ...
+});
+```
+
+![account-pro-secect-account](../images/account-pro-select-account-parameter.png)
+
+You have three options:
+
+- Continue: The login process will continue with the current account.
+- Switch to another account: Will be redirected to the login page to log in with another account.
+- Create a new account: Will be redirected to the register page to create a new account.
+
+> The OAuth login process will continue after the user selects one of the options.
+
+![account-pro-secect-account](../images/account-pro-select-account.png)
+
+All available prompt parameters:
+
+| **Parameter**    | **Description**                                                                                             |
+|------------------|-------------------------------------------------------------------------------------------------------------|
+| `login`          | Forces the user to re-authenticate, even if they are already logged in.                                      |
+| `consent`        | Forces the user to re-consent to the requested permissions, even if they have consented before.             |
+| `select_account` | Forces the user to select an account, even if they are already logged in (especially relevant if multiple accounts are available). |
+| `none`           | Does not trigger any prompt. If the user is not logged in, or their consent is not granted, it will return an error or redirect accordingly. |
 
 ## Social / External Logins
 
@@ -120,7 +162,7 @@ The application startup template comes with **Twitter**, **Google** and **Micros
 
 ![account-pro-external-login-settings](../images/account-pro-external-login-settings.png)
 
-The social/External login system is compatible with the multi-tenancy. Each tenant can configure their own provider settings if your application is multi-tenant.
+The social/External login system is compatible with the multi-tenancy. Each tenant can enable or disable the external login provider and configure their own provider settings if your application is multi-tenant.
 
 ### Install a new External Login
 
@@ -144,7 +186,7 @@ context.Services.AddAuthentication()
         facebook.Scope.Add("public_profile");
     })
     .WithDynamicOptions<FacebookOptions>(
-        FacebookDefaults.AuthenticationScheme,
+        FacebookDefaults.AuthenticationScheme, // Facebook
         options =>
         {
             options.WithProperty(x => x.AppId);
@@ -155,6 +197,18 @@ context.Services.AddAuthentication()
 
 * `AddFacebook()` is the standard method that you can set hard-coded configuration.
 * `WithDynamicOptions<FacebookOptions>` is provided by the Account Module which makes possible to configure the provided properties on the UI.
+
+#### Localize Provider Properties
+
+You can add following translation to localize the properties of the external login providers:
+
+`en.json`:
+
+````json
+"ExternalProvider:Facebook": "Facebook",
+"ExternalProvider:Facebook:AppId": "App ID",
+"ExternalProvider:Facebook:AppSecret": "App Secret",
+````
 
 ### IPostConfigureAccountExternalProviderOptions
 
@@ -225,6 +279,12 @@ You can link an external login in `Account/ExternalLogins` page of `Account` mod
 Users who register via both local registration and external/social login using the same email address will be required to enter their local password on the first external/social login.
 
 ![require-local-password-on-social-account-linking](../images/require-local-password-on-social-account-linking.png)
+
+### Time Zone Setting
+
+Users can to set their own time zone in the account settings page if application is [supports multiple timezones](../framework/infrastructure/timing.md#clock-options).
+
+![account-pro-time-zone-setting](../images/account-pro-time-zone-setting.png)
 
 ## Internals
 

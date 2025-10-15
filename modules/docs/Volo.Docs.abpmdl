@@ -7,18 +7,6 @@
     }
   },
   "packages": {
-    "VoloDocs.Web": {
-      "path": "app/VoloDocs.Web/VoloDocs.Web.abppkg",
-      "folder": "app"
-    },
-    "VoloDocs.EntityFrameworkCore": {
-      "path": "app/VoloDocs.EntityFrameworkCore/VoloDocs.EntityFrameworkCore.abppkg",
-      "folder": "app"
-    },
-    "VoloDocs.Migrator": {
-      "path": "app/VoloDocs.Migrator/VoloDocs.Migrator.abppkg",
-      "folder": "app"
-    },
     "Volo.Docs.Web": {
       "path": "src/Volo.Docs.Web/Volo.Docs.Web.abppkg",
       "folder": "src"

@@ -13,11 +13,18 @@ public class AbpDateTimeConverter : JsonConverter<DateTime>, ITransientDependenc
 {
     private readonly IClock _clock;
     private readonly AbpJsonOptions _options;
+    private bool _skipDateTimeNormalization;
 
     public AbpDateTimeConverter(IClock clock, IOptions<AbpJsonOptions> abpJsonOptions)
     {
         _clock = clock;
         _options = abpJsonOptions.Value;
+    }
+
+    public virtual AbpDateTimeConverter SkipDateTimeNormalization()
+    {
+        _skipDateTimeNormalization = true;
+        return this;
     }
 
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -31,7 +38,7 @@ public class AbpDateTimeConverter : JsonConverter<DateTime>, ITransientDependenc
                     var s = reader.GetString();
                     if (DateTime.TryParseExact(s, format, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var d1))
                     {
-                        return _clock.Normalize(d1);
+                        return Normalize(d1);
                     }
                 }
             }
@@ -43,7 +50,7 @@ public class AbpDateTimeConverter : JsonConverter<DateTime>, ITransientDependenc
 
         if (reader.TryGetDateTime(out var d3))
         {
-            return _clock.Normalize(d3);
+            return Normalize(d3);
         }
 
         var dateText = reader.GetString();
@@ -51,7 +58,7 @@ public class AbpDateTimeConverter : JsonConverter<DateTime>, ITransientDependenc
         {
             if (DateTime.TryParse(dateText, CultureInfo.CurrentUICulture, DateTimeStyles.None, out var d4))
             {
-                return _clock.Normalize(d4);
+                return Normalize(d4);
             }
         }
 
@@ -62,11 +69,16 @@ public class AbpDateTimeConverter : JsonConverter<DateTime>, ITransientDependenc
     {
         if (_options.OutputDateTimeFormat.IsNullOrWhiteSpace())
         {
-            writer.WriteStringValue(_clock.Normalize(value));
+            writer.WriteStringValue(Normalize(value));
         }
         else
         {
-            writer.WriteStringValue(_clock.Normalize(value).ToString(_options.OutputDateTimeFormat, CultureInfo.CurrentUICulture));
+            writer.WriteStringValue(Normalize(value).ToString(_options.OutputDateTimeFormat, CultureInfo.CurrentUICulture));
         }
+    }
+
+    protected virtual DateTime Normalize(DateTime dateTime)
+    {
+        return _skipDateTimeNormalization ? dateTime : _clock.Normalize(dateTime);
     }
 }

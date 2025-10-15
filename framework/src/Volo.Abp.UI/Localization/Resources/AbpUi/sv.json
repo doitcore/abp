@@ -59,6 +59,7 @@
     "AddNew": "Lägg till ny",
     "ProfilePicture": "Profilbild",
     "Theme": "Tema",
-    "NotAssigned": "Ej tilldelad"
+    "NotAssigned": "Ej tilldelad",
+    "EntityActionsDisabledTooltip": "Du har inte tillgång till dessa åtgärder."
   }
 }

@@ -485,6 +485,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.AspNetCore.Bundlin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.AspNetCore.Components.MauiBlazor.Bundling", "src\Volo.Abp.AspNetCore.Components.MauiBlazor.Bundling\Volo.Abp.AspNetCore.Components.MauiBlazor.Bundling.csproj", "{70720321-DED4-464F-B913-BDA5BBDD7982}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.BlobStoring.Bunny", "src\Volo.Abp.BlobStoring.Bunny\Volo.Abp.BlobStoring.Bunny.csproj", "{1BBCBA72-CDB6-4882-96EE-D4CD149433A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.BlobStoring.Bunny.Tests", "test\Volo.Abp.BlobStoring.Bunny.Tests\Volo.Abp.BlobStoring.Bunny.Tests.csproj", "{BC4BB2D6-DFD8-4190-AAC3-32C0A7A8E915}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volo.Abp.Timing.Tests", "test\Volo.Abp.Timing.Tests\Volo.Abp.Timing.Tests.csproj", "{58FCF22D-E8DB-4EB8-B586-9BB6E9899D64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1447,6 +1453,18 @@ Global
 		{70720321-DED4-464F-B913-BDA5BBDD7982}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70720321-DED4-464F-B913-BDA5BBDD7982}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70720321-DED4-464F-B913-BDA5BBDD7982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BBCBA72-CDB6-4882-96EE-D4CD149433A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BBCBA72-CDB6-4882-96EE-D4CD149433A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BBCBA72-CDB6-4882-96EE-D4CD149433A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BBCBA72-CDB6-4882-96EE-D4CD149433A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC4BB2D6-DFD8-4190-AAC3-32C0A7A8E915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC4BB2D6-DFD8-4190-AAC3-32C0A7A8E915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC4BB2D6-DFD8-4190-AAC3-32C0A7A8E915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC4BB2D6-DFD8-4190-AAC3-32C0A7A8E915}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58FCF22D-E8DB-4EB8-B586-9BB6E9899D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58FCF22D-E8DB-4EB8-B586-9BB6E9899D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58FCF22D-E8DB-4EB8-B586-9BB6E9899D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58FCF22D-E8DB-4EB8-B586-9BB6E9899D64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1691,6 +1709,9 @@ Global
 		{C753DDD6-5699-45F8-8669-08CE0BB816DE} = {447C8A77-E5F0-4538-8687-7383196D04EA}
 		{75AA8A90-B3F6-43DF-ADA7-0990DEF44E2C} = {5DF0E140-0513-4D0D-BE2E-3D4D85CD70E6}
 		{70720321-DED4-464F-B913-BDA5BBDD7982} = {5DF0E140-0513-4D0D-BE2E-3D4D85CD70E6}
+		{1BBCBA72-CDB6-4882-96EE-D4CD149433A2} = {5DF0E140-0513-4D0D-BE2E-3D4D85CD70E6}
+		{BC4BB2D6-DFD8-4190-AAC3-32C0A7A8E915} = {447C8A77-E5F0-4538-8687-7383196D04EA}
+		{58FCF22D-E8DB-4EB8-B586-9BB6E9899D64} = {447C8A77-E5F0-4538-8687-7383196D04EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB97ECF4-9A84-433F-A80B-2A3285BDD1D5}

@@ -11,9 +11,9 @@ This document provides a road map, release schedule, and planned features for th
 
 ## Next Versions
 
-### v9.2
+### v9.3
 
-The next version will be 9.2 and planned to release the stable 9.2 version in June 2025. We will be mostly working on the following topics:
+The next version will be 9.3 and planned to release the stable 9.3 version in July 2025. We will be mostly working on the following topics:
 
 * Framework
   * Upgrading 3rd-party dependencies
@@ -22,22 +22,20 @@ The next version will be 9.2 and planned to release the stable 9.2 version in Ju
 * ABP Suite
   * Define navigation properties without target string property dependency
   * Improvements one-to-many scenarios
-  * Access to default code generation templates for customized templates
   * File Upload Modal enhancements
+  * Master/Detail DataGrid Toggle Detail Row Enhancements for Blazor UI
+
 
 * ABP Studio
+  * Allow to directly create new solutions with ABP's RC (Release Candidate) versions
   * Automate more details on new service creation for a microservice solution
   * Support multiple concurrent Kubernetes deployment/integration scenarios
   * Improve the module installation experience / installation guides
-  * Auto-install 3rd-party dependencies
-  * Better handle long log files
-  * Allow to directly create new solutions with ABP's RC (Release Candidate) versions
-  * Support Intel processors for Mac computers, support ARM chipset for Windows and support Linux OS
   * Improve client proxy generation experience
   * Modular Monolith Application Startup Template
 
 * Application modules
-  * Account module: Support mixed social/local login scenarios & enforcing email verification in wide aspect
+  * Account module: Support mixed social/local login scenarios & adding security related features
   * UI/UX improvements on existing application modules
 
 * Updating existing tutorials & documents (with other UI & DB options)
@@ -62,6 +60,8 @@ The ABP framework is [open source](https://github.com/abpframework/abp) and free
 * [#15932](https://github.com/abpframework/abp/issues/15932) / Introduce ABP Diagnostics Module
 * [#16744](https://github.com/abpframework/abp/issues/16744) / State Management API
 * [#17815](https://github.com/abpframework/abp/issues/17815) / Operation Rate Limiting
+* [#119](https://github.com/abpframework/abp/issues/119) / REST API Versioning Improvements
+* [#2087](https://github.com/abpframework/abp/issues/2087) / RavenDB Database Support
 
 ### Application Modules / UI Themes
 
@@ -107,7 +107,7 @@ Here, are some of the important planned features for next ABP Studio versions:
 
 Here, are some of the important planned features for the next ABP Suite versions:
 
-* Handle image properties for entities
+* Handle image properties for entities (in addition to file properties, which is already supported)
 * Allow to define extra properties for DTOs those are not a part of the entity
 * Allow to create pages instead of modals for CRUD page generation
 * View-only (detail view) modal/page for an entity
@@ -118,7 +118,7 @@ Here, are some of the important planned features for the next ABP Suite versions
 
 ## Feature Requests
 
-Vote for your favorite feature on the related GitHub issues (and write your thoughts). You can create an issue on [the GitHub repository](https://github.com/abpframework/abp) for your feature requests, but first search in the existing issues please. You can also contact info@abp.io for your feature requests and other suggestions.
+Vote for your favorite feature on the related GitHub issues (and write your thoughts). You can create an issue on [the GitHub repository](https://github.com/abpframework/abp) for your feature requests, but please first search the existing issues. You can also contact [info@abp.io](mailto:info@abp.io) for your feature requests and other suggestions.
 
 ## See Also
 

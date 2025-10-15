@@ -16,12 +16,12 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     where TEntityCacheItem : class
 {
     protected IReadOnlyRepository<TEntity, TKey> Repository { get; }
-    protected IDistributedCache<TEntityCacheItem, TKey> Cache { get; }
+    protected IDistributedCache<EntityCacheItemWrapper<TEntityCacheItem>, TKey> Cache { get; }
     protected IUnitOfWorkManager UnitOfWorkManager { get; }
 
     protected EntityCacheBase(
         IReadOnlyRepository<TEntity, TKey> repository,
-        IDistributedCache<TEntityCacheItem, TKey> cache,
+        IDistributedCache<EntityCacheItemWrapper<TEntityCacheItem>, TKey> cache,
         IUnitOfWorkManager unitOfWorkManager)
     {
         Repository = repository;
@@ -31,7 +31,7 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
 
     public virtual async Task<TEntityCacheItem?> FindAsync(TKey id)
     {
-        return await Cache.GetOrAddAsync(
+        return (await Cache.GetOrAddAsync(
             id,
             async () =>
             {
@@ -41,7 +41,7 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
                 }
 
                 return MapToCacheItem(await Repository.FindAsync(id))!;
-            });
+            }))?.Value;
     }
 
     public virtual async Task<TEntityCacheItem> GetAsync(TKey id)
@@ -56,7 +56,7 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
                 }
 
                 return MapToCacheItem(await Repository.GetAsync(id))!;
-            }))!;
+            }))!.Value!;
     }
 
     protected virtual bool HasObjectExtensionInfo()
@@ -65,15 +65,10 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
                ObjectExtensionManager.Instance.GetOrNull(typeof(TEntity)) != null;
     }
 
-    protected abstract TEntityCacheItem? MapToCacheItem(TEntity? entity);
+    protected abstract EntityCacheItemWrapper<TEntityCacheItem>? MapToCacheItem(TEntity? entity);
 
     public async Task HandleEventAsync(EntityChangedEventData<TEntity> eventData)
     {
-        if (eventData is EntityCreatedEventData<TEntity>)
-        {
-            return;
-        }
-
         /* Why we are using double remove:
          * First Cache.RemoveAsync drops the cache item in a unit of work.
          * Some other application / thread may read the value from database and put it to the cache again

@@ -18,7 +18,7 @@ First things first! Let's setup your development environment before creating the
 * [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or another IDE that supports .NET development
 * [.NET 9.0+](https://dotnet.microsoft.com/en-us/download/dotnet)
 * [Node v22.11+](https://nodejs.org/)
-* [Yarn v1.22+ (not v2+)](https://classic.yarnpkg.com/en/docs/install) or npm v10+ (already installed with Node)
+* [Yarn v1.22+ (not v2+)](https://classic.yarnpkg.com/en/docs/install) or npm v10+ (already installed with Node), **This is required for the Angular applications.**
 * [Docker Desktop (with Kubernetes enabled)](https://www.docker.com/products/docker-desktop/)
 * [Helm](https://helm.sh/docs/intro/install/)
 * [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/)
@@ -28,7 +28,7 @@ First things first! Let's setup your development environment before creating the
 
 ## Creating a New Solution
 
-> 🛈 This document uses [ABP Studio](../studio/index.md) to create new ABP solutions. **ABP Studio** is in the beta version now. If you have any issues, you can use the [ABP CLI](../cli/index.md) to create new solutions. You can also use the [getting started page](https://abp.io/get-started) to easily build ABP CLI commands for new project creations.
+> 🛈 This document uses [ABP Studio](../studio/index.md) to create new ABP solutions. You can also use the [ABP CLI](../cli/index.md) to create new solutions and use the [getting started page](https://abp.io/get-started) to easily build ABP CLI commands.
 
 > ABP startup solution templates have many options for your specific needs. If you don't understand an option that probably means you don't need it. We selected common defaults for you, so you can leave these options as they are.
 
@@ -159,9 +159,9 @@ In the *Solution Runner* section (on the left side) you can see all the runnable
 
 ![abp-studio-microservice-solution-runner-applications](images/abp-studio-microservice-solution-runner-applications.png)
 
-> A leaf item in the *Solution Runner* is called as an *Application* as it is an executable application.
+> A leaf item in the *Solution Runner* is called as an *Application* as it is an executable application, excluding items under `Containers`.
 
-As shown in the figure above, the executable applications are grouped into folders like `apps`, `gateways`, `infrastructure`, and `services`. You can start/stop them all, a group (folder) of them, or one by one.
+As shown in the figure above, the executable applications are grouped into folders like `apps`, `gateways`, and `services`. You can start/stop them all, a group (folder) of them, or one by one. The `Containers` branch contains the needed docker containers for the applications. 
 
 Before running the applications, you can run the all application by right-clicking the root item in the *Solution Runner* and select *Build* -> *Build All* action. However, you don't need to do that, because ABP Studio builds the applications before running them by default.
 

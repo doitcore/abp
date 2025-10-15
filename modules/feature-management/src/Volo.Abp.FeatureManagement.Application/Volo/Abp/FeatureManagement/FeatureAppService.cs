@@ -137,6 +137,7 @@ public class FeatureAppService : FeatureManagementAppServiceBase, IFeatureAppSer
 
     public virtual async Task DeleteAsync([NotNull] string providerName, string providerKey)
     {
+        await CheckProviderPolicy(providerName, providerKey);
         await FeatureManager.DeleteAsync(providerName, providerKey);
     }
 }

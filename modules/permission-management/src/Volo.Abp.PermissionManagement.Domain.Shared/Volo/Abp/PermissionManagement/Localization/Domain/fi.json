@@ -7,6 +7,7 @@
     "SelectAllInAllTabs": "Myönnä kaikki käyttöoikeudet",
     "SelectAllInThisTab": "Valitse kaikki",
     "SaveWithoutAnyPermissionsWarningMessage": "Haluatko varmasti tallentaa ilman käyttöoikeuksia?",
-    "PermissionGroup": "Käyttöoikeus"
+    "PermissionGroup": "Käyttöoikeus",
+    "Filter": "Suodatus"
   }
 }

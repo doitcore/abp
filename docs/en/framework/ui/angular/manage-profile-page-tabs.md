@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn to manage profile page tabs in ABP Framework using `ManageProfileTabsService` for adding, removing, or editing tabs effortlessly."
+}
+```
+
 # Manage Profile Page Tabs
 
 ![manage profile page](./images/manage-profile-page.png)

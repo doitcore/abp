@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to build modular applications with ABP Framework, including best practices, templates, and CLI support for seamless development."
+}
+```
+
 # Modularity
 
 ## Introduction

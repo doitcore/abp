@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to set up your development environment for ABP Angular 17.3.x with this quick start guide, ensuring a smooth development experience."
+}
+```
+
 # ABP Angular Quick Start
 
 **In this version ABP uses Angular [17.3.x](https://github.com/angular/angular/tree/17.3.x) version. You don't have to install Angular CLI globally**

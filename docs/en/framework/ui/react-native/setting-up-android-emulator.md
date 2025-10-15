@@ -111,6 +111,34 @@ adb install myApp.apk
 
 ---
 
+## How to Enable Fast Refresh in React Native
+
+React Native uses a hot reload system called **Fast Refresh**.  
+It is enabled by default in development mode, but you can manually enable or disable it via the Developer Menu.
+
+### To open the Developer Menu on Android emulator:
+
+```bash
+adb shell input keyevent 82
+```
+
+This command simulates the hardware menu button and opens the Developer Menu inside the emulator.
+
+### From the Developer Menu:
+
+- Look for the option: **Enable Fast Refresh**
+- If it's unchecked, tap to enable it
+- If it's already checked, Fast Refresh is already active
+
+### Alternative (if adb doesn't work):
+
+Focus the emulator window and press:
+
+- **Ctrl + M** (Windows/Linux)
+- **Cmd + M** (Mac)
+
+---
+
 ## Troubleshooting
 
 | Problem | Explanation |

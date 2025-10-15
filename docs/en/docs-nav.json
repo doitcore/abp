@@ -2625,6 +2625,10 @@
         {
           "text": "Optimizing for Production",
           "path": "deployment/optimizing-production.md"
+        },
+        {
+          "text": "Configuring Forwarded Headers for Reverse Proxies",
+          "path": "deployment/forwarded-headers.md"
         }
       ]
     },

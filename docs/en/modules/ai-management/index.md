@@ -97,7 +97,7 @@ When creating or managing a workspace, you can configure the following propertie
 | `Temperature` | No | Response randomness (0.0-1.0, defaults to provider default) |
 | `Description` | No | Workspace description |
 | `IsActive` | No | Enable/disable the workspace (default: true) |
-| `ApplicationName` | No | Associate workspace with specific application (for multi-application scenarios) |
+| `ApplicationName` | No | Associate workspace with specific application |
 | `RequiredPermissionName` | No | Permission required to use this workspace |
 | `IsSystem` | No | Whether it's a system workspace (read-only) |
 | `OverrideSystemConfiguration` | No | Allow database configuration to override code-defined settings |
@@ -138,8 +138,7 @@ PreConfigure<AbpAIWorkspaceOptions>(options =>
 * **Created through the UI** or programmatically via `IWorkspaceRepository`
 * **Fully manageable** - can be created, updated, activated/deactivated, and deleted
 * **Stored in database** with all configuration
-* **Ideal for** user-customizable AI features and multi-tenant scenarios
-* **Supports multi-tenancy** - each tenant has isolated workspaces
+* **Ideal for** user-customizable AI features
 
 Example (data seeding):
 
@@ -632,29 +631,6 @@ WorkspaceConfiguration:{ApplicationName}:{WorkspaceName}
 ```
 
 The cache is automatically invalidated when workspaces are created, updated, or deleted.
-
-### Multi-Tenancy
-
-The AI Management module is **fully multi-tenant aware**:
-
-- **Workspaces are isolated per tenant**: Each tenant has their own set of workspaces.
-- **Independent configurations**: Tenants can configure their own AI providers and API keys.
-- **Secure credential separation**: API keys and configurations are never shared between tenants.
-- **System workspaces**: System workspaces defined in code are available to all tenants.
-
-When working with multi-tenant applications:
-
-```csharp
-// Create workspace for specific tenant
-using (_currentTenant.Change(tenantId))
-{
-    await _workspaceRepository.InsertAsync(new Workspace(
-        name: "TenantSpecificWorkspace",
-        provider: "OpenAI",
-        modelName: "gpt-4"
-    ));
-}
-```
 
 ## See Also
 

@@ -98,7 +98,7 @@ export class BooksService {
 
 ```
 
-Use it in a component (standalone example):
+Use it in a component:
 
 ```ts
 // books.component.ts
@@ -108,7 +108,6 @@ import { BooksService, Book } from './books.service';
 
 @Component({
     selector: 'app-books',
-    standalone: true,
     imports: [CommonModule],
     template: `
     <h1>Books</h1>
@@ -134,11 +133,6 @@ Route resolver variant (keeps templates simple and aligns with SSR prefetching):
 
 ```ts
 // src/app/routes.ts
-import { Routes } from '@angular/router';
-import { resolve } from './shared/resolve-helpers'; // optional helper
-import { ProductsPageComponent } from './pages/products.page';
-import { inject } from '@angular/core';
-import { ProductsService } from './data/products.service';
 
 export const routes: Routes = [
   {

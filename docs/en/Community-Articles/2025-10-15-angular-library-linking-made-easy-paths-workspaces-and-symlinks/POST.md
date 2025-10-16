@@ -1,5 +1,7 @@
 # Angular Library Linking Made Easy: Paths, Workspaces, and Symlinks
 
+Managing local libraries and path references in Angular projects has evolved significantly with the introduction of the new Angular application builder. What once required manual path mappings, fragile symlinks, and `node_modules` references is now more structured, predictable, and aligned with modern TypeScript and workspace practices. This guide walks through how path mapping works, how it has changed, and the best ways to link and manage your local libraries in brand new Angular ecosystem.
+
 ### Understanding TypeScript Path Mapping
 
 Path aliases is a powerful feature in TypeScript that helps developers simplify and organize their import statements. Instead of dealing with long and error-prone relative paths like `../../../components/button`, you can define a clear and descriptive alias that points directly to a specific directory or module.
@@ -40,7 +42,7 @@ With this approach, imports like `@my-package/utils` or `@my-package/components/
 
 ### Step-by-Step Examples of Path Configuration
 
-As this example provides a glimpse for the path mapping, this is not the only way for aliases. Here are the other ways to utilize this feature.
+As this example provides a glimpse for the path mapping, this is not the only way for the aliases. Here are the other ways to utilize this feature.
 
 1. **Using `package.json` Exports for Library Mapping**
 
@@ -74,7 +76,7 @@ As this example provides a glimpse for the path mapping, this is not the only wa
 
    You can create a symlink using npm or yarn:
 
-   ```tsx
+   ```bash
    # Inside your library folder
    npm link
 
@@ -124,11 +126,12 @@ Angular used to support path aliases to the locally installed packages by refere
 }
 ```
 
-However, this approach is not recommended, hence not supported, by the typescript. You can find detailed guidance on this topic in the TypeScript documentation, which notes that paths should not reference mono-repo packages or those inside **node_modules\***:\* [Paths should not point to monorepo packages or node_modules packages](https://www.typescriptlang.org/docs/handbook/modules/reference.html#paths-should-not-point-to-monorepo-packages-or-node_modules-packages).
+However, this approach is not recommended, hence not supported, by the TypeScript. You can find detailed guidance on this topic in the TypeScript documentation, which notes that paths should not reference mono-repo packages or those inside **node_modules\***:\* [Paths should not point to monorepo packages or node_modules packages](https://www.typescriptlang.org/docs/handbook/modules/reference.html#paths-should-not-point-to-monorepo-packages-or-node_modules-packages).
 
 Giving a real life example would explain the situation better. Suppose that you have such structure:
 
-- You have a main angular app that consumes several npm dependencies and holds registered local paths that reference to another library locally like this:
+- Amain angular app that consumes several npm dependencies and holds registered local paths that reference to another library locally like this:
+
   ```tsx
   // angular/tsconfig.json
   {
@@ -148,8 +151,11 @@ Giving a real life example would explain the situation better. Suppose that you 
     },
   }
   ```
+
   This simply references to this package physically https://github.com/abpframework/abp/tree/dev/npm/ng-packs/packages/identity
+
 - This library is also using these dependencies
+
   ```tsx
   // npm/ng-packs/packages/identity/package.json
   {
@@ -171,7 +177,9 @@ Giving a real life example would explain the situation better. Suppose that you 
     }
   }
   ```
+
   As these libraries also have their own dependencies, the identity package needs to consume them in itself. Before the [application builder migration](https://angular.dev/tools/cli/build-system-migration), you could register the path configuration like this
+
   ```tsx
   // angular/tsconfig.json
   {
@@ -196,16 +204,40 @@ Giving a real life example would explain the situation better. Suppose that you 
     },
   }
   ```
-  However, the latest builder forces more strict rules.So, it does not resolve the paths that reference to the `node_modules` causing a common DI errors as mentioned here:
+
+  However, the latest builder forces more strict rules. So, it does not resolve the paths that reference to the `node_modules` causing a common DI error as mentioned here:
+
   - https://github.com/angular/angular-cli/issues/31395
   - https://github.com/angular/angular-cli/issues/26901
   - https://github.com/angular/angular-cli/issues/27176
 
-In this case, we recommend using a symlink script. You can reach them through: [INSERT GITHUB LINK]
+In this case, we recommend using a symlink script. You can reach them through this example application: [🔗 Angular Sample Path Reference](https://github.com/sumeyyeKurtulus/AbpPathReferenceExamples)
 
 These scripts help you share dependencies from the main Angular app to local library projects via symlinks:
 
 - `symlink-config.ps1` centralizes which library directories to touch (e.g., ../../modules/Volo.Abp.Identity/angular/projects/identity) and which packages to link (e.g., @angular, @abp, rxjs)
 - `setup-symlinks.ps1` reads that config and, for each library, creates a `node_modules` folder if needed and symlinks only the listed packages from the `node_modules` of the app to avoid duplicate installs
-- `remove-symlinks.ps1` cleans up by deleting those library node_modules directories so they can use their own local deps again
+- `remove-symlinks.ps1` cleans up by deleting those library `node_modules` directories so they can use their own local deps again
 - In `angular/package.json`, the `symlinks:setup` and `symlinks:remove` npm scripts simply run those two PowerShell scripts so you can execute them conveniently with your package manager.
+
+---
+
+### Best Practices and Recommendations
+
+As we have explained each way of path mapping, this part of the article aims to summarize the best practices. Here are the points you need to consider:
+
+- Prefer **workspace references** for large projects and mono-repos.
+- Use **TypeScript path aliases** only for local development convenience.
+- Strictly avoid referencing `node_modules` directly; let the Angular builder manage package resolution.
+- Maintain **consistent library structures** with clear `package.json` exports for reusable libraries.
+- Automate **symlink creation/removal** if needed to reduce manual errors.
+
+Here is the list of common pitfalls and how you could troubleshoot them:
+
+- **DI errors after path configurations for typescript config**: Ensure that only one copy of each library is resolved. Avoid duplicate modules by checking `node_modules` and symlinks.
+- **IDE not recognizing aliases**: Confirm that `tsconfig.json` or `tsconfig.base.json` includes the correct `paths` configuration and that your IDE is using the correct tsconfig.
+- **Build errors with old paths**: Migrate paths pointing to `node_modules` to either workspace references or local library paths.
+- **Symlink issues in CI/CD**: Use automated scripts to create/remove symlinks consistently; do not rely on manual linking.
+- **Module resolution conflicts**: Check library dependencies for mismatched versions and align them using a package manager workspace strategy.
+
+As Angular’s build system continues to mature, developers are encouraged to move away from outdated path configurations and manual symlink setups. By embracing workspace references, consistent library exports, and TypeScript path mapping, teams can build scalable, maintainable applications without wrestling with complex import paths or dependency conflicts. With the right configuration, local development becomes faster, cleaner, and far more reliable.

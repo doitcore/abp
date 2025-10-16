@@ -156,13 +156,6 @@ Like Option A, but less boilerplate. This approach uses an **HttpInterceptor** t
 Example interceptor that caches GET requests:
 
 ```ts
-
-
-```
-
-- Standalone apps (Angular ≥16): enable the HTTP transfer cache provider alongside `provideHttpClient`.
-
-```ts
 import { inject, makeStateKey, PLATFORM_ID, TransferState } from '@angular/core';
 import {
     HttpEvent,

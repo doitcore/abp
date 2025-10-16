@@ -126,7 +126,7 @@ Angular used to support path aliases to the locally installed packages by refere
 }
 ```
 
-However, this approach is not recommended, hence not supported, by the TypeScript. You can find detailed guidance on this topic in the TypeScript documentation, which notes that paths should not reference mono-repo packages or those inside **node_modules\***:\* [Paths should not point to monorepo packages or node_modules packages](https://www.typescriptlang.org/docs/handbook/modules/reference.html#paths-should-not-point-to-monorepo-packages-or-node_modules-packages).
+However, this approach is not recommended, hence not supported, by the TypeScript. You can find detailed guidance on this topic in the TypeScript documentation, which notes that paths should not reference mono-repo packages or those inside **node_modules**: [Paths should not point to monorepo packages or node_modules packages](https://www.typescriptlang.org/docs/handbook/modules/reference.html#paths-should-not-point-to-monorepo-packages-or-node_modules-packages).
 
 Giving a real life example would explain the situation better. Suppose that you have such structure:
 

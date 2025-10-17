@@ -168,4 +168,15 @@ abp-back-to-impersonator-nav-item {
         color: var(--bs-navbar-color);
     }
 }
+
+.ngx-datatable.material:has(.datatable-body-row) .datatable-footer {
+  border-top: none;
+}
+
+.ngx-datatable.material:not(:has(.datatable-body-row)) .datatable-footer {
+  border-top: 1px solid #dee2e6;
+}
+
 `;
+
+

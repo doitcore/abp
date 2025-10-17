@@ -7,7 +7,6 @@ import {
   Router,
   RouterEvent,
   Event,
-  RouterState,
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';

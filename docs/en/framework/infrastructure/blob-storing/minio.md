@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to configure the MinIO BLOB Storing Provider in your ABP Framework project for efficient object storage."
+}
+```
+
 # BLOB Storing Minio Provider
 
 BLOB Storing Minio Provider can store BLOBs in [MinIO Object storage](https://min.io/).

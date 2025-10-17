@@ -8,16 +8,15 @@ Path aliases is a powerful feature in TypeScript that helps developers simplify 
 
 This configuration is managed through the `paths` property in the TypeScript configuration file (`tsconfig.json`), allowing you to map custom names to local folders or compiled outputs. For example:
 
-```tsx
+```json
 // tsconfig.json
 {
-	"compilerOptions": {
-		"paths": {
-			"@my-package": ["./dist/my-package"],
-			"@my-second-package": ["./projects/my-second-package/src/public-api.ts"]
-
-		}
-	}
+  "compilerOptions": {
+    "paths": {
+      "@my-package": ["./dist/my-package"],
+      "@my-second-package": ["./projects/my-second-package/src/public-api.ts"]
+    }
+  }
 }
 ```
 
@@ -25,14 +24,14 @@ In this setup, `@my-package` serves as a shorthand reference to your locally bui
 
 When working with multiple subdirectories or a more complex folder structure, you can also use wildcards to create flexible and dynamic mappings. This pattern is especially useful for modular libraries or mono-repos that contain multiple sub-packages:
 
-```tsx
+```json
 // tsconfig.json
 {
-	"compilerOptions": {
-		"paths": {
-			"@my-package/*": ["./dist/my-package/*"]
-		}
-	}
+  "compilerOptions": {
+    "paths": {
+      "@my-package/*": ["./dist/my-package/*"]
+    }
+  }
 }
 ```
 
@@ -50,7 +49,7 @@ As this example provides a glimpse for the path mapping, this is not the only wa
 
    This allows Node and modern bundlers to resolve imports cleanly when consuming the library, without depending solely on TypeScript configuration.
 
-   ```tsx
+   ```json
    // dist/my-lib/package.json
    {
      "name": "@my-org/my-lib",
@@ -115,14 +114,14 @@ Choosing the right one, or even combining them depends on the scale of your proj
 
 Angular used to support path aliases to the locally installed packages by referencing to the `node_modules` folder like this:
 
-```tsx
+```json
 // tsconfig.json
 {
-	"compilerOptions": {
-		"paths": {
-			"@angular/*": ["./node_modules/@angular/*"]
-		}
-	}
+  "compilerOptions": {
+    "paths": {
+      "@angular/*": ["./node_modules/@angular/*"]
+    }
+  }
 }
 ```
 
@@ -132,7 +131,7 @@ Giving a real life example would explain the situation better. Suppose that you 
 
 - Amain angular app that consumes several npm dependencies and holds registered local paths that reference to another library locally like this:
 
-  ```tsx
+  ```json
   // angular/tsconfig.json
   {
     "compileOnSave": false,
@@ -147,8 +146,8 @@ Giving a real life example would explain the situation better. Suppose that you 
         "@abp/ng.identity/proxy": [
           "../modules/Volo.Abp.Identity/angular/projects/identity/proxy/src/public-api.ts"
         ]
-      },
-    },
+      }
+    }
   }
   ```
 
@@ -156,7 +155,7 @@ Giving a real life example would explain the situation better. Suppose that you 
 
 - This library is also using these dependencies
 
-  ```tsx
+  ```json
   // npm/ng-packs/packages/identity/package.json
   {
     "name": "@abp/ng.identity",
@@ -180,17 +179,19 @@ Giving a real life example would explain the situation better. Suppose that you 
 
   As these libraries also have their own dependencies, the identity package needs to consume them in itself. Before the [application builder migration](https://angular.dev/tools/cli/build-system-migration), you could register the path configuration like this
 
-  ```tsx
+  ```json
   // angular/tsconfig.json
   {
     "compileOnSave": false,
     "compilerOptions": {
       "paths": {
-        "@angular/*":["node_modules/@angular/*"],
-        "@abp/*":["node_modules/@abp/*"],
+        "@angular/*": ["node_modules/@angular/*"],
+        "@abp/*": ["node_modules/@abp/*"],
         "@swimlane/*": ["node_modules/@swimlane/*"],
-        "@ngx-validate/core":["node_modules/@ngx-validate/core"],
-        "@ng-bootstrap/ng-bootstrap": ["node_modules/@ng-bootstrap/ng-bootstrap"],
+        "@ngx-validate/core": ["node_modules/@ngx-validate/core"],
+        "@ng-bootstrap/ng-bootstrap": [
+          "node_modules/@ng-bootstrap/ng-bootstrap"
+        ],
         "@abp/ng.identity": [
           "../modules/Volo.Abp.Identity/angular/projects/identity/src/public-api.ts"
         ],
@@ -200,8 +201,8 @@ Giving a real life example would explain the situation better. Suppose that you 
         "@abp/ng.identity/proxy": [
           "../modules/Volo.Abp.Identity/angular/projects/identity/proxy/src/public-api.ts"
         ]
-      },
-    },
+      }
+    }
   }
   ```
 

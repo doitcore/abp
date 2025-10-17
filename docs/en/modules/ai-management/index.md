@@ -7,9 +7,7 @@ This module implements AI (Artificial Intelligence) management capabilities on t
 
 ## How to Install
 
-### New Solutions
-
-AI Management module is not pre-installed in [the startup templates](../solution-templates/layered-web-application). You can install it using the ABP CLI or ABP Suite.
+AI Management module is not pre-installed in [the startup templates](../solution-templates/layered-web-application). You can install it using the ABP CLI or ABP Studio.
 
 **Using ABP CLI:**
 
@@ -17,16 +15,10 @@ AI Management module is not pre-installed in [the startup templates](../solution
 abp add-module Volo.AIManagement
 ```
 
-**Using ABP Suite:**
+**Using ABP Studio:**
 
-Open ABP Suite, navigate to your solution, and install the AI Management module from the Modules page.
+Open ABP Studio, navigate to your solution explorer, **Right Click** on the project and select **Import Module**. Choose `Volo.AIManagement` from `NuGet` tab and check the "Install this Module" checkbox. Click the "OK" button to install the module.
 
-### Existing Solutions
-If you want to add the **AI Management** module to your existing solution, you can use the ABP CLI `add-module` command:
-
-```bash
-abp add-module Volo.AIManagement
-```
 
 ## Packages
 
@@ -97,7 +89,7 @@ When creating or managing a workspace, you can configure the following propertie
 | `Temperature` | No | Response randomness (0.0-1.0, defaults to provider default) |
 | `Description` | No | Workspace description |
 | `IsActive` | No | Enable/disable the workspace (default: true) |
-| `ApplicationName` | No | Associate workspace with specific application (for multi-application scenarios) |
+| `ApplicationName` | No | Associate workspace with specific application |
 | `RequiredPermissionName` | No | Permission required to use this workspace |
 | `IsSystem` | No | Whether it's a system workspace (read-only) |
 | `OverrideSystemConfiguration` | No | Allow database configuration to override code-defined settings |
@@ -126,7 +118,7 @@ PreConfigure<AbpAIWorkspaceOptions>(options =>
         configuration.ConfigureChatClient(chatClientConfiguration =>
         {
             chatClientConfiguration.Builder = new ChatClientBuilder(
-                sp => new OpenAIClient(apiKey).AsChatClient("gpt-4")
+                sp => new OpenAIClient(apiKey).GetChatClient("gpt-4")
             );
         });
     });
@@ -138,8 +130,7 @@ PreConfigure<AbpAIWorkspaceOptions>(options =>
 * **Created through the UI** or programmatically via `IWorkspaceRepository`
 * **Fully manageable** - can be created, updated, activated/deactivated, and deleted
 * **Stored in database** with all configuration
-* **Ideal for** user-customizable AI features and multi-tenant scenarios
-* **Supports multi-tenancy** - each tenant has isolated workspaces
+* **Ideal for** user-customizable AI features
 
 Example (data seeding):
 
@@ -228,7 +219,7 @@ public class YourModule : AbpModule
                 configuration.ConfigureChatClient(chatClientConfiguration =>
                 {
                     chatClientConfiguration.Builder = new ChatClientBuilder(
-                        sp => new OpenAIClient(apiKey).AsChatClient("gpt-4")
+                        sp => new OpenAIClient(apiKey).GetChatClient("gpt-4")
                     );
                 });
             });
@@ -632,29 +623,6 @@ WorkspaceConfiguration:{ApplicationName}:{WorkspaceName}
 ```
 
 The cache is automatically invalidated when workspaces are created, updated, or deleted.
-
-### Multi-Tenancy
-
-The AI Management module is **fully multi-tenant aware**:
-
-- **Workspaces are isolated per tenant**: Each tenant has their own set of workspaces.
-- **Independent configurations**: Tenants can configure their own AI providers and API keys.
-- **Secure credential separation**: API keys and configurations are never shared between tenants.
-- **System workspaces**: System workspaces defined in code are available to all tenants.
-
-When working with multi-tenant applications:
-
-```csharp
-// Create workspace for specific tenant
-using (_currentTenant.Change(tenantId))
-{
-    await _workspaceRepository.InsertAsync(new Workspace(
-        name: "TenantSpecificWorkspace",
-        provider: "OpenAI",
-        modelName: "gpt-4"
-    ));
-}
-```
 
 ## See Also
 

@@ -53,6 +53,7 @@ AI Management module adds the following items to the "Main" menu, under the "Adm
 
 Workspaces page is used to manage AI workspaces in the system. You can create, edit, duplicate, and delete workspaces.
 
+![ai-management-workspaces](../../images/ai-management-workspaces.png)
 
 You can create a new workspace or edit an existing workspace in this page. The workspace configuration includes:
 

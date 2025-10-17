@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Volo.Abp.AI.Abstractions/Volo.Abp.AI.Abstractions.csproj" />
+    <Project Path="src/Volo.Abp.AI/Volo.Abp.AI.csproj" />
     <Project Path="src/Volo.Abp.ApiVersioning.Abstractions/Volo.Abp.ApiVersioning.Abstractions.csproj" />
     <Project Path="src/Volo.Abp.AspNetCore.Abstractions/Volo.Abp.AspNetCore.Abstractions.csproj" />
     <Project Path="src/Volo.Abp.AspNetCore.Authentication.JwtBearer/Volo.Abp.AspNetCore.Authentication.JwtBearer.csproj" />
@@ -173,6 +175,7 @@
   <Folder Name="/test/">
     <Project Path="test/AbpTestBase/AbpTestBase.csproj" />
     <Project Path="test/SimpleConsoleDemo/SimpleConsoleDemo.csproj" />
+    <Project Path="test/Volo.Abp.AI.Tests/Volo.Abp.AI.Tests.csproj" />
     <Project Path="test/Volo.Abp.AspNetCore.Authentication.OAuth.Tests/Volo.Abp.AspNetCore.Authentication.OAuth.Tests.csproj" />
     <Project Path="test/Volo.Abp.AspNetCore.MultiTenancy.Tests/Volo.Abp.AspNetCore.MultiTenancy.Tests.csproj" />
     <Project Path="test/Volo.Abp.AspNetCore.Mvc.PlugIn/Volo.Abp.AspNetCore.Mvc.PlugIn.csproj" />

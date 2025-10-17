@@ -2344,6 +2344,10 @@
           ]
         },
         {
+          "text": "AI Management (Pro)",
+          "path": "modules/ai-management/index.md"
+        },
+        {
           "text": "Audit Logging",
           "path": "modules/audit-logging.md"
         },

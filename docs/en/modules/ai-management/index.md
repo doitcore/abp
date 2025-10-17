@@ -7,9 +7,7 @@ This module implements AI (Artificial Intelligence) management capabilities on t
 
 ## How to Install
 
-### New Solutions
-
-AI Management module is not pre-installed in [the startup templates](../solution-templates/layered-web-application). You can install it using the ABP CLI or ABP Suite.
+AI Management module is not pre-installed in [the startup templates](../solution-templates/layered-web-application). You can install it using the ABP CLI or ABP Studio.
 
 **Using ABP CLI:**
 
@@ -17,16 +15,10 @@ AI Management module is not pre-installed in [the startup templates](../solution
 abp add-module Volo.AIManagement
 ```
 
-**Using ABP Suite:**
+**Using ABP Studio:**
 
-Open ABP Suite, navigate to your solution, and install the AI Management module from the Modules page.
+Open ABP Studio, navigate to your solution explorer, **Right Click** on the project and select **Import Module**. Choose `Volo.AIManagement` from `NuGet` tab and check the "Install this Module" checkbox. Click the "OK" button to install the module.
 
-### Existing Solutions
-If you want to add the **AI Management** module to your existing solution, you can use the ABP CLI `add-module` command:
-
-```bash
-abp add-module Volo.AIManagement
-```
 
 ## Packages
 

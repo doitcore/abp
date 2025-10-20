@@ -78,7 +78,10 @@ jobs:
                 # Create directory if it doesn't exist
                 mkdir -p "$(dirname "$file")"
                 # Checkout the file from merge commit
-                git show "${{ github.event.pull_request.merge_commit_sha }}:$file" > "$file" 2>/dev/null || echo "  Warning: Could not checkout $file"
+                if ! git show "${{ github.event.pull_request.merge_commit_sha }}:$file" > "$file" 2>err.log; then
+                  echo "  Warning: Could not checkout $file"
+                  echo "    Reason: $(cat err.log)"
+                fi
               fi
             done <<< "$FILES"
             

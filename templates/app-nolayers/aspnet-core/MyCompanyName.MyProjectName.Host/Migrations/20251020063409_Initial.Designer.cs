@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyCompanyName.MyProjectName.EntityFrameworkCore;
+using MyCompanyName.MyProjectName.Data;
 using Volo.Abp.EntityFrameworkCore;
 
 #nullable disable
 
-namespace MyCompanyName.MyProjectName.Migrations
+namespace MyCompanyName.MyProjectName.Host.Migrations
 {
-    [DbContext(typeof(AuthServerDbContext))]
-    [Migration("20251018030413_Initial")]
+    [DbContext(typeof(MyProjectNameDbContext))]
+    [Migration("20251020063409_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -1017,6 +1017,27 @@ namespace MyCompanyName.MyProjectName.Migrations
                     b.ToTable("AbpUserOrganizationUnits", (string)null);
                 });
 
+            modelBuilder.Entity("Volo.Abp.Identity.IdentityUserPasswordHistory", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Password")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("UserId", "Password");
+
+                    b.ToTable("AbpUserPasswordHistories", (string)null);
+                });
+
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserRole", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -1824,6 +1845,15 @@ namespace MyCompanyName.MyProjectName.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Volo.Abp.Identity.IdentityUserPasswordHistory", b =>
+                {
+                    b.HasOne("Volo.Abp.Identity.IdentityUser", null)
+                        .WithMany("PasswordHistories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserRole", b =>
                 {
                     b.HasOne("Volo.Abp.Identity.IdentityRole", null)
@@ -1921,6 +1951,8 @@ namespace MyCompanyName.MyProjectName.Migrations
                     b.Navigation("Logins");
 
                     b.Navigation("OrganizationUnits");
+
+                    b.Navigation("PasswordHistories");
 
                     b.Navigation("Roles");
 

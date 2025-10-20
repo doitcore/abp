@@ -12,7 +12,7 @@ public class AbpRadioInputTagHelper : AbpTagHelper<AbpRadioInputTagHelper, AbpRa
 
     public string? Label { get; set; }
 
-    public bool SuppressLabel { get; set; } = false;
+    public bool SuppressLabel { get; set; }
 
     [HtmlAttributeName("info")]
     public string? InfoText { get; set; }

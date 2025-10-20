@@ -101,6 +101,8 @@ app.Run();
 
 ## 3) Garbage Collection and ThreadPool
 
+
+
 ![image-20251019160355415](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160355415.png)
 
 ### GC Memory Cleanup Mode

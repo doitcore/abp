@@ -237,6 +237,8 @@ On K8s, set `terminationGracePeriodSeconds` and wire **readiness**/startup probe
 
 ## 11) Load Test
 
+![image-20251020180232079](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020180232079.png)
+
 Sometimes arguing with our lover is good. We can see her/his face before marrying 😀 Use **k6** or **bombardier**  and test with realistic payloads and prod-like limits. Don't be surprise later when your app is running on prod! These topics should be tested: `CPU %` , `Time in GC` ,  `LOH Allocations` , `ThreadPool Queue Length` and `Socket Exhaustion`. 
 
 ### About K6

@@ -1,5 +1,7 @@
 # Optimize Your .NET App for Production (Complete Checklist)
 
+![cover](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\cover.png)
+
 **Tags:** 
 
 > #optimize #dotnet #aspnetcore #performance #kestrel #best-practises
@@ -17,6 +19,8 @@ I see way too many .NET apps go to prod like it’s still “F5 on my laptop.”
 ------
 
 ## 1) Publish Command and CSPROJ  Settings
+
+![image-20251019160137674](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160137674.png)
 
 Never go to production with debug build! See the below command which publishes properly a .NET app for production.
 
@@ -46,6 +50,8 @@ dotnet publish -c Release -o out -p:PublishTrimmed=true -p:PublishSingleFile=tru
 ------
 
 ## 2) Kestrel Hosting
+
+![image-20251019160303146](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160303146.png)
 
 By default, ASP.NET Core app listen only `localhost`, it means it accepts requests only from inside the machine. When you deploy to Docker or Kubernetes, the container’s internal network needs to expose the app to the outside world. To do this you can set it via environment variable as below:
 
@@ -95,6 +101,8 @@ app.Run();
 
 ## 3) Garbage Collection and ThreadPool
 
+![image-20251019160355415](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160355415.png)
+
 ### GC Memory Cleanup Mode
 
 GC (Garbage Collection) is how .NET automatically frees memory. There are two main modes:
@@ -129,6 +137,8 @@ ThreadPool.SetMinThreads(200, 200);
 ------
 
 ## 4) HTTP Performance
+
+![image-20251019160413738](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160413738.png)
 
 ### HTTP Response Compression 
 
@@ -183,6 +193,8 @@ var json = JsonSerializer.Serialize(dto, MyJsonContext.Default.MyDto)
 ------
 
 ## 5) Data Layer (Probably Where Most Apps Slow Down)
+
+![image-20251019160500983](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160500983.png)
 
 ### Reuse `DbContext` via Factory (Pooling)
 

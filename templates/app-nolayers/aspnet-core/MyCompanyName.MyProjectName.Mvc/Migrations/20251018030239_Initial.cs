@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MyCompanyName.MyProjectName.Host.Migrations
+namespace MyCompanyName.MyProjectName.Mvc.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -279,7 +279,7 @@ namespace MyCompanyName.MyProjectName.Host.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SessionId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Device = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    DeviceInfo = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    DeviceInfo = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClientId = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),

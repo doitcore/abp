@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MyCompanyName.MyProjectName.Host.Migrations
+namespace MyCompanyName.MyProjectName.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -279,7 +279,7 @@ namespace MyCompanyName.MyProjectName.Host.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SessionId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Device = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    DeviceInfo = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    DeviceInfo = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClientId = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
@@ -652,6 +652,26 @@ namespace MyCompanyName.MyProjectName.Host.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AbpUserOrganizationUnits_AbpUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbpUserPasswordHistories",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbpUserPasswordHistories", x => new { x.UserId, x.Password });
+                    table.ForeignKey(
+                        name: "FK_AbpUserPasswordHistories_AbpUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
@@ -1098,6 +1118,9 @@ namespace MyCompanyName.MyProjectName.Host.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUserOrganizationUnits");
+
+            migrationBuilder.DropTable(
+                name: "AbpUserPasswordHistories");
 
             migrationBuilder.DropTable(
                 name: "AbpUserRoles");

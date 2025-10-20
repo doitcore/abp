@@ -1,5 +1,7 @@
 ## 6)  Telemetry (Logs, Metrics, Traces)
 
+![image-20251020173353352](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020173353352.jpg)
+
 The below code adds `OpenTelemetry` to collect app logs, metrics, and traces in .NET.
 
 ```csharp
@@ -30,6 +32,8 @@ When your app is on-air, you should know about the below tools. You know in airp
 ------
 
 ## 7) Build and Run Your .NET App in Docker the Right Way
+
+![image-20251020174203295](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174203295.png)
 
 A multi-stage build is a Docker technique where you use one image for building your app and another smaller image for running it. Why we do multi-stage build, because the .NET SDK image is big but has all the build tools. The .NET Runtime image is small and optimized for production. You copy only the published output from the build stage into the runtime stage.
 
@@ -93,6 +97,8 @@ I'll explain what these Docker file commands;
 ------
 
 ## 8) Security 
+
+![image-20251020174103427](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174103427.png)
 
 ### 8.1) HTTPS Everywhere Even Behind Proxy
 
@@ -181,6 +187,8 @@ options.Cookie.SameSite = SameSiteMode.Strict; // or Lax
 
 ## 9) Startup/Cold Start
 
+![image-20251020174425706](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174425706.png)
+
 ### 9.1) Keep Tiered JIT On
 
 The **JIT (Just-In-Time) compiler** converts your app’s Intermediate Language (IL) into native CPU instructions when the code runs. _Tiered JIT_ means the runtime uses 2 stages of compilation. Actually this setting is enabled by default in modern .NET. So just keep it on.
@@ -207,6 +215,8 @@ In .NET 8+, you don’t have to manually enable PGO (Profile-Guided Optimization
 
 ## 10) Graceful Shutdown
 
+![image-20251020174712659](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174712659.png)
+
 When we break up with our lover, we often argue and regret it later. When an application breaks up with an operating system, it should be done well 😘 ...
 When your app stops, maybe you deploy a new version or Kubernetes restarts a pod... the OS sends a signal called `SIGTERM` (terminate). 
 A **graceful shutdown** means handling that signal properly, finishing what’s running, cleaning up, and exiting cleanly (like an adult)!
@@ -227,10 +237,20 @@ On K8s, set `terminationGracePeriodSeconds` and wire **readiness**/startup probe
 
 ## 11) Load Test
 
-Sometimes arguing with our lover is good. We can see her/his face before marrying 😀 Use **k6** or **bombardier**  and test with realistic payloads and prod-like limits. Don't be surprise later when your app is running on prod! Test these topics:
+Sometimes arguing with our lover is good. We can see her/his face before marrying 😀 Use **k6** or **bombardier**  and test with realistic payloads and prod-like limits. Don't be surprise later when your app is running on prod! These topics should be tested: `CPU %` , `Time in GC` ,  `LOH Allocations` , `ThreadPool Queue Length` and `Socket Exhaustion`. 
 
-- CPU %
-- Time in GC
-- LOH allocations
-- ThreadPool queue length
-- Socket exhaustion
+### About K6
+
+- A modern load testing tool, using Go and JavaScript.
+
+- 29K stars on GitHub
+- GitHub address: https://github.com/grafana/k6
+
+### About Bombardier
+
+- Fast cross-platform HTTP benchmarking tool written in Go.
+
+- 7K stars on GitHub
+- GitHub address: https://github.com/codesenberg/bombardier
+
+[![image-20251020175737615](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020175737615.png)](https://trends.google.com/trends/explore?cat=31&q=bombardier%20%2B%20benchmarking,k6%20%2B%20benchmarking)

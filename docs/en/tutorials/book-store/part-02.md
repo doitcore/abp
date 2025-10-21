@@ -522,7 +522,7 @@ Now you can see the final result on your browser:
 
 ![Book list final result](images/bookstore-book-list-angular.png)
 
-{{else if UI == "Blazor" || UI == "BlazorServer" || UI == "BlazorWebApp"}}
+{{else if UI == "Blazor" || UI == "BlazorServer" || UI == "BlazorWebApp" || UI == "MAUIBlazor"}}
 
 ## Create a Books Page
 

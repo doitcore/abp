@@ -52,8 +52,14 @@ jobs:
       - name: Get changed markdown files from merged PR
         id: changed-files
         run: |
-          # Get files changed in the merged PR (only Added and Modified, exclude Deleted)
-          FILES=$(git diff --name-only --diff-filter=AM ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.merge_commit_sha }} | grep 'docs/en/.*\.md$' || true)
+          # Get the list of commits in the PR
+          PR_HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          PR_BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          
+          echo "PR commits range: $PR_BASE_SHA..$PR_HEAD_SHA"
+          
+          # Get files changed in the PR commits only (only Added and Modified, exclude Deleted)
+          FILES=$(git diff --name-only --diff-filter=AM $PR_BASE_SHA..$PR_HEAD_SHA | grep 'docs/en/.*\.md$' || true)
           
           echo "Files changed in the merged PR (added/modified only):"
           echo "$FILES"

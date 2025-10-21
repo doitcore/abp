@@ -32,10 +32,10 @@ AI Management module packages are designed for various usage scenarios. Packages
 
 ### Menu Items
 
-AI Management module adds the following items to the "Main" menu, under the "Administration" menu item:
+AI Management module adds the following items to the "Main" menu:
 
-* **Workspaces**: Workspace management page.
-* **Chat**: AI chat interface for testing workspaces.
+* **AI Management**: Root menu item for AI Management module. (`AIManagement`)
+    * **Workspaces**: Workspace management page. (`AIManagement.Workspaces`)
 
 `AIManagementMenus` class has the constants for the menu item names.
 
@@ -135,14 +135,15 @@ PreConfigure<AbpAIWorkspaceOptions>(options =>
 Example (data seeding):
 
 ```csharp
-await _workspaceRepository.InsertAsync(new Workspace(
+var workspace = new Workspace(
     name: "CustomerSupportWorkspace",
     provider: "OpenAI",
     modelName: "gpt-4",
-    apiKey: "your-api-key",
-    systemPrompt: "You are a helpful customer support assistant.",
-    requiredPermissionName: "MyApp.CustomerSupport"
-));
+    apiKey: "your-api-key"
+);
+workspace.ApplicationName = ApplicationInfoAccessor.ApplicationName;
+workspace.SystemPrompt = "You are a helpful customer support assistant.";
+await _workspaceRepository.InsertAsync(workspace);
 ```
 
 ### Workspace Naming Rules
@@ -155,8 +156,6 @@ await _workspaceRepository.InsertAsync(new Workspace(
 
 The AI Management module defines the following permissions:
 
-### Workspace Management Permissions
-
 | Permission | Description | Default Granted To |
 |------------|-------------|-------------------|
 | `AIManagement.Workspaces` | View workspaces | Admin role |
@@ -164,11 +163,6 @@ The AI Management module defines the following permissions:
 | `AIManagement.Workspaces.Update` | Edit existing workspaces | Admin role |
 | `AIManagement.Workspaces.Delete` | Delete workspaces | Admin role |
 
-### Chat Permissions
-
-| Permission | Description | Default Granted To |
-|------------|-------------|-------------------|
-| `AIManagement.Chat` | Access chat interface | Admin role |
 
 ### Workspace-Level Permissions
 
@@ -184,9 +178,8 @@ var workspace = new Workspace(
 ```
 
 When a workspace has a required permission:
-* Only users with that permission can access the workspace
+* Only authorized users with that permission can access the workspace endpoints
 * Users without the permission will receive an authorization error
-* The workspace will not appear in the workspace selection dropdown for unauthorized users
 
 ## Usage Scenarios
 

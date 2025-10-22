@@ -12,7 +12,7 @@ The menu is inside the `ApplicationLayoutComponent` in the @abp/ng.theme.basic p
 
 ## How to Add a Logo
 
-The `logoUrl` property in the environment variables is the url of the logo. 
+The `logoUrl` property in the environment variables is the url of the logo.
 
 You can add your logo to `src/assets` folder and set the `logoUrl` as shown below:
 
@@ -27,6 +27,25 @@ export const environment = {
 };
 ```
 
+Then provide the logo at application startup using the Theme Shared provider. This makes the logo (and application name) available to all ABP/Theme components (including LeptonX brand component) via injection tokens.
+
+```ts
+// app.config.ts
+import { provideLogo, withEnvironmentOptions } from '@abp/ng.theme.shared';
+import { environment } from './environments/environment';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ... other providers
+    provideLogo(withEnvironmentOptions(environment)),
+  ],
+};
+```
+
+Notes
+- This approach works across themes. If you are using LeptonX, the brand logo component reads these values automatically; you don't need any theme-specific code.
+- You can still override visuals with CSS variables if desired. See the LeptonX section for CSS overrides.
+
 ## How to Add a Navigation Element
 
 ### Via `RoutesService`
@@ -35,12 +54,14 @@ You can add routes to the menu by calling the `add` method of `RoutesService`. I
 
 ```js
 import { RoutesService, eLayoutType } from '@abp/ng.core';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component(/* component metadata */)
 export class AppComponent {
-  constructor(routes: RoutesService) {
-    routes.add([
+  private routes = inject(RoutesService);
+
+  constructor() {
+    this.routes.add([
       {
         path: '/your-path',
         name: 'Your navigation',
@@ -126,15 +147,16 @@ To get the route items as grouped we can use the `groupedVisible` (or Observable
 
 ```js
 import { ABP, RoutesService, RouteGroup } from "@abp/ng.core";
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { Observable } from "rxjs";
 
 @Component(/* component metadata */)
 export class AppComponent {
+  private routes = inject(RoutesService);
+
   visible: RouteGroup<ABP.Route>[] | undefined = this.routes.groupedVisible;
-  //Or
-  visible$:Observable<RouteGroup<ABP.Route>[] | undefined> = this.routes.groupedVisible$;
-  
-  constructor(private routes: RoutesService) {}
+  // Or
+  visible$: Observable<RouteGroup<ABP.Route>[] | undefined> = this.routes.groupedVisible$;
 }
 ```
 
@@ -165,12 +187,14 @@ export const appConfig: ApplicationConfig = {
 
 ```typescript
 import { RoutesService } from '@abp/ng.core';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component(/* component metadata */)
 export class AppComponent {
-  constructor(private routes: RoutesService) {
-    routes.setSingularizeStatus(false);
+  private routes = inject(RoutesService);
+
+  constructor() {
+    this.routes.setSingularizeStatus(false);
   }
 }
 ```
@@ -276,7 +300,12 @@ this.routes.remove(['Your navigation']);
 // or
 this.routes.removeByParam({ name: 'Your navigation' });
 ```
+**Method Parameters:**
+- `remove(routeNames: string[])`: Takes an array of route names to remove.
+- `removeByParam(routeProperty: Partial<ABP.Route>)`: Takes any route property (name, path, parentName, etc.) to match and remove routes.
+<br>
 
+**Results of the operations above:**
 - Moved the _Home_ navigation under the _Administration_ dropdown based on given `parentName`.
 - Added an icon to _Home_.
 - Specified the order and made _Home_ the first item in list.
@@ -294,7 +323,7 @@ You can add elements to the right part of the menu by calling the `addItems` met
 
 ```js
 import { NavItemsService } from '@abp/ng.theme.shared';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component({
   template: `
@@ -306,8 +335,10 @@ export class MySearchInputComponent {}
 
 @Component(/* component metadata */)
 export class AppComponent {
-  constructor(private navItems: NavItemsService) {
-    navItems.addItems([
+  private navItems = inject(NavItemsService);
+
+  constructor() {
+    this.navItems.addItems([
       {
         id: 'MySearchInput',
         order: 1,
@@ -336,13 +367,15 @@ The `patchItem` method of `NavItemsService` finds an element by its `id` propert
 
 ```js
 export class AppComponent {
-  constructor(private navItems: NavItemsService) {
-    navItems.patchItem(eThemeBasicComponents.Languages, {
+  private navItems = inject(NavItemsService);
+
+  constructor() {
+    this.navItems.patchItem(eThemeBasicComponents.Languages, {
       requiredPolicy: 'new policy here',
       order: 1,
     });
 
-    navItems.removeItem(eThemeBasicComponents.CurrentUser);
+    this.navItems.removeItem(eThemeBasicComponents.CurrentUser);
   }
 }
 ```

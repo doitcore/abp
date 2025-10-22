@@ -1,4 +1,4 @@
-import { Directive, Injector, Input } from '@angular/core';
+import { Directive, Injector, Input, inject } from '@angular/core';
 import { ActionData, ActionList, InferredAction } from '../../models/actions';
 import { ExtensionsService } from '../../services/extensions.service';
 import { EXTENSIONS_ACTION_TYPE, EXTENSIONS_IDENTIFIER } from '../../tokens/extensions.token';
@@ -16,7 +16,9 @@ export abstract class AbstractActionsComponent<
 
   @Input() record!: InferredData<L>['record'];
 
-  protected constructor(injector: Injector) {
+  protected constructor() {
+    const injector = inject(Injector);
+
     super();
     this.getInjected = injector.get.bind(injector);
     const extensions = injector.get(ExtensionsService);

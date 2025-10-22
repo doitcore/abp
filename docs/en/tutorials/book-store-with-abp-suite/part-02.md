@@ -135,9 +135,11 @@ It will take some time to complete the process. After the process is completed, 
 
 {{ end }}
 
-After the application is started, you can right-click and *Browse* on the application to open it in the ABP Studio's pre-integrated browser. After logging in using the default credentials (`admin` / `1q2w3E*`), you can see the Books page in the following figure with a single record:
+After the application is started, you can right-click and *Browse* on the application to open it in the ABP Studio's pre-integrated browser. After logging in using the default credentials (`admin` / `1q2w3E*`), you can see the Books page like in the following figure:
 
 ![](./images/suite-book-pages-browser.png)
+
+> By default, ABP Suite doesn't generate data seed contributors for entities, as you'll need to create them manually. This is intentional since having dummy data in development or production environments may not be suitable for your specific needs. However, if you selected the **Create unit & integration tests** option while creating the entity, you can see the sample data-seed contributors under the *Acme.BookStore.Domain.Tests* project to simplify the testing process by having initial data for the entities, which we will see in [the part 4 of this tutorial](part-04.md).
 
 On this page, you can create a new book, update an existing book, delete a book, export all records (or the filtered records) to excel, filter the records by using the advanced filter section, bulk delete multiple records and so on.
 

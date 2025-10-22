@@ -1,6 +1,6 @@
 # Optimize Your .NET App for Production (Complete Checklist)
 
-![cover](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\cover.png)
+![Optimize Your .NET App for Production: A Complete List](cover.png)
 
 **Tags:** 
 

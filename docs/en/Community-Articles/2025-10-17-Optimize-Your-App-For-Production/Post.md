@@ -1,7 +1,5 @@
 # Optimize Your .NET App for Production (Complete Checklist)
 
-![Optimize Your .NET App for Production: A Complete List](cover.png)
-
 I see way too many .NET apps go to prod like it’s still “F5 on my laptop.” Here’s the checklist I wish someone shoved me years ago. It’s opinionated, pragmatic, copy-pasteable.
 
 ------

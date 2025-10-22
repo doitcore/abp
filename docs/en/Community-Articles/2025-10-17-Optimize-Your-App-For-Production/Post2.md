@@ -1,3 +1,5 @@
+*If you’ve landed directly on this article, note that it’s part-2 of the series. You can read part-1 here: [Optimize Your .NET App for Production (Part 1)](https://abp.io/community/articles/optimize-your-dotnet-app-for-production-for-any-.net-app-wa24j28e)*
+
 ## 6)  Telemetry (Logs, Metrics, Traces)
 
 ![Telemetry](6.png)

@@ -1135,6 +1135,8 @@ builder.Services.AddHostedService<OrderProcessorWorker>();
 
 This pattern ensures that each run of the worker uses a new `DbContext`, preventing problems such as memory leaks or stale data.
 
+>While this example uses a simple `Task.Delay` loop within the `BackgroundService`, a robust pattern for managing decoupled background tasks involves an in memory queue. You can learn how to build this system by following this guide: [How to Build an In Memory Background Job Queue in ASP.NET Core From Scratch](https://abp.io/community/articles/how-to-build-an-in-memory-background-job-queue-in-asp.net-core-from-scratch-pai2zmtr).
+
 ## Conclusion
 
 Understanding the **ASP.NET Core Dependency Injection** framework is essential for any .NET developer. By understanding the built in IoC container, choosing the right service lifecycles, and opting for explicit constructor injection, you can create modular, testable, and maintainable applications.

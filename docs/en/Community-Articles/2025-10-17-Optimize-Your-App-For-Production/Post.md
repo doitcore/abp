@@ -247,5 +247,5 @@ In production run migrations manually, never do it on app startup. That way you 
 
 Use [Polly](https://www.pollydocs.org/) for retries, timeouts and circuit breakers for your DB or HTTP calls. Handles short outages gracefully
 
-To keep the article short and **for the better readability I spitted it into 2 parts 👉 [Continue with the second part here](Post2.md)... 
+*To keep the article short and for the better readability I spitted it into 2 parts 👉 [Continue with the second part here](https://abp.io/community/articles/optimize-your-dotnet-app-for-production-for-any-.net-app-2-78xgncpi)...* 
 

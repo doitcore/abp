@@ -2,18 +2,6 @@
 
 ![Optimize Your .NET App for Production: A Complete List](cover.png)
 
-**Tags:** 
-
-> #optimize #dotnet #aspnetcore #performance #kestrel #best-practises
-
-**Meta Desc 1**
-
-> Meta description: Learn a battle-tested checklist to optimize .NET apps for production: publish settings, AOT/trim, Kestrel + GC tuning, caching/compression, Docker, health checks and observability.
-
-**Meta Desc 2**
-
-> Optimize .NET for production with a practical checklist: Release publish, trim/R2R, Kestrel/GC tuning, caching/compression, Docker hardening, health checks and OpenTelemetry. Real commands, copy-paste snippets, minimal fluff.
-
 I see way too many .NET apps go to prod like it’s still “F5 on my laptop.” Here’s the checklist I wish someone shoved me years ago. It’s opinionated, pragmatic, copy-pasteable.
 
 ------

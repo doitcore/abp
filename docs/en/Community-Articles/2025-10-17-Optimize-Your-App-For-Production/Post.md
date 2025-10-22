@@ -20,7 +20,7 @@ I see way too many .NET apps go to prod like it’s still “F5 on my laptop.”
 
 ## 1) Publish Command and CSPROJ  Settings
 
-![image-20251019160137674](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160137674.png)
+![Publish Command and CSPROJ Setting](1.png)
 
 Never go to production with debug build! See the below command which publishes properly a .NET app for production.
 
@@ -51,7 +51,7 @@ dotnet publish -c Release -o out -p:PublishTrimmed=true -p:PublishSingleFile=tru
 
 ## 2) Kestrel Hosting
 
-![image-20251019160303146](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160303146.png)
+![Kestrel Hosting](2.png)
 
 By default, ASP.NET Core app listen only `localhost`, it means it accepts requests only from inside the machine. When you deploy to Docker or Kubernetes, the container’s internal network needs to expose the app to the outside world. To do this you can set it via environment variable as below:
 
@@ -103,7 +103,7 @@ app.Run();
 
 
 
-![image-20251019160355415](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160355415.png)
+![Garbage Collection and ThreadPool](3.png)
 
 ### GC Memory Cleanup Mode
 
@@ -140,7 +140,7 @@ ThreadPool.SetMinThreads(200, 200);
 
 ## 4) HTTP Performance
 
-![image-20251019160413738](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160413738.png)
+![HTTP Performance](4.png)
 
 ### HTTP Response Compression 
 
@@ -194,9 +194,9 @@ var json = JsonSerializer.Serialize(dto, MyJsonContext.Default.MyDto)
 
 ------
 
-## 5) Data Layer (Probably Where Most Apps Slow Down)
+## 5) Data Layer (Mostly Where Most Apps Slow Down!)
 
-![image-20251019160500983](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251019160500983.png)
+![Data Layer](5.png)
 
 ### Reuse `DbContext` via Factory (Pooling)
 
@@ -251,7 +251,7 @@ Use EF Core logging, SQL Server Profiler, or `EXPLAIN` (Postgres/MySQL) to find 
 
 ###  Migrations
 
-In production run migrations manually, never do it on app startup.That way you can review schema changes, back up data and avoid breaking the live DB.
+In production run migrations manually, never do it on app startup. That way you can review schema changes, back up data and avoid breaking the live DB.
 
 
 
@@ -261,5 +261,5 @@ In production run migrations manually, never do it on app startup.That way you c
 
 Use [Polly](https://www.pollydocs.org/) for retries, timeouts and circuit breakers for your DB or HTTP calls. Handles short outages gracefully
 
-To keep the article short and for the better readability I splitted it into 2 parts -> [Continue with the second part here](Post2.md)... 
+To keep the article short and **for the better readability I spitted it into 2 parts 👉 [Continue with the second part here](Post2.md)... 
 

@@ -1,6 +1,6 @@
 ## 6)  Telemetry (Logs, Metrics, Traces)
 
-![image-20251020173353352](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020173353352.jpg)
+![Telemetry](6.png)
 
 The below code adds `OpenTelemetry` to collect app logs, metrics, and traces in .NET.
 
@@ -31,9 +31,9 @@ When your app is on-air, you should know about the below tools. You know in airp
 
 ------
 
-## 7) Build and Run Your .NET App in Docker the Right Way
+## 7) Build & Run .NET App in Docker the Right Way
 
-![image-20251020174203295](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174203295.png)
+![Docker](7.png)
 
 A multi-stage build is a Docker technique where you use one image for building your app and another smaller image for running it. Why we do multi-stage build, because the .NET SDK image is big but has all the build tools. The .NET Runtime image is small and optimized for production. You copy only the published output from the build stage into the runtime stage.
 
@@ -98,9 +98,9 @@ I'll explain what these Docker file commands;
 
 ## 8) Security 
 
-![image-20251020174103427](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174103427.png)
+![Security](8.png)
 
-### 8.1) HTTPS Everywhere Even Behind Proxy
+### HTTPS Everywhere Even Behind Proxy
 
 Even if your app runs behind a reverse proxy like Nginx, Cloudflare or a load balancer, always enforce HTTPS. Why? Because internal traffic can still be captured if you don't use SSL and also cookies, HSTS, browser APIs require HTTPS. In .NET, you can easily enforce HTTPS like this:
 
@@ -110,7 +110,7 @@ app.UseHttpsRedirection();
 
 
 
-### 8.2) Use HSTS  in  Production
+### Use HSTS  in  Production
 
 HSTS (HTTP Strict Transport Security) tells browsers:
 
@@ -127,7 +127,7 @@ if (!app.Environment.IsDevelopment())
 
 When you use HSTS, it sends browser this HTTP header: ` Strict-Transport-Security: max-age=31536000; includeSubDomains`. Browser will remember this setting for 1 year (31,536,000 seconds) that this site must only use HTTPS. And `includeSubDomains` option applies the rule to all subdomains as well (eg: `api.abp.io`, `cdn.abp.io`,  `account.abp.io` etc..)
 
-### 8.3) Store Secrets on Environment Variables or Secret Stores
+### Store Secrets on Environment Variables or Secret Stores
 
 Never store passwords, connection strings, or API keys in your code or Git. Then where should we keep them?
 
@@ -147,7 +147,7 @@ Or **Secret stores** like: Azure Key Vault, AWS Secrets Manager, HashiCorp Vault
 
 
 
-### 8.4) Add Rate-Limiting to Public Endpoints
+### Add Rate-Limiting to Public Endpoints
 
 Don't forget there'll be not naive guys who will use your app! We've many times faced this issue in the past on our public front-facing websites. So protect your public APIs from abuse, bots, and DDoS. Use rate-limiting!!! Stop brute-force attacks, prevent your resources from exhaustion...
 
@@ -167,7 +167,7 @@ app.UseRateLimiter();
 - Also there's an open-source rate-limiting library -> [github.com/stefanprodan/AspNetCoreRateLimit](https://github.com/stefanprodan/AspNetCoreRateLimit)
 - Another one -> [nuget.org/packages/Polly.RateLimiting](https://www.nuget.org/packages/Polly.RateLimiting)
 
-### 8.5) Secure Cookies
+### Secure Cookies
 
 Cookies are often good targets for attacks. You must secure them properly otherwise you can face cookie stealing or CSRF attack.
 
@@ -187,9 +187,9 @@ options.Cookie.SameSite = SameSiteMode.Strict; // or Lax
 
 ## 9) Startup/Cold Start
 
-![image-20251020174425706](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174425706.png)
+![Cold Start / Startup](9.png)
 
-### 9.1) Keep Tiered JIT On
+### Keep Tiered JIT On
 
 The **JIT (Just-In-Time) compiler** converts your app’s Intermediate Language (IL) into native CPU instructions when the code runs. _Tiered JIT_ means the runtime uses 2 stages of compilation. Actually this setting is enabled by default in modern .NET. So just keep it on.
 
@@ -201,7 +201,7 @@ The **JIT (Just-In-Time) compiler** converts your app’s Intermediate Language 
 
 
 
-### 9.2) **Use PGO (Profile-Guided Optimization)**
+### Use PGO (Profile-Guided Optimization)
 
 PGO lets .NET learn from real usage of your app. It profiles which functions are used most often, then re-optimizes the build for that pattern. You can think of it as the runtime saying:
 
@@ -215,7 +215,7 @@ In .NET 8+, you don’t have to manually enable PGO (Profile-Guided Optimization
 
 ## 10) Graceful Shutdown
 
-![image-20251020174712659](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020174712659.png)
+![Shutdown](10.png)
 
 When we break up with our lover, we often argue and regret it later. When an application breaks up with an operating system, it should be done well 😘 ...
 When your app stops, maybe you deploy a new version or Kubernetes restarts a pod... the OS sends a signal called `SIGTERM` (terminate). 
@@ -237,7 +237,7 @@ On K8s, set `terminationGracePeriodSeconds` and wire **readiness**/startup probe
 
 ## 11) Load Test
 
-![image-20251020180232079](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020180232079.png)
+![Load Test](11.png)
 
 Sometimes arguing with our lover is good. We can see her/his face before marrying 😀 Use **k6** or **bombardier**  and test with realistic payloads and prod-like limits. Don't be surprise later when your app is running on prod! These topics should be tested: `CPU %` , `Time in GC` ,  `LOH Allocations` , `ThreadPool Queue Length` and `Socket Exhaustion`. 
 
@@ -255,4 +255,4 @@ Sometimes arguing with our lover is good. We can see her/his face before marryin
 - 7K stars on GitHub
 - GitHub address: https://github.com/codesenberg/bombardier
 
-[![image-20251020175737615](D:\github\volosoft\abp\docs\en\Community-Articles\2025-10-17-Optimize-Your-App-For-Production\image-20251020175737615.png)](https://trends.google.com/trends/explore?cat=31&q=bombardier%20%2B%20benchmarking,k6%20%2B%20benchmarking)
+[![Bombardier vs K6](11_1.png)](https://trends.google.com/trends/explore?cat=31&q=bombardier%20%2B%20benchmarking,k6%20%2B%20benchmarking)

@@ -25,6 +25,7 @@ public class EfCoreBlogFeatureRepository : EfCoreRepository<ICmsKitDbContext, Bl
     {
         return await (await GetQueryableAsync())
                         .Where(x => x.BlogId == blogId)
+                        .OrderBy(x => x.FeatureName)
                         .ToListAsync(GetCancellationToken(cancellationToken));
     }
 
@@ -32,6 +33,7 @@ public class EfCoreBlogFeatureRepository : EfCoreRepository<ICmsKitDbContext, Bl
     {
         return await (await GetQueryableAsync())
                     .Where(x => x.BlogId == blogId && featureNames.Contains(x.FeatureName))
+                    .OrderBy(x => x.FeatureName)
                     .ToListAsync(GetCancellationToken(cancellationToken));
     }
 }

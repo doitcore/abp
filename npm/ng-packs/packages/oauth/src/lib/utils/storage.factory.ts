@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ServerTokenStorageService } from '../services/server-token-storage.service';
 import { BrowserTokenStorageService, MemoryTokenStorageService } from '../services';
 import { OAuthStorage } from 'angular-oauth2-oidc';
-import { AbpLocalStorageService, APP_STARTED_WITH_SSR } from '@abp/ng.core';
+import { APP_STARTED_WITH_SSR } from '@abp/ng.core';
 
 export class MockStorage implements Storage {
   private data = new Map<string, string>();

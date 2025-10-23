@@ -349,7 +349,7 @@ Note that this command can upgrade your solution from a previous version, and al
 * `--solution-name` or `-sn`: Specify the solution name. Search `*.sln` files in the directory by default.
 * `--check-all`: Check the new version of each package separately. Default is `false`.
 * `--version` or `-v`: Specifies the version to use for update. If not specified, latest version is used.
-* * `--leptonx-version` or `-lv`: Specifies the LeptonX version to use for update. If not specified, latest version or the version that is compatible with `--version` argument  is used.
+* `--leptonx-version` or `-lv`: Specifies the LeptonX version to use for update. If not specified, latest version or the version that is compatible with `--version` argument  is used.
 
 ### clean
 

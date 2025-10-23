@@ -34,9 +34,18 @@ Alternatively, you can use the [Pomelo.EntityFrameworkCore.MySql](https://www.nu
 
 Find ***YourProjectName*EntityFrameworkCoreModule** class inside the `.EntityFrameworkCore` project, replace `typeof(AbpEntityFrameworkCoreMySQLModule)` with `typeof(AbpEntityFrameworkCoreMySQLPomeloModule)` in the `DependsOn` attribute.
 
-> Depending on your solution structure, you may find more code files need to be changed.
+## UseMySQL()
 
-The `UseMySQL()` method calls remain the same, no changes needed.
+Find `UseSqlServer()` calls in your solution. Check the following files:
+
+* *YourProjectName*EntityFrameworkCoreModule.cs inside the `.EntityFrameworkCore` project. Replace `UseSqlServer()` with `UseMySql()`.
+* *YourProjectName*DbContextFactory.cs inside the `.EntityFrameworkCore` project. Replace `UseSqlServer()` with `UseMySql()`.
+
+You also need to specify the `ServerVersion`, See https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/wiki/Configuration-Options#server-version for more details.
+
+`UseMySql(configuration.GetConnectionString("Default"), ServerVersion.AutoDetect(configuration.GetConnectionString("Default")));` or `UseMySql(configuration.GetConnectionString("Default"), new MySqlServerVersion(new Version(8, 4, 6)));`
+
+> Depending on your solution structure, you may find more code files need to be changed.
 
 ## Change the Connection Strings
 

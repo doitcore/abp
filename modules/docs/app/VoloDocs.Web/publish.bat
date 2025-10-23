@@ -4,6 +4,8 @@ dotnet clean
 dotnet restore
 dotnet build
 
+abp install-libs
+
 DEL /F/Q/S "C:\Publishes\VoloDocs" > NUL && RMDIR /Q/S "C:\Publishes\VoloDocs"
 
 dotnet publish -c Release -r win-x64   --self-contained true -o "C:\Publishes\VoloDocs\win-x64\Web"

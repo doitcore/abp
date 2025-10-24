@@ -20,9 +20,35 @@ public class AbpDateTimeModelBinder : IModelBinder
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         await _dateTimeModelBinder.BindModelAsync(bindingContext);
-        if (bindingContext.Result.IsModelSet && bindingContext.Result.Model is DateTime dateTime)
+    
+        if (!bindingContext.Result.IsModelSet || bindingContext.Result.Model is not DateTime dateTime)
         {
-            bindingContext.Result = ModelBindingResult.Success(_clock.Normalize(dateTime));
+            return;
         }
+    
+        // If the DateTime has no timezone info (most cases from input)
+        if (dateTime.Kind == DateTimeKind.Unspecified)
+        {
+            // Try to get user's timezone
+            var userTz = _currentTimezoneProvider.TimeZone;
+            if (!userTz.IsNullOrWhiteSpace())
+            {
+                try
+                {
+                    var tzInfo = _timezoneProvider.GetTimeZoneInfo(userTz);
+                    // Treat the input as user's local time and convert to UTC
+                    var utc = TimeZoneInfo.ConvertTimeToUtc(dateTime, tzInfo);
+                    bindingContext.Result = ModelBindingResult.Success(utc);
+                    return;
+                }
+                catch
+                {
+                    // fallback to default clock normalization if invalid TZ
+                }
+            }
+        }
+    
+        // fallback: original behavior
+        bindingContext.Result = ModelBindingResult.Success(_clock.Normalize(dateTime));
     }
 }

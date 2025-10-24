@@ -64,6 +64,8 @@
 
             <abp-select id="Layout" asp-for="ViewModel.LayoutName" asp-items="@LayoutConstants.GetLayoutsSelectList()" label="@L["SelectLayout"]"></abp-select>
 
+            <abp-select asp-for="ViewModel.Status" label="@L["Status"]"></abp-select>
+
             <abp-input asp-for="@Model.ViewModel.Content" />
 
             <abp-tabs tab-style="Tab">

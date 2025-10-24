@@ -56,5 +56,7 @@ public class CreateModel : CmsKitAdminPageModel
         [TextArea(Rows = 6)]
         [DynamicMaxLength(typeof(PageConsts), nameof(PageConsts.MaxStyleLength))]
         public string Style { get; set; }
+
+        public PageStatus Status { get; set; } = PageStatus.Draft;
     }
 }

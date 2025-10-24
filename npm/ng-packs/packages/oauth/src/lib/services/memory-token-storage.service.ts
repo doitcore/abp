@@ -1,3 +1,4 @@
+// shared-worker-token-storage.service.ts
 import { inject, Injectable } from '@angular/core';
 import { OAuthStorage } from 'angular-oauth2-oidc';
 import { AbpLocalStorageService } from '@abp/ng.core';
@@ -6,34 +7,108 @@ import { AbpLocalStorageService } from '@abp/ng.core';
   providedIn: 'root',
 })
 export class MemoryTokenStorageService implements OAuthStorage {
-  private keysShouldStoreInMemory = ['access_token', 'id_token', 'expires_at', 'id_token_claims_obj', 'id_token_expires_at', 'id_token_stored_at', 'access_token_stored_at', 'abpOAuthClientId', 'granted_scopes'];
-  private data = new Map<string, string>();
-  private localStorageService = inject(AbpLocalStorageService);
+  private keysShouldStoreInMemory = [
+    'access_token', 'id_token', 'expires_at',
+    'id_token_claims_obj', 'id_token_expires_at',
+    'id_token_stored_at', 'access_token_stored_at',
+    'abpOAuthClientId', 'granted_scopes'
+  ];
 
-  getItem(key: string): string {
-    if (this.keysShouldStoreInMemory.includes(key)) {
-      return this.data.get(key) || null;
+  private worker?: any;
+  private port?: MessagePort;
+  private cache = new Map<string, string>();
+  private localStorageService = inject(AbpLocalStorageService);
+  private useSharedWorker = false;
+
+  constructor() {
+    this.initializeStorage();
+  }
+
+  private initializeStorage(): void {
+    // @ts-ignore
+    if (typeof SharedWorker !== 'undefined') {
+      try {
+        // @ts-ignore
+        this.worker = new SharedWorker(
+          new URL('../workers/token-storage.worker.ts', import.meta.url),
+          { type: 'module', name: 'oauth-token-storage' }
+        );
+
+        this.port = this.worker.port;
+        this.port.start();
+        this.useSharedWorker = true;
+
+        this.port.onmessage = (event) => {
+          const { action, key, value } = event.data;
+
+          switch (action) {
+            case 'set':
+              this.cache.set(key, value);
+              break;
+            case 'remove':
+              this.cache.delete(key);
+              break;
+            case 'clear':
+              this.cache.clear();
+              break;
+          }
+        };
+
+        console.log('✅ Using SharedWorker for cross-tab token storage');
+      } catch (error) {
+        console.warn('⚠️ SharedWorker failed:', error);
+        this.useSharedWorker = false;
+      }
+    } else {
+      console.warn('⚠️ SharedWorker not supported');
+      this.useSharedWorker = false;
     }
-    return this.localStorageService.getItem(key);
+  }
+
+  getItem(key: string): string | null {
+    if (!this.keysShouldStoreInMemory.includes(key)) {
+      return this.localStorageService.getItem(key);
+    }
+
+/*    if (this.useSharedWorker) {
+      return this.cache.get(key) || null;
+    }*/
+
+    return this.cache.get(key) || null;
+  }
+
+  setItem(key: string, value: string): void {
+    if (!this.keysShouldStoreInMemory.includes(key)) {
+      this.localStorageService.setItem(key, value);
+      return;
+    }
+
+    if (this.useSharedWorker && this.port) {
+      // this.cache.set(key, value);
+      this.port.postMessage({ action: 'set', key, value });
+    } else {
+      this.cache.set(key, value);
+    }
   }
 
   removeItem(key: string): void {
-    if (this.keysShouldStoreInMemory.includes(key)) {
-      this.data.delete(key);
+    if (!this.keysShouldStoreInMemory.includes(key)) {
+      this.localStorageService.removeItem(key);
       return;
     }
-    this.localStorageService.removeItem(key);
-  }
 
-  setItem(key: string, data: string): void {
-    if (this.keysShouldStoreInMemory.includes(key)) {
-      this.data.set(key, data);
-      return;
+    if (this.useSharedWorker && this.port) {
+      // this.cache.delete(key);
+      this.port.postMessage({ action: 'remove', key });
+    } else {
+      this.cache.delete(key);
     }
-    this.localStorageService.setItem(key, data);
   }
 
-  clear() {
-    this.data.clear();
+  clear(): void {
+    if (this.useSharedWorker && this.port) {
+      this.port.postMessage({ action: 'clear' });
+    }
+    this.cache.clear();
   }
 }

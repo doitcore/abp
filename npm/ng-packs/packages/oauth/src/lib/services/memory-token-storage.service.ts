@@ -6,35 +6,31 @@ import { AbpLocalStorageService } from '@abp/ng.core';
   providedIn: 'root',
 })
 export class MemoryTokenStorageService implements OAuthStorage {
-  private keysShouldStoreLocalstorage = ['PKCE_verifier', 'abpOAuthClientId', 'abp_session', 'refresh_token', 'granted_scopes', 'id_token_claims_obj'];
-  private keysShouldStoreInMemory = ['access_token'];
+  private keysShouldStoreInMemory = ['access_token', 'id_token', 'expires_at', 'id_token_claims_obj', 'id_token_expires_at', 'id_token_stored_at', 'access_token_stored_at', 'abpOAuthClientId', 'granted_scopes'];
   private data = new Map<string, string>();
   private localStorageService = inject(AbpLocalStorageService);
 
   getItem(key: string): string {
-    console.log('getItem -->>', key);
-    if (this.keysShouldStoreInMemory.includes(key)) {
-      return this.data.get(key) || null;
+    if (!this.keysShouldStoreInMemory.includes(key)) {
+      return this.localStorageService.getItem(key);
     }
-    return this.localStorageService.getItem(key);
+    return this.data.get(key) || null;
   }
 
   removeItem(key: string): void {
-    if (this.keysShouldStoreInMemory.includes(key)) {
-      this.data.delete(key);
+    if (!this.keysShouldStoreInMemory.includes(key)) {
+      this.localStorageService.removeItem(key);
       return;
     }
-    this.localStorageService.removeItem(key);
+    this.data.delete(key);
   }
 
   setItem(key: string, data: string): void {
-    if (this.keysShouldStoreInMemory.includes(key)) {
-      console.log('setItem -->', key, data);
-      this.data.set(key, data);
+    if (!this.keysShouldStoreInMemory.includes(key)) {
+      this.localStorageService.setItem(key, data);
       return;
     }
-    console.log('setItem -->', key, data);
-    this.localStorageService.setItem(key, data);
+    this.data.set(key, data);
   }
 
   clear() {

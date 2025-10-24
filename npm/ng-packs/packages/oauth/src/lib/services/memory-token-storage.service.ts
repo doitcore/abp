@@ -11,26 +11,26 @@ export class MemoryTokenStorageService implements OAuthStorage {
   private localStorageService = inject(AbpLocalStorageService);
 
   getItem(key: string): string {
-    if (!this.keysShouldStoreInMemory.includes(key)) {
-      return this.localStorageService.getItem(key);
+    if (this.keysShouldStoreInMemory.includes(key)) {
+      return this.data.get(key) || null;
     }
-    return this.data.get(key) || null;
+    return this.localStorageService.getItem(key);
   }
 
   removeItem(key: string): void {
-    if (!this.keysShouldStoreInMemory.includes(key)) {
-      this.localStorageService.removeItem(key);
+    if (this.keysShouldStoreInMemory.includes(key)) {
+      this.data.delete(key);
       return;
     }
-    this.data.delete(key);
+    this.localStorageService.removeItem(key);
   }
 
   setItem(key: string, data: string): void {
-    if (!this.keysShouldStoreInMemory.includes(key)) {
-      this.localStorageService.setItem(key, data);
+    if (this.keysShouldStoreInMemory.includes(key)) {
+      this.data.set(key, data);
       return;
     }
-    this.data.set(key, data);
+    this.localStorageService.setItem(key, data);
   }
 
   clear() {

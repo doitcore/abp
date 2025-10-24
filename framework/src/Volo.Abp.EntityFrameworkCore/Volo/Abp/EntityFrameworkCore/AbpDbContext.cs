@@ -117,6 +117,12 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
     {
         optionsBuilder.ConfigureWarnings(c => c.Ignore(RelationalEventId.PendingModelChangesWarning));
         base.OnConfiguring(optionsBuilder);
+        
+        Options.Value.DefaultOnConfiguringAction?.Invoke(this, optionsBuilder);
+        foreach (var onConfiguringAction in Options.Value.OnConfiguringActions.GetOrDefault(typeof(TDbContext)) ?? [])
+        {
+            onConfiguringAction.As<Action<DbContext, DbContextOptionsBuilder>>().Invoke(this, optionsBuilder);
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

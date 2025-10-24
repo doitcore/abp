@@ -1,5 +1,4 @@
-// shared-worker-token-storage.service.ts
-import { inject, Injectable } from '@angular/core';
+import { DOCUMENT, inject, Injectable } from '@angular/core';
 import { OAuthStorage } from 'angular-oauth2-oidc';
 import { AbpLocalStorageService } from '@abp/ng.core';
 
@@ -18,6 +17,7 @@ export class MemoryTokenStorageService implements OAuthStorage {
   private port?: MessagePort;
   private cache = new Map<string, string>();
   private localStorageService = inject(AbpLocalStorageService);
+  private _document = inject(DOCUMENT);
   private useSharedWorker = false;
 
   constructor() {
@@ -43,13 +43,16 @@ export class MemoryTokenStorageService implements OAuthStorage {
 
           switch (action) {
             case 'set':
+              this.checkAuthStateChanges(key);
               this.cache.set(key, value);
               break;
             case 'remove':
               this.cache.delete(key);
+              this.refreshDocument();
               break;
             case 'clear':
               this.cache.clear();
+              this.refreshDocument();
               break;
           }
         };
@@ -111,4 +114,16 @@ export class MemoryTokenStorageService implements OAuthStorage {
     }
     this.cache.clear();
   }
+
+  private checkAuthStateChanges(key: string): void {
+    console.log("current access token:", this.cache.get('access_token'));
+    if (key !== 'access_token' && !this.cache.get('access_token')) {
+      this.refreshDocument();
+    }
+  }
+
+  private refreshDocument(): void {
+    this._document.defaultView?.location.reload();
+  }
+
 }

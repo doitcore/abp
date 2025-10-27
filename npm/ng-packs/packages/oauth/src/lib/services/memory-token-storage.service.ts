@@ -31,7 +31,7 @@ export class MemoryTokenStorageService implements OAuthStorage {
         // @ts-ignore
         this.worker = new SharedWorker(
           new URL('../workers/token-storage.worker.ts', import.meta.url),
-          { type: 'module', name: 'oauth-token-storage' }
+          { name: 'oauth-token-storage' }
         );
 
         this.port = this.worker.port;
@@ -72,11 +72,6 @@ export class MemoryTokenStorageService implements OAuthStorage {
     if (!this.keysShouldStoreInMemory.includes(key)) {
       return this.localStorageService.getItem(key);
     }
-
-/*    if (this.useSharedWorker) {
-      return this.cache.get(key) || null;
-    }*/
-
     return this.cache.get(key) || null;
   }
 
@@ -87,7 +82,7 @@ export class MemoryTokenStorageService implements OAuthStorage {
     }
 
     if (this.useSharedWorker && this.port) {
-      // this.cache.set(key, value);
+      this.cache.set(key, value);
       this.port.postMessage({ action: 'set', key, value });
     } else {
       this.cache.set(key, value);
@@ -115,9 +110,8 @@ export class MemoryTokenStorageService implements OAuthStorage {
     this.cache.clear();
   }
 
-  private checkAuthStateChanges(key: string): void {
-    console.log("current access token:", this.cache.get('access_token'));
-    if (key !== 'access_token' && !this.cache.get('access_token')) {
+  private checkAuthStateChanges = (key: string) => {
+    if (key === 'access_token' && !this.cache.get('access_token')) {
       this.refreshDocument();
     }
   }

@@ -57,6 +57,7 @@ public class CreateModel : CmsKitAdminPageModel
         [DynamicMaxLength(typeof(PageConsts), nameof(PageConsts.MaxStyleLength))]
         public string Style { get; set; }
 
+        [HiddenInput]
         public PageStatus Status { get; set; } = PageStatus.Draft;
     }
 }

@@ -69,6 +69,7 @@ public class UpdateModel : CmsKitAdminPageModel
         [DynamicMaxLength(typeof(PageConsts), nameof(PageConsts.MaxStyleLength))]
         public string Style { get; set; }
 
+        [HiddenInput]
         public PageStatus Status { get; set; }
 
         [HiddenInput]

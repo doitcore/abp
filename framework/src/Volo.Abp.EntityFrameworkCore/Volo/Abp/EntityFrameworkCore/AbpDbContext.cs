@@ -117,7 +117,12 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
     {
         optionsBuilder.ConfigureWarnings(c => c.Ignore(RelationalEventId.PendingModelChangesWarning));
         base.OnConfiguring(optionsBuilder);
-        
+
+        if (LazyServiceProvider == null || Options == null)
+        {
+            return;
+        }
+
         Options.Value.DefaultOnConfiguringAction?.Invoke(this, optionsBuilder);
         foreach (var onConfiguringAction in Options.Value.OnConfiguringActions.GetOrDefault(typeof(TDbContext)) ?? [])
         {
@@ -804,7 +809,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             modelBuilder,
             mutableEntityType
         );
-        
+
         entityTypeBuilder.ConfigureByConvention();
 
         ConfigureGlobalFilters<TEntity>(modelBuilder, mutableEntityType, entityTypeBuilder);
@@ -821,7 +826,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
 
     protected virtual void ConfigureGlobalFilters<TEntity>(
         ModelBuilder modelBuilder,
-        IMutableEntityType mutableEntityType, 
+        IMutableEntityType mutableEntityType,
         EntityTypeBuilder<TEntity> entityTypeBuilder)
         where TEntity : class
     {
@@ -852,7 +857,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
         {
             return;
         }
-        
+
 
         foreach (var property in mutableEntityType.GetProperties().
                      Where(property => property.PropertyInfo != null &&
@@ -864,7 +869,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
                 modelBuilder,
                 mutableEntityType
             );
-            
+
             entityTypeBuilder
                 .Property(property.Name)
                 .HasConversion(property.ClrType == typeof(DateTime)
@@ -874,7 +879,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
     }
 
     protected virtual void ConfigureValueGenerated<TEntity>(
-        ModelBuilder modelBuilder, 
+        ModelBuilder modelBuilder,
         IMutableEntityType mutableEntityType)
         where TEntity : class
     {

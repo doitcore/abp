@@ -1,4 +1,4 @@
-# Five Things You Should Keep in Mind When Deploying to a Clustered Environment
+# 5 Things You Should Keep in Mind When Deploying to a Clustered Environment
 
 Let’s be honest — moving from a single server to a cluster sounds simple on paper.  
 You just add a few more machines, right?  
@@ -13,6 +13,8 @@ Each request in a cluster might hit a different machine.
 If your application keeps user sessions or cache in memory, that data probably won’t exist on the next node.  
 That’s why many teams decide to push state out of the app itself.
 
+![Stateless vs Stateful](stateless.png)
+
 **A few real-world tips:**
 - Keep sessions in **Redis** or something similar instead of local memory.  
 - Design endpoints so they don’t rely on earlier requests.  
@@ -24,6 +26,8 @@ That’s why many teams decide to push state out of the app itself.
 
 Uploading files to local disk? That’s going to hurt in a cluster.  
 Other nodes can’t reach those files, and you’ll spend hours wondering why images disappear.
+
+![Shared Storage](shared.png)
 
 **Better habits:**
 - Push uploads to **S3**, **Azure Blob**, or **Google Cloud Storage**.  
@@ -38,6 +42,8 @@ Every node opens its own database connections.
 Ten nodes with twenty connections each — that’s already two hundred open sessions.  
 The database might not love that.
 
+![Database Connections](database.png)
+
 **What helps:**
 - Put a cap on your connection pools.  
 - Avoid keeping transactions open for too long.  
@@ -50,6 +56,8 @@ The database might not love that.
 When something breaks in a distributed system, it’s never obvious which server was responsible.  
 That’s why observability isn’t optional anymore.
 
+![Observability](logging.png)
+
 **Consider this:**
 - Stream logs to **ELK**, **Datadog**, or **Grafana Loki**.  
 - Add a **trace ID** to every incoming request and propagate it across services.  
@@ -61,6 +69,8 @@ That’s why observability isn’t optional anymore.
 
 If more than one node runs the same job, you might process the same data twice — or delete something by mistake.  
 You don’t want that kind of excitement in production.
+
+![Background Jobs](background.png)
 
 **A few precautions:**
 - Use a **distributed lock** or **leader election** system.  

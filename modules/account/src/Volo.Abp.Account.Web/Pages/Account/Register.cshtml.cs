@@ -137,7 +137,7 @@ public class RegisterModel : AccountPageModel
                 await RegisterLocalUserAsync();
             }
 
-            return await RedirectSafelyAsync(ReturnUrl ?? "~/");
+            return await RedirectSafelyAsync(ReturnUrl, ReturnUrlHash);
         }
         catch (BusinessException e)
         {

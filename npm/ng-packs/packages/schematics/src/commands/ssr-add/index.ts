@@ -211,6 +211,33 @@ function updateRootTsConfigRule(options: SSROptions): Rule {
   };
 }
 
+export function updateIndexHtml(options: SSROptions): Rule {
+  return async (host: Tree) => {
+    const workspace = await getWorkspace(host);
+    const project = workspace.projects.get(options.project);
+
+    if (!project) {
+      return;
+    }
+
+    const buildOptions = project.targets.get('build')?.options;
+    const indexPath = buildOptions?.index as string;
+
+    if (!indexPath || !host.exists(indexPath)) {
+      return;
+    }
+
+    const buffer = host.read(indexPath);
+    if (!buffer) return;
+    const content = buffer.toString('utf-8');
+
+    const loaderDiv = `<div id="lp-page-loader"></div>`;
+    let updatedContent = content.replace(loaderDiv, '');
+    host.overwrite(indexPath, updatedContent);
+  };
+}
+
+
 function updateApplicationBuilderWorkspaceConfigRule(
   projectSourceRoot: string,
   options: SSROptions,
@@ -439,6 +466,7 @@ export default function (options: SSROptions): Rule {
       addServerFile(sourceRoot, options, isStandalone),
       addScriptsRule(options, usingApplicationBuilder),
       addDependencies(options, usingApplicationBuilder),
+      updateIndexHtml(options),
     ]);
   };
 }

@@ -2,12 +2,14 @@ import 'zone.js/node';
 
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr/node';
-import express from 'express';
+import * as express from 'express';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import <% if (isStandalone) { %>bootstrap<% } else { %>AppServerModule<% } %> from './main.server';
 import {environment} from './environments/environment';
 import * as oidc from 'openid-client';
+import { ServerCookieParser } from '@abp/ng.core';
+import {COOKIES} from "@abp/ng.oauth";
 
 if (environment.production === false) {
   process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
@@ -176,7 +178,7 @@ export function app(): express.Express {
         documentFilePath: indexHtml,
         url: `${protocol}://${headers.host}${originalUrl}`,
         publicPath: distFolder,
-        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
+        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }, { provide: COOKIES, useValue: JSON.stringify(req.headers.cookie) }],
       })
       .then((html) => {
         res.cookie('ssr-init', 'true', {...secureCookie, httpOnly: false});
@@ -188,7 +190,7 @@ export function app(): express.Express {
   return server;
 }
 
-function run(): void {
+async function run(): Promise<void> {
   const port = process.env['PORT'] || 4000;
 
   console.log('🔐 Initializing OIDC configuration...');
@@ -201,7 +203,6 @@ function run(): void {
     if (error) {
       throw error;
     }
-
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }

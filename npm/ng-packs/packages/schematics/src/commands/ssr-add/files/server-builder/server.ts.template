@@ -9,14 +9,24 @@ import <% if (isStandalone) { %>bootstrap<% } else { %>AppServerModule<% } %> fr
 import {environment} from './environments/environment';
 import * as oidc from 'openid-client';
 
+if (environment.production === false) {
+  process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+}
+
 const ISSUER = new URL(environment.oAuthConfig.issuer);
 const CLIENT_ID = environment.oAuthConfig.clientId;
 const REDIRECT_URI = environment.oAuthConfig.redirectUri;
 const SCOPE = environment.oAuthConfig.scope;
+// @ts-ignore
+const CLIENT_SECRET = environment.oAuthConfig.clientSecret || undefined;
 
-const config = await oidc.discovery(ISSUER, CLIENT_ID, /* client_secret */ undefined);
+let config: Awaited<ReturnType<typeof oidc.discovery>>;
 const secureCookie = { httpOnly: true, sameSite: 'lax' as const, secure: environment.production, path: '/' };
 const tokenCookie = { ...secureCookie, httpOnly: false };
+
+async function initializeOIDC() {
+  config = await oidc.discovery(ISSUER, CLIENT_ID, CLIENT_SECRET);
+}
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -72,6 +82,10 @@ export function app(): express.Express {
         res.clearCookie('refresh_token', secureCookie);
         res.clearCookie('expires_at', tokenCookie);
         res.clearCookie('returnUrl', secureCookie);
+
+        if (!config) {
+          return res.redirect('/');
+        }
 
         const endSessionEndpoint = config.serverMetadata().end_session_endpoint;
         if (endSessionEndpoint) {
@@ -162,9 +176,12 @@ export function app(): express.Express {
         documentFilePath: indexHtml,
         url: `${protocol}://${headers.host}${originalUrl}`,
         publicPath: distFolder,
-        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }, { provide: 'cookies', useValue: JSON.stringify(req.headers.cookie) }],
+        providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
       })
-      .then((html) => res.send(html))
+      .then((html) => {
+        res.cookie('ssr-init', 'true', {...secureCookie, httpOnly: false});
+        return res.send(html)
+        })
       .catch((err) => next(err));
   });
 
@@ -173,6 +190,10 @@ export function app(): express.Express {
 
 function run(): void {
   const port = process.env['PORT'] || 4000;
+
+  console.log('🔐 Initializing OIDC configuration...');
+  await initializeOIDC();
+  console.log('✅ OIDC configuration loaded');
 
   // Start up the Node server
   const server = app();

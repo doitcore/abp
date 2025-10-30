@@ -1,10 +1,10 @@
 @echo off
 
+abp install-libs
+
 dotnet clean
 dotnet restore
 dotnet build
-
-abp install-libs
 
 DEL /F/Q/S "C:\Publishes\VoloDocs" > NUL && RMDIR /Q/S "C:\Publishes\VoloDocs"
 

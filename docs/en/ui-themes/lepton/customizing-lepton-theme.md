@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to customize the Lepton Theme in your ABP application with custom CSS, enhancing your website's appearance effortlessly."
+}
+```
+
 # Customize Lepton Theme with Custom CSS
 
 ````json
@@ -38,9 +45,16 @@ export const appConfig: ApplicationConfig = {
 
 Import your style file to `src/style.scss`
 
-```css
+```scss
 /* style.scss */
-import 'your-custom-style';
+@import 'your-custom-style';
+```
+
+or
+
+```scss
+/* style.scss */
+@use 'your-custom-style';
 ```
 
 Or add your style file to the `styles` arrays which in `angular.json` file 

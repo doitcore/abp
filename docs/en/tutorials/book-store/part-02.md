@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Explore Part 2 of our Web Application Development Tutorial, focusing on the Book List Page and leveraging dynamic JavaScript proxies in ABP Framework."
+}
+```
+
 # Web Application Development Tutorial - Part 2: The Book List Page
 ````json
 //[doc-params]
@@ -515,7 +522,7 @@ Now you can see the final result on your browser:
 
 ![Book list final result](images/bookstore-book-list-angular.png)
 
-{{else if UI == "Blazor" || UI == "BlazorServer" || UI == "BlazorWebApp"}}
+{{else if UI == "Blazor" || UI == "BlazorServer" || UI == "BlazorWebApp" || UI == "MAUIBlazor"}}
 
 ## Create a Books Page
 

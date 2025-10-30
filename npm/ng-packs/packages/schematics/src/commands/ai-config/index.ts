@@ -38,10 +38,11 @@ export default function (options: AiConfigSchema): Rule {
     let targetPath = '/';
 
     if (options.targetProject) {
-      const project = workspace.projects.get(options.targetProject);
+      const trimmedTargetProject = options.targetProject.trim();
+      const project = workspace.projects.get(trimmedTargetProject);
       if (!project) {
         throw new SchematicsException(
-          `Project "${options.targetProject}" not found in workspace.`
+          `Project "${trimmedTargetProject}" not found in workspace.`
         );
       }
       targetPath = normalize(project.root);

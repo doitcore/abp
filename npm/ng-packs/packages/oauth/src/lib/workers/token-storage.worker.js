@@ -1,23 +1,12 @@
-/// <reference no-default-lib="true"/>
-/// <reference lib="es2020" />
-/// <reference lib="webworker" />
+// ESM SharedWorker
 
-declare const self: SharedWorkerGlobalScope;
+const tokenStore = new Map();
+const ports = new Set();
 
-interface TokenMessage {
-  action: 'set' | 'remove' | 'clear' | 'get';
-  key?: string;
-  value?: string;
-}
-
-const tokenStore = new Map<string, string>();
-const ports = new Set<MessagePort>();
-
-self.onconnect = (event: MessageEvent) => {
+self.onconnect = (event) => {
   const port = event.ports[0];
   ports.add(port);
-
-  port.onmessage = (e: MessageEvent<TokenMessage>) => {
+  port.onmessage = (e) => {
     const { action, key, value } = e.data;
     switch (action) {
       case 'set':

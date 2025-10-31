@@ -113,7 +113,8 @@ export class AbpOAuthService implements IAuthService {
     try {
       return this.oAuthService.refreshToken();
     } catch (error) {
-      return Promise.resolve();
+      console.log("Error while refreshing token: ", error);
+      return Promise.reject();
     }
   }
 

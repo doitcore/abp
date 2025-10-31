@@ -56,14 +56,10 @@ export class MemoryTokenStorageService implements OAuthStorage {
               break;
           }
         };
-
-        console.log('✅ Using SharedWorker for cross-tab token storage');
       } catch (error) {
-        console.warn('⚠️ SharedWorker failed:', error);
         this.useSharedWorker = false;
       }
     } else {
-      console.warn('⚠️ SharedWorker not supported');
       this.useSharedWorker = false;
     }
   }
@@ -96,7 +92,7 @@ export class MemoryTokenStorageService implements OAuthStorage {
     }
 
     if (this.useSharedWorker && this.port) {
-      // this.cache.delete(key);
+      this.cache.delete(key);
       this.port.postMessage({ action: 'remove', key });
     } else {
       this.cache.delete(key);

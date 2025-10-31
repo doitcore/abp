@@ -4,7 +4,9 @@
 @using Volo.Abp.Features
 @attribute [Authorize]
 @attribute [RequiresFeature(SettingManagementFeatures.Enable)]
-
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.UI.Navigation.Localization.Resource
+@inject IStringLocalizer<AbpUiNavigationResource> LUiNavigation
 @* ************************* PAGE HEADER ************************* *@
 <PageHeader Title="@L["Settings"]" BreadcrumbItems="@BreadcrumbItems">
 

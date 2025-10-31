@@ -22,7 +22,7 @@ import {
   ConfigStateService,
   LocalizationPipe,
   LocalizationService,
-  PermissionDirective,
+  PermissionDirective
 } from '@abp/ng.core';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { CommonModule } from '@angular/common';
@@ -45,6 +45,10 @@ const { required, email } = Validators;
   ],
 })
 export class EmailSettingGroupComponent implements OnInit {
+  private emailSettingsService = inject(EmailSettingsService);
+  private fb = inject(UntypedFormBuilder);
+  private toasterService = inject(ToasterService);
+
   protected readonly localizationService = inject(LocalizationService);
   protected readonly configStateSevice = inject(ConfigStateService);
   protected readonly currentUserEmail = toSignal(
@@ -57,12 +61,6 @@ export class EmailSettingGroupComponent implements OnInit {
   emailingPolicy = SettingManagementPolicyNames.Emailing;
   isEmailTestModalOpen = false;
   modalSize: NgbModalOptions = { size: 'lg' };
-
-  constructor(
-    private emailSettingsService: EmailSettingsService,
-    private fb: UntypedFormBuilder,
-    private toasterService: ToasterService,
-  ) {}
 
   ngOnInit() {
     this.getData();

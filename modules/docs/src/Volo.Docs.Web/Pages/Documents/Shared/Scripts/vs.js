@@ -34,7 +34,7 @@
         var scrollToHashLink = function () {
             var hash = window.location.hash;
 
-            if (!hash || hash === '#') {
+            if (!hash || hash === '#' || hash === '#gsc.tab=0') {
                 return;
             }
 
@@ -68,8 +68,6 @@
             if ($myNav.length === 0) {
                 return;
             }
-
-            Toc.init($myNav);
 
             $('body').scrollspy({
                 target: $myNav,

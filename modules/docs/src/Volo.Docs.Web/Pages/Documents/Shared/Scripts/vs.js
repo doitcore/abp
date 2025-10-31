@@ -71,8 +71,6 @@
                 return;
             }
 
-            Toc.init($myNav);
-
             $('body').scrollspy({
                 target: $myNav,
             });

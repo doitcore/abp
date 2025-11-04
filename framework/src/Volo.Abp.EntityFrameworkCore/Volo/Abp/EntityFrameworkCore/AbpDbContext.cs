@@ -474,7 +474,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
 
     protected virtual bool IsOnlyForeignKeysModified(EntityEntry entry)
     {
-        return entry.Properties.All(x => x.IsModified && x.Metadata.IsForeignKey() &&
+        return entry.Properties.Where(x => x.IsModified).All(x => x.Metadata.IsForeignKey() &&
                                          (x.CurrentValue == null || x.OriginalValue?.ToString() == x.CurrentValue?.ToString()));
     }
 

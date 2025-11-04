@@ -268,7 +268,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             if (EntityChangeOptions.Value.PublishEntityUpdatedEventWhenNavigationChanges)
             {
                 var ignoredEntity = EntityChangeOptions.Value.IgnoredNavigationEntitySelectors.Any(selector => selector.Predicate(entityEntry.Entity.GetType()));
-                var onlyForeignKeyModifiedEntity = entityEntry.State == EntityState.Modified && entityEntry.Properties.Where(x => x.IsModified).All(x => x.Metadata.IsForeignKey() && (x.CurrentValue == null || x.OriginalValue?.ToString() == x.CurrentValue?.ToString()));
+                var onlyForeignKeyModifiedEntity = entityEntry.State == EntityState.Modified && IsOnlyForeignKeysDeleted(entityEntry);
                 if ((entityEntry.State == EntityState.Unchanged && ignoredEntity) || onlyForeignKeyModifiedEntity && ignoredEntity)
                 {
                     continue;
@@ -292,7 +292,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             }
             else if (entityEntry.Properties.Any(x => x.IsModified && (x.Metadata.ValueGenerated == ValueGenerated.Never || x.Metadata.ValueGenerated == ValueGenerated.OnAdd)))
             {
-                if (entityEntry.Properties.Where(x => x.IsModified).All(x => x.Metadata.IsForeignKey() && (x.CurrentValue == null || x.OriginalValue?.ToString() == x.CurrentValue?.ToString())))
+                if (IsOnlyForeignKeysDeleted(entityEntry))
                 {
                     // Skip `PublishEntityDeletedEvent/PublishEntityUpdatedEvent` if only foreign keys have changed.
                     break;
@@ -428,8 +428,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             case EntityState.Modified:
                 if (entry.Properties.Any(x => x.IsModified && (x.Metadata.ValueGenerated == ValueGenerated.Never || x.Metadata.ValueGenerated == ValueGenerated.OnAdd)))
                 {
-                    var modifiedProperties = entry.Properties.Where(x => x.IsModified).ToList();
-                    if (modifiedProperties.All(x => x.Metadata.IsForeignKey() && (x.CurrentValue == null || x.OriginalValue?.ToString() == x.CurrentValue?.ToString())))
+                    if (IsOnlyForeignKeysDeleted(entry))
                     {
                         // Skip `PublishEntityDeletedEvent/PublishEntityUpdatedEvent` if only foreign keys have changed.
                         break;
@@ -471,6 +470,12 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
                 EntityChangeEventHelper.PublishEntityDeletedEvent(entry.Entity);
                 break;
         }
+    }
+
+    protected virtual bool IsOnlyForeignKeysDeleted(EntityEntry entry)
+    {
+        return entry.Properties.All(x => x.IsModified && x.Metadata.IsForeignKey() &&
+                                         (x.CurrentValue == null || x.OriginalValue?.ToString() == x.CurrentValue?.ToString()));
     }
 
     protected virtual void HandlePropertiesBeforeSave()

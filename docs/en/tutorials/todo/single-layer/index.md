@@ -793,7 +793,7 @@ Open the `/angular/src/app/home/home.component.html` file and replace its conten
             <ul id="TodoList">
                 @for (todoItem of todoItems; track todoItem.id) {
                 <li>
-                    <i class="fa fa-trash-o" (click)="delete(todoItem.id)"></i> {{ todoItem.text }}
+                    <i class="fa fa-trash-o" (click)="delete(todoItem.id)"></i> {%{{{ todoItem.text }}}%}
                 </li>
                 }
             </ul>

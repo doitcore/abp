@@ -384,7 +384,7 @@ public abstract class AbpEntityChangeOptions_DomainEvents_Tests<TStartupModule> 
         });
         entityUpdatedEventTriggered.ShouldBeTrue();
 
-        // Test only foreign key changed to null
+        // Test only foreign key change to null
         entityUpdatedEventTriggered = false;
         await WithUnitOfWorkAsync(async () =>
         {

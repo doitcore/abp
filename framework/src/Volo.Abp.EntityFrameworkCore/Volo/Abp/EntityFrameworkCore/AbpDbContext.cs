@@ -453,6 +453,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
                         break;
                     }
 
+                    var modifiedProperties = entry.Properties.Where(x => x.IsModified).ToList();
                     var disableAuditingAttributes = modifiedProperties.Select(x => x.Metadata.PropertyInfo?.GetCustomAttribute<DisableAuditingAttribute>()).ToList();
                     if (disableAuditingAttributes.Any(x => x == null || x.UpdateModificationProps))
                     {

@@ -281,6 +281,7 @@
     "DeleteAllBlogPostsOfThisBlog": "Delete all blog posts of this blog",
     "RequiredPermissionName": "Required permission name",
     "Enum:PageStatus:0": "Draft",
-    "Enum:PageStatus:1": "Publish"
+    "Enum:PageStatus:1": "Publish",
+    "AllPosts": "All posts"
   }
 }

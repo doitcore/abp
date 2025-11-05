@@ -59,7 +59,7 @@ public class CmsKitCommonWebModule : AbpModule
 
         Configure<CmsKitContentWidgetOptions>(options =>
         {
-            options.AddWidgetIfFeatureEnabled(typeof(CommentsFeature), "Comment", "CmsCommenting");
+            options.AddWidgetIfFeatureEnabled(typeof(CommentsFeature), "Comment", "CmsCommenting", "CmsKitCommentConfiguration");
         });
     }
 }

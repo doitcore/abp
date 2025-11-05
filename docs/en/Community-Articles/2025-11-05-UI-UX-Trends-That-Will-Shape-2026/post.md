@@ -15,7 +15,7 @@ More users, more sales, better promotion, and a higher conversion rate... The el
 If the "loading" icon appears too often on your digital product, you might not be doing it right. If you fail to optimize speed, the temporary effect of visual displays won't be enough to convert potential users into customers. Remember, the moment people start waiting, you've lost at least half of them.
 
 ## 2\. Dark Mode \- Still, and Forever
-![data-model](./bento.png)
+![data-model](./dark-mode.png)
 
 Dark Mode is no longer an option; it's a **standard**. It's become a necessity, not a choice, especially for users who spend hours staring at screens and are accustomed to dark themes in code editors and terminals. However, the approach to dark mode isn't simply about inverting colors; it's much deeper than that. The key is managing contrast and depth.
 
@@ -46,6 +46,7 @@ Bento grids should aim for a balanced design by using both simple text and sophi
 Large fonts have been a trend for several years, and it seems web designers are becoming more and more bold. The increasing preference for larger fonts every year is a sign that this trend will continue into 2026\. This trend is about more than just using large font sizes in headlines.
 
 Creating a cohesive typographic scale and proper line height and letter spacing are critical elements to consider when creating this trend. As the font size increases, line height should decrease, and the space between letters should be narrower.  
+
 The browser default font size, which we used to see in body text and paragraphs and has now become standard, is 16 pixels. In the last few years, we've started seeing body font sizes of 17 or 18 pixels more frequently. The increasing importance of readability every year makes this more common. Font sizes in rem values, rather than px, provide the most efficient results.
 
 ## 5\. Micro Animations

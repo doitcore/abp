@@ -26,7 +26,7 @@ import {
 import { LocaleDirection } from '@abp/ng.theme.shared';
 import {
   Component,
-  EventEmitter, Inject, Input, Optional, Output, TrackByFunction
+  EventEmitter, Inject, inject, Input, Optional, Output, TrackByFunction
 } from '@angular/core';
 import { of } from 'rxjs';
 import { finalize, switchMap, tap } from 'rxjs/operators';
@@ -49,16 +49,18 @@ type PermissionWithStyle = PermissionGrantInfoDto & {
 })
 export class PermissionManagementComponent
   implements
-  PermissionManagement.PermissionManagementComponentInputs,
-  PermissionManagement.PermissionManagementComponentOutputs {
+    PermissionManagement.PermissionManagementComponentInputs,
+    PermissionManagement.PermissionManagementComponentOutputs {
+
+  private readonly service = inject(PermissionsService);
+  private readonly configState = inject(ConfigStateService);
+
   protected _providerName: string;
   @Input()
   get providerName(): string {
     if (this.replaceableData) return this.replaceableData.inputs.providerName;
-
     return this._providerName;
   }
-
   set providerName(value: string) {
     this._providerName = value;
   }
@@ -67,10 +69,8 @@ export class PermissionManagementComponent
   @Input()
   get providerKey(): string {
     if (this.replaceableData) return this.replaceableData.inputs.providerKey;
-
     return this._providerKey;
   }
-
   set providerKey(value: string) {
     this._providerKey = value;
   }
@@ -79,10 +79,8 @@ export class PermissionManagementComponent
   @Input()
   get hideBadges(): boolean {
     if (this.replaceableData) return this.replaceableData.inputs.hideBadges;
-
     return this._hideBadges;
   }
-
   set hideBadges(value: boolean) {
     this._hideBadges = value;
   }
@@ -92,7 +90,6 @@ export class PermissionManagementComponent
   get visible(): boolean {
     return this._visible;
   }
-
   set visible(value: boolean) {
     if (value === this._visible) return;
 
@@ -113,15 +110,10 @@ export class PermissionManagementComponent
   @Output() readonly visibleChange = new EventEmitter<boolean>();
 
   data: GetPermissionListResultDto = { groups: [], entityDisplayName: null };
-
   selectedGroup: PermissionGroupDto;
-
   permissions: PermissionGrantInfoDto[] = [];
-
   selectThisTab = false;
-
   selectAllTab = false;
-
   modalBusy = false;
 
   trackByFn: TrackByFunction<PermissionGroupDto> = (_, item) => item.name;
@@ -149,7 +141,6 @@ export class PermissionManagementComponent
 
   get isVisible(): boolean {
     if (!this.replaceableData) return this.visible;
-
     return this.replaceableData.inputs.visible;
   }
 
@@ -159,9 +150,7 @@ export class PermissionManagementComponent
     public replaceableData: ReplaceableComponents.ReplaceableTemplateData<
       PermissionManagement.PermissionManagementComponentInputs,
       PermissionManagement.PermissionManagementComponentOutputs
-    >,
-    private service: PermissionsService,
-    private configState: ConfigStateService
+    >
   ) {}
 
   getChecked(name: string) {
@@ -169,17 +158,11 @@ export class PermissionManagementComponent
   }
 
   isGrantedByOtherProviderName(grantedProviders: ProviderInfoDto[]): boolean {
-    if (grantedProviders.length) {
-      return grantedProviders.findIndex(p => p.providerName !== this.providerName) > -1;
-    }
-    return false;
+    return grantedProviders?.some(p => p.providerName !== this.providerName);
   }
 
   onClickCheckbox(clickedPermission: PermissionGrantInfoDto, value) {
-    if (
-      clickedPermission.isGranted &&
-      this.isGrantedByOtherProviderName(clickedPermission.grantedProviders)
-    )
+    if (clickedPermission.isGranted && this.isGrantedByOtherProviderName(clickedPermission.grantedProviders))
       return;
 
     setTimeout(() => {
@@ -191,7 +174,6 @@ export class PermissionManagementComponent
         } else if (clickedPermission.parentName === per.name && !clickedPermission.isGranted) {
           return { ...per, isGranted: true };
         }
-
         return per;
       });
 
@@ -262,16 +244,11 @@ export class PermissionManagementComponent
     this.setTabCheckboxState();
   }
 
-
   submit() {
     const unchangedPermissions = getPermissions(this.data.groups);
-
     const changedPermissions: UpdatePermissionDto[] = this.permissions
       .filter(per =>
-        unchangedPermissions.find(unchanged => unchanged.name === per.name).isGranted ===
-        per.isGranted
-          ? false
-          : true,
+        unchangedPermissions.find(unchanged => unchanged.name === per.name).isGranted !== per.isGranted
       )
       .map(({ name, isGranted }) => ({ name, isGranted }));
 
@@ -328,26 +305,23 @@ export class PermissionManagementComponent
       this.replaceableData.outputs.visibleChange(visible);
     }
   }
-  
+
   shouldFetchAppConfig() {
     const currentUser = this.configState.getOne('currentUser') as CurrentUserDto;
 
     if (this.providerName === 'R') return currentUser.roles.some(role => role === this.providerKey);
-
     if (this.providerName === 'U') return currentUser.id === this.providerKey;
 
     return false;
   }
 }
 
-function findMargin(permissions: PermissionGrantInfoDto[], permission: PermissionGrantInfoDto) {
+function findMargin(permissions: PermissionGrantInfoDto[], permission: PermissionGrantInfoDto): number {
   const parentPermission = permissions.find(per => per.name === permission.parentName);
-
   if (parentPermission && parentPermission.parentName) {
     let margin = 20;
-    return (margin += findMargin(permissions, parentPermission));
+    return margin + findMargin(permissions, parentPermission);
   }
-
   return parentPermission ? 20 : 0;
 }
 
@@ -468,12 +442,12 @@ Open `app.component.ts` in `src/app` folder and modify it as shown below:
 ```js
 import { ReplaceableComponentsService } from '@abp/ng.core';
 import { ePermissionManagementComponents } from '@abp/ng.permission-management';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PermissionManagementComponent } from './permission-management/permission-management.component';
 
 //...
 export class AppComponent implements OnInit {
-  constructor(private replaceableComponents: ReplaceableComponentsService) {} // injected ReplaceableComponentsService
+  private readonly replaceableComponents = inject(ReplaceableComponentsService); // injected ReplaceableComponentsService
 
   ngOnInit() {
     this.replaceableComponents.add({

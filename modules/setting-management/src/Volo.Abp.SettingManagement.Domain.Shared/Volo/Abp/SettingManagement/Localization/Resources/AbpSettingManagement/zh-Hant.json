@@ -17,6 +17,7 @@
     "SentSuccessfully": "發送成功",
     "MailSendingFailed": "郵件發送失敗,請檢查你的郵件配置並重試.",
     "Send": "發送",
+    "Menu:Settings": "設置",
     "Menu:Emailing": "信箱",
     "Menu:TimeZone": "時區",
     "DisplayName:Timezone": "時區",

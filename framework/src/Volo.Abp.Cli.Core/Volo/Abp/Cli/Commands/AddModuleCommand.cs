@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -69,6 +70,7 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
         var newProTemplate = !string.IsNullOrEmpty(template) && template == ModuleProTemplate.TemplateName;
         var withSourceCode = newTemplate || newProTemplate || commandLineArgs.Options.ContainsKey(Options.SourceCode.Long);
         var addSourceCodeToSolutionFile = withSourceCode && commandLineArgs.Options.ContainsKey("add-to-solution-file");
+        var skipOpeningDocumentation = commandLineArgs.Options.ContainsKey(Options.SkipOpeningDocumentation.Long);
         var skipDbMigrations = newTemplate || newProTemplate || commandLineArgs.Options.ContainsKey(Options.DbMigrations.Skip);
         var solutionFile = GetSolutionFile(commandLineArgs);
 
@@ -98,7 +100,8 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
              withSourceCode,
              addSourceCodeToSolutionFile,
              newTemplate,
-             newProTemplate
+             newProTemplate,
+             skipOpeningDocumentation
          );
 
         _lastAddedModuleInfo = new AddModuleInfoOutput
@@ -116,7 +119,7 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
 
         sb.AppendLine("");
         sb.AppendLine("'add-module' command is used to add a multi-package ABP module to a solution.");
-        sb.AppendLine("It should be used in a folder containing a .sln file.");
+        sb.AppendLine("It should be used in a folder containing a .sln or .slnx file.");
         sb.AppendLine("");
         sb.AppendLine("Usage:");
         sb.AppendLine("  abp add-module <module-name> [options]");
@@ -164,20 +167,21 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
             return providedSolutionFile;
         }
 
-        var foundSolutionFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln");
-        if (foundSolutionFiles.Length == 1)
+        var foundSolutionFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln")
+            .Concat(Directory.GetFiles(Directory.GetCurrentDirectory(), "*.slnx")).ToList();
+        if (foundSolutionFiles.Count == 1)
         {
             return foundSolutionFiles[0];
         }
 
-        if (foundSolutionFiles.Length == 0)
+        if (foundSolutionFiles.Count == 0)
         {
-            throw new CliUsageException("'abp add-module' command should be used inside a folder containing a .sln file!");
+            throw new CliUsageException("'abp add-module' command should be used inside a folder containing a .sln or .slnx file!");
         }
 
         //foundSolutionFiles.Length > 1
 
-        var sb = new StringBuilder("There are multiple solution (.sln) files in the current directory. Please specify one of the files below:");
+        var sb = new StringBuilder("There are multiple solution (.sln or .slnx) files in the current directory. Please specify one of the files below:");
 
         foreach (var foundSolutionFile in foundSolutionFiles)
         {
@@ -222,6 +226,11 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
         {
             public const string Short = "t";
             public const string Long = "template";
+        }
+
+        public class SkipOpeningDocumentation
+        {
+            public const string Long = "skip-opening-documentation";
         }
     }
 }

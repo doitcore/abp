@@ -8,7 +8,6 @@ import {
   SkipSelf,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import {
   NgbDateAdapter,
@@ -27,7 +26,6 @@ import { selfFactory } from '../../utils/factory.util';
 @Component({
   exportAs: 'abpExtensibleDateTimePicker',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     NgbDatepickerModule,
     NgbTimepickerModule,

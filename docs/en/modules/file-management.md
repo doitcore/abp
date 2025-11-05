@@ -1,6 +1,13 @@
+```json
+//[doc-seo]
+{
+    "Description": "Discover the File Management Module for ABP Framework, enabling efficient file uploads, downloads, and organization with multi-tenancy support."
+}
+```
+
 # File Management Module (Pro)
 
-> You must have an ABP Team or a higher license to use this module.
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 This module is used to upload, download and organize files in a hierarchical folder structure. It is also compatible to multi-tenancy and you can determine total size limit for your tenants.
 

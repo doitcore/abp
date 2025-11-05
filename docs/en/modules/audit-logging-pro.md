@@ -1,6 +1,13 @@
+```json
+//[doc-seo]
+{
+    "Description": "Discover the ABP Framework's Audit Logging Module (Pro) to track changes, filter logs, and enhance application monitoring efficiently."
+}
+```
+
 # Audit Logging Module (Pro)
 
-> You must have an ABP Team or a higher license to use this module.
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 This module implements the Audit Logging system of an application;
 

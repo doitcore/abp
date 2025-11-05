@@ -1,6 +1,13 @@
+```json
+//[doc-seo]
+{
+    "Description": "Explore the OpenIddict Module (Pro) for ABP Framework to manage applications, API scopes, and client permissions seamlessly."
+}
+```
+
 # OpenIddict Module (Pro)
 
-> You must have an ABP Team or a higher license to use this module.
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 This module provides integration and management functionality for the OpenIddict library;
 

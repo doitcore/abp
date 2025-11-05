@@ -1,6 +1,13 @@
+```json
+//[doc-seo]
+{
+    "Description": "Integrate payment gateways seamlessly with the ABP Payment Module, supporting multiple options like Stripe and PayPal for one-time and recurring payments."
+}
+```
+
 # Payment Module (Pro)
 
-> You must have an ABP Team or a higher license to use this module.
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 Payment module implements payment gateway integration of an application. It provides one time payment and recurring payment options. 
 

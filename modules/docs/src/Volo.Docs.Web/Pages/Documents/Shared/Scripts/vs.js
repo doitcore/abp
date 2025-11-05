@@ -34,15 +34,17 @@
         var scrollToHashLink = function () {
             var hash = window.location.hash;
 
-            if (!hash || hash === '#') {
+            if (!hash || hash === '#' || hash === '#gsc.tab=0') {
                 return;
             }
+
+            hash = hash.split('&')[0];
 
             var $targetElement = $(decodeURIComponent(hash));
 
             $targetElement = $targetElement.length
                 ? $targetElement
-                : $('[name=' + this.hash.slice(1) + ']');
+                : $('[name=' + hash.slice(1) + ']');
 
             if (!$targetElement.length) {
                 return;
@@ -62,6 +64,10 @@
             handleCustomScrolls();
 
             var $myNav = $('#docs-sticky-index');
+
+            if ($myNav.length === 0) {
+                return;
+            }
 
             $('body').scrollspy({
                 target: $myNav,

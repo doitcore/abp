@@ -1,6 +1,13 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to manage user data with the GDPR module, enabling personal data downloads and deletions in your ABP applications."
+}
+```
+
 # GDPR Module (Pro)
 
-> You must have an ABP Team or a higher license to use this module.
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 This module allows users to download and delete their personal data collected by the application. 
 

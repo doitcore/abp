@@ -1,6 +1,13 @@
+```json
+//[doc-seo]
+{
+    "Description": "Explore the Identity Module (Pro) for ABP Framework, enabling robust user and role management, permissions, and authentication features."
+}
+```
+
 # Identity Module (Pro)
 
-> You must have an ABP Team or a higher license to use this module.
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 This module implements the User and Role system of an application;
 

@@ -235,6 +235,7 @@
     "SelectAnBlogToAssign": "Wählen Sie einen Blog aus, um Blogbeiträge zuzuweisen",
     "DeleteAllBlogPostsOfThisBlog": "Alle Blogbeiträge dieses Blogs löschen",
     "RequiredPermissionName": "Erforderlicher Berechtigungsname",
-    "AllPosts": "Alle Beiträge"
+    "AllPosts": "Alle Beiträge",
+    "IsReadOnly": "Schreibgeschützt"
   }
 }

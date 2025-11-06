@@ -226,6 +226,7 @@
     "SelectAnBlogToAssign": "Atanacak bir blog seçin",
     "DeleteAllBlogPostsOfThisBlog": "Bu blogun tüm blog yazılarını sil",
     "RequiredPermissionName": "Gerekli izin adı",
-    "AllPosts": "Tüm gönderiler"
+    "AllPosts": "Tüm gönderiler",
+    "IsReadOnly": "Salt okunur"
   }
 }

@@ -235,6 +235,7 @@
     "SelectAnBlogToAssign": "Valitse blogi, johon haluat määrittää",
     "DeleteAllBlogPostsOfThisBlog": "Poista tämän blogin kaikki blogiviestit",
     "RequiredPermissionName": "Tarvittava lupa",
-    "AllPosts": "Kaikki viestit"
+    "AllPosts": "Kaikki viestit",
+    "IsReadOnly": "Vain luku"
   }
 }

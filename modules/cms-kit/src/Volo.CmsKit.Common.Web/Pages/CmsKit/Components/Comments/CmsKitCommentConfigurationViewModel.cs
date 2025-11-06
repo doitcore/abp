@@ -10,6 +10,5 @@ public class CmsKitCommentConfigurationViewModel
   [Required]
   public string EntityId { get; set; }
 
-  [Required]
   public bool IsReadOnly { get; set; } = false;
 }

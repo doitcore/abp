@@ -235,6 +235,7 @@
     "SelectAnBlogToAssign": "Выберите блог для назначения",
     "DeleteAllBlogPostsOfThisBlog": "Удалить все сообщения в блоге этого блога",
     "RequiredPermissionName": "Имя требуемого разрешения",
-    "AllPosts": "Все записи"
+    "AllPosts": "Все записи",
+    "IsReadOnly": "Только для чтения"
   }
 }

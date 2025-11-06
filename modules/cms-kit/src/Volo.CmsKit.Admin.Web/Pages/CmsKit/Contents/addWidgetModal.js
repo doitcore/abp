@@ -34,7 +34,7 @@ $(function () {
                         var propertyValue = properties[propertyName];
                         
                         //skip default/empty values
-                        if(!propertyValue) {
+                        if (propertyValue === null || propertyValue === undefined || propertyValue === '') {
                             continue;
                         }
 

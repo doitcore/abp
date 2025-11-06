@@ -25,7 +25,7 @@ $(function () {
 
             $(".save-changes").click(function () {
 
-                if (activeForm && !activeForm.valid()) {
+                if (activeForm && activeForm.length > 0 && !activeForm.valid()) {
                     return;
                 }
 

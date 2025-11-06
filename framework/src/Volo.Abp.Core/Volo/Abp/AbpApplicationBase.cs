@@ -185,8 +185,7 @@ public abstract class AbpApplicationBase : IAbpApplication
         {
             try
             {
-                using var scope = ServiceProvider.CreateScope();
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<AbpApplicationBase>>();
+                var logger = Services.GetInitLogger<AbpApplicationBase>();
                 logger.LogException(ex, LogLevel.Trace);
             }
             catch

@@ -25,11 +25,11 @@ $(function () {
 
             $(".save-changes").click(function () {
 
-                if(!activeForm.valid()) {
+                if (activeForm && !activeForm.valid()) {
                     return;
                 }
 
-                let properties = activeForm.serializeFormToObject();          
+                let properties = activeForm ? activeForm.serializeFormToObject() : {};          
 
                 let widgetText = "[Widget Type=\"" + widgetType + "\" ";
 

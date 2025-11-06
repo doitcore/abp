@@ -280,6 +280,7 @@
     "SelectAnBlogToAssign": "Select a blog to assign",
     "DeleteAllBlogPostsOfThisBlog": "Delete all blog posts of this blog",
     "RequiredPermissionName": "Required permission name",
-    "AllPosts": "All posts"
+    "AllPosts": "All posts",
+    "IsReadOnly": "Readonly"
   }
 }

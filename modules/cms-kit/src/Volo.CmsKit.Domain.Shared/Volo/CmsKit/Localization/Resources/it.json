@@ -235,6 +235,7 @@
     "SelectAnBlogToAssign": "Seleziona un blog a cui assegnare i post del blog",
     "DeleteAllBlogPostsOfThisBlog": "Elimina tutti i post del blog di questo blog",
     "RequiredPermissionName": "Nome del permesso richiesto",
-    "AllPosts": "Tutti i post"
+    "AllPosts": "Tutti i post",
+    "IsReadOnly": "Sola lettura"
   }
 }

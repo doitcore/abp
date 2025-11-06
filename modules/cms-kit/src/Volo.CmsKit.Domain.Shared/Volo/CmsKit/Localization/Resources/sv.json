@@ -262,6 +262,7 @@
     "SelectAnBlogToAssign": "Välj en blogg att tilldela",
     "DeleteAllBlogPostsOfThisBlog": "Radera alla blogginlägg i denna blogg",
     "RequiredPermissionName": "Nödvändigt behörighetsnamn",
-    "AllPosts": "Alla inlägg"
+    "AllPosts": "Alla inlägg",
+    "IsReadOnly": "Skrivskyddad"
   }
 }

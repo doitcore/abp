@@ -235,6 +235,7 @@
     "SelectAnBlogToAssign": "Selectaţi un blog pentru a atribui postările de blog",
     "DeleteAllBlogPostsOfThisBlog": "Ştergeţi toate postările de blog ale acestui blog",
     "RequiredPermissionName": "Numele permisiunii necesare",
-    "AllPosts": "Toate postările"
+    "AllPosts": "Toate postările",
+    "IsReadOnly": "Doar citire"
   }
 }

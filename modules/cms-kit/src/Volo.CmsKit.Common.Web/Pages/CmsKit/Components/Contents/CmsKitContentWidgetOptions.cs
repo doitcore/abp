@@ -25,12 +25,12 @@ public class CmsKitContentWidgetOptions
     {
         Check.NotNull(globalFeatureType, nameof(globalFeatureType));
 
-        if(globalFeatureType.GetCustomAttribute<GlobalFeatureNameAttribute>() == null)
+        if (globalFeatureType.GetCustomAttribute<GlobalFeatureNameAttribute>() == null)
         {
             throw new ArgumentException($"The type {globalFeatureType.Name} must have a {nameof(GlobalFeatureNameAttribute)} attribute.", nameof(globalFeatureType));
         }
 
-        if(!GlobalFeatureManager.Instance.IsEnabled(globalFeatureType))
+        if (!GlobalFeatureManager.Instance.IsEnabled(globalFeatureType))
         {
             return;
         }

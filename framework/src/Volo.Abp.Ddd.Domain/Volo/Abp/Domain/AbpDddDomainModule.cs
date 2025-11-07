@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Auditing;
+using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.ChangeTracking;
@@ -24,7 +25,8 @@ namespace Volo.Abp.Domain;
     typeof(AbpExceptionHandlingModule),
     typeof(AbpSpecificationsModule),
     typeof(AbpCachingModule),
-    typeof(AbpDddDomainSharedModule)
+    typeof(AbpDddDomainSharedModule),
+    typeof(AbpAuthorizationAbstractionsModule)
     )]
 public class AbpDddDomainModule : AbpModule
 {

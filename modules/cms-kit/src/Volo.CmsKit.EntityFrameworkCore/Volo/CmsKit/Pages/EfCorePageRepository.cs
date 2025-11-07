@@ -26,7 +26,7 @@ public class EfCorePageRepository : EfCoreRepository<ICmsKitDbContext, Page, Gui
         return await (await GetDbSetAsync()).WhereIf(
             !filter.IsNullOrWhiteSpace(),
             x =>
-                x.Title.ToLower().Contains(filter.ToLower()) || x.Slug.Contains(filter)
+                x.Title.ToLower().Contains(filter.ToLower()) || x.Slug.ToLower().Contains(filter.ToLower())
         ).WhereIf(status.HasValue, x => x.Status == status)
         .CountAsync(GetCancellationToken(cancellationToken));
     }
@@ -42,7 +42,7 @@ public class EfCorePageRepository : EfCoreRepository<ICmsKitDbContext, Page, Gui
         return await (await GetDbSetAsync()).WhereIf(
                 !filter.IsNullOrWhiteSpace(),
                 x =>
-                    x.Title.ToLower().Contains(filter.ToLower()) || x.Slug.Contains(filter))
+                    x.Title.ToLower().Contains(filter.ToLower()) || x.Slug.ToLower().Contains(filter.ToLower()))
             .WhereIf(status.HasValue, x => x.Status == status)
             .OrderBy(sorting.IsNullOrEmpty() ? nameof(Page.Title) : sorting)
             .PageBy(skipCount, maxResultCount)

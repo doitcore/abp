@@ -58,6 +58,11 @@ public class AbpEntityFrameworkCoreTestModule : AbpModule
             {
                 opt.DefaultWithDetailsFunc = q => q.Include(p => p.BlogPosts);
             });
+
+            options.Entity<AppEntityWithNavigationsForeign>(opt =>
+            {
+                opt.DefaultWithDetailsFunc = q => q.Include(p => p.OneToMany);
+            });
         });
 
         context.Services.AddAbpDbContext<HostTestAppDbContext>(options =>

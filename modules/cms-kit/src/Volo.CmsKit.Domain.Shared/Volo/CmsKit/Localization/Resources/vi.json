@@ -235,6 +235,7 @@
     "SelectAnBlogToAssign": "Chọn một blog để gán",
     "DeleteAllBlogPostsOfThisBlog": "Xóa tất cả bài đăng trên blog của blog này",
     "RequiredPermissionName": "Tên quyền cần thiết",
-    "AllPosts": "Tất cả bài viết"
+    "AllPosts": "Tất cả bài viết",
+    "IsReadOnly": "Chỉ đọc"
   }
 }

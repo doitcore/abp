@@ -235,6 +235,7 @@
     "SelectAnBlogToAssign": "Vyberte blog, na ktorý chcete priradiť blogové príspevky",
     "DeleteAllBlogPostsOfThisBlog": "Zmazať všetky blogové príspevky tohto blogu",
     "RequiredPermissionName": "Požadovaný názov oprávnenia",
-    "AllPosts": "Všetky príspevky"
+    "AllPosts": "Všetky príspevky",
+    "IsReadOnly": "Iba na čítanie"
   }
 }

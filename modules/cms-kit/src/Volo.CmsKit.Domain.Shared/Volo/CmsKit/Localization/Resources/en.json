@@ -282,6 +282,7 @@
     "RequiredPermissionName": "Required permission name",
     "Enum:PageStatus:0": "Draft",
     "Enum:PageStatus:1": "Publish",
-    "AllPosts": "All posts"
+    "AllPosts": "All posts",
+    "IsReadOnly": "Readonly"
   }
 }

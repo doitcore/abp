@@ -31,7 +31,14 @@ $(function () {
 
                 for (var propertyName in properties) {
                     if (!propertyName.includes(']') && !propertyName.includes('[')) {
-                        widgetText += propertyName + "=\"" + properties[propertyName] + "\" ";
+                        var propertyValue = properties[propertyName];
+                        
+                        //skip default/empty values
+                        if (propertyValue === null || propertyValue === undefined || propertyValue === '') {
+                            continue;
+                        }
+
+                        widgetText += propertyName + "=\"" + propertyValue + "\" ";
                     }
                 }
 

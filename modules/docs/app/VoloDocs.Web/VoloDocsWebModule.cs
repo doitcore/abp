@@ -208,8 +208,8 @@ namespace VoloDocs.Web
             var app = context.GetApplicationBuilder();
             var env = context.GetEnvironment();
 
-            app.MapAbpStaticAssets();
             app.UseRouting();
+            app.MapAbpStaticAssets();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseAbpRequestLocalization();

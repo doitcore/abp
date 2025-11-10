@@ -28,7 +28,7 @@ public class AbpAuditingTestDbContext : AbpDbContext<AbpAuditingTestDbContext>
     public DbSet<AppEntityWithValueObject> AppEntityWithValueObject { get; set; }
 
     public DbSet<AppEntityWithNavigations> AppEntityWithNavigations { get; set; }
-
+    public DbSet<AppEntityWithNavigationChildOneToMany> AppEntityWithNavigationChildOneToMany { get; set; }
     public AbpAuditingTestDbContext(DbContextOptions<AbpAuditingTestDbContext> options)
         : base(options)
     {

@@ -280,6 +280,8 @@
     "SelectAnBlogToAssign": "Select a blog to assign",
     "DeleteAllBlogPostsOfThisBlog": "Delete all blog posts of this blog",
     "RequiredPermissionName": "Required permission name",
+    "Enum:PageStatus:0": "Draft",
+    "Enum:PageStatus:1": "Publish",
     "AllPosts": "All posts",
     "IsReadOnly": "Readonly"
   }

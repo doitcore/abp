@@ -5,22 +5,55 @@ namespace Volo.Abp.Authorization.Permissions.Resources;
 
 public interface IResourcePermissionChecker
 {
+    /// <summary>
+    /// Checks if the given permission is granted for the given resource.
+    /// </summary>
+    /// <param name="permissionName">The name of the permission.</param>
+    /// <param name="resourceName">The name of the resource.</param>
+    /// <param name="resourceKey">Resource key</param>
+    /// <returns>
+    /// True if the permission is granted.
+    /// </returns>
     Task<bool> IsGrantedAsync(
         string permissionName,
         string resourceName,
         string resourceKey
     );
     
+    /// <summary>
+    /// Gets all permissions for the given resource.
+    /// </summary>
+    /// <param name="resourceName">Resource name</param>
+    /// <param name="resourceKey">Resource key</param>
+    /// <returns>
+    /// A dictionary of permission names and their states.
+    /// </returns>
     Task<IDictionary<string, bool>> GetPermissionsAsync(
         string resourceName,
         string resourceKey
     );
     
+    /// <summary>
+    /// Gets all granted permissions for the given resource.
+    /// </summary>
+    /// <param name="resourceName">Resource name</param>
+    /// <param name="resourceKey">Resource key</param>
+    /// <returns>
+    /// An array of granted permission names.
+    /// </returns>
     Task<string[]> GetGrantedPermissionsAsync(
         string resourceName,
         string resourceKey
     );
-    
+
+    /// <summary>
+    /// Retrieves the keys of resources for which the specified permission is granted.
+    /// </summary>
+    /// <param name="resourceName">The name of the resource.</param>
+    /// <param name="permissionName">The name of the permission.</param>
+    /// <returns>
+    /// An array of resource keys where the specified permission is granted.
+    /// </returns>
     Task<string[]> GetGrantedResourceKeysAsync(
         string resourceName,
         string permissionName

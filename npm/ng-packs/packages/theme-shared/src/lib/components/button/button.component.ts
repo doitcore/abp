@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ABP } from '@abp/ng.core';
+import { ABP, StopPropagationDirective } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-button',
@@ -29,7 +29,7 @@ import { ABP } from '@abp/ng.core';
       <i [ngClass]="icon" class="me-1" aria-hidden="true"></i><ng-content></ng-content>
     </button>
   `,
-  imports: [CommonModule],
+  imports: [CommonModule, StopPropagationDirective],
 })
 export class ButtonComponent implements OnInit {
   @Input()

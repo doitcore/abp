@@ -33,6 +33,11 @@ internal sealed class TelemetrySolutionInfoEnricher : TelemetryActivityEventEnri
     {
         try
         {
+            if (context.SolutionPath.IsNullOrEmpty())
+            {
+                return Task.CompletedTask;
+            }
+
             var jsonContent = File.ReadAllText(context.SolutionPath!);
             using var doc = JsonDocument.Parse(jsonContent, new JsonDocumentOptions
             {

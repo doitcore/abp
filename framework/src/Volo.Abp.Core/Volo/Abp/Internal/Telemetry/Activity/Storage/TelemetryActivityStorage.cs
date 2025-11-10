@@ -35,7 +35,7 @@ public class TelemetryActivityStorage : ITelemetryActivityStorage, ISingletonDep
 
         var activityName = activityEvent.Get<string>(ActivityPropertyNames.ActivityName);
         
-        if (activityName == ActivityNameConsts.AbpStudioClose)
+        if (activityName == ActivityNameConsts.AbpStudioClose || activityName == ActivityNameConsts.AbpStudioCloseWithoutLogin)
         {
             State.SessionId = null;
         }

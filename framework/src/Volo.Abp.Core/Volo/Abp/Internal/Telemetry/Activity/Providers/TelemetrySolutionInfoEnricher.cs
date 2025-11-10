@@ -91,6 +91,9 @@ internal sealed class TelemetrySolutionInfoEnricher : TelemetryActivityEventEnri
         context.Current[ActivityPropertyNames.DynamicLocalization] = TelemetryJsonExtensions.GetBooleanOrNull(config, "dynamicLocalization");
         context.Current[ActivityPropertyNames.KubernetesConfiguration] = TelemetryJsonExtensions.GetBooleanOrNull(config, "kubernetesConfiguration");
         context.Current[ActivityPropertyNames.GrafanaDashboard] = TelemetryJsonExtensions.GetBooleanOrNull(config, "grafanaDashboard");
+        context.Current[ActivityPropertyNames.SampleCrudPage] = TelemetryJsonExtensions.GetBooleanOrNull(config, "sampleCrudPage");
+        context.Current[ActivityPropertyNames.CreationTool] = TelemetryJsonExtensions.GetStringOrNull(config, "creationTool");
+        context.Current[ActivityPropertyNames.Aspire] = TelemetryJsonExtensions.GetBooleanOrNull(config, "aspire");
     }
 
     private static void AddModuleInfo(ActivityContext context, JsonElement modulesElement)

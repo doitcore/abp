@@ -113,7 +113,6 @@ helm upgrade --install --version=4.0.19 ingress-nginx ingress-nginx/ingress-ngin
 
 > [enable-underscores-in-headers](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#enable-underscores-in-headers) is required to allow http request use `__tenant` to pass tenant information to the backend service.
 
-
 ### mkcert
 
 Use mkcert to generate trusted certificates for local development. You can install mkcert by following the [official mkcert installation guide](https://github.com/FiloSottile/mkcert#installation).

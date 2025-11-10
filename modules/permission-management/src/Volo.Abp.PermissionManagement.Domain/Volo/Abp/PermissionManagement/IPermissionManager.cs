@@ -4,8 +4,6 @@ using JetBrains.Annotations;
 
 namespace Volo.Abp.PermissionManagement;
 
-//TODO: Write extension methods for simple IsGranted check
-
 public interface IPermissionManager
 {
     Task<PermissionWithGrantedProviders> GetAsync(

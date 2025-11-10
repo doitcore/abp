@@ -111,7 +111,8 @@ helm repo update
 helm upgrade --install --version=4.0.19 ingress-nginx ingress-nginx/ingress-nginx --set controller.config.enable-underscores-in-headers="true"
 ```
 
->  --set controller.config.enable-underscores-in-headers="true" is required to allow headers with underscores (e.g., `__tenant`) used by ABP framework.
+> [enable-underscores-in-headers](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#enable-underscores-in-headers) is required to allow http request use `__tenant` to pass tenant information to the backend service.
+
 
 ### mkcert
 

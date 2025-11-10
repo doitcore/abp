@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities;
 
@@ -52,5 +54,25 @@ public static class EntityResourcePermissionCheckerExtensions
             typeof(TEntity).FullName!,
             entity.GetKeys().JoinAsString(",")
         );
+    }
+    
+    public async static Task<TKey[]> GetGrantedEntityIdsAsync<TEntity, TKey>(
+        this IResourcePermissionChecker resourcePermissionChecker,
+        string permissionName
+    )
+        where TEntity : class, IEntity<TKey>
+    {
+        Check.NotNull(resourcePermissionChecker, nameof(resourcePermissionChecker));
+        Check.NotNullOrWhiteSpace(permissionName, nameof(permissionName));
+
+        var keys = await resourcePermissionChecker.GetGrantedResourceKeysAsync(
+            typeof(TEntity).FullName!,
+            permissionName
+        );
+        
+        return keys
+            .Select(x => Convert.ChangeType(x, typeof(TKey)))
+            .Cast<TKey>()
+            .ToArray();
     }
 }

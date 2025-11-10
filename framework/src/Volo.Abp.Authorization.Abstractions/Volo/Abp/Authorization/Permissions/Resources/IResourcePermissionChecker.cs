@@ -20,4 +20,9 @@ public interface IResourcePermissionChecker
         string resourceName,
         string resourceKey
     );
+    
+    Task<string[]> GetGrantedResourceKeysAsync(
+        string resourceName,
+        string permissionName
+    );
 }

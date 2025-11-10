@@ -55,4 +55,20 @@ public static class ResourcePermissionCheckerExtensions
             resourceKey.ToString()!
         );
     }
+    
+    public static Task<string[]> GetGrantedResourceKeysAsync<TResource>(
+        this IResourcePermissionChecker resourcePermissionChecker,
+        TResource resource,
+        string permissionName
+    )
+    {
+        Check.NotNull(resourcePermissionChecker, nameof(resourcePermissionChecker));
+        Check.NotNull(resource, nameof(resource));
+        Check.NotNullOrWhiteSpace(permissionName, nameof(permissionName));
+
+        return resourcePermissionChecker.GetGrantedResourceKeysAsync(
+            typeof(TResource).FullName!,
+            permissionName
+        );
+    }
 }

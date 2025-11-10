@@ -108,8 +108,10 @@ If you are using Helm, you can install NGINX Ingress using the following command
 ```cs
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-helm upgrade --install --version=4.0.19 ingress-nginx ingress-nginx/ingress-nginx
+helm upgrade --install --version=4.0.19 ingress-nginx ingress-nginx/ingress-nginx --set controller.config.enable-underscores-in-headers="true"
 ```
+
+>  --set controller.config.enable-underscores-in-headers="true" is required to allow headers with underscores (e.g., `__tenant`) used by ABP framework.
 
 ### mkcert
 

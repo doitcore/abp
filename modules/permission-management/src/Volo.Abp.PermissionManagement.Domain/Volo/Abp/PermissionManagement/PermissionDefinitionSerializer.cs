@@ -19,7 +19,7 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
 
     public PermissionDefinitionSerializer(
         IGuidGenerator guidGenerator,
-        ISimpleStateCheckerSerializer stateCheckerSerializer, 
+        ISimpleStateCheckerSerializer stateCheckerSerializer,
         ILocalizableStringSerializer localizableStringSerializer)
     {
         StateCheckerSerializer = stateCheckerSerializer;
@@ -27,16 +27,16 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
         GuidGenerator = guidGenerator;
     }
 
-    public async Task<(PermissionGroupDefinitionRecord[], PermissionDefinitionRecord[])> 
+    public async Task<(PermissionGroupDefinitionRecord[], PermissionDefinitionRecord[])>
         SerializeAsync(IEnumerable<PermissionGroupDefinition> permissionGroups)
     {
         var permissionGroupRecords = new List<PermissionGroupDefinitionRecord>();
         var permissionRecords = new List<PermissionDefinitionRecord>();
-        
+
         foreach (var permissionGroup in permissionGroups)
         {
             permissionGroupRecords.Add(await SerializeAsync(permissionGroup));
-            
+
             foreach (var permission in permissionGroup.GetPermissionsWithChildren())
             {
                 permissionRecords.Add(await SerializeAsync(permission, permissionGroup));
@@ -45,7 +45,7 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
 
         return (permissionGroupRecords.ToArray(), permissionRecords.ToArray());
     }
-    
+
     public Task<PermissionGroupDefinitionRecord> SerializeAsync(PermissionGroupDefinition permissionGroup)
     {
         using (CultureHelper.Use(CultureInfo.InvariantCulture))
@@ -60,11 +60,11 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
             {
                 permissionGroupRecord.SetProperty(property.Key, property.Value);
             }
-            
+
             return Task.FromResult(permissionGroupRecord);
         }
     }
-    
+
     public Task<PermissionDefinitionRecord> SerializeAsync(
         PermissionDefinition permission,
         PermissionGroupDefinition permissionGroup)
@@ -75,6 +75,7 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
                 GuidGenerator.Create(),
                 permissionGroup?.Name,
                 permission.Name,
+                permission.Type,
                 permission.Parent?.Name,
                 LocalizableStringSerializer.Serialize(permission.DisplayName),
                 permission.IsEnabled,
@@ -87,11 +88,11 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
             {
                 permissionRecord.SetProperty(property.Key, property.Value);
             }
-            
+
             return Task.FromResult(permissionRecord);
         }
     }
-    
+
     protected virtual string SerializeProviders(ICollection<string> providers)
     {
         return providers.Any()

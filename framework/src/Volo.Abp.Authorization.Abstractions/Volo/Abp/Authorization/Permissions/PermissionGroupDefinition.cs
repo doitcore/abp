@@ -54,8 +54,38 @@ public class PermissionGroupDefinition : ICanAddChildPermission
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
     {
+        return AddPermission(
+            name,
+            PermissionType.UserBased,
+            displayName,
+            multiTenancySide,
+            isEnabled);
+    }
+
+    public virtual PermissionDefinition AddResourcePermission(
+        [NotNull] string name,
+        ILocalizableString? displayName = null,
+        MultiTenancySides multiTenancySide = MultiTenancySides.Both,
+        bool isEnabled = true)
+    {
+        return AddPermission(
+            name,
+            PermissionType.ResourceBased,
+            displayName,
+            multiTenancySide,
+            isEnabled);
+    }
+
+    protected virtual PermissionDefinition AddPermission(
+        [NotNull] string name,
+        PermissionType type,
+        ILocalizableString? displayName = null,
+        MultiTenancySides multiTenancySide = MultiTenancySides.Both,
+        bool isEnabled = true)
+    {
         var permission = new PermissionDefinition(
             name,
+            type,
             displayName,
             multiTenancySide,
             isEnabled

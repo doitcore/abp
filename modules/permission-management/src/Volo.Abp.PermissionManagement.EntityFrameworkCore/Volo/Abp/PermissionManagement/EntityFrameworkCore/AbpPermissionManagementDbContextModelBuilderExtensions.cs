@@ -27,6 +27,23 @@ public static class AbpPermissionManagementDbContextModelBuilderExtensions
             b.ApplyObjectExtensionMappings();
         });
 
+        builder.Entity<ResourcePermissionGrant>(b =>
+        {
+            b.ToTable(AbpPermissionManagementDbProperties.DbTablePrefix + "ResourcePermissionGrants", AbpPermissionManagementDbProperties.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Name).HasMaxLength(PermissionDefinitionRecordConsts.MaxNameLength).IsRequired();
+            b.Property(x => x.ProviderName).HasMaxLength(PermissionGrantConsts.MaxProviderNameLength).IsRequired();
+            b.Property(x => x.ProviderKey).HasMaxLength(PermissionGrantConsts.MaxProviderKeyLength).IsRequired();
+            b.Property(x => x.ResourceName).HasMaxLength(PermissionGrantConsts.MaxResourceNameLength).IsRequired();
+            b.Property(x => x.ResourceKey).HasMaxLength(PermissionGrantConsts.MaxResourceKeyLength).IsRequired();
+
+            b.HasIndex(x => new { x.TenantId, x.Name, x.ProviderName, x.ProviderKey, x.ResourceName, x.ResourceKey }).IsUnique();
+
+            b.ApplyObjectExtensionMappings();
+        });
+
         if (builder.IsHostDatabase())
         {
             builder.Entity<PermissionGroupDefinitionRecord>(b =>

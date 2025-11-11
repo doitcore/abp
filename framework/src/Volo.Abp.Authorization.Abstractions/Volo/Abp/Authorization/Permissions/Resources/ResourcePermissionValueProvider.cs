@@ -7,11 +7,11 @@ public abstract class ResourcePermissionValueProvider : IResourcePermissionValue
 {
     public abstract string Name { get; }
 
-    protected IResourcePermissionStore PermissionStore { get; }
+    protected IResourcePermissionStore ResourcePermissionStore { get; }
 
-    protected ResourcePermissionValueProvider(IResourcePermissionStore permissionStore)
+    protected ResourcePermissionValueProvider(IResourcePermissionStore resourcePermissionStore)
     {
-        PermissionStore = permissionStore;
+        ResourcePermissionStore = resourcePermissionStore;
     }
 
     public abstract Task<PermissionGrantResult> CheckAsync(ResourcePermissionValueCheckContext context);

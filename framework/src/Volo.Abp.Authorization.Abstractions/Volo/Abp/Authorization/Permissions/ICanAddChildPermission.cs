@@ -11,10 +11,4 @@ public interface ICanAddChildPermission
         ILocalizableString? displayName = null,
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true);
-
-    PermissionDefinition AddResourcePermission(
-        [NotNull] string name,
-        ILocalizableString? displayName = null,
-        MultiTenancySides multiTenancySide = MultiTenancySides.Both,
-        bool isEnabled = true);
 }

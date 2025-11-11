@@ -17,9 +17,9 @@ public class PermissionDefinition :
     public string Name { get; }
 
     /// <summary>
-    /// Type of the permission.
+    /// Resource name of the permission.
     /// </summary>
-    public PermissionType Type { get; set; }
+    public string? ResourceName { get; set; }
 
     /// <summary>
     /// Parent of this permission if one exists.
@@ -83,13 +83,13 @@ public class PermissionDefinition :
 
     protected internal PermissionDefinition(
         [NotNull] string name,
-        PermissionType type = PermissionType.UserBased,
+        string? resourceName = null,
         ILocalizableString? displayName = null,
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
     {
         Name = Check.NotNull(name, nameof(name));
-        Type = type;
+        ResourceName = resourceName;
         DisplayName = displayName ?? new FixedLocalizableString(name);
         MultiTenancySide = multiTenancySide;
         IsEnabled = isEnabled;
@@ -106,24 +106,9 @@ public class PermissionDefinition :
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
     {
-        return AddChild(
-            name,
-            PermissionType.UserBased,
-            displayName,
-            multiTenancySide,
-            isEnabled);
-    }
-
-    public virtual PermissionDefinition AddChild(
-        [NotNull] string name,
-        PermissionType type,
-        ILocalizableString? displayName = null,
-        MultiTenancySides multiTenancySide = MultiTenancySides.Both,
-        bool isEnabled = true)
-    {
         var child = new PermissionDefinition(
             name,
-            type,
+            null,
             displayName,
             multiTenancySide,
             isEnabled)
@@ -144,16 +129,7 @@ public class PermissionDefinition :
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
     {
-        return this.AddChild(name, PermissionType.ResourceBased, displayName, multiTenancySide, isEnabled);
-    }
-
-    PermissionDefinition ICanAddChildPermission.AddResourcePermission(
-        string name,
-        ILocalizableString? displayName = null,
-        MultiTenancySides multiTenancySide = MultiTenancySides.Both,
-        bool isEnabled = true)
-    {
-        return this.AddChild(name, PermissionType.ResourceBased, displayName, multiTenancySide, isEnabled);
+        return this.AddChild(name, displayName, multiTenancySide, isEnabled);
     }
 
     /// <summary>

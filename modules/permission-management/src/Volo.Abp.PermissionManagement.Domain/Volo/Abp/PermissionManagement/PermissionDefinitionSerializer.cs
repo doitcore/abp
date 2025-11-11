@@ -75,7 +75,7 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
                 GuidGenerator.Create(),
                 permissionGroup?.Name,
                 permission.Name,
-                permission.Type,
+                permission.ResourceName,
                 permission.Parent?.Name,
                 LocalizableStringSerializer.Serialize(permission.DisplayName),
                 permission.IsEnabled,

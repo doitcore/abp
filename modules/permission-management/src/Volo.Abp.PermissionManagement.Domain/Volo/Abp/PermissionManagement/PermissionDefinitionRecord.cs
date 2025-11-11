@@ -12,7 +12,7 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
 
     public string Name { get; set; }
 
-    public PermissionType Type { get; set; }
+    public string ResourceName { get; set; }
 
     public string ParentName { get; set; }
 
@@ -44,7 +44,7 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
         Guid id,
         string groupName,
         string name,
-        PermissionType type,
+        string resourceName,
         string parentName,
         string displayName,
         bool isEnabled = true,
@@ -55,7 +55,7 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
     {
         GroupName = Check.NotNullOrWhiteSpace(groupName, nameof(groupName), PermissionGroupDefinitionRecordConsts.MaxNameLength);
         Name = Check.NotNullOrWhiteSpace(name, nameof(name), PermissionDefinitionRecordConsts.MaxNameLength);
-        Type = type;
+        ResourceName = resourceName;
         ParentName = Check.Length(parentName, nameof(parentName), PermissionDefinitionRecordConsts.MaxNameLength);
         DisplayName =  Check.NotNullOrWhiteSpace(displayName, nameof(displayName), PermissionDefinitionRecordConsts.MaxDisplayNameLength);
         IsEnabled = isEnabled;

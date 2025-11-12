@@ -1,5 +1,5 @@
 # Microsoft.Extensions.AI
-[Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/microsoft-extensions-ai) is a library that provides a unified API for integrating AI services. It is a part of the Microsoft AI Extensions Library. It is used to integrate AI services into your application. This documentation is about the usage of this library with ABP Framework. Make sure you have read the [Artificial Intelligence](../artificial-intelligence.md) documentation before reading this documentation.
+[Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/microsoft-extensions-ai) is a library that provides a unified API for integrating AI services. It is a part of the Microsoft AI Extensions Library. It is used to integrate AI services into your application. This documentation is about the usage of this library with ABP Framework. Make sure you have read the [Artificial Intelligence](../index.md) documentation before reading this documentation.
 
 ## Usage
 

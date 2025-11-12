@@ -1,5 +1,5 @@
 # Microsoft.SemanticKernel
-[Microsoft.SemanticKernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) is a library that provides a unified SDK for integrating AI services. This documentation is about the usage of this library with ABP Framework. Make sure you have read the [Artificial Intelligence](../artificial-intelligence.md) documentation before reading this documentation.
+[Microsoft.SemanticKernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) is a library that provides a unified SDK for integrating AI services. This documentation is about the usage of this library with ABP Framework. Make sure you have read the [Artificial Intelligence](./index.md) documentation before reading this documentation.
 
 ## Usage
 

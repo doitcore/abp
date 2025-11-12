@@ -254,6 +254,10 @@ ABP uses dynamic proxying to make these attributes work. There are some rules he
 
 > Change tracking behavior doesn't affect tracking entity objects returned from `InsertAsync` and `UpdateAsync` methods. The objects returned from these methods are always tracked (if the underlying provider has the change tracking feature) and any change you make to these objects are saved into the database.
 
+#### Check If Change Tracking Is Enabled
+
+In case of you need to check if change tracking is enabled or disabled on a repository object, you can simply read the `IsChangeTrackingEnabled` property. It is `false` by default for read only repositories (see the *Read Only Repositories* section below). It is `null` by default for other repository objects. If it is `null`, change tracking is enabled unless you've explicitly used the change tracking attributes (see the *Attributes for Change Tracking* section).
+
 ## Other Generic Repository Types
 
 Standard `IRepository<TEntity, TKey>` interface exposes the standard `IQueryable<TEntity>` and you can freely query using the standard LINQ methods. This is fine for most of the applications. However, some ORM providers or database systems may not support standard `IQueryable` interface. If you want to use such providers, you can't rely on the `IQueryable`.

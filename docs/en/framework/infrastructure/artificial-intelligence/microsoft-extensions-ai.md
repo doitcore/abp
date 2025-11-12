@@ -173,4 +173,4 @@ public class MyProjectModule : AbpModule
 ## See Also
 
 - [Usage of Semantic Kernel](./microsoft-semantic-kernel.md)
-- [AI Samples for .NET](https://github.com/microsoft/ai-samples): Microsoft's AI samples for .NET
+- [AI Samples for .NET](https://learn.microsoft.com/en-us/samples/dotnet/ai-samples/ai-samples/)

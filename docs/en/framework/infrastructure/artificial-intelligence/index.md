@@ -24,5 +24,5 @@ You can use both of them in your application by resolving `IChatClient` or `IKer
 
 Check the following documentation for the usage of `Microsoft.Extensions.AI` and `Microsoft.SemanticKernel`:
 
-- [Microsoft.Extensions.AI](./microsoft-extensions-ai.md)
-- [Microsoft.SemanticKernel](./microsoft-semantic-kernel.md)
+- [Usage of Microsoft.Extensions.AI](./microsoft-extensions-ai.md)
+- [Usage of Microsoft.SemanticKernel](./microsoft-semantic-kernel.md)

@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Learn how to effectively implement localization in your ABP Framework project using the Localization Pipe and Service for seamless multilingual support."
+  "Description": "Learn how to effectively implement localization in your ABP Framework project using the Localization Pipe and Service for seamless multilingual support."
 }
 ```
 
@@ -76,11 +76,12 @@ Then, we can use this key like this:
 
 First of all, you should import the `LocalizationService` from **@abp/ng.core**
 
-```ts
-import { LocalizationService } from "@abp/ng.core";
+```js
+import { LocalizationService } from '@abp/ng.core';
+import { inject } from '@angular/core';
 
 class MyClass {
-  constructor(private localizationService: LocalizationService) {}
+  private localizationService = inject(LocalizationService);
 }
 ```
 
@@ -411,5 +412,5 @@ The locale files that you added to the `webpackInclude` magic comment will be in
 
 ## See Also
 
-* [Localization in ASP.NET Core](../../fundamentals/localization.md)
-* [Video tutorial](https://abp.io/video-courses/essentials/localization)
+- [Localization in ASP.NET Core](../../fundamentals/localization.md)
+- [Video tutorial](https://abp.io/video-courses/essentials/localization)

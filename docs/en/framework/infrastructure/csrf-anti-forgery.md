@@ -24,7 +24,7 @@ Once you enable it;
 
 Especially, the second point is a pain for your clients and unnecessarily consumes your server resources.
 
-> You can read more about the ASP.NET Core antiforgery system in its own [documentation](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery). 
+> You can use any ASP.NET Core antiforgery features, like `ValidateAntiForgeryToken`, `AutoValidateAntiforgeryToken`, or `IgnoreAntiforgeryToken`, for more information, see the [official documentation](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery).
 
 ## The Solution
 

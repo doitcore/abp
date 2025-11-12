@@ -128,3 +128,8 @@ public class MyProjectModule : AbpModule
     }
 }
 ```
+
+## See Also
+
+- [Usage of Microsoft.Extensions.AI](./microsoft-extensions-ai.md)
+- [AI Samples for .NET](https://github.com/microsoft/ai-samples): Microsoft's AI samples for .NET

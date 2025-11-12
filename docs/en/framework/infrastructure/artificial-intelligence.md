@@ -17,7 +17,7 @@ abp add-package Volo.Abp.AI
 
 ## Usage
 
-Since ABP supports both `Microsoft.Extensions.AI` and `Microsoft.SemanticKernel`. Microsoft provides `IChatClient` interface abstraction for different chat client integrations. ABP respects it and uses it by default. Also `Kernel` object is used by `Microsoft.SemanticKernel` to execute AI capabilities. ABP respects it and uses it by default.
+Both `Microsoft.Extensions.AI` and `Microsoft.SemanticKernel` are supported. Microsoft provides `IChatClient` interface to cover multiple chat client integrations. ABP respects it and uses it by default. You'll be use this interface to access the chat client from your services. In the other hand, `Microsoft.SemanticKernel` provides `Kernel` object to configure and execute AI capabilities ABP respects it and uses it by default but the Kernel is not directly accessible from your services. You'll be use `IKernelAccessor` service to access the `Kernel` object from your services.
 
 You can use both of them in your application by resolving `IChatClient` or `IKernelAccessor` services from the [service provider](../fundamentals/dependency-injection.md). `IChatClient` is the original interface from `Microsoft.Extensions.AI` but `IKernelAccessor` is a custom service that is used to access the `Kernel` object from `Microsoft.SemanticKernel`.
 

@@ -115,6 +115,7 @@ You can resolve generic versions of `IChatClient`, `IChatClientAccessor` or `IKe
 public class MyService
 {
     private readonly IChatClientAccessor<CommentSummarization> _chatClientAccessor;
+
     public MyService(IChatClientAccessor<CommentSummarization> chatClientAccessor)
     {
         _chatClientAccessor = chatClientAccessor;
@@ -148,7 +149,7 @@ public class MyService
 ### Microsoft.Extensions.AI
 To configure a chat client, you'll need a LLM provider package such as [Microsoft.Extensions.AI.OpenAI](https://www.nuget.org/packages/Microsoft.Extensions.AI.OpenAI) or [OllamaSharp](https://www.nuget.org/packages/OllamaSharp/) to configure a chat client.
 
-_The following example is requires [OllamaSharp](https://www.nuget.org/packages/OllamaSharp/) package to be installed._
+_The following example requires [OllamaSharp](https://www.nuget.org/packages/OllamaSharp/) package to be installed._
 
 
 Demonstration of the default workspace configuration:
@@ -201,7 +202,7 @@ public class MyProjectModule : AbpModule
 ### Semantic Kernel
 To configure a kernel, you'll need a kernel connector package such as [Microsoft.SemanticKernel.Connectors.OpenAI](Microsoft.SemanticKernel.Connectors.OpenAI) to configure a kernel to use a specific LLM provider.
 
-_The following example is requires [Microsoft.SemanticKernel.Connectors.AzureOpenAI](Microsoft.SemanticKernel.Connectors.AzureOpenAI) package to be installed._
+_The following example requires [Microsoft.SemanticKernel.Connectors.AzureOpenAI](Microsoft.SemanticKernel.Connectors.AzureOpenAI) package to be installed._
 
 Demonstration of the default workspace configuration:
 ```csharp

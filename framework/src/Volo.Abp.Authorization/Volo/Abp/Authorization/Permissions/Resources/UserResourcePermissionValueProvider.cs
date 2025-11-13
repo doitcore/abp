@@ -25,7 +25,7 @@ public class UserResourcePermissionValueProvider : ResourcePermissionValueProvid
             return PermissionGrantResult.Undefined;
         }
 
-        return await ResourcePermissionStore.IsGrantedAsync(context.Permission.Name, Name, userId)
+        return await ResourcePermissionStore.IsGrantedAsync(context.Permission.Name, context.ResourceName, context.ResourceKey, Name, userId)
             ? PermissionGrantResult.Granted
             : PermissionGrantResult.Undefined;
     }
@@ -41,6 +41,6 @@ public class UserResourcePermissionValueProvider : ResourcePermissionValueProvid
             return new MultiplePermissionGrantResult(permissionNames);
         }
 
-        return await ResourcePermissionStore.IsGrantedAsync(permissionNames, Name, userId);
+        return await ResourcePermissionStore.IsGrantedAsync(permissionNames, context.ResourceName, context.ResourceKey, Name, userId);
     }
 }

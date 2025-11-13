@@ -17,12 +17,12 @@ public class NullResourcePermissionStore : IResourcePermissionStore, ISingletonD
         Logger = NullLogger<NullResourcePermissionStore>.Instance;
     }
 
-    public Task<bool> IsGrantedAsync(string name, string resourceName, string resourceKey)
+    public Task<bool> IsGrantedAsync(string name, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         return TaskCache.FalseResult;
     }
 
-    public Task<MultiplePermissionGrantResult> IsGrantedAsync(string[] names, string resourceName, string resourceKey)
+    public Task<MultiplePermissionGrantResult> IsGrantedAsync(string[] names, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         return Task.FromResult(new MultiplePermissionGrantResult(names, PermissionGrantResult.Prohibited));
     }

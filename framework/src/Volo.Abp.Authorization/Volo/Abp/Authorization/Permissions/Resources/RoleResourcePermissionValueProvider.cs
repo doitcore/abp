@@ -28,7 +28,7 @@ public class RoleResourcePermissionValueProvider : ResourcePermissionValueProvid
 
         foreach (var role in roles.Distinct())
         {
-            if (await ResourcePermissionStore.IsGrantedAsync(context.Permission.Name, Name, role))
+            if (await ResourcePermissionStore.IsGrantedAsync(context.Permission.Name, context.ResourceName, context.ResourceKey, Name, role))
             {
                 return PermissionGrantResult.Granted;
             }
@@ -52,7 +52,7 @@ public class RoleResourcePermissionValueProvider : ResourcePermissionValueProvid
 
         foreach (var role in roles.Distinct())
         {
-            var multipleResult = await ResourcePermissionStore.IsGrantedAsync(permissionNames.ToArray(), Name, role);
+            var multipleResult = await ResourcePermissionStore.IsGrantedAsync(permissionNames.ToArray(), context.ResourceName, context.ResourceKey, Name, role);
 
             foreach (var grantResult in multipleResult.Result.Where(grantResult =>
                 result.Result.ContainsKey(grantResult.Key) &&

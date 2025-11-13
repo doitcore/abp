@@ -35,4 +35,9 @@ public class AbpDddDomainModule : AbpModule
         context.Services.AddConventionalRegistrar(new AbpRepositoryConventionalRegistrar());
         context.Services.OnRegistered(ChangeTrackingInterceptorRegistrar.RegisterIfNeeded);
     }
+
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddEntityResourcePermissionAuthorization();
+    }
 }

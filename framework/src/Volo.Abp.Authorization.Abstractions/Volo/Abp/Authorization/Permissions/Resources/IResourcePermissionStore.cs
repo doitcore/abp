@@ -11,19 +11,36 @@ public interface IResourcePermissionStore
     /// <param name="name">The name of the permission.</param>
     /// <param name="resourceName">The name of the resource.</param>
     /// <param name="resourceKey">Resource key</param>
+    /// <param name="providerName">The name of the provider.</param>
+    /// <param name="providerKey">The key of the provider.</param>
     /// <returns>
     /// True if the permission is granted.
     /// </returns>
     Task<bool> IsGrantedAsync(
         string name,
         string resourceName,
-        string resourceKey
+        string resourceKey,
+        string providerName,
+        string providerKey
     );
 
+    /// <summary>
+    /// Checks if the given permissions are granted for the given resource.
+    /// </summary>
+    /// <param name="names">The name of the permissions.</param>
+    /// <param name="resourceName">The name of the resource.</param>
+    /// <param name="resourceKey">Resource key</param>
+    /// <param name="providerName">The name of the provider.</param>
+    /// <param name="providerKey">The key of the provider.</param>
+    /// <returns>
+    /// A <see cref="MultiplePermissionGrantResult"/> object containing the grant results for each permission.
+    /// </returns>
     Task<MultiplePermissionGrantResult> IsGrantedAsync(
         string[] names,
         string resourceName,
-        string resourceKey
+        string resourceKey,
+        string providerName,
+        string providerKey
     );
 
     /// <summary>

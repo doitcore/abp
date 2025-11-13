@@ -9,10 +9,11 @@ public class EntityResourcePermissionRequirementHandler : AuthorizationHandler<R
 {
     protected readonly IResourcePermissionChecker PermissionChecker;
 
-    protected EntityResourcePermissionRequirementHandler(IResourcePermissionChecker permissionChecker)
+    public EntityResourcePermissionRequirementHandler(IResourcePermissionChecker permissionChecker)
     {
         PermissionChecker = permissionChecker;
     }
+
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourcePermissionRequirement requirement, IEntity? resource)
     {
         if (resource == null)

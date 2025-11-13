@@ -18,6 +18,7 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
 
     protected IDictionary<string, PermissionGroupDefinition> PermissionGroupDefinitions { get; }
     protected IDictionary<string, PermissionDefinition> PermissionDefinitions { get; }
+    protected IDictionary<string, PermissionDefinition> ResourcePermissionDefinitions { get; }
     protected ISimpleStateCheckerSerializer StateCheckerSerializer { get; }
     protected ILocalizableStringSerializer LocalizableStringSerializer { get; }
 
@@ -34,6 +35,7 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
 
         PermissionGroupDefinitions = new Dictionary<string, PermissionGroupDefinition>();
         PermissionDefinitions = new Dictionary<string, PermissionDefinition>();
+        ResourcePermissionDefinitions = new Dictionary<string, PermissionDefinition>();
     }
 
     public Task FillAsync(
@@ -42,9 +44,21 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
     {
         PermissionGroupDefinitions.Clear();
         PermissionDefinitions.Clear();
+        ResourcePermissionDefinitions.Clear();
 
         var context = new PermissionDefinitionContext(null);
 
+        var resourcePermissions = permissionRecords.Where(x => !x.ResourceName.IsNullOrWhiteSpace());
+        foreach (var resourcePermission in resourcePermissions)
+        {
+            context.AddResourcePermission(resourcePermission.Name,
+                resourcePermission.ResourceName,
+                resourcePermission.DisplayName != null ? LocalizableStringSerializer.Deserialize(resourcePermission.DisplayName) : null,
+                resourcePermission.MultiTenancySide,
+                resourcePermission.IsEnabled);
+        }
+
+        var permissions = permissionRecords.Where(x => x.ResourceName.IsNullOrWhiteSpace()).ToList();
         foreach (var permissionGroupRecord in permissionGroupRecords)
         {
             var permissionGroup = context.AddGroup(
@@ -59,12 +73,12 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
                 permissionGroup[property.Key] = property.Value;
             }
 
-            var permissionRecordsInThisGroup = permissionRecords
+            var permissionRecordsInThisGroup = permissions
                 .Where(p => p.GroupName == permissionGroup.Name);
 
             foreach (var permissionRecord in permissionRecordsInThisGroup.Where(x => x.ParentName == null))
             {
-                AddPermissionRecursively(permissionGroup, permissionRecord, permissionRecords);
+                AddPermissionRecursively(permissionGroup, permissionRecord, permissions);
             }
         }
 
@@ -84,6 +98,16 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
     public IReadOnlyList<PermissionGroupDefinition> GetGroups()
     {
         return PermissionGroupDefinitions.Values.ToList();
+    }
+
+    public PermissionDefinition GetResourcePermissionOrNull(string name)
+    {
+        return ResourcePermissionDefinitions.GetOrDefault(name);
+    }
+
+    public IReadOnlyList<PermissionDefinition> GetResourcePermissions()
+    {
+        return ResourcePermissionDefinitions.Values.ToList();
     }
 
     private void AddPermissionRecursively(ICanAddChildPermission permissionContainer,

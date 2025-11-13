@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -27,9 +26,9 @@ public class NullResourcePermissionStore : IResourcePermissionStore, ISingletonD
         return Task.FromResult(new MultiplePermissionGrantResult(names, PermissionGrantResult.Prohibited));
     }
 
-    public Task<IDictionary<string, bool>> GetPermissionsAsync(string resourceName, string resourceKey)
+    public Task<MultiplePermissionGrantResult> GetPermissionsAsync(string resourceName, string resourceKey)
     {
-        return Task.FromResult((IDictionary<string, bool>)new Dictionary<string, bool>());
+        return Task.FromResult(new MultiplePermissionGrantResult());
     }
 
     public Task<string[]> GetGrantedPermissionsAsync(string resourceName, string resourceKey)

@@ -51,7 +51,7 @@ public interface IResourcePermissionStore
     /// <returns>
     /// A dictionary of permission names and their states.
     /// </returns>
-    Task<IDictionary<string, bool>> GetPermissionsAsync(
+    Task<MultiplePermissionGrantResult> GetPermissionsAsync(
         string resourceName,
         string resourceKey
     );

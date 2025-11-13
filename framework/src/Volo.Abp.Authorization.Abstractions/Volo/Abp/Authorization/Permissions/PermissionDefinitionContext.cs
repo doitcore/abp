@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Volo.Abp.Localization;
+using Volo.Abp.MultiTenancy;
 
 namespace Volo.Abp.Authorization.Permissions;
 
@@ -11,17 +12,20 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
 
     public Dictionary<string, PermissionGroupDefinition> Groups { get; }
 
+    public Dictionary<string, PermissionDefinition> ResourcePermissions { get; }
+
     internal IPermissionDefinitionProvider? CurrentProvider { get; set; }
 
     public static class KnownPropertyNames
     {
         public const string CurrentProviderName = "_CurrentProviderName";
     }
-    
+
     public PermissionDefinitionContext(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
         Groups = new Dictionary<string, PermissionGroupDefinition>();
+        ResourcePermissions = new Dictionary<string, PermissionDefinition>();
     }
 
     public virtual PermissionGroupDefinition AddGroup(
@@ -43,7 +47,7 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
         }
 
         Groups[name] = group;
-        
+
         return group;
     }
 
@@ -51,37 +55,23 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
     public virtual PermissionGroupDefinition GetGroup([NotNull] string name)
     {
         var group = GetGroupOrNull(name);
-
-        if (group == null)
-        {
-            throw new AbpException($"Could not find a permission definition group with the given name: {name}");
-        }
-
-        return group;
+        return group ?? throw new AbpException($"Could not find a permission definition group with the given name: {name}");
     }
 
     public virtual PermissionGroupDefinition? GetGroupOrNull([NotNull] string name)
     {
         Check.NotNull(name, nameof(name));
-
-        if (!Groups.ContainsKey(name))
-        {
-            return null;
-        }
-
-        return Groups[name];
+        return Groups.GetOrDefault(name);
     }
 
     public virtual void RemoveGroup(string name)
     {
         Check.NotNull(name, nameof(name));
 
-        if (!Groups.ContainsKey(name))
+        if (!Groups.Remove(name))
         {
             throw new AbpException($"Not found permission group with name: {name}");
         }
-
-        Groups.Remove(name);
     }
 
     public virtual PermissionDefinition? GetPermissionOrNull([NotNull] string name)
@@ -99,5 +89,50 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
         }
 
         return null;
+    }
+
+    public virtual PermissionDefinition AddResourcePermission(
+        string name,
+        string resourceName,
+        ILocalizableString? displayName = null,
+        MultiTenancySides multiTenancySide = MultiTenancySides.Both,
+        bool isEnabled = true)
+    {
+        Check.NotNull(name, nameof(name));
+
+        if (ResourcePermissions.ContainsKey(name))
+        {
+            throw new AbpException($"There is already an existing resource permission with name: {name}");
+        }
+
+        var permission = new PermissionDefinition(
+            name,
+            resourceName,
+            displayName,
+            multiTenancySide,
+            isEnabled)
+        {
+            [KnownPropertyNames.CurrentProviderName] = CurrentProvider?.GetType().FullName
+        };
+
+        ResourcePermissions[name] = permission;
+
+        return permission;
+    }
+
+    public virtual PermissionDefinition? GetResourcePermissionOrNull([NotNull] string name)
+    {
+        Check.NotNull(name, nameof(name));
+        return ResourcePermissions.GetOrDefault(name);
+    }
+
+    public virtual void RemoveResourcePermission([NotNull] string name)
+    {
+        Check.NotNull(name, nameof(name));
+
+        if (!ResourcePermissions.Remove(name))
+        {
+            throw new AbpException($"Not found resource permission with name: {name}");
+        }
     }
 }

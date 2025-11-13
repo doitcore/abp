@@ -83,13 +83,22 @@ public class PermissionDefinition :
 
     protected internal PermissionDefinition(
         [NotNull] string name,
-        string? resourceName = null,
+        string resourceName,
+        ILocalizableString? displayName = null,
+        MultiTenancySides multiTenancySide = MultiTenancySides.Both,
+        bool isEnabled = true)
+        : this(name, displayName, multiTenancySide, isEnabled)
+    {
+        ResourceName = Check.NotNull(resourceName, nameof(resourceName));
+    }
+
+    protected internal PermissionDefinition(
+        [NotNull] string name,
         ILocalizableString? displayName = null,
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
     {
         Name = Check.NotNull(name, nameof(name));
-        ResourceName = resourceName;
         DisplayName = displayName ?? new FixedLocalizableString(name);
         MultiTenancySide = multiTenancySide;
         IsEnabled = isEnabled;
@@ -108,7 +117,6 @@ public class PermissionDefinition :
     {
         var child = new PermissionDefinition(
             name,
-            null,
             displayName,
             multiTenancySide,
             isEnabled)

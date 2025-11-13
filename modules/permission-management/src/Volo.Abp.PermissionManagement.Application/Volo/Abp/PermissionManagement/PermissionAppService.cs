@@ -18,12 +18,14 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
 {
     protected PermissionManagementOptions Options { get; }
     protected IPermissionManager PermissionManager { get; }
+    protected IResourcePermissionManager ResourcePermissionManager { get; }
     protected IPermissionDefinitionManager PermissionDefinitionManager { get; }
     protected ISimpleStateCheckerManager<PermissionDefinition> SimpleStateCheckerManager { get; }
 
     public PermissionAppService(
         IPermissionManager permissionManager,
         IPermissionDefinitionManager permissionDefinitionManager,
+        IResourcePermissionManager resourcePermissionManager,
         IOptions<PermissionManagementOptions> options,
         ISimpleStateCheckerManager<PermissionDefinition> simpleStateCheckerManager)
     {
@@ -32,6 +34,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
 
         Options = options.Value;
         PermissionManager = permissionManager;
+        ResourcePermissionManager = resourcePermissionManager;
         PermissionDefinitionManager = permissionDefinitionManager;
         SimpleStateCheckerManager = simpleStateCheckerManager;
     }
@@ -160,14 +163,73 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         }
     }
 
-    protected virtual async Task CheckProviderPolicy(string providerName)
+    public virtual async Task<GetResourcePermissionListResultDto> GetAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var policyName = Options.ProviderPolicies.GetOrDefault(providerName);
+        await CheckProviderPolicy(providerName, true);
+
+        var result = new GetResourcePermissionListResultDto
+        {
+            EntityDisplayName = providerKey,
+            Permissions = new List<ResourcePermissionGrantInfoDto>()
+        };
+
+        var multiTenancySide = CurrentTenant.GetMultiTenancySide();
+
+        var resourcePermissions = new List<PermissionDefinition>();
+        foreach (var resourcePermission in (await PermissionDefinitionManager.GetResourcePermissionsAsync())
+                 .Where(x => x.IsEnabled && (!x.Providers.Any() || x.Providers.Contains(providerName)) && x.MultiTenancySide.HasFlag(multiTenancySide)))
+        {
+            if (await SimpleStateCheckerManager.IsEnabledAsync(resourcePermission))
+            {
+                resourcePermissions.Add(resourcePermission);
+            }
+        }
+
+        var multipleGrantInfo = await ResourcePermissionManager.GetAsync(resourcePermissions.Select(x => x.Name).ToArray(), resourceName, resourceKey, providerName, providerKey);
+        foreach (var resourcePermission in resourcePermissions)
+        {
+            var grantInfo = multipleGrantInfo.Result.FirstOrDefault(x => x.Name == resourcePermission.Name);
+            if (grantInfo == null)
+            {
+                continue;
+            }
+
+            result.Permissions.Add(new ResourcePermissionGrantInfoDto()
+            {
+                Name =  resourcePermission.Name,
+                DisplayName = resourcePermission.DisplayName?.Localize(StringLocalizerFactory),
+                IsGranted = grantInfo.IsGranted,
+                AllowedProviders = resourcePermission.Providers,
+                GrantedProviders = grantInfo.Providers.Select(x => new ProviderInfoDto
+                {
+                    ProviderName = x.Name,
+                    ProviderKey = x.Key,
+                }).ToList()
+            });
+        }
+
+        return result;
+    }
+
+    public virtual async Task UpdateAsync(string resourceName, string resourceKey, string providerName, string providerKey, UpdatePermissionsDto input)
+    {
+        await CheckProviderPolicy(providerName, true);
+
+        foreach (var permissionDto in input.Permissions)
+        {
+            await ResourcePermissionManager.SetAsync(permissionDto.Name, resourceName, resourceKey, providerName, providerKey, permissionDto.IsGranted);
+        }
+    }
+
+    protected virtual async Task CheckProviderPolicy(string providerName, bool isResourcePermission = false)
+    {
+        var policyName = isResourcePermission
+            ? Options.ResourceProviderPolicies.GetOrDefault(providerName)
+            : Options.ProviderPolicies.GetOrDefault(providerName);
         if (policyName.IsNullOrEmpty())
         {
             throw new AbpException($"No policy defined to get/set permissions for the provider '{providerName}'. Use {nameof(PermissionManagementOptions)} to map the policy.");
         }
-
         await AuthorizationService.CheckAsync(policyName);
     }
 }

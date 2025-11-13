@@ -11,4 +11,8 @@ public interface IPermissionAppService : IApplicationService
     Task<GetPermissionListResultDto> GetByGroupAsync([NotNull] string groupName, [NotNull] string providerName, [NotNull] string providerKey);
 
     Task UpdateAsync([NotNull] string providerName, [NotNull] string providerKey, UpdatePermissionsDto input);
+
+    Task<GetResourcePermissionListResultDto> GetAsync([NotNull] string resourceName, [NotNull] string resourceKey, [NotNull] string providerName, [NotNull] string providerKey);
+
+    Task UpdateAsync([NotNull] string resourceName, [NotNull] string resourceKey, [NotNull] string providerName, [NotNull] string providerKey, UpdatePermissionsDto input);
 }

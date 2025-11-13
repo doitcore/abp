@@ -7,33 +7,33 @@ public interface IResourcePermissionManager
 {
     Task<PermissionWithGrantedProviders> GetAsync(
         string permissionName,
-        string providerName,
-        string providerKey,
-        string resourceName,
-        string resourceKey
-    );
-    
-    Task<MultiplePermissionWithGrantedProviders> GetAsync(
-        string[] permissionNames,
-        string provideName,
-        string providerKey,
-        string resourceName,
-        string resourceKey
-    );
-    
-    Task<List<PermissionWithGrantedProviders>> GetAllAsync(
-        string providerName,
-        string providerKey,
-        string resourceName,
-        string resourceKey
-    );
-    
-    Task SetAsync(
-        string permissionName,
-        string providerName,
-        string providerKey,
         string resourceName,
         string resourceKey,
+        string providerName,
+        string providerKey
+    );
+
+    Task<MultiplePermissionWithGrantedProviders> GetAsync(
+        string[] permissionNames,
+        string resourceName,
+        string resourceKey,
+        string providerName,
+        string providerKey
+    );
+
+    Task<List<PermissionWithGrantedProviders>> GetAllAsync(
+        string resourceName,
+        string resourceKey,
+        string providerName,
+        string providerKey
+    );
+
+    Task SetAsync(
+        string permissionName,
+        string resourceName,
+        string resourceKey,
+        string providerName,
+        string providerKey,
         bool isGranted
     );
 }

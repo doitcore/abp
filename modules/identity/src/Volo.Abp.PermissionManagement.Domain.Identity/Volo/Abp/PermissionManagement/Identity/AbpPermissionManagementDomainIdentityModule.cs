@@ -1,4 +1,5 @@
 ﻿using Volo.Abp.Authorization.Permissions;
+using Volo.Abp.Authorization.Permissions.Resources;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
 using Volo.Abp.Users;
@@ -18,10 +19,14 @@ public class AbpPermissionManagementDomainIdentityModule : AbpModule
         {
             options.ManagementProviders.Add<UserPermissionManagementProvider>();
             options.ManagementProviders.Add<RolePermissionManagementProvider>();
+            options.ResourceManagementProviders.Add<UserResourcePermissionManagementProvider>();
+            options.ResourceManagementProviders.Add<RoleResourcePermissionManagementProvider>();
 
             //TODO: Can we prevent duplication of permission names without breaking the design and making the system complicated
             options.ProviderPolicies[UserPermissionValueProvider.ProviderName] = "AbpIdentity.Users.ManagePermissions";
             options.ProviderPolicies[RolePermissionValueProvider.ProviderName] = "AbpIdentity.Roles.ManagePermissions";
+            options.ProviderPolicies[UserResourcePermissionValueProvider.ProviderName] = "AbpIdentity.Users.ManagePermissions";
+            options.ProviderPolicies[RoleResourcePermissionValueProvider.ProviderName] = "AbpIdentity.Roles.ManagePermissions";
         });
     }
 }

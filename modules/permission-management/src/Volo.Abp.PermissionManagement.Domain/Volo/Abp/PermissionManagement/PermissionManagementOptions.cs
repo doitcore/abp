@@ -7,6 +7,8 @@ public class PermissionManagementOptions
 {
     public ITypeList<IPermissionManagementProvider> ManagementProviders { get; }
 
+    public ITypeList<IResourcePermissionManagementProvider> ResourceManagementProviders { get; }
+
     public Dictionary<string, string> ProviderPolicies { get; }
 
     /// <summary>
@@ -22,6 +24,7 @@ public class PermissionManagementOptions
     public PermissionManagementOptions()
     {
         ManagementProviders = new TypeList<IPermissionManagementProvider>();
+        ResourceManagementProviders = new TypeList<IResourcePermissionManagementProvider>();
         ProviderPolicies = new Dictionary<string, string>();
     }
 }

@@ -11,7 +11,7 @@
     <PackageVersion Include="Autofac" Version="8.4.0" />
     <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageVersion Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
-    <PackageVersion Include="AutoMapper" Version="15.0.1" />
+    <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.7.2" />

@@ -35,15 +35,15 @@ The next version will be 10.1 and planned to release the stable 10.1 version in 
   * Support Multiple Concurrent Kubernetes Deployment/Integration Scenarios
   * Improve the Module Installation Experience / Installation Guides
 
-* Application modules
+* Application Modules
   * Payment Module: Public Page Implementation (for Blazor & Angular UIs)
   * AI Management Module: UI Implementation for Blazor & Angular UIs
-  * CMS Kit: Enhancements for some features (Rating, Dynamic Widgets, FAQ and more...)
-  * UI/UX improvements on existing application modules
+  * CMS Kit: Enhancements for Some Features (Rating, Dynamic Widgets, FAQ and more...)
+  * UI/UX Improvements on Existing Application Modules
 
-* Updating existing tutorials & documents (with other UI & DB options)
-  * Microservice development
-  * Modular monolith development
+* Updating Existing Tutorials & Documents (with Other UI & DB Options)
+  * Microservice Development
+  * Modular Monolith Development
 
 ## Backlog Items
 

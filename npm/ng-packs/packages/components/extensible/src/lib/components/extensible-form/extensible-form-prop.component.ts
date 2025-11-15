@@ -155,8 +155,33 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.isFirstGroup && this.first && this.fieldRef) {
-      this.fieldRef.nativeElement.focus();
+      this.focusField();
     }
+  }
+
+  private focusField() {
+    const element = this.fieldRef.nativeElement;
+    
+    if (this.isElementVisible(element)) {
+      element.focus();
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0) {
+          element.focus();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.01 });
+
+    observer.observe(element);
+    setTimeout(() => observer.disconnect(), 5000);
+  }
+
+  private isElementVisible(element: HTMLElement): boolean {
+    return element.offsetParent !== null;
   }
 
   getComponent(prop: FormProp): string {

@@ -206,7 +206,7 @@ public class ResourcePermissionStore : IResourcePermissionStore, ITransientDepen
             var permissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
             foreach (var resourcePermission in resourcePermissions)
             {
-                var isGranted = permissionGrants.Any(x => x == resourcePermission.Name);
+                var isGranted = permissionGrants.Any(x => x.Name == resourcePermission.Name);
                 result.Result.Add(resourcePermission.Name, isGranted ? PermissionGrantResult.Granted : PermissionGrantResult.Undefined);
             }
 
@@ -222,9 +222,9 @@ public class ResourcePermissionStore : IResourcePermissionStore, ITransientDepen
         var result = new List<string>();
         foreach (var grantedPermission in grantedPermissions)
         {
-            if (resourcePermissions.Any(x => x.Name == grantedPermission))
+            if (resourcePermissions.Any(x => x.Name == grantedPermission.Name))
             {
-                result.Add(grantedPermission);
+                result.Add(grantedPermission.Name);
             }
         }
 
@@ -233,7 +233,7 @@ public class ResourcePermissionStore : IResourcePermissionStore, ITransientDepen
 
     public virtual async Task<string[]> GetGrantedResourceKeysAsync(string resourceName, string name)
     {
-        return (await ResourcePermissionGrantRepository.GetResourceKeys(resourceName, name)).ToArray();
+        return (await ResourcePermissionGrantRepository.GetResourceKeys(resourceName, name)).Select(x => x.Name).ToArray();
     }
 
     protected virtual string GetPermissionNameFormCacheKeyOrNull(string key)

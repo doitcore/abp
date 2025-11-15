@@ -63,7 +63,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
     public virtual async Task<PermissionWithGrantedProviders> GetAsync(string permissionName, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(permissionName);
-        if (permission == null)
+        if (permission == null || permission.ResourceName != resourceName)
         {
             return new PermissionWithGrantedProviders(permissionName, false);
         }
@@ -85,7 +85,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         foreach (var permissionName in permissionNames)
         {
             var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(permissionName);
-            if (permission != null)
+            if (permission != null && permission.ResourceName == resourceName)
             {
                 permissions.Add(permission);
             }
@@ -116,19 +116,60 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         return result;
     }
 
+    public virtual async Task<List<PermissionWithGrantedProviders>> GetAllAsync(string resourceName, string resourceKey)
+    {
+        var resourcePermissionDefinitions = (await PermissionDefinitionManager.GetResourcePermissionsAsync()).Where(x => x.ResourceName == resourceName).ToArray();
+        var resourcePermissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
+        var result = new List<PermissionWithGrantedProviders>();
+        foreach (var resourcePermissionDefinition in resourcePermissionDefinitions)
+        {
+            var permissionWithGrantedProviders = new PermissionWithGrantedProviders(resourcePermissionDefinition.Name, false);
+
+            var grantedPermissions = resourcePermissionGrants
+                .Where(x => x.Name == resourcePermissionDefinition.Name)
+                .ToList();
+
+            if (grantedPermissions.Any())
+            {
+                permissionWithGrantedProviders.IsGranted = true;
+                foreach (var grantedPermission in grantedPermissions)
+                {
+                    permissionWithGrantedProviders.Providers.Add(new PermissionValueProviderInfo(grantedPermission.ProviderName, grantedPermission.ProviderKey));
+                }
+            }
+
+            result.Add(permissionWithGrantedProviders);
+        }
+
+        return result;
+    }
+
     public virtual async Task<List<PermissionWithGrantedProviders>> GetAllAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var permissionDefinitions = (await PermissionDefinitionManager.GetResourcePermissionsAsync()).ToArray();
-
+        var permissionDefinitions = (await PermissionDefinitionManager.GetResourcePermissionsAsync()).Where(x => x.ResourceName == resourceName).ToArray();
         var multiplePermissionWithGrantedProviders = await GetInternalAsync(permissionDefinitions, resourceName, resourceKey, providerName, providerKey);
-
         return multiplePermissionWithGrantedProviders.Result;
+    }
+
+    public virtual async Task<List<PermissionProviderWithPermissions>> GetAllGroupAsync(string resourceName, string resourceKey)
+    {
+        var resourcePermissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
+        var resourcePermissionGrantsGroup = resourcePermissionGrants.GroupBy(x => new { x.ProviderName, x.ProviderKey });
+        var result = new List<PermissionProviderWithPermissions>();
+        foreach (var resourcePermissionGrant in resourcePermissionGrantsGroup)
+        {
+            result.Add(new PermissionProviderWithPermissions(resourcePermissionGrant.Key.ProviderName, resourcePermissionGrant.Key.ProviderKey)
+            {
+                Permissions = resourcePermissionGrant.Select(x => x.Name).ToList()
+            });
+        }
+        return result;
     }
 
     public virtual async Task SetAsync(string permissionName, string resourceName, string resourceKey, string providerName, string providerKey, bool isGranted)
     {
         var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(permissionName);
-        if (permission == null)
+        if (permission == null || permission.ResourceName != resourceName)
         {
             /* Silently ignore undefined permissions,
                maybe they were removed from dynamic permission definition store */

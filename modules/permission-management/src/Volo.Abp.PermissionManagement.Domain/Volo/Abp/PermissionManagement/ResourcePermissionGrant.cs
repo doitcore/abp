@@ -16,7 +16,7 @@ public class ResourcePermissionGrant : Entity<Guid>, IMultiTenant
     [NotNull]
     public virtual string ProviderName { get; protected set; }
 
-    [CanBeNull]
+    [NotNull]
     public virtual string ProviderKey { get; protected internal set; }
 
     [NotNull]
@@ -44,7 +44,7 @@ public class ResourcePermissionGrant : Entity<Guid>, IMultiTenant
         Id = id;
         Name = Check.NotNullOrWhiteSpace(name, nameof(name));
         ProviderName = Check.NotNullOrWhiteSpace(providerName, nameof(providerName));
-        ProviderKey = providerKey;
+        ProviderKey = Check.NotNullOrWhiteSpace(providerKey, nameof(providerKey));
         ResourceName = Check.NotNullOrWhiteSpace(resourceName, nameof(resourceName));
         ResourceKey = Check.NotNullOrWhiteSpace(resourceKey, nameof(resourceKey));
         TenantId = tenantId;

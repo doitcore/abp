@@ -23,9 +23,19 @@ public interface IResourcePermissionManager
 
     Task<List<PermissionWithGrantedProviders>> GetAllAsync(
         string resourceName,
+        string resourceKey
+    );
+
+    Task<List<PermissionWithGrantedProviders>> GetAllAsync(
+        string resourceName,
         string resourceKey,
         string providerName,
         string providerKey
+    );
+
+    Task<List<PermissionProviderWithPermissions>> GetAllGroupAsync(
+        string resourceName,
+        string resourceKey
     );
 
     Task SetAsync(

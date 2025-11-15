@@ -36,14 +36,14 @@ public class PermissionsController : AbpControllerBase, IPermissionAppService
     }
 
     [HttpGet("resource")]
-    public virtual Task<GetResourcePermissionListResultDto> GetAsync(string resourceName, string resourceKey, string providerName, string providerKey)
+    public virtual Task<GetResourcePermissionListResultDto> GetResourceAsync(string resourceName, string resourceKey)
     {
-        return PermissionAppService.GetAsync(resourceName, resourceKey, providerName, providerKey);
+        return PermissionAppService.GetResourceAsync(resourceName, resourceKey);
     }
 
     [HttpPut("resource")]
-    public virtual Task UpdateAsync(string resourceName, string resourceKey, string providerName, string providerKey, UpdatePermissionsDto input)
+    public virtual Task UpdateResourceAsync(string resourceName, string resourceKey, UpdateResourcePermissionsDto input)
     {
-        return PermissionAppService.UpdateAsync(resourceName, resourceKey, providerName, providerKey, input);
+        return PermissionAppService.UpdateResourceAsync(resourceName, resourceKey, input);
     }
 }

@@ -21,7 +21,7 @@
                   "parametersOnMethod": [
                     {
                       "name": "input",
-                      "typeAsString": "System.Collections.Generic.List`1[[Volo.Abp.PermissionManagement.IsGrantedRequest, Volo.Abp.PermissionManagement.Domain.Shared, Version=9.3.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
+                      "typeAsString": "System.Collections.Generic.List`1[[Volo.Abp.PermissionManagement.IsGrantedRequest, Volo.Abp.PermissionManagement.Domain.Shared, Version=10.1.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
                       "type": "System.Collections.Generic.List<Volo.Abp.PermissionManagement.IsGrantedRequest>",
                       "typeSimple": "[Volo.Abp.PermissionManagement.IsGrantedRequest]",
                       "isOptional": false,
@@ -46,7 +46,7 @@
               "parametersOnMethod": [
                 {
                   "name": "input",
-                  "typeAsString": "System.Collections.Generic.List`1[[Volo.Abp.PermissionManagement.IsGrantedRequest, Volo.Abp.PermissionManagement.Domain.Shared, Version=9.3.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
+                  "typeAsString": "System.Collections.Generic.List`1[[Volo.Abp.PermissionManagement.IsGrantedRequest, Volo.Abp.PermissionManagement.Domain.Shared, Version=10.1.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib",
                   "type": "System.Collections.Generic.List<Volo.Abp.PermissionManagement.IsGrantedRequest>",
                   "typeSimple": "[Volo.Abp.PermissionManagement.IsGrantedRequest]",
                   "isOptional": false,
@@ -170,6 +170,64 @@
                       "typeAsString": "Volo.Abp.PermissionManagement.UpdatePermissionsDto, Volo.Abp.PermissionManagement.Application.Contracts",
                       "type": "Volo.Abp.PermissionManagement.UpdatePermissionsDto",
                       "typeSimple": "Volo.Abp.PermissionManagement.UpdatePermissionsDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "GetResourceAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "resourceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "resourceKey",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto",
+                    "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto"
+                  }
+                },
+                {
+                  "name": "UpdateResourceAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "resourceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "resourceKey",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto, Volo.Abp.PermissionManagement.Application.Contracts",
+                      "type": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
+                      "typeSimple": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -380,6 +438,140 @@
                   "jsonName": null,
                   "type": "Volo.Abp.PermissionManagement.UpdatePermissionsDto",
                   "typeSimple": "Volo.Abp.PermissionManagement.UpdatePermissionsDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
+            },
+            "GetResourceAsyncByResourceNameAndResourceKey": {
+              "uniqueName": "GetResourceAsyncByResourceNameAndResourceKey",
+              "name": "GetResourceAsync",
+              "httpMethod": "GET",
+              "url": "api/permission-management/permissions/resource",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "resourceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "resourceKey",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "resourceName",
+                  "name": "resourceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "resourceKey",
+                  "name": "resourceKey",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto",
+                "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
+            },
+            "UpdateResourceAsyncByResourceNameAndResourceKeyAndInput": {
+              "uniqueName": "UpdateResourceAsyncByResourceNameAndResourceKeyAndInput",
+              "name": "UpdateResourceAsync",
+              "httpMethod": "PUT",
+              "url": "api/permission-management/permissions/resource",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "resourceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "resourceKey",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto, Volo.Abp.PermissionManagement.Application.Contracts",
+                  "type": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
+                  "typeSimple": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "resourceName",
+                  "name": "resourceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "resourceKey",
+                  "name": "resourceKey",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
+                  "typeSimple": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,

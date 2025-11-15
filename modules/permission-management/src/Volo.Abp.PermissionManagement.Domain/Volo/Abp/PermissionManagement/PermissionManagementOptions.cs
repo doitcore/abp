@@ -11,8 +11,6 @@ public class PermissionManagementOptions
     
     public ITypeList<IResourcePermissionManagementProvider> ResourceManagementProviders { get; }
 
-    public Dictionary<string, string> ResourceProviderPolicies { get; }
-
     /// <summary>
     /// Default: true.
     /// </summary>
@@ -29,6 +27,5 @@ public class PermissionManagementOptions
         ProviderPolicies = new Dictionary<string, string>();
 
         ResourceManagementProviders = new TypeList<IResourcePermissionManagementProvider>();
-        ResourceProviderPolicies = new Dictionary<string, string>();
     }
 }

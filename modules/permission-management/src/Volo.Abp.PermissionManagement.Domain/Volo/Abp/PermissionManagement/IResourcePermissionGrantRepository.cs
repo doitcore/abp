@@ -34,13 +34,13 @@ public interface IResourcePermissionGrantRepository : IBasicRepository<ResourceP
         CancellationToken cancellationToken = default
     );
 
-    Task<List<string>> GetPermissionsAsync(
+    Task<List<ResourcePermissionGrant>> GetPermissionsAsync(
         string resourceName,
         string resourceKey,
         CancellationToken cancellationToken = default
     );
 
-    Task<List<string>> GetResourceKeys(
+    Task<List<ResourcePermissionGrant>> GetResourceKeys(
         string resourceName,
         string name,
         CancellationToken cancellationToken = default

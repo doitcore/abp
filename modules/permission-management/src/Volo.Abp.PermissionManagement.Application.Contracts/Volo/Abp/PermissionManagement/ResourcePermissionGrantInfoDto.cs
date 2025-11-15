@@ -4,13 +4,9 @@ namespace Volo.Abp.PermissionManagement;
 
 public class ResourcePermissionGrantInfoDto
 {
-    public string Name { get; set; }
+    public string ProviderName { get; set; }
 
-    public string DisplayName { get; set; }
+    public string ProviderKey { get; set; }
 
-    public bool IsGranted { get; set; }
-
-    public List<string> AllowedProviders { get; set; }
-
-    public List<ProviderInfoDto> GrantedProviders { get; set; }
+    public List<GrantedResourcePermissionDto> Permissions { get; set; }
 }

@@ -26,18 +26,18 @@ public abstract class ResourcePermissionManagementProvider : IResourcePermission
         CurrentTenant = currentTenant;
     }
 
-    public virtual async Task<PermissionValueProviderGrantInfo> CheckAsync(string name, string resourceName,string resourceKey, string providerName, string providerKey)
+    public virtual async Task<ResourcePermissionValueProviderGrantInfo> CheckAsync(string name, string resourceName,string resourceKey, string providerName, string providerKey)
     {
         var multiplePermissionValueProviderGrantInfo = await CheckAsync(new[] { name }, resourceName, resourceKey, providerName, providerKey);
 
         return multiplePermissionValueProviderGrantInfo.Result.First().Value;
     }
 
-    public virtual async Task<MultiplePermissionValueProviderGrantInfo> CheckAsync(string[] names, string resourceName, string resourceKey, string providerName, string providerKey)
+    public virtual async Task<MultipleResourcePermissionValueProviderGrantInfo> CheckAsync(string[] names, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         using (ResourcePermissionGrantRepository.DisableTracking())
         {
-            var multiplePermissionValueProviderGrantInfo = new MultiplePermissionValueProviderGrantInfo(names);
+            var multiplePermissionValueProviderGrantInfo = new MultipleResourcePermissionValueProviderGrantInfo(names);
             if (providerName != Name)
             {
                 return multiplePermissionValueProviderGrantInfo;
@@ -48,7 +48,7 @@ public abstract class ResourcePermissionManagementProvider : IResourcePermission
             foreach (var permissionName in names)
             {
                 var isGrant = resourcePermissionGrants.Any(x => x.Name == permissionName);
-                multiplePermissionValueProviderGrantInfo.Result[permissionName] = new PermissionValueProviderGrantInfo(isGrant, providerKey);
+                multiplePermissionValueProviderGrantInfo.Result[permissionName] = new ResourcePermissionValueProviderGrantInfo(isGrant, providerKey);
             }
 
             return multiplePermissionValueProviderGrantInfo;

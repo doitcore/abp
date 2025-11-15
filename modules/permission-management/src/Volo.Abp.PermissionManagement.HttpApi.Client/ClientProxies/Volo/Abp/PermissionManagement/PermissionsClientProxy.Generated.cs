@@ -45,4 +45,23 @@ public partial class PermissionsClientProxy : ClientProxyBase<IPermissionAppServ
             { typeof(UpdatePermissionsDto), input }
         });
     }
+
+    public virtual async Task<GetResourcePermissionListResultDto> GetResourceAsync(string resourceName, string resourceKey)
+    {
+        return await RequestAsync<GetResourcePermissionListResultDto>(nameof(GetResourceAsync), new ClientProxyRequestTypeValue
+        {
+            { typeof(string), resourceName },
+            { typeof(string), resourceKey }
+        });
+    }
+
+    public virtual async Task UpdateResourceAsync(string resourceName, string resourceKey, UpdateResourcePermissionsDto input)
+    {
+        await RequestAsync(nameof(UpdateResourceAsync), new ClientProxyRequestTypeValue
+        {
+            { typeof(string), resourceName },
+            { typeof(string), resourceKey },
+            { typeof(UpdateResourcePermissionsDto), input }
+        });
+    }
 }

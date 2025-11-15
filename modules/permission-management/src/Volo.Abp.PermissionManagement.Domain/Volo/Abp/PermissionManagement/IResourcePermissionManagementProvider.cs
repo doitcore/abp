@@ -8,7 +8,7 @@ public interface IResourcePermissionManagementProvider : ISingletonDependency //
 {
     string Name { get; }
 
-    Task<PermissionValueProviderGrantInfo> CheckAsync(
+    Task<ResourcePermissionValueProviderGrantInfo> CheckAsync(
         [NotNull] string name,
         [NotNull] string resourceName,
         [NotNull] string resourceKey,
@@ -16,7 +16,7 @@ public interface IResourcePermissionManagementProvider : ISingletonDependency //
         [NotNull] string providerKey
     );
 
-    Task<MultiplePermissionValueProviderGrantInfo> CheckAsync(
+    Task<MultipleResourcePermissionValueProviderGrantInfo> CheckAsync(
         [NotNull] string[] names,
         [NotNull] string resourceName,
         [NotNull] string resourceKey,

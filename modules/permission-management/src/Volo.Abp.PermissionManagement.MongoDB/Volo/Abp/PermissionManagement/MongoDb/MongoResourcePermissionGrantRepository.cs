@@ -57,23 +57,23 @@ public class MongoResourcePermissionGrantRepository : MongoDbRepository<IPermiss
             ).ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<List<string>> GetPermissionsAsync(string resourceName, string resourceKey, CancellationToken cancellationToken = default)
+    public virtual async Task<List<ResourcePermissionGrant>> GetPermissionsAsync(string resourceName, string resourceKey, CancellationToken cancellationToken = default)
     {
         cancellationToken = GetCancellationToken(cancellationToken);
         return await (await GetQueryableAsync(cancellationToken))
             .Where(s =>
                 s.ResourceName == resourceName &&
                 s.ResourceKey == resourceKey
-            ).Select(x => x.Name).ToListAsync(cancellationToken);
+            ).ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<List<string>> GetResourceKeys(string resourceName, string name, CancellationToken cancellationToken = default)
+    public virtual async Task<List<ResourcePermissionGrant>> GetResourceKeys(string resourceName, string name, CancellationToken cancellationToken = default)
     {
         cancellationToken = GetCancellationToken(cancellationToken);
         return await (await GetQueryableAsync(cancellationToken))
             .Where(s =>
                 s.ResourceName == resourceName &&
                 s.Name == name
-            ).Select(x => x.ResourceKey).ToListAsync(cancellationToken);
+            ).ToListAsync(cancellationToken);
     }
 }

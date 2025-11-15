@@ -283,8 +283,6 @@ The implementation uses several optimizations:
 Configure<AbpDistributedCacheOptions>(options =>
 {
     options.KeyPrefix = "ApiKey:";
-    options.GlobalCacheEntryOptions.AbsoluteExpirationRelativeToNow 
-        = TimeSpan.FromHours(1);
 });
 ```
 

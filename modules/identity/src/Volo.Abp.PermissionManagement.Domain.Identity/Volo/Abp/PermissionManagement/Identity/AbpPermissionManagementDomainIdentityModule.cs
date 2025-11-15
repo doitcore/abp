@@ -26,10 +26,6 @@ public class AbpPermissionManagementDomainIdentityModule : AbpModule
 
             options.ResourceManagementProviders.Add<UserResourcePermissionManagementProvider>();
             options.ResourceManagementProviders.Add<RoleResourcePermissionManagementProvider>();
-
-            //TODO: Can we prevent duplication of permission names without breaking the design and making the system complicated
-            options.ResourceProviderPolicies[UserResourcePermissionValueProvider.ProviderName] = "AbpIdentity.Users.ManagePermissions";
-            options.ResourceProviderPolicies[RoleResourcePermissionValueProvider.ProviderName] = "AbpIdentity.Roles.ManagePermissions";
         });
     }
 }

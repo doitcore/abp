@@ -29,18 +29,18 @@ public class RoleResourcePermissionManagementProvider : ResourcePermissionManage
         UserRoleFinder = userRoleFinder;
     }
 
-    public override async Task<PermissionValueProviderGrantInfo> CheckAsync(string name, string resourceName, string resourceKey, string providerName, string providerKey)
+    public override async Task<ResourcePermissionValueProviderGrantInfo> CheckAsync(string name, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         var multipleGrantInfo = await CheckAsync(new[] { name }, resourceName, resourceKey, providerName, providerKey);
 
         return multipleGrantInfo.Result.Values.First();
     }
 
-    public override async Task<MultiplePermissionValueProviderGrantInfo> CheckAsync(string[] names, string resourceName, string resourceKey, string providerName, string providerKey)
+    public override async Task<MultipleResourcePermissionValueProviderGrantInfo> CheckAsync(string[] names, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         using (ResourcePermissionGrantRepository.DisableTracking())
         {
-            var multiplePermissionValueProviderGrantInfo = new MultiplePermissionValueProviderGrantInfo(names);
+            var multiplePermissionValueProviderGrantInfo = new MultipleResourcePermissionValueProviderGrantInfo(names);
             var resourcePermissionGrants = new List<ResourcePermissionGrant>();
 
             if (providerName == Name)
@@ -70,7 +70,7 @@ public class RoleResourcePermissionManagementProvider : ResourcePermissionManage
                 var resourcePermissionGrant = resourcePermissionGrants.FirstOrDefault(x => x.Name == permissionName);
                 if (resourcePermissionGrant != null)
                 {
-                    multiplePermissionValueProviderGrantInfo.Result[permissionName] = new PermissionValueProviderGrantInfo(true, resourcePermissionGrant.ProviderKey);
+                    multiplePermissionValueProviderGrantInfo.Result[permissionName] = new ResourcePermissionValueProviderGrantInfo(true, resourcePermissionGrant.ProviderKey);
                 }
             }
 

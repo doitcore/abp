@@ -180,6 +180,23 @@
                   }
                 },
                 {
+                  "name": "GetResourceDefinitionsAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "resourceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.PermissionManagement.GetResourcePermissionDefinitionListResultDto",
+                    "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionDefinitionListResultDto"
+                  }
+                },
+                {
                   "name": "GetResourceAsync",
                   "parametersOnMethod": [
                     {
@@ -202,6 +219,47 @@
                   "returnValue": {
                     "type": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto",
                     "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto"
+                  }
+                },
+                {
+                  "name": "GetResourceByProviderAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "resourceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "resourceKey",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "providerName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "providerKey",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.PermissionManagement.GetResourcePermissionWithProviderListResultDto",
+                    "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionWithProviderListResultDto"
                   }
                 },
                 {
@@ -228,6 +286,47 @@
                       "typeAsString": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto, Volo.Abp.PermissionManagement.Application.Contracts",
                       "type": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
                       "typeSimple": "Volo.Abp.PermissionManagement.UpdateResourcePermissionsDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "DeleteResourceAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "resourceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "resourceKey",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "providerName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "providerKey",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -452,6 +551,43 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
             },
+            "GetResourceDefinitionsAsyncByResourceName": {
+              "uniqueName": "GetResourceDefinitionsAsyncByResourceName",
+              "name": "GetResourceDefinitionsAsync",
+              "httpMethod": "GET",
+              "url": "api/permission-management/permissions/resource-definitions",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "resourceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "resourceName",
+                  "name": "resourceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.PermissionManagement.GetResourcePermissionDefinitionListResultDto",
+                "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionDefinitionListResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
+            },
             "GetResourceAsyncByResourceNameAndResourceKey": {
               "uniqueName": "GetResourceAsyncByResourceNameAndResourceKey",
               "name": "GetResourceAsync",
@@ -505,6 +641,103 @@
               "returnValue": {
                 "type": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto",
                 "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionListResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
+            },
+            "GetResourceByProviderAsyncByResourceNameAndResourceKeyAndProviderNameAndProviderKey": {
+              "uniqueName": "GetResourceByProviderAsyncByResourceNameAndResourceKeyAndProviderNameAndProviderKey",
+              "name": "GetResourceByProviderAsync",
+              "httpMethod": "GET",
+              "url": "api/permission-management/permissions/resource/by-provider",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "resourceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "resourceKey",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "providerName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "providerKey",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "resourceName",
+                  "name": "resourceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "resourceKey",
+                  "name": "resourceKey",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "providerName",
+                  "name": "providerName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "providerKey",
+                  "name": "providerKey",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.PermissionManagement.GetResourcePermissionWithProviderListResultDto",
+                "typeSimple": "Volo.Abp.PermissionManagement.GetResourcePermissionWithProviderListResultDto"
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
@@ -576,6 +809,103 @@
                   "defaultValue": null,
                   "constraintTypes": null,
                   "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
+            },
+            "DeleteResourceAsyncByResourceNameAndResourceKeyAndProviderNameAndProviderKey": {
+              "uniqueName": "DeleteResourceAsyncByResourceNameAndResourceKeyAndProviderNameAndProviderKey",
+              "name": "DeleteResourceAsync",
+              "httpMethod": "DELETE",
+              "url": "api/permission-management/permissions/resource",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "resourceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "resourceKey",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "providerName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "providerKey",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "resourceName",
+                  "name": "resourceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "resourceKey",
+                  "name": "resourceKey",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "providerName",
+                  "name": "providerName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "providerKey",
+                  "name": "providerKey",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
                   "descriptorName": ""
                 }
               ],

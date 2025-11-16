@@ -5,6 +5,10 @@
     var _permissionsModal = new abp.ModalManager(
         abp.appPath + 'AbpPermissionManagement/PermissionManagementModal'
     );
+    var _resourcePermissionsModal = new abp.ModalManager({
+        viewUrl: abp.appPath + "AbpPermissionManagement/ResourcePermissionManagementModal",
+        modalClass: 'ResourcePermissionManagement'
+    });
     var _editModal = new abp.ModalManager(
         abp.appPath + 'Identity/Roles/EditModal'
     );
@@ -39,6 +43,16 @@
                                 providerName: 'R',
                                 providerKey: data.record.name,
                                 providerKeyDisplayName: data.record.name
+                            });
+                        },
+                    },
+                    {
+                        text: l('ResourcePermissions'),
+                        action: function (data) {
+                            _resourcePermissionsModal.open({
+                                resourceName: 'Volo.Abp.Identity.IdentityRole',
+                                resourceKey: data.record.name,
+                                resourceDisplayName: data.record.name + '(Volo.Abp.Identity.IdentityRole)'
                             });
                         },
                     },

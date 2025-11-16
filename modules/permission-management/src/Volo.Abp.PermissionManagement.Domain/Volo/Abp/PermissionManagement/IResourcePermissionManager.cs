@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp.Authorization.Permissions;
 
 namespace Volo.Abp.PermissionManagement;
 
 public interface IResourcePermissionManager
 {
+    Task<List<PermissionDefinition>> GetAvailableResourcePermissionsAsync(string resourceName);
+
     Task<PermissionWithGrantedProviders> GetAsync(
         string permissionName,
         string resourceName,

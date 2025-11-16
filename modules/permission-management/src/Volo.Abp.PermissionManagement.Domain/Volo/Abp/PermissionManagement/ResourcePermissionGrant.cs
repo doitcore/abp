@@ -33,20 +33,20 @@ public class ResourcePermissionGrant : Entity<Guid>, IMultiTenant
     public ResourcePermissionGrant(
         Guid id,
         [NotNull] string name,
-        [NotNull] string providerName,
-        [CanBeNull] string providerKey,
         [NotNull] string resourceName,
         [NotNull] string resourceKey,
+        [NotNull] string providerName,
+        [CanBeNull] string providerKey,
         Guid? tenantId = null)
     {
         Check.NotNull(name, nameof(name));
 
         Id = id;
         Name = Check.NotNullOrWhiteSpace(name, nameof(name));
-        ProviderName = Check.NotNullOrWhiteSpace(providerName, nameof(providerName));
-        ProviderKey = Check.NotNullOrWhiteSpace(providerKey, nameof(providerKey));
         ResourceName = Check.NotNullOrWhiteSpace(resourceName, nameof(resourceName));
         ResourceKey = Check.NotNullOrWhiteSpace(resourceKey, nameof(resourceKey));
+        ProviderName = Check.NotNullOrWhiteSpace(providerName, nameof(providerName));
+        ProviderKey = Check.NotNullOrWhiteSpace(providerKey, nameof(providerKey));
         TenantId = tenantId;
     }
 }

@@ -60,6 +60,22 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         );
     }
 
+    public virtual async Task<List<PermissionDefinition>> GetAvailableResourcePermissionsAsync(string resourceName)
+    {
+        var multiTenancySide = CurrentTenant.GetMultiTenancySide();
+        var resourcePermissions = new List<PermissionDefinition>();
+        foreach (var resourcePermission in (await PermissionDefinitionManager.GetResourcePermissionsAsync())
+                 .Where(x => x.IsEnabled && x.MultiTenancySide.HasFlag(multiTenancySide) && x.ResourceName == resourceName))
+        {
+            if (await SimpleStateCheckerManager.IsEnabledAsync(resourcePermission))
+            {
+                resourcePermissions.Add(resourcePermission);
+            }
+        }
+
+        return resourcePermissions;
+    }
+
     public virtual async Task<PermissionWithGrantedProviders> GetAsync(string permissionName, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(permissionName);
@@ -118,7 +134,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
     public virtual async Task<List<PermissionWithGrantedProviders>> GetAllAsync(string resourceName, string resourceKey)
     {
-        var resourcePermissionDefinitions = (await PermissionDefinitionManager.GetResourcePermissionsAsync()).Where(x => x.ResourceName == resourceName).ToArray();
+        var resourcePermissionDefinitions = await GetAvailableResourcePermissionsAsync(resourceName);
         var resourcePermissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
         var result = new List<PermissionWithGrantedProviders>();
         foreach (var resourcePermissionDefinition in resourcePermissionDefinitions)
@@ -126,7 +142,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
             var permissionWithGrantedProviders = new PermissionWithGrantedProviders(resourcePermissionDefinition.Name, false);
 
             var grantedPermissions = resourcePermissionGrants
-                .Where(x => x.Name == resourcePermissionDefinition.Name)
+                .Where(x => x.Name == resourcePermissionDefinition.Name && x.ResourceName == resourceName && x.ResourceKey == resourceKey)
                 .ToList();
 
             if (grantedPermissions.Any())
@@ -146,14 +162,18 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
     public virtual async Task<List<PermissionWithGrantedProviders>> GetAllAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var permissionDefinitions = (await PermissionDefinitionManager.GetResourcePermissionsAsync()).Where(x => x.ResourceName == resourceName).ToArray();
-        var multiplePermissionWithGrantedProviders = await GetInternalAsync(permissionDefinitions, resourceName, resourceKey, providerName, providerKey);
+        var permissionDefinitions = await GetAvailableResourcePermissionsAsync(resourceName);
+        var multiplePermissionWithGrantedProviders = await GetInternalAsync(permissionDefinitions.ToArray(), resourceName, resourceKey, providerName, providerKey);
         return multiplePermissionWithGrantedProviders.Result;
     }
 
     public virtual async Task<List<PermissionProviderWithPermissions>> GetAllGroupAsync(string resourceName, string resourceKey)
     {
+        var resourcePermissions = await GetAvailableResourcePermissionsAsync(resourceName);
         var resourcePermissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
+        resourcePermissionGrants = resourcePermissionGrants
+            .Where(x => resourcePermissions.Any(rp => rp.Name == x.Name))
+            .ToList();
         var resourcePermissionGrantsGroup = resourcePermissionGrants.GroupBy(x => new { x.ProviderName, x.ProviderKey });
         var result = new List<PermissionProviderWithPermissions>();
         foreach (var resourcePermissionGrant in resourcePermissionGrantsGroup)
@@ -259,10 +279,8 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
         var neededCheckPermissions = new List<PermissionDefinition>();
 
-        foreach (var permission in permissions
-                                    .Where(x => x.IsEnabled)
-                                    .Where(x => x.MultiTenancySide.HasFlag(CurrentTenant.GetMultiTenancySide()))
-                                    .Where(x => !x.Providers.Any() || x.Providers.Contains(providerName)))
+        var resourcePermissions = await GetAvailableResourcePermissionsAsync(resourceName);
+        foreach (var permission in resourcePermissions)
         {
             if (await SimpleStateCheckerManager.IsEnabledAsync(permission))
             {
@@ -285,10 +303,16 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
                 if (providerResultDict.Value.IsGranted)
                 {
                     var permissionWithGrantedProvider = multiplePermissionWithGrantedProviders.Result
-                        .First(x => x.Name == providerResultDict.Key);
+                        .FirstOrDefault(x => x.Name == providerResultDict.Key);
+
+                    if (permissionWithGrantedProvider == null)
+                    {
+                        continue;
+                    }
 
                     permissionWithGrantedProvider.IsGranted = true;
-                    permissionWithGrantedProvider.Providers.Add(new PermissionValueProviderInfo(provider.Name, providerResultDict.Value.ProviderKey));
+                    permissionWithGrantedProvider.Providers.Add(
+                        new PermissionValueProviderInfo(provider.Name, providerResultDict.Value.ProviderKey));
                 }
             }
         }

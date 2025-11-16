@@ -19,7 +19,7 @@ Also see the following notes about ABP releases:
 This is currently a RC (release-candidate) and you can see the detailed **[blog post / announcement](https://abp.io/community/announcements/announcing-abp-10-0-release-candidate-86lrnyox)** for the v10.0 release.
 
 * Upgraded to .NET 10.0
-* Upgraded to `Blazorise` **v1.8.2**
+* Upgraded to `Blazorise` **v1.8.6**
 * New PRO Module: [Elsa Workflows](../modules/elsa-pro.md)
 * New Object Mapper: **Mapperly**
 * Localization: Nested Object Support in JSON Files

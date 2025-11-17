@@ -131,6 +131,7 @@ import { MyService } from '../services';
       useValue: eMyComponents.MyComponent,
     },
   ],
+  imports: [],
 })
 export class MyComponent implements OnInit, OnDestroy {
   // Properties
@@ -397,6 +398,7 @@ import { MyService } from '../services';
       <button type="submit">Submit</button>
     </form>
   `,
+  imports: [],
 })
 export class MyFormComponent {
   form: FormGroup;

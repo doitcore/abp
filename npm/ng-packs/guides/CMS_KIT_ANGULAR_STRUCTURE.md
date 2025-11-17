@@ -623,6 +623,7 @@ import { PageDto } from '../../models';
       useValue: eCmsKitAdminComponents.PageList,
     },
   ],
+  imports: [],
 })
 export class PageListComponent implements OnInit {
   data = this.list.getGrid();
@@ -655,6 +656,7 @@ import { PageDto } from '../../models';
 @Component({
   selector: 'abp-page-view',
   templateUrl: './page-view.component.html',
+  imports: [],
 })
 export class PageViewComponent implements OnInit {
   page: PageDto;
@@ -1181,8 +1183,6 @@ export enum eCmsKitAdminRouteNames {
 
 ### Phase 2: Admin - Comments Feature
 
-- [ ] Create Comment DTOs
-- [ ] Create CommentAdminService
 - [ ] Create CommentListComponent
 - [ ] Create CommentApproveComponent
 - [ ] Create CommentDetailsComponent
@@ -1191,68 +1191,53 @@ export enum eCmsKitAdminRouteNames {
 
 ### Phase 3: Admin - Tags Feature
 
-- [ ] Create Tag DTOs
-- [ ] Create TagAdminService
 - [ ] Create Tag components
 - [ ] Create default extension points
 - [ ] Add routes and providers
 
 ### Phase 4: Admin - Pages Feature
 
-- [ ] Create Page DTOs
-- [ ] Create PageAdminService
 - [ ] Create Page components
 - [ ] Create default extension points
 - [ ] Add routes and providers
 
 ### Phase 5: Admin - Blogs Feature
 
-- [ ] Create Blog DTOs
-- [ ] Create BlogAdminService
 - [ ] Create Blog components
 - [ ] Create default extension points
 - [ ] Add routes and providers
 
 ### Phase 6: Admin - Blog Posts Feature
 
-- [ ] Create BlogPost DTOs
-- [ ] Create BlogPostAdminService
 - [ ] Create BlogPost components
 - [ ] Create default extension points
 - [ ] Add routes and providers
 
 ### Phase 7: Admin - Menus Feature
 
-- [ ] Create MenuItem DTOs
-- [ ] Create MenuItemAdminService
 - [ ] Create MenuItem components
 - [ ] Create default extension points
 - [ ] Add routes and providers
 
 ### Phase 8: Admin - Global Resources Feature
 
-- [ ] Create GlobalResource DTOs
-- [ ] Create GlobalResourceAdminService
 - [ ] Create GlobalResourceListComponent
 - [ ] Create default extension points
 - [ ] Add routes and providers
 
 ### Phase 9: Public - Pages Feature
 
-- [ ] Create PagePublicService
 - [ ] Create PageViewComponent
 - [ ] Add routes
 
 ### Phase 10: Public - Blogs Feature
 
-- [ ] Create BlogPostPublicService
 - [ ] Create BlogListComponent
 - [ ] Create BlogPostViewComponent
 - [ ] Add routes
 
 ### Phase 11: Public - Comments Feature
 
-- [ ] Create CommentPublicService
 - [ ] Create CommentingComponent
 - [ ] Add routes
 

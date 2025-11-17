@@ -118,6 +118,7 @@ package-name/
       useValue: eMyComponents.MyComponent,
     },
   ],
+  imports: [],
 })
 export class MyComponent implements OnInit {
   public readonly list = inject(ListService);

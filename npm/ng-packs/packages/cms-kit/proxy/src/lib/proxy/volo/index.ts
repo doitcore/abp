@@ -1,3 +1,2 @@
-import * as Abp from './abp';
-import * as CmsKit from './cms-kit';
-export { Abp, CmsKit };
+export * from './cms-kit';
+export * from './abp';

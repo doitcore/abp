@@ -189,9 +189,9 @@ Of course, you need your application to run on an optimized web server and becom
 
 1. Create a new static web server instance. You can use a service like [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/), [Firebase](https://firebase.google.com/docs/hosting), [Netlify](https://www.netlify.com/), [Vercel](https://vercel.com/), or even [GitHub Pages](https://angular.io/guide/deployment#deploy-to-github-pages). Another option is maintaining own web server with [NGINX](https://www.nginx.com/), [IIS](https://www.iis.net/), [Apache HTTP Server](https://httpd.apache.org/), or equivalent.
 2. Copy the files from `dist/MyProjectName` <sup id="a-dist-folder-name">[1](#f-dist-folder-name)</sup> to a publicly served destination on the server via CLI of the service provider, SSH, or FTP (whichever is available). This step would be defined as a job if you have a CI/CD flow.
-3. [Configure the server](https://angular.io/guide/deployment#server-configuration) to redirect all requests to the _index.html_ file. Some services do that automatically. Others require you [to add a file to the bundle via assets](https://angular.io/guide/workspace-config#assets-configuration) which describes the server how to do the redirections. Occasionally, you may need to do manual configuration.
+3. [Configure the server](https://angular.dev/tools/cli/deployment#server-configuration) to redirect all requests to the _index.html_ file. Some services do that automatically. Others require you [to add a file to the bundle via assets](https://angular.dev/reference/configs/workspace-config) which describes the server how to do the redirections. Occasionally, you may need to do manual configuration.
 
-In addition, you can [deploy your application to certain targets using the Angular CLI](https://angular.io/guide/deployment#automatic-deployment-with-the-cli). Here are some deploy targets:
+In addition, you can [deploy your application to certain targets using the Angular CLI](https://angular.dev/tools/cli/deployment#automatic-deployment-with-the-cli). Here are some deploy targets:
 
 - [Azure](https://github.com/Azure/ng-deploy-azure#readme)
 - [Firebase](https://github.com/angular/angularfire#readme)

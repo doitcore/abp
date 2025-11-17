@@ -14,16 +14,16 @@ export function configureRoutes() {
   const routesService = inject(RoutesService);
   routesService.add([
     {
-      path: '/cms-kit/comments',
+      path: '/cms/comments',
       name: eCmsKitAdminRouteNames.Comments,
-      parentName: eThemeSharedRouteNames.Administration,
+      parentName: 'CmsKit::Menu:CMS',
       order: 100,
       layout: eLayoutType.application,
       iconClass: 'fa fa-comments',
       requiredPolicy: eCmsKitAdminPolicyNames.Comments,
     },
     {
-      path: '/cms-kit/tags',
+      path: '/cms/tags',
       name: eCmsKitAdminRouteNames.Tags,
       parentName: eThemeSharedRouteNames.Administration,
       order: 101,
@@ -32,7 +32,7 @@ export function configureRoutes() {
       requiredPolicy: eCmsKitAdminPolicyNames.Tags,
     },
     {
-      path: '/cms-kit/pages',
+      path: '/cms/pages',
       name: eCmsKitAdminRouteNames.Pages,
       parentName: eThemeSharedRouteNames.Administration,
       order: 102,
@@ -41,7 +41,7 @@ export function configureRoutes() {
       requiredPolicy: eCmsKitAdminPolicyNames.Pages,
     },
     {
-      path: '/cms-kit/blogs',
+      path: '/cms/blogs',
       name: eCmsKitAdminRouteNames.Blogs,
       parentName: eThemeSharedRouteNames.Administration,
       order: 103,
@@ -50,7 +50,7 @@ export function configureRoutes() {
       requiredPolicy: eCmsKitAdminPolicyNames.Blogs,
     },
     {
-      path: '/cms-kit/blog-posts',
+      path: '/cms/blog-posts',
       name: eCmsKitAdminRouteNames.BlogPosts,
       parentName: eThemeSharedRouteNames.Administration,
       order: 104,
@@ -59,7 +59,7 @@ export function configureRoutes() {
       requiredPolicy: eCmsKitAdminPolicyNames.BlogPosts,
     },
     {
-      path: '/cms-kit/menus',
+      path: '/cms/menus',
       name: eCmsKitAdminRouteNames.Menus,
       parentName: eThemeSharedRouteNames.Administration,
       order: 105,
@@ -68,7 +68,7 @@ export function configureRoutes() {
       requiredPolicy: eCmsKitAdminPolicyNames.Menus,
     },
     {
-      path: '/cms-kit/global-resources',
+      path: '/cms/global-resources',
       name: eCmsKitAdminRouteNames.GlobalResources,
       parentName: eThemeSharedRouteNames.Administration,
       order: 106,

@@ -1,5 +1,4 @@
-// Components will be exported here
-// export * from './comments';
+export * from './comments';
 // export * from './tags';
 // export * from './pages';
 // export * from './blogs';

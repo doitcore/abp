@@ -1,4 +1,4 @@
-import { Provider, makeEnvironmentProviders } from '@angular/core';
+import { makeEnvironmentProviders } from '@angular/core';
 import { CMS_KIT_ADMIN_ROUTE_PROVIDERS } from './route.provider';
 
 export function provideCmsKitAdminConfig() {

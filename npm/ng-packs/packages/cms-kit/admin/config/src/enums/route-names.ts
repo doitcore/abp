@@ -1,5 +1,5 @@
 export enum eCmsKitAdminRouteNames {
-  Comments = 'CmsKit::Menu:Comments',
+  Comments = 'CmsKit::CmsKit.Comments',
   Tags = 'CmsKit::Menu:Tags',
   Pages = 'CmsKit::Menu:Pages',
   Blogs = 'CmsKit::Menu:Blogs',

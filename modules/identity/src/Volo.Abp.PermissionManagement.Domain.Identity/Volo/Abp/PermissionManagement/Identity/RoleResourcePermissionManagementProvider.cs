@@ -48,9 +48,8 @@ public class RoleResourcePermissionManagementProvider : ResourcePermissionManage
                 resourcePermissionGrants.AddRange(await ResourcePermissionGrantRepository.GetListAsync(names, resourceName, resourceKey, providerName, providerKey));
             }
 
-            if (providerName == UserResourcePermissionValueProvider.ProviderName)
+            if (providerName == UserResourcePermissionValueProvider.ProviderName && Guid.TryParse(providerKey, out var userId))
             {
-                var userId = Guid.Parse(providerKey);
                 var roleNames = await UserRoleFinder.GetRoleNamesAsync(userId);
 
                 foreach (var roleName in roleNames)

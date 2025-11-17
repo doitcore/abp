@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc;
 
@@ -36,8 +35,20 @@ public class PermissionsController : AbpControllerBase, IPermissionAppService
         return PermissionAppService.UpdateAsync(providerName, providerKey, input);
     }
 
+    [HttpGet("resource-provider-key-lookup-services")]
+    public virtual Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync()
+    {
+        return PermissionAppService.GetResourceProviderKeyLookupServicesAsync();
+    }
+
+    [HttpGet("search-resource-provider-keys")]
+    public virtual Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter)
+    {
+        return PermissionAppService.SearchResourceProviderKeyAsync(serviceName, filter);
+    }
+
     [HttpGet("resource-definitions")]
-    public Task<GetResourcePermissionDefinitionListResultDto> GetResourceDefinitionsAsync(string resourceName)
+    public virtual Task<GetResourcePermissionDefinitionListResultDto> GetResourceDefinitionsAsync(string resourceName)
     {
         return PermissionAppService.GetResourceDefinitionsAsync(resourceName);
     }

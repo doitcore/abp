@@ -8,8 +8,10 @@ public class PermissionManagementOptions
     public ITypeList<IPermissionManagementProvider> ManagementProviders { get; }
 
     public Dictionary<string, string> ProviderPolicies { get; }
-    
+
     public ITypeList<IResourcePermissionManagementProvider> ResourceManagementProviders { get; }
+
+    public ITypeList<IResourcePermissionProviderKeyLookupService> ResourcePermissionProviderKeyLookupServices { get; }
 
     /// <summary>
     /// Default: true.
@@ -27,5 +29,6 @@ public class PermissionManagementOptions
         ProviderPolicies = new Dictionary<string, string>();
 
         ResourceManagementProviders = new TypeList<IResourcePermissionManagementProvider>();
+        ResourcePermissionProviderKeyLookupServices = new TypeList<IResourcePermissionProviderKeyLookupService>();
     }
 }

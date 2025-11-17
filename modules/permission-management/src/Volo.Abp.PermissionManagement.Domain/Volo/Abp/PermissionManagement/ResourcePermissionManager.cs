@@ -33,6 +33,8 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
     private readonly Lazy<List<IResourcePermissionManagementProvider>> _lazyProviders;
 
+    private readonly Lazy<List<IResourcePermissionProviderKeyLookupService>> _lazyProviderKeyLookupServices;
+
     public ResourcePermissionManager(
         IPermissionDefinitionManager permissionDefinitionManager,
         ISimpleStateCheckerManager<PermissionDefinition> simpleStateCheckerManager,
@@ -58,9 +60,30 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
                 .ToList(),
             true
         );
+
+        _lazyProviderKeyLookupServices = new Lazy<List<IResourcePermissionProviderKeyLookupService>>(
+            () => Options
+                .ResourcePermissionProviderKeyLookupServices
+                .Select(c => serviceProvider.GetRequiredService(c) as IResourcePermissionProviderKeyLookupService)
+                .ToList(),
+            true
+        );
     }
 
-    public virtual async Task<List<PermissionDefinition>> GetAvailableResourcePermissionsAsync(string resourceName)
+    public virtual Task<List<IResourcePermissionProviderKeyLookupService>> GetProviderKeyLookupServicesAsync()
+    {
+        return Task.FromResult(_lazyProviderKeyLookupServices.Value);
+    }
+
+    public virtual  Task<IResourcePermissionProviderKeyLookupService> GetProviderKeyLookupServiceAsync(string serviceName)
+    {
+        var service = _lazyProviderKeyLookupServices.Value.FirstOrDefault(s => s.Name == serviceName);
+        return service == null
+            ? throw new AbpException("Unknown resource permission provider key lookup service: " + serviceName)
+            : Task.FromResult(service);
+    }
+
+    public virtual async Task<List<PermissionDefinition>> GetAvailablePermissionsAsync(string resourceName)
     {
         var multiTenancySide = CurrentTenant.GetMultiTenancySide();
         var resourcePermissions = new List<PermissionDefinition>();
@@ -134,7 +157,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
     public virtual async Task<List<PermissionWithGrantedProviders>> GetAllAsync(string resourceName, string resourceKey)
     {
-        var resourcePermissionDefinitions = await GetAvailableResourcePermissionsAsync(resourceName);
+        var resourcePermissionDefinitions = await GetAvailablePermissionsAsync(resourceName);
         var resourcePermissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
         var result = new List<PermissionWithGrantedProviders>();
         foreach (var resourcePermissionDefinition in resourcePermissionDefinitions)
@@ -162,14 +185,14 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
     public virtual async Task<List<PermissionWithGrantedProviders>> GetAllAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var permissionDefinitions = await GetAvailableResourcePermissionsAsync(resourceName);
+        var permissionDefinitions = await GetAvailablePermissionsAsync(resourceName);
         var multiplePermissionWithGrantedProviders = await GetInternalAsync(permissionDefinitions.ToArray(), resourceName, resourceKey, providerName, providerKey);
         return multiplePermissionWithGrantedProviders.Result;
     }
 
     public virtual async Task<List<PermissionProviderWithPermissions>> GetAllGroupAsync(string resourceName, string resourceKey)
     {
-        var resourcePermissions = await GetAvailableResourcePermissionsAsync(resourceName);
+        var resourcePermissions = await GetAvailablePermissionsAsync(resourceName);
         var resourcePermissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
         resourcePermissionGrants = resourcePermissionGrants
             .Where(x => resourcePermissions.Any(rp => rp.Name == x.Name))
@@ -279,7 +302,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
         var neededCheckPermissions = new List<PermissionDefinition>();
 
-        var resourcePermissions = await GetAvailableResourcePermissionsAsync(resourceName);
+        var resourcePermissions = await GetAvailablePermissionsAsync(resourceName);
         foreach (var permission in resourcePermissions)
         {
             if (await SimpleStateCheckerManager.IsEnabledAsync(permission))

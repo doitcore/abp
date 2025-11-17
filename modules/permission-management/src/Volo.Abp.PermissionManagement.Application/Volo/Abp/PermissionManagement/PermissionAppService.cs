@@ -167,6 +167,35 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     }
 
     [Authorize] //TODO: Check permission
+    public virtual async Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync()
+    {
+        var lookupServices = await ResourcePermissionManager.GetProviderKeyLookupServicesAsync();
+        return new GetResourceProviderListResultDto
+        {
+            Providers = lookupServices.Select(s => new ResourceProviderDto
+            {
+                Name = s.Name,
+                DisplayName = s.DisplayName.Localize(StringLocalizerFactory),
+            }).ToList()
+        };
+    }
+
+    [Authorize] //TODO: Check permission
+    public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter)
+    {
+        var lookupService = await ResourcePermissionManager.GetProviderKeyLookupServiceAsync(serviceName);
+        var keys = await lookupService.SearchAsync(filter);
+        return new SearchProviderKeyListResultDto
+        {
+            Keys = keys.Select(x => new SearchProviderKeyInfo
+            {
+                ProviderKey =  x.ProviderKey,
+                ProviderDisplayName =  x.ProviderDisplayName,
+            }).ToList()
+        };
+    }
+
+    [Authorize] //TODO: Check permission
     public virtual async Task<GetResourcePermissionDefinitionListResultDto> GetResourceDefinitionsAsync(string resourceName)
     {
         var result = new GetResourcePermissionDefinitionListResultDto
@@ -174,7 +203,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             Permissions = new List<ResourcePermissionDefinitionDto>()
         };
 
-        var resourcePermissions = await ResourcePermissionManager.GetAvailableResourcePermissionsAsync(resourceName);
+        var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
         foreach (var resourcePermission in resourcePermissions)
         {
             result.Permissions.Add(new ResourcePermissionDefinitionDto()
@@ -195,7 +224,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             Permissions = new List<ResourcePermissionGrantInfoDto>()
         };
 
-        var resourcePermissions = await ResourcePermissionManager.GetAvailableResourcePermissionsAsync(resourceName);
+        var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
         var resourcePermissionGrantsGroup = await ResourcePermissionManager.GetAllGroupAsync(resourceName, resourceKey);
         foreach (var resourcePermissionGrant in resourcePermissionGrantsGroup)
         {
@@ -235,7 +264,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             result.Permissions.Add(new ResourcePermissionWithProdiverGrantInfoDto
             {
                 Name = resourcePermission.Name,
-                DisplayName = (await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(resourceName))?.DisplayName?.Localize(StringLocalizerFactory),
+                DisplayName = (await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(resourcePermission.Name))?.DisplayName.Localize(StringLocalizerFactory),
                 IsGranted = resourcePermission.IsGranted
             });
         }
@@ -246,7 +275,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     [Authorize] //TODO: Check permission
     public virtual async Task UpdateResourceAsync(string resourceName, string resourceKey, UpdateResourcePermissionsDto input)
     {
-        var resourcePermissions = await ResourcePermissionManager.GetAvailableResourcePermissionsAsync(resourceName);
+        var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
         foreach (var resourcePermission in resourcePermissions)
         {
             var isGranted = !input.Permissions.IsNullOrEmpty() && input.Permissions.Any(p => p == resourcePermission.Name);
@@ -257,7 +286,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     [Authorize] //TODO: Check permission
     public virtual async Task DeleteResourceAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var resourcePermissions = await ResourcePermissionManager.GetAvailableResourcePermissionsAsync(resourceName);
+        var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
         foreach (var resourcePermission in resourcePermissions)
         {
             await ResourcePermissionManager.SetAsync(resourcePermission.Name, resourceName, resourceKey, providerName, providerKey, false);

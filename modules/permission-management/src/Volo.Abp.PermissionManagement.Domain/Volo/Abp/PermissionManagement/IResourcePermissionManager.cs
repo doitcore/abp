@@ -6,7 +6,11 @@ namespace Volo.Abp.PermissionManagement;
 
 public interface IResourcePermissionManager
 {
-    Task<List<PermissionDefinition>> GetAvailableResourcePermissionsAsync(string resourceName);
+    Task<List<IResourcePermissionProviderKeyLookupService>> GetProviderKeyLookupServicesAsync();
+
+    Task<IResourcePermissionProviderKeyLookupService> GetProviderKeyLookupServiceAsync(string providerName);
+
+    Task<List<PermissionDefinition>> GetAvailablePermissionsAsync(string resourceName);
 
     Task<PermissionWithGrantedProviders> GetAsync(
         string permissionName,

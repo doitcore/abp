@@ -12,6 +12,10 @@ public interface IPermissionAppService : IApplicationService
 
     Task UpdateAsync([NotNull] string providerName, [NotNull] string providerKey, UpdatePermissionsDto input);
 
+    Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync();
+
+    Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter);
+
     Task<GetResourcePermissionDefinitionListResultDto> GetResourceDefinitionsAsync([NotNull] string resourceName);
 
     Task<GetResourcePermissionListResultDto> GetResourceAsync([NotNull] string resourceName, [NotNull] string resourceKey);

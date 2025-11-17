@@ -10,7 +10,7 @@ namespace Volo.Abp.Identity.Integration;
 public interface IIdentityUserIntegrationService : IApplicationService
 {
     Task<string[]> GetRoleNamesAsync(Guid id);
-    
+
     Task<UserData> FindByIdAsync(Guid id);
 
     Task<UserData> FindByUserNameAsync(string userName);
@@ -18,4 +18,8 @@ public interface IIdentityUserIntegrationService : IApplicationService
     Task<ListResultDto<UserData>> SearchAsync(UserLookupSearchInputDto input);
 
     Task<long> GetCountAsync(UserLookupCountInputDto input);
+
+    Task<ListResultDto<RoleData>> SearchRoleAsync(RoleLookupSearchInputDto input);
+
+    Task<long> GetRoleCountAsync(RoleLookupCountInputDto input);
 }

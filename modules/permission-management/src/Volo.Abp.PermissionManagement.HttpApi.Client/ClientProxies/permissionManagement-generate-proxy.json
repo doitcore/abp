@@ -180,6 +180,39 @@
                   }
                 },
                 {
+                  "name": "GetResourceProviderKeyLookupServicesAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto",
+                    "typeSimple": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto"
+                  }
+                },
+                {
+                  "name": "SearchResourceProviderKeyAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "serviceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "filter",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.PermissionManagement.SearchProviderKeyListResultDto",
+                    "typeSimple": "Volo.Abp.PermissionManagement.SearchProviderKeyListResultDto"
+                  }
+                },
+                {
                   "name": "GetResourceDefinitionsAsync",
                   "parametersOnMethod": [
                     {
@@ -547,6 +580,78 @@
               "returnValue": {
                 "type": "System.Void",
                 "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
+            },
+            "GetResourceProviderKeyLookupServicesAsync": {
+              "uniqueName": "GetResourceProviderKeyLookupServicesAsync",
+              "name": "GetResourceProviderKeyLookupServicesAsync",
+              "httpMethod": "GET",
+              "url": "api/permission-management/permissions/resource-provider-key-lookup-services",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto",
+                "typeSimple": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
+            },
+            "SearchResourceProviderKeyAsyncByServiceNameAndFilter": {
+              "uniqueName": "SearchResourceProviderKeyAsyncByServiceNameAndFilter",
+              "name": "SearchResourceProviderKeyAsync",
+              "httpMethod": "GET",
+              "url": "api/permission-management/permissions/search-resource-provider-keys",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "serviceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "filter",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "serviceName",
+                  "name": "serviceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "filter",
+                  "name": "filter",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.PermissionManagement.SearchProviderKeyListResultDto",
+                "typeSimple": "Volo.Abp.PermissionManagement.SearchProviderKeyListResultDto"
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"

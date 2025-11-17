@@ -26,6 +26,9 @@ public class AbpPermissionManagementDomainIdentityModule : AbpModule
 
             options.ResourceManagementProviders.Add<UserResourcePermissionManagementProvider>();
             options.ResourceManagementProviders.Add<RoleResourcePermissionManagementProvider>();
+
+            options.ResourcePermissionProviderKeyLookupServices.Add<UserResourcePermissionProviderKeyLookupService>();
+            options.ResourcePermissionProviderKeyLookupServices.Add<RoleResourcePermissionProviderKeyLookupService>();
         });
     }
 }

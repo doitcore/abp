@@ -59,4 +59,20 @@ public partial class IdentityUserIntegrationClientProxy : ClientProxyBase<IIdent
             { typeof(UserLookupCountInputDto), input }
         });
     }
+
+    public virtual async Task<ListResultDto<RoleData>> SearchRoleAsync(RoleLookupSearchInputDto input)
+    {
+        return await RequestAsync<ListResultDto<RoleData>>(nameof(SearchRoleAsync), new ClientProxyRequestTypeValue
+        {
+            { typeof(RoleLookupSearchInputDto), input }
+        });
+    }
+
+    public virtual async Task<long> GetRoleCountAsync(RoleLookupCountInputDto input)
+    {
+        return await RequestAsync<long>(nameof(GetRoleCountAsync), new ClientProxyRequestTypeValue
+        {
+            { typeof(RoleLookupCountInputDto), input }
+        });
+    }
 }

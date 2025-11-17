@@ -1,0 +1,15 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Volo.Abp.Localization;
+
+namespace Volo.Abp.PermissionManagement;
+
+public interface IResourcePermissionProviderKeyLookupService
+{
+    public string Name { get; }
+
+    public ILocalizableString DisplayName { get; }
+
+    Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, CancellationToken cancellationToken = default);
+}

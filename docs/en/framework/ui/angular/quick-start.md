@@ -110,7 +110,7 @@ You may modify the behavior of the **start script** (in the package.json file) b
 
 ### Angular Live Development Server
 
-The development server of Angular is based on [Webpack DevServer](https://webpack.js.org/configuration/dev-server/). It tracks changes to source files and syncs the browser window after an incremental re-compilation every time <sup id="a-dev-server">[2](#f-dev-server)</sup> you make one. Your experience will be like this:
+The development server runs via Angular's Application Builder and uses a fast, modern dev server under the hood. It tracks changes to source files and refreshes the browser after an incremental compilation every time <sup id="a-dev-server">[2](#f-dev-server)</sup> you make one. Your experience will be like this:
 
 <img alt="Angular Live Development Server compiles again on template change and removes a button from the page displayed by the browser." src="./images/quick-start---angular-live-development-server.gif" width="818px" style="max-width:100%">
 
@@ -122,7 +122,7 @@ Please keep in mind that you should not use this server in production. To provid
 
 <sup id="f-certificate-error"><b>1</b></sup> _If you see the error above when you run the Angular app, your browser might be blocking access to the API because of the self-signed certificate. Visit that address and allow access to it (once). When you see the Swagger interface, you are good to go._ <sup>[↩](#a-certificate-error)</sup>
 
-<sup id="f-dev-server"><b>2</b></sup> _Sometimes, depending on the file changed, Webpack may miss the change and cannot reflect it in the browser. For example, tsconfig files are not being tracked. In such a case, please restart the development server._ <sup>[↩](#a-dev-server)</sup>
+<sup id="f-dev-server"><b>2</b></sup> _Sometimes, depending on the file changed, the development server may not pick up the change (for example, certain configuration files like tsconfig are not watched). In such a case, please restart the development server._ <sup>[↩](#a-dev-server)</sup>
 
 ---
 

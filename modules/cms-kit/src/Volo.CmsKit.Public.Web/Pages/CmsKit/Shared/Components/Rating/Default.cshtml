@@ -11,13 +11,7 @@
       
             @if (CurrentUser.IsAuthenticated)
             {
-                @if (!Model.IsReadOnly && Model.CurrentRating != null)
-                {
-                    <a href="#" class="rating-undo-link text-decoration-none">
-                        <small class="text-muted"><i class="fa fa-undo"></i> @L["Undo"]</small>
-                    </a>
-                }
-                if (Model.Ratings != null)
+                @if (Model.Ratings != null)
                 {
                     <a href="#" class="text-muted ms-1 text-decoration-none" data-bs-toggle="modal" data-bs-target="#ratingDetail">
                         <i class="far fa-question-circle"></i>
@@ -31,6 +25,11 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <div class="text-center mb-3">
+                                        <h4>@L["AverageRating"]: @Model.AverageRating.ToString("F1")</h4>
+                                        <small class="text-muted">(@Model.TotalRating @L["TotalRatings"])</small>
+                                    </div>
+                                    <hr />
                                     <div class="row text-center">
                                         @foreach (var rating in Model.Ratings)
                                         {
@@ -49,13 +48,14 @@
                     </div>
                 }
 
-                <small class="live-rating text-center d-inline-block" style="width: 24px">@(Model.CurrentRating != null ? Model.CurrentRating + "  " : 0 + "")</small>
+                <small class="live-rating text-center d-inline-block" style="width: 32px">@Model.AverageRating.ToString("F1")</small>
 
-                <span class="my-rating text-dark p-1" data-rating="@(Model.CurrentRating ?? 0)" data-authenticated="@(Model.CurrentRating != null)" data-readonly="@Model.IsReadOnly">
+                <span class="my-rating text-dark p-1" data-rating="@(Model.CurrentRating ?? 0)" data-readonly="@Model.IsReadOnly">
                 </span>
             }
             else
             {
+                <small class="live-rating text-center d-inline-block" style="width: 32px">@Model.AverageRating.ToString("F1")</small>
                 <span class="my-rating text-dark p-1" data-authenticated="True" data-bs-toggle="popover" data-bs-placement="right" data-html="true" data-content="<div class='text-center'><div class='d-grid gap-2'><a href='@Model.LoginUrl' class='btn btn-primary'>@L["LoginToRate"]</a></div></div>"></span>
                 <span class="rating-login"></span>
             }

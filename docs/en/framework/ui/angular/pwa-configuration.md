@@ -45,7 +45,7 @@ So, Angular CLI updates some files and add a few others:
   - `serviceWorker` is `true` in production build.
   - `ngswConfigPath` refers to _ngsw-config.json_.
 - **package.json** has _@angular/service-worker_ as a new dependency.
-- **app.config.ts** imports `ServiceWorkerModule` and registers a service worker filename.
+- **app.config.ts** The `provideServiceWorker` provider is imported to register the service worker script.
 - **index.html** has following modifications:
   - A `<link>` element that refers to _manifest.webmanifest_.
   - A `<meta>` tag that sets a theme color.

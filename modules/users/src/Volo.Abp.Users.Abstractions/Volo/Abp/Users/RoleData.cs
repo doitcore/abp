@@ -47,7 +47,6 @@ public class RoleData : IRoleData
     {
         Id = id;
         Name = name;
-        Name = name;
         IsDefault = isDefault;
         IsStatic = isStatic;
         IsPublic = isPublic;

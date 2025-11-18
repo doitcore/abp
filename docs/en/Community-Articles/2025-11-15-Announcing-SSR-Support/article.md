@@ -78,16 +78,6 @@ The ABP SSR schematic supports both modern and legacy Angular build configuratio
 - Designed for legacy Angular applications
 - Compatible with legacy applications
 
-### Standalone Components
-- Form-based 'standalone' application architecture
-- Simpler application architecture (no NgModule)
-- More effective tree-shaking and code splitting
-
-### NgModule-based Applications
-- The classic NgModule architecture
-- Supports full backward compatibility
-- Migration enabled over time
-
 ## Running Your SSR Application
 
 After adding SSR to your project, you can run your application in SSR mode:

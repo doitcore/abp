@@ -2,7 +2,6 @@ var abp = abp || {};
 (function ($) {
     var l = abp.localization.getResource('AbpPermissionManagement');
     var _dataTable = null;
-
     abp.ui.extensions.entityActions.get('permissionManagement.resource').addContributor(
         function (actionList) {
             return actionList.addManyTail(
@@ -19,7 +18,9 @@ var abp = abp || {};
                                 providerKey: data.record.providerKey
                             });
                             _updateResourcePermissionsModal.onResult(function () {
-                                _dataTable.ajax.reloadEx();
+                                _dataTable.ajax.reloadEx(function (json) {
+                                    _dataTable.columns.adjust();
+                                });
                             });
                         },
                     },
@@ -34,7 +35,9 @@ var abp = abp || {};
                         action: function (data) {
                             volo.abp.permissionManagement.permissions.deleteResource($("#ResourceName").val(), $("#ResourceKey").val(), data.record.providerName, data.record.providerKey).then(function () {
                                 abp.notify.info(l('SuccessfullyDeleted'));
-                                _dataTable.ajax.reloadEx();
+                                _dataTable.ajax.reloadEx(function (json) {
+                                    _dataTable.columns.adjust();
+                                });
                             });
                         },
                     }
@@ -54,19 +57,19 @@ var abp = abp || {};
                         }
                     },
                     {
-                        title: l("Target"),
+                        title: l("ResourcePermissionTarget"),
                         data: 'providerName',
                         render: function (data, type, row) {
-                            return row.providerName + ' (' + row.providerKey + ')';
+                            return '<span class="d-inline-block bg-light rounded-pill px-2 me-1 ms-1 mb-1">' + row.providerName + '</span>' + row.providerDisplayName;
                         },
                     },
                     {
-                        title: l("Permissions"),
+                        title: l("ResourcePermissionPermissions"),
                         data: 'permissions',
                         render: function (data, type, row) {
                             var spans = '';
                             for (var i = 0; i < row.permissions.length; i++) {
-                                spans += '<span class="d-inline-block bg-light rounded-pill px-2 me-1 mb-1">' + row.permissions[i].name + '</span>';
+                                spans += '<span class="d-inline-block bg-light rounded-pill px-2 me-1 mb-1">' + row.permissions[i].displayName + '</span>';
                             }
                             return spans;
                         },
@@ -86,8 +89,8 @@ var abp = abp || {};
                     order: [],
                     searching: false,
                     processing: true,
-                    scrollX: true,
-                    serverSide: true,
+                    scrollX: false,
+                    serverSide: false,
                     paging: true,
                     ajax: function () {
                         return function (requestData, callback, settings) {
@@ -114,7 +117,9 @@ var abp = abp || {};
                     resourceDisplayName: $("#ResourceDisplayName").val()
                 });
                 _addResourcePermissionsModal.onResult(function () {
-                    _dataTable.ajax.reloadEx();
+                    _dataTable.ajax.reloadEx(function (json) {
+                        _dataTable.columns.adjust();
+                    });
                 });
             });
         };

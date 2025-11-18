@@ -194,18 +194,48 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
     {
         var resourcePermissions = await GetAvailablePermissionsAsync(resourceName);
         var resourcePermissionGrants = await ResourcePermissionGrantRepository.GetPermissionsAsync(resourceName, resourceKey);
-        resourcePermissionGrants = resourcePermissionGrants
-            .Where(x => resourcePermissions.Any(rp => rp.Name == x.Name))
-            .ToList();
+        resourcePermissionGrants = resourcePermissionGrants.Where(x => resourcePermissions.Any(rp => rp.Name == x.Name)).ToList();
         var resourcePermissionGrantsGroup = resourcePermissionGrants.GroupBy(x => new { x.ProviderName, x.ProviderKey });
         var result = new List<PermissionProviderWithPermissions>();
         foreach (var resourcePermissionGrant in resourcePermissionGrantsGroup)
         {
-            result.Add(new PermissionProviderWithPermissions(resourcePermissionGrant.Key.ProviderName, resourcePermissionGrant.Key.ProviderKey)
+            result.Add(new PermissionProviderWithPermissions(resourcePermissionGrant.Key.ProviderName, resourcePermissionGrant.Key.ProviderKey, resourcePermissionGrant.Key.ProviderKey)
             {
                 Permissions = resourcePermissionGrant.Select(x => x.Name).ToList()
             });
         }
+
+        if (result.Any())
+        {
+            var providerKeyInfos = new Dictionary<string, List<ResourcePermissionProviderKeyInfo>>();
+            var resourcePermissionProviderGroup = resourcePermissionGrants.GroupBy(x => x.ProviderName);
+            var providerKeyLookupServices = await GetProviderKeyLookupServicesAsync();
+            foreach (var resourcePermissionProvider in resourcePermissionProviderGroup)
+            {
+                var providerKeyLookupService = providerKeyLookupServices.FirstOrDefault(s => s.Name == resourcePermissionProvider.Key);
+                if (providerKeyLookupService == null)
+                {
+                    continue;
+                }
+                var keys = resourcePermissionProvider.Select(rp => rp.ProviderKey).ToList();
+                providerKeyInfos.Add(resourcePermissionProvider.Key, await providerKeyLookupService.SearchAsync(keys.ToArray()));
+            }
+
+            foreach (var item in result)
+            {
+                if (!providerKeyInfos.TryGetValue(item.ProviderName, out var providerKeyInfoList))
+                {
+                    continue;
+                }
+
+                var providerKeyInfo = providerKeyInfoList.FirstOrDefault(p => p.ProviderKey == item.ProviderKey);
+                if (providerKeyInfo != null)
+                {
+                    item.ProviderDisplayName = providerKeyInfo.ProviderDisplayName;
+                }
+            }
+        }
+
         return result;
     }
 

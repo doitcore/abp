@@ -8,6 +8,18 @@
     "SelectAllInThisTab": "Select all",
     "SaveWithoutAnyPermissionsWarningMessage": "Are you sure you want to save without any permissions?",
     "PermissionGroup": "Permission Group",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "ResourcePermissions": "Resource permissions",
+    "ResourcePermissionTarget": "Target",
+    "ResourcePermissionPermissions": "Permissions",
+    "AddResourcePermission": "Add resource permissions",
+    "ResourcePermissionDeletionConfirmationMessage": "Are you sure you want to delete this resource permissions?",
+    "AddResourcePermissions": "Add resource permissions",
+    "UpdateResourcePermissions": "Update resource permissions",
+    "ResourceName": "Resource Name",
+    "ResourceKey": "Resource Key",
+    "ProviderName": "Provider Name",
+    "ProviderKey": "Provider Key",
+    "GrantAllResourcePermissions": "Grant all"
   }
 }

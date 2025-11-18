@@ -50,6 +50,13 @@ public class IdentityUserIntegrationController : AbpControllerBase, IIdentityUse
     }
 
     [HttpGet]
+    [Route("search/by-ids")]
+    public virtual Task<ListResultDto<UserData>> SearchByIdsAsync(Guid[] ids)
+    {
+        return UserIntegrationService.SearchByIdsAsync(ids);
+    }
+
+    [HttpGet]
     [Route("count")]
     public Task<long> GetCountAsync(UserLookupCountInputDto input)
     {
@@ -61,6 +68,13 @@ public class IdentityUserIntegrationController : AbpControllerBase, IIdentityUse
     public virtual Task<ListResultDto<RoleData>> SearchRoleAsync(RoleLookupSearchInputDto input)
     {
         return UserIntegrationService.SearchRoleAsync(input);
+    }
+
+    [HttpGet]
+    [Route("search/roles/by-ids")]
+    public virtual Task<ListResultDto<RoleData>> SearchRoleByIdsAsync(Guid[] ids)
+    {
+        return UserIntegrationService.SearchRoleByIdsAsync(ids);
     }
 
     [HttpGet]

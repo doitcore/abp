@@ -11,15 +11,18 @@ public class IdentityUserIntegrationService : IdentityAppServiceBase, IIdentityU
 {
     protected IUserRoleFinder UserRoleFinder { get; }
     protected IdentityUserRepositoryExternalUserLookupServiceProvider UserLookupServiceProvider { get; }
+    protected IIdentityUserRepository UserRepository { get; }
     protected IIdentityRoleRepository RoleRepository { get; }
 
     public IdentityUserIntegrationService(
         IUserRoleFinder userRoleFinder,
         IdentityUserRepositoryExternalUserLookupServiceProvider userLookupServiceProvider,
+        IIdentityUserRepository userRepository,
         IIdentityRoleRepository roleRepository)
     {
         UserRoleFinder = userRoleFinder;
         UserLookupServiceProvider = userLookupServiceProvider;
+        UserRepository = userRepository;
         RoleRepository = roleRepository;
     }
 
@@ -66,6 +69,28 @@ public class IdentityUserIntegrationService : IdentityAppServiceBase, IIdentityU
         );
     }
 
+    public virtual async Task<ListResultDto<UserData>> SearchByIdsAsync(Guid[] ids)
+    {
+        var users = await UserRepository.GetListByIdsAsync(ids);
+
+        return new ListResultDto<UserData>(
+            users
+                .Select(u => new UserData(
+                    u.Id,
+                    u.UserName,
+                    u.Email,
+                    u.Name,
+                    u.Surname,
+                    u.EmailConfirmed,
+                    u.PhoneNumber,
+                    u.PhoneNumberConfirmed,
+                    u.TenantId,
+                    u.IsActive,
+                    u.ExtraProperties))
+                .ToList()
+        );
+    }
+
     public virtual async Task<long> GetCountAsync(UserLookupCountInputDto input)
     {
         return await UserLookupServiceProvider.GetCountAsync(input.Filter);
@@ -76,6 +101,15 @@ public class IdentityUserIntegrationService : IdentityAppServiceBase, IIdentityU
         using (RoleRepository.DisableTracking())
         {
             var roles = await RoleRepository.GetListAsync(input.Filter);
+            return new ListResultDto<RoleData>(roles.Select(r => new RoleData(r.Id, r.Name, r.IsDefault, r.IsStatic, r.IsPublic, r.TenantId, r.ExtraProperties)).ToList());
+        }
+    }
+
+    public virtual async Task<ListResultDto<RoleData>> SearchRoleByIdsAsync(Guid[] ids)
+    {
+        using (RoleRepository.DisableTracking())
+        {
+            var roles = await RoleRepository.GetListAsync(ids);
             return new ListResultDto<RoleData>(roles.Select(r => new RoleData(r.Id, r.Name, r.IsDefault, r.IsStatic, r.IsPublic, r.TenantId, r.ExtraProperties)).ToList());
         }
     }

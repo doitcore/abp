@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -27,6 +28,17 @@ public class RoleResourcePermissionProviderKeyLookupService : IResourcePermissio
     public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, CancellationToken cancellationToken = default)
     {
         var roles = await UserRoleFinder.SearchRoleAsync(filter);
+        return roles.Select(r => new ResourcePermissionProviderKeyInfo(r.RoleName, r.RoleName)).ToList();
+    }
+
+    public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string[] keys, CancellationToken cancellationToken = new CancellationToken())
+    {
+        var ids = keys
+            .Select(key => Guid.TryParse(key, out var id) ? (Guid?)id : null)
+            .Where(id => id.HasValue)
+            .Select(id => id.Value)
+            .ToArray();
+        var roles = await UserRoleFinder.SearchRoleByIdsAsync(ids.ToArray());
         return roles.Select(r => new ResourcePermissionProviderKeyInfo(r.RoleName, r.RoleName)).ToList();
     }
 }

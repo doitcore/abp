@@ -9,7 +9,7 @@ var abp = abp || {};
         $all.prop("checked", $items.length === $items.filter(":checked").length);
     });
 
-    var $providerKey = $("#AddModel\\.ProviderKey");
+    var $providerKey = $("#AddModel_ProviderKey");
     $providerKey.select2({
         ajax: {
             url: '/api/permission-management/permissions/search-resource-provider-keys',
@@ -42,6 +42,10 @@ var abp = abp || {};
 
     $('input[name="AddModel.ProviderName"]').change(function () {
         $providerKey.val(null).trigger('change');
+    });
+
+    $('#addResourcePermissionManagementForm').submit(function () {
+         $(this).valid();
     });
 
 })(jQuery);

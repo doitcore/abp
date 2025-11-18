@@ -52,6 +52,14 @@ public partial class IdentityUserIntegrationClientProxy : ClientProxyBase<IIdent
         });
     }
 
+    public virtual async Task<ListResultDto<UserData>> SearchByIdsAsync(Guid[] ids)
+    {
+        return await RequestAsync<ListResultDto<UserData>>(nameof(SearchByIdsAsync), new ClientProxyRequestTypeValue
+        {
+            { typeof(Guid[]), ids }
+        });
+    }
+
     public virtual async Task<long> GetCountAsync(UserLookupCountInputDto input)
     {
         return await RequestAsync<long>(nameof(GetCountAsync), new ClientProxyRequestTypeValue
@@ -65,6 +73,14 @@ public partial class IdentityUserIntegrationClientProxy : ClientProxyBase<IIdent
         return await RequestAsync<ListResultDto<RoleData>>(nameof(SearchRoleAsync), new ClientProxyRequestTypeValue
         {
             { typeof(RoleLookupSearchInputDto), input }
+        });
+    }
+
+    public virtual async Task<ListResultDto<RoleData>> SearchRoleByIdsAsync(Guid[] ids)
+    {
+        return await RequestAsync<ListResultDto<RoleData>>(nameof(SearchRoleByIdsAsync), new ClientProxyRequestTypeValue
+        {
+            { typeof(Guid[]), ids }
         });
     }
 

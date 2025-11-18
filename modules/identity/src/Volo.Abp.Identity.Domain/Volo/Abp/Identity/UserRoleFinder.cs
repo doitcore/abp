@@ -54,4 +54,30 @@ public class UserRoleFinder : IUserRoleFinder, ITransientDependency
             }).ToList();
         }
     }
+
+    public virtual async Task<List<UserFinderResult>> SearchUserByIdsAsync(Guid[] ids)
+    {
+        using (IdentityUserRepository.DisableTracking())
+        {
+            var users = await IdentityUserRepository.GetListByIdsAsync(ids);
+            return users.Select(user => new UserFinderResult
+            {
+                Id = user.Id,
+                UserName = user.UserName
+            }).ToList();
+        }
+    }
+
+    public virtual async Task<List<RoleFinderResult>> SearchRoleByIdsAsync(Guid[] ids)
+    {
+        using (IdentityUserRepository.DisableTracking())
+        {
+            var roles = await IdentityRoleRepository.GetListAsync(ids);
+            return roles.Select(user => new RoleFinderResult
+            {
+                Id = user.Id,
+                RoleName = user.Name
+            }).ToList();
+        }
+    }
 }

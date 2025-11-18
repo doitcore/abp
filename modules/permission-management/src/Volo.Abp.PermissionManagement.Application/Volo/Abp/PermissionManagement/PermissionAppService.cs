@@ -232,6 +232,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             {
                 ProviderName = resourcePermissionGrant.ProviderName,
                 ProviderKey = resourcePermissionGrant.ProviderKey,
+                ProviderDisplayName = resourcePermissionGrant.ProviderDisplayName,
                 Permissions = new List<GrantedResourcePermissionDto>()
             };
 

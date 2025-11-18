@@ -1,5 +1,6 @@
 (function ($) {
     var l = abp.localization.getResource('AbpIdentity');
+    var rl = abp.localization.getResource('AbpPermissionManagement');
 
     var _identityUserAppService = volo.abp.identity.identityUser;
 
@@ -85,7 +86,7 @@
                         },
                     },
                     {
-                        text: l('ResourcePermissions'),
+                        text: rl('ResourcePermissions'),
                         action: function (data) {
                             _resourcePermissionsModal.open({
                                 resourceName: 'Volo.Abp.Identity.IdentityUser',

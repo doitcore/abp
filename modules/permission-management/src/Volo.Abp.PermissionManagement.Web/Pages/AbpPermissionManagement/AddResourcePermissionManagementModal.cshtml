@@ -16,7 +16,7 @@
 <script src="/Pages/AbpPermissionManagement/add-resource-permission-management-modal.js"></script>
 
 <form method="post" asp-page="/AbpPermissionManagement/AddResourcePermissionManagementModal">
-    <abp-modal>
+    <abp-modal id="addResourcePermissionManagementModal">
         <abp-modal-header title="@(L["AddResourcePermissions"].Value)"></abp-modal-header>
         <input asp-for="@Model.ResourceName" />
         <input asp-for="@Model.ResourceKey" />
@@ -38,7 +38,12 @@
                     }
                 </div>
             </div>
-            <abp-input asp-for="@Model.AddModel.ProviderKey"/>
+
+            <div class="mb-3">
+                <label class="form-label" for="AddModel.ProviderKey">ProviderKey:</label>
+                <select asp-for="@Model.AddModel.ProviderKey" id="AddModel.ProviderKey" class="form-control"></select>
+            </div>
+
             <div class="mb-3" id="permissionList">
                 <div class="mb-1 d-flex align-items-center justify-content-between">
                     <label class="form-labe">Permissions:</label>

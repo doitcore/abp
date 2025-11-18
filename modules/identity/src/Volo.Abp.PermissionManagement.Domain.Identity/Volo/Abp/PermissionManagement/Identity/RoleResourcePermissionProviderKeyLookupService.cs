@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Volo.Abp.Authorization.Permissions.Resources;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.Localization;
@@ -11,7 +12,7 @@ namespace Volo.Abp.PermissionManagement.Identity;
 
 public class RoleResourcePermissionProviderKeyLookupService : IResourcePermissionProviderKeyLookupService, ITransientDependency
 {
-    public string Name => "Role";
+    public string Name => RoleResourcePermissionValueProvider.ProviderName;
 
     public ILocalizableString DisplayName { get; }
 

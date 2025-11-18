@@ -28,14 +28,14 @@ public class ResourcePermissionValueProviderManager : IResourcePermissionValuePr
     protected virtual List<IResourcePermissionValueProvider> GetProviders()
     {
         var providers = Options
-            .ValueProviders
+            .ResourceValueProviders
             .Select(type => (ServiceProvider.GetRequiredService(type) as IResourcePermissionValueProvider)!)
             .ToList();
 
         var multipleProviders = providers.GroupBy(p => p.Name).FirstOrDefault(x => x.Count() > 1);
         if(multipleProviders != null)
         {
-            throw new AbpException($"Duplicate permission value provider name detected: {multipleProviders.Key}. Providers:{Environment.NewLine}{multipleProviders.Select(p => p.GetType().FullName!).JoinAsString(Environment.NewLine)}");
+            throw new AbpException($"Duplicate resource permission value provider name detected: {multipleProviders.Key}. Providers:{Environment.NewLine}{multipleProviders.Select(p => p.GetType().FullName!).JoinAsString(Environment.NewLine)}");
         }
 
         return providers;

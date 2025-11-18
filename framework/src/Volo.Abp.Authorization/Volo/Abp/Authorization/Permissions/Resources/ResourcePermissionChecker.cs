@@ -45,7 +45,7 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
     {
         Check.NotNull(name, nameof(name));
 
-        var permission = await PermissionDefinitionManager.GetOrNullAsync(name);
+        var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(name);
         if (permission == null)
         {
             return false;
@@ -115,7 +115,7 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
         var permissionDefinitions = new List<PermissionDefinition>();
         foreach (var name in names)
         {
-            var permission = await PermissionDefinitionManager.GetOrNullAsync(name);
+            var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(name);
             if (permission == null)
             {
                 result.Result.Add(name, PermissionGrantResult.Prohibited);

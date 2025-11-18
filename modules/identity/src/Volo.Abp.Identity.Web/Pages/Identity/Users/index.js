@@ -90,7 +90,7 @@
                         action: function (data) {
                             _resourcePermissionsModal.open({
                                 resourceName: 'Volo.Abp.Identity.IdentityUser',
-                                resourceKey: data.record.name,
+                                resourceKey: data.record.id,
                                 resourceDisplayName: data.record.name + '(Volo.Abp.Identity.IdentityUser)'
                             });
                         },

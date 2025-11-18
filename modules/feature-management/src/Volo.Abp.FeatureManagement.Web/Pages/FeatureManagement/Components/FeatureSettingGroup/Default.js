@@ -11,6 +11,10 @@
                 providerName: 'T'
             });
         });
+
+        _featuresModal.onResult(function(){
+            abp.notify.success(l('SavedSuccessfully'));
+        });
     })
     
 })(jQuery);

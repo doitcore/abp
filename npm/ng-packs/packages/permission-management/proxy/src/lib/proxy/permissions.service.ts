@@ -1,11 +1,13 @@
 import type { GetPermissionListResultDto, UpdatePermissionsDto } from './models';
 import { RestService } from '@abp/ng.core';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PermissionsService {
+  private restService = inject(RestService);
+
   apiName = 'AbpPermissionManagement';
 
   get = (providerName: string, providerKey: string) =>
@@ -24,6 +26,4 @@ export class PermissionsService {
       body: input,
     },
     { apiName: this.apiName });
-
-  constructor(private restService: RestService) {}
 }

@@ -15,6 +15,7 @@ You have to provide the `SubscriptionService` at component or directive level, b
 
 ```js
 import { SubscriptionService } from '@abp/ng.core';
+import { inject } from '@angular/core';
 
 @Component({
   /* class metadata here */
@@ -23,7 +24,9 @@ import { SubscriptionService } from '@abp/ng.core';
 class DemoComponent {
   count$ = interval(1000);
 
-  constructor(private subscription: SubscriptionService) {
+  private subscription = inject(SubscriptionService);
+
+  constructor() {
     this.subscription.addOne(this.count$, console.log);
   }
 }
@@ -45,7 +48,7 @@ You can pass a `next` function and an `error` function.
   providers: [SubscriptionService],
 })
 class DemoComponent implements OnInit {
-  constructor(private subscription: SubscriptionService) {}
+  private subscription = inject(SubscriptionService);
 
   ngOnInit() {
     const source$ = interval(1000);
@@ -68,7 +71,7 @@ Or, you can pass an observer.
   providers: [SubscriptionService],
 })
 class DemoComponent implements OnInit {
-  constructor(private subscription: SubscriptionService) {}
+  private subscription = inject(SubscriptionService);
 
   ngOnInit() {
     const source$ = interval(1000);
@@ -94,7 +97,7 @@ There are two ways to do that. If you are not going to subscribe again, you may 
   providers: [SubscriptionService],
 })
 class DemoComponent implements OnInit {
-  constructor(private subscription: SubscriptionService) {}
+  private subscription = inject(SubscriptionService);
 
   ngOnInit() {
     this.subscription.addOne(interval(1000), console.log);
@@ -114,7 +117,7 @@ This will clear all subscriptions, but you will not be able to subscribe again. 
   providers: [SubscriptionService],
 })
 class DemoComponent implements OnInit {
-  constructor(private subscription: SubscriptionService) {}
+  private subscription = inject(SubscriptionService);
 
   ngOnInit() {
     this.subscription.addOne(interval(1000), console.log);
@@ -138,8 +141,7 @@ Sometimes, you may need to unsubscribe from a particular subscription but leave 
 })
 class DemoComponent implements OnInit {
   countSubscription: Subscription;
-
-  constructor(private subscription: SubscriptionService) {}
+  private subscription = inject(SubscriptionService);
 
   ngOnInit() {
     this.countSubscription = this.subscription.addOne(
@@ -166,8 +168,7 @@ You may want to take control of a particular subscription. In such a case, you m
 })
 class DemoComponent implements OnInit {
   countSubscription: Subscription;
-
-  constructor(private subscription: SubscriptionService) {}
+  private subscription = inject(SubscriptionService);
 
   ngOnInit() {
     this.countSubscription = this.subscription.addOne(
@@ -193,7 +194,7 @@ Please use `isClosed` getter to check if `closeAll` was called before.
   providers: [SubscriptionService],
 })
 class DemoComponent implements OnInit {
-  constructor(private subscription: SubscriptionService) {}
+  private subscription = inject(SubscriptionService);
 
   ngOnInit() {
     this.subscription.addOne(interval(1000), console.log);

@@ -200,7 +200,7 @@ public abstract class AbpApplicationBase : IAbpApplication
         using var scope = ServiceProvider.CreateScope();
         var abpHostEnvironment = scope.ServiceProvider.GetRequiredService<IAbpHostEnvironment>();
         var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-        return abpHostEnvironment.IsDevelopment() && configuration.GetValue<bool?>("Abp:Telemetry:IsEnabled") == true;
+        return abpHostEnvironment.IsDevelopment() && configuration.GetValue<bool?>("Abp:Telemetry:IsEnabled") != false;
     }
 
     //TODO: We can extract a new class for this

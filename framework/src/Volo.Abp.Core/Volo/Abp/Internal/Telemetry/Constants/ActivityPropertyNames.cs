@@ -56,13 +56,14 @@ public static class ActivityPropertyNames
     public const string SoftwareType = "SoftwareType";
     public const string WebFramework = "WebFramework";
     public const string Dbms = "Dbms";
-    public const string UiTheme = "UiTheme";
-    public const string UiThemeStyle = "UiThemeStyle";
+    public const string UiTheme = "Theme";
+    public const string UiThemeStyle = "ThemeStyle";
     public const string MobileApp = "MobileApp";
     public const string SampleCrudPage = "SampleCrudPage";
     public const string FirstAbpVersion = "FirstAbpVersion";
     public const string FirstDotnetVersion = "FirstDotnetVersion";
     public const string CreationTool = "CreationTool";
+    public const string Aspire = "Aspire";
     public const string ModuleName = "ModuleName";
     public const string ModuleVersion = "ModuleVersion";
     public const string ModuleInstallationTime = "ModuleInstallationTime";

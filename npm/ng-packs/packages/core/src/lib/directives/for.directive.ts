@@ -1,15 +1,16 @@
-import {
-  Directive,
-  EmbeddedViewRef,
-  Input,
-  IterableChangeRecord,
-  IterableChanges,
-  IterableDiffer,
-  IterableDiffers,
-  OnChanges,
-  TemplateRef,
-  TrackByFunction,
-  ViewContainerRef,
+import { 
+  Directive, 
+  EmbeddedViewRef, 
+  Input, 
+  IterableChangeRecord, 
+  IterableChanges, 
+  IterableDiffer, 
+  IterableDiffers, 
+  OnChanges, 
+  TemplateRef, 
+  TrackByFunction, 
+  ViewContainerRef, 
+  inject 
 } from '@angular/core';
 import clone from 'just-clone';
 import compare from 'just-compare';
@@ -36,6 +37,10 @@ class RecordView {
   selector: '[abpFor]',
 })
 export class ForDirective implements OnChanges {
+  private tempRef = inject<TemplateRef<AbpForContext>>(TemplateRef);
+  private vcRef = inject(ViewContainerRef);
+  private differs = inject(IterableDiffers);
+
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('abpForOf')
   items!: any[];
@@ -72,12 +77,6 @@ export class ForDirective implements OnChanges {
   get trackByFn(): TrackByFunction<any> {
     return this.trackBy || ((index: number, item: any) => (item as any).id || index);
   }
-
-  constructor(
-    private tempRef: TemplateRef<AbpForContext>,
-    private vcRef: ViewContainerRef,
-    private differs: IterableDiffers,
-  ) {}
 
   private iterateOverAppliedOperations(changes: IterableChanges<any>) {
     const rw: RecordView[] = [];

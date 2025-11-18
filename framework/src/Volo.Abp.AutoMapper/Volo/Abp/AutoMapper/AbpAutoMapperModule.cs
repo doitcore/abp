@@ -39,6 +39,7 @@ public class AbpAutoMapperModule : AbpModule
                 {
                     configurator(autoMapperConfigurationContext);
                 }
+
                 var mapperConfiguration = new MapperConfiguration(mapperConfigurationExpression);
 
                 foreach (var profileType in options.ValidatingProfiles)

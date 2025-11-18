@@ -11,10 +11,14 @@ import {
   CommentListComponent,
   CommentApproveComponent,
   CommentDetailsComponent,
+  TagListComponent,
 } from './components';
 import {
   CMS_KIT_ADMIN_ENTITY_ACTION_CONTRIBUTORS,
   CMS_KIT_ADMIN_ENTITY_PROP_CONTRIBUTORS,
+  CMS_KIT_ADMIN_TOOLBAR_ACTION_CONTRIBUTORS,
+  CMS_KIT_ADMIN_CREATE_FORM_PROP_CONTRIBUTORS,
+  CMS_KIT_ADMIN_EDIT_FORM_PROP_CONTRIBUTORS,
 } from './tokens';
 import { cmsKitAdminExtensionsResolver } from './resolvers';
 import { CmsKitAdminConfigOptions } from './models';
@@ -72,6 +76,21 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
           },
           title: 'CmsKit::Comments',
         },
+        {
+          path: 'tags',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.Tags',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.TagList,
+              defaultComponent: TagListComponent,
+            },
+          },
+          title: 'CmsKit::Tags',
+        },
       ],
     },
   ];
@@ -86,6 +105,18 @@ function provideCmsKitAdminContributors(options: CmsKitAdminConfigOptions = {}):
     {
       provide: CMS_KIT_ADMIN_ENTITY_PROP_CONTRIBUTORS,
       useValue: options.entityPropContributors,
+    },
+    {
+      provide: CMS_KIT_ADMIN_TOOLBAR_ACTION_CONTRIBUTORS,
+      useValue: options.toolbarActionContributors,
+    },
+    {
+      provide: CMS_KIT_ADMIN_CREATE_FORM_PROP_CONTRIBUTORS,
+      useValue: options.createFormPropContributors,
+    },
+    {
+      provide: CMS_KIT_ADMIN_EDIT_FORM_PROP_CONTRIBUTORS,
+      useValue: options.editFormPropContributors,
     },
   ];
 }

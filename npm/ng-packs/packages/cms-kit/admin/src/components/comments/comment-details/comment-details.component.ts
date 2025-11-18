@@ -15,7 +15,7 @@ import {
   commentApproveStateOptions,
 } from '@abp/ng.cms-kit/proxy';
 import { eCmsKitAdminComponents } from '../../../enums';
-import { CMS_KIT_COMMENTS_REQUIRE_APPROVEMENT } from '../comment-list';
+import { CMS_KIT_COMMENTS_REQUIRE_APPROVEMENT } from '../constants';
 
 @Component({
   selector: 'abp-comment-details',

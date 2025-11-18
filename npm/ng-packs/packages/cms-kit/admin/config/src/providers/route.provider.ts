@@ -1,5 +1,4 @@
 import { eLayoutType, RoutesService } from '@abp/ng.core';
-import { eThemeSharedRouteNames } from '@abp/ng.theme.shared';
 import { inject, provideAppInitializer } from '@angular/core';
 import { eCmsKitAdminPolicyNames } from '../enums/policy-names';
 import { eCmsKitAdminRouteNames } from '../enums/route-names';
@@ -16,7 +15,7 @@ export function configureRoutes() {
     {
       path: '/cms/comments',
       name: eCmsKitAdminRouteNames.Comments,
-      parentName: 'CmsKit::Menu:CMS',
+      parentName: eCmsKitAdminRouteNames.Cms,
       order: 100,
       layout: eLayoutType.application,
       iconClass: 'fa fa-comments',
@@ -25,7 +24,7 @@ export function configureRoutes() {
     {
       path: '/cms/tags',
       name: eCmsKitAdminRouteNames.Tags,
-      parentName: eThemeSharedRouteNames.Administration,
+      parentName: eCmsKitAdminRouteNames.Cms,
       order: 101,
       layout: eLayoutType.application,
       iconClass: 'fa fa-tags',
@@ -34,7 +33,7 @@ export function configureRoutes() {
     {
       path: '/cms/pages',
       name: eCmsKitAdminRouteNames.Pages,
-      parentName: eThemeSharedRouteNames.Administration,
+      parentName: eCmsKitAdminRouteNames.Cms,
       order: 102,
       layout: eLayoutType.application,
       iconClass: 'fa fa-file',
@@ -43,7 +42,7 @@ export function configureRoutes() {
     {
       path: '/cms/blogs',
       name: eCmsKitAdminRouteNames.Blogs,
-      parentName: eThemeSharedRouteNames.Administration,
+      parentName: eCmsKitAdminRouteNames.Cms,
       order: 103,
       layout: eLayoutType.application,
       iconClass: 'fa fa-blog',
@@ -52,7 +51,7 @@ export function configureRoutes() {
     {
       path: '/cms/blog-posts',
       name: eCmsKitAdminRouteNames.BlogPosts,
-      parentName: eThemeSharedRouteNames.Administration,
+      parentName: eCmsKitAdminRouteNames.Cms,
       order: 104,
       layout: eLayoutType.application,
       iconClass: 'fa fa-file-alt',
@@ -61,7 +60,7 @@ export function configureRoutes() {
     {
       path: '/cms/menus',
       name: eCmsKitAdminRouteNames.Menus,
-      parentName: eThemeSharedRouteNames.Administration,
+      parentName: eCmsKitAdminRouteNames.Cms,
       order: 105,
       layout: eLayoutType.application,
       iconClass: 'fa fa-bars',
@@ -70,7 +69,7 @@ export function configureRoutes() {
     {
       path: '/cms/global-resources',
       name: eCmsKitAdminRouteNames.GlobalResources,
-      parentName: eThemeSharedRouteNames.Administration,
+      parentName: eCmsKitAdminRouteNames.Cms,
       order: 106,
       layout: eLayoutType.application,
       iconClass: 'fa fa-globe',

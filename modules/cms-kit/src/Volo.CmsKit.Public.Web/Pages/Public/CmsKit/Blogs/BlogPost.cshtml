@@ -130,16 +130,6 @@
     </div>
 
     <div class="col-md-2 d-sm-none d-md-block">
-        @if (Model.ViewModel.Author.Id == CurrentUser.Id)
-        {
-            <button id="deleteBlogPost" class="btn btn-danger">
-                <i class="fa fa-remove">
-                </i>
-                    @L["Delete"]
-            </button>
-
-            <hr />
-        }
         @if (isScrollIndexEnabled)
         {
             <div id="scroll-index" class="docs-inner-anchors mt-2">

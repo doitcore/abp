@@ -1,15 +1,10 @@
 (function ($) {
     var l = abp.localization.getResource('AbpIdentity');
-    var rl = abp.localization.getResource('AbpPermissionManagement');
 
     var _identityRoleAppService = volo.abp.identity.identityRole;
     var _permissionsModal = new abp.ModalManager(
         abp.appPath + 'AbpPermissionManagement/PermissionManagementModal'
     );
-    var _resourcePermissionsModal = new abp.ModalManager({
-        viewUrl: abp.appPath + "AbpPermissionManagement/ResourcePermissionManagementModal",
-        modalClass: 'ResourcePermissionManagement'
-    });
     var _editModal = new abp.ModalManager(
         abp.appPath + 'Identity/Roles/EditModal'
     );
@@ -44,16 +39,6 @@
                                 providerName: 'R',
                                 providerKey: data.record.name,
                                 providerKeyDisplayName: data.record.name
-                            });
-                        },
-                    },
-                    {
-                        text: rl('ResourcePermissions'),
-                        action: function (data) {
-                            _resourcePermissionsModal.open({
-                                resourceName: 'Volo.Abp.Identity.IdentityRole',
-                                resourceKey: data.record.id,
-                                resourceDisplayName: data.record.name + '(Volo.Abp.Identity.IdentityRole)'
                             });
                         },
                     },

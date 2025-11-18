@@ -1,6 +1,5 @@
 (function ($) {
     var l = abp.localization.getResource('AbpIdentity');
-    var rl = abp.localization.getResource('AbpPermissionManagement');
 
     var _identityUserAppService = volo.abp.identity.identityUser;
 
@@ -51,10 +50,7 @@
     var _permissionsModal = new abp.ModalManager(
         abp.appPath + 'AbpPermissionManagement/PermissionManagementModal'
     );
-    var _resourcePermissionsModal = new abp.ModalManager({
-        viewUrl: abp.appPath + "AbpPermissionManagement/ResourcePermissionManagementModal",
-        modalClass: 'ResourcePermissionManagement'
-    });
+
     var _dataTable = null;
 
     abp.ui.extensions.entityActions.get('identity.user').addContributor(
@@ -82,16 +78,6 @@
                                 providerName: 'U',
                                 providerKey: data.record.id,
                                 providerKeyDisplayName: data.record.userName
-                            });
-                        },
-                    },
-                    {
-                        text: rl('ResourcePermissions'),
-                        action: function (data) {
-                            _resourcePermissionsModal.open({
-                                resourceName: 'Volo.Abp.Identity.IdentityUser',
-                                resourceKey: data.record.id,
-                                resourceDisplayName: data.record.name + '(Volo.Abp.Identity.IdentityUser)'
                             });
                         },
                     },

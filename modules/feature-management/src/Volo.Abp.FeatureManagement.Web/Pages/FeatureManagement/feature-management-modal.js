@@ -13,12 +13,9 @@ var abp = abp || {};
                         let providerName = $('#ProviderName').val();
                         let prodiverKey = $('#ProviderKey').val();
                         volo.abp.featureManagement.features.delete(providerName, prodiverKey).then(function () {
-                            abp.notify.success(l('ResetedToDefault'));
-                        });
-                        setTimeout(function () {
-                            $("#FeatureManagementForm").trigger('abp-ajax-success');
+                            abp.notify.success(l('SavedSuccessfully'));
                             $('#featureManagmentModal').modal('hide');
-                        }, 500);
+                        });
                     }
                 });
         });

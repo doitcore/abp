@@ -6,7 +6,7 @@ namespace Volo.Abp.Authorization.Permissions.Resources;
 
 public static class EntityResourcePermissionCheckerExtensions
 {
-        /// <summary>
+    /// <summary>
     /// Checks if the specified permission is granted for the given entity.
     /// </summary>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>

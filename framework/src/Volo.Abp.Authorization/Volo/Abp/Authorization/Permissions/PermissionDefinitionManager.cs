@@ -43,7 +43,7 @@ public class PermissionDefinitionManager : IPermissionDefinitionManager, ITransi
         var permission = await GetResourcePermissionOrNullAsync(name);
         if (permission == null)
         {
-            throw new AbpException("Undefined permission: " + name);
+            throw new AbpException("Undefined resource permission: " + name);
         }
 
         return permission;

@@ -35,15 +35,11 @@ public class ResourcePermissionManagementModal : AbpPageModel
 
     public virtual Task<IActionResult> OnGetAsync()
     {
-        ValidateModel();
         return Task.FromResult<IActionResult>(Page());
     }
 
     public virtual async Task<IActionResult> OnPostAsync()
     {
-        ValidateModel();
-
-
         return NoContent();
     }
 

@@ -82,7 +82,7 @@ public class DynamicPermissionDefinitionStore : IDynamicPermissionDefinitionStor
         using (await StoreCache.SyncSemaphore.LockAsync())
         {
             await EnsureCacheIsUptoDateAsync();
-            return StoreCache.GetPermissionOrNull(name);
+            return StoreCache.GetResourcePermissionOrNull(name);
         }
     }
 
@@ -96,7 +96,7 @@ public class DynamicPermissionDefinitionStore : IDynamicPermissionDefinitionStor
         using (await StoreCache.SyncSemaphore.LockAsync())
         {
             await EnsureCacheIsUptoDateAsync();
-            return StoreCache.GetPermissions().ToImmutableList();
+            return StoreCache.GetResourcePermissions().ToImmutableList();
         }
     }
 

@@ -16,10 +16,11 @@
     "ResourcePermissionDeletionConfirmationMessage": "Are you sure you want to delete this resource permissions?",
     "AddResourcePermissions": "Add resource permissions",
     "UpdateResourcePermissions": "Update resource permissions",
-    "ResourceName": "Resource Name",
-    "ResourceKey": "Resource Key",
-    "ProviderName": "Provider Name",
-    "ProviderKey": "Provider Key",
+    "Resource": "Resource",
+    "ResourceName": "Resource name",
+    "ResourceKey": "Resource key",
+    "ProviderName": "Provider name",
+    "ProviderKey": "Provider key",
     "GrantAllResourcePermissions": "Grant all"
   }
 }

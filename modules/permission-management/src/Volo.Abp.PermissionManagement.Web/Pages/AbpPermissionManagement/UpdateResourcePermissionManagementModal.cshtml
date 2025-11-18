@@ -24,10 +24,8 @@
         <input asp-for="@Model.ProviderKey" />
         <abp-modal-body>
             <div class="mb-3">
-                <label class="form-label">@L["ResourceName"]:</label>
-                <p>@(HttpUtility.HtmlEncode(Model.ResourceName))</p>
-                <label class="form-label">@L["ResourceKey"]:</label>
-                <p>@(HttpUtility.HtmlEncode(Model.ResourceKey))</p>
+                <label class="form-label">@L["Resource"]:</label>
+                <p>@(HttpUtility.HtmlEncode(Model.ResourceDisplayName))</p>
             </div>
             <div class="mb-3" id="permissionList">
                 <div class="mb-1 d-flex align-items-center justify-content-between">

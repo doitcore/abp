@@ -246,7 +246,7 @@ If a workspace configures only the Kernel, a chat client may still be exposed fo
 
 ## Advanced Usage and Customizations
 
-### Addding Your Own DelegatingChatClient
+### Adding Your Own DelegatingChatClient
 
 If you want to build your own decorator, implement a `DelegatingChatClient` derivative and provide an extension method that adds it to the `ChatClientBuilder` using `builder.Use(...)`.
 
@@ -303,5 +303,5 @@ There are no database tables for this feature; it is a pure configuration and DI
 
 ## See Also
 
-- Microsoft.Extensions.AI (Chat Client)
-- Microsoft Semantic Kernel
+- [Microsoft.Extensions.AI (Chat Client)](https://learn.microsoft.com/en-us/dotnet/api/microsoft.extensions.ai.ichatclient)
+- [Microsoft Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/)

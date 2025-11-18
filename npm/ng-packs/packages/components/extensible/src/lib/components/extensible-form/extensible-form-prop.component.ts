@@ -155,7 +155,9 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.isFirstGroup && this.first && this.fieldRef) {
-      this.fieldRef.nativeElement.focus();
+      requestAnimationFrame(() => {
+        this.fieldRef.nativeElement.focus();
+      });
     }
   }
 

@@ -170,20 +170,11 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
     this.asterisk = this.service.calcAsterisks(this.validators);
   }
 
-  private focusElement() {
-    try {
-      this.fieldRef.nativeElement.focus();
-      this.shouldFocus.set(false);
-    } catch (error) {
-      console.error('Error focusing field:', error);
-    }
-  }
-
   ngAfterViewInit() {
-    this.isViewReady.set(true);
-
-    if (this.isFirstGroup && this.first) {
-      this.shouldFocus.set(true);
+    if (this.isFirstGroup && this.first && this.fieldRef) {
+      requestAnimationFrame(() => {
+        this.fieldRef.nativeElement.focus();
+      });
     }
   }
 

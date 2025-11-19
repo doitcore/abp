@@ -3,11 +3,14 @@ import {
   TagDto,
   PageDto,
   BlogDto,
+  BlogPostListDto,
   TagCreateDto,
   TagUpdateDto,
   CreateBlogDto,
+  CreateBlogPostDto,
   CreatePageInputDto,
   UpdateBlogDto,
+  UpdateBlogPostDto,
   UpdatePageInputDto,
 } from '@abp/ng.cms-kit/proxy';
 import {
@@ -41,6 +44,13 @@ import {
   DEFAULT_BLOG_CREATE_FORM_PROPS,
   DEFAULT_BLOG_EDIT_FORM_PROPS,
 } from '../defaults/blogs';
+import {
+  DEFAULT_BLOG_POST_ENTITY_ACTIONS,
+  DEFAULT_BLOG_POST_ENTITY_PROPS,
+  DEFAULT_BLOG_POST_TOOLBAR_ACTIONS,
+  DEFAULT_BLOG_POST_CREATE_FORM_PROPS,
+  DEFAULT_BLOG_POST_EDIT_FORM_PROPS,
+} from '../defaults/blog-posts';
 import { eCmsKitAdminComponents } from '../enums';
 
 export const DEFAULT_CMS_KIT_ADMIN_ENTITY_ACTIONS = {
@@ -50,6 +60,7 @@ export const DEFAULT_CMS_KIT_ADMIN_ENTITY_ACTIONS = {
   [eCmsKitAdminComponents.Tags]: DEFAULT_TAG_ENTITY_ACTIONS,
   [eCmsKitAdminComponents.Pages]: DEFAULT_PAGE_ENTITY_ACTIONS,
   [eCmsKitAdminComponents.Blogs]: DEFAULT_BLOG_ENTITY_ACTIONS,
+  [eCmsKitAdminComponents.BlogPosts]: DEFAULT_BLOG_POST_ENTITY_ACTIONS,
 };
 
 export const DEFAULT_CMS_KIT_ADMIN_ENTITY_PROPS = {
@@ -59,12 +70,14 @@ export const DEFAULT_CMS_KIT_ADMIN_ENTITY_PROPS = {
   [eCmsKitAdminComponents.Tags]: DEFAULT_TAG_ENTITY_PROPS,
   [eCmsKitAdminComponents.Pages]: DEFAULT_PAGE_ENTITY_PROPS,
   [eCmsKitAdminComponents.Blogs]: DEFAULT_BLOG_ENTITY_PROPS,
+  [eCmsKitAdminComponents.BlogPosts]: DEFAULT_BLOG_POST_ENTITY_PROPS,
 };
 
 export const DEFAULT_CMS_KIT_ADMIN_TOOLBAR_ACTIONS = {
   [eCmsKitAdminComponents.Tags]: DEFAULT_TAG_TOOLBAR_ACTIONS,
   [eCmsKitAdminComponents.Pages]: DEFAULT_PAGE_TOOLBAR_ACTIONS,
   [eCmsKitAdminComponents.Blogs]: DEFAULT_BLOG_TOOLBAR_ACTIONS,
+  [eCmsKitAdminComponents.BlogPosts]: DEFAULT_BLOG_POST_TOOLBAR_ACTIONS,
 };
 
 export const DEFAULT_CMS_KIT_ADMIN_CREATE_FORM_PROPS = {
@@ -72,6 +85,7 @@ export const DEFAULT_CMS_KIT_ADMIN_CREATE_FORM_PROPS = {
   [eCmsKitAdminComponents.Pages]: DEFAULT_PAGE_CREATE_FORM_PROPS,
   [eCmsKitAdminComponents.Blogs]: DEFAULT_BLOG_CREATE_FORM_PROPS,
   [eCmsKitAdminComponents.PageForm]: DEFAULT_PAGE_CREATE_FORM_PROPS,
+  [eCmsKitAdminComponents.BlogPostForm]: DEFAULT_BLOG_POST_CREATE_FORM_PROPS,
 };
 
 export const DEFAULT_CMS_KIT_ADMIN_EDIT_FORM_PROPS = {
@@ -79,6 +93,7 @@ export const DEFAULT_CMS_KIT_ADMIN_EDIT_FORM_PROPS = {
   [eCmsKitAdminComponents.Pages]: DEFAULT_PAGE_EDIT_FORM_PROPS,
   [eCmsKitAdminComponents.Blogs]: DEFAULT_BLOG_EDIT_FORM_PROPS,
   [eCmsKitAdminComponents.PageForm]: DEFAULT_PAGE_EDIT_FORM_PROPS,
+  [eCmsKitAdminComponents.BlogPostForm]: DEFAULT_BLOG_POST_EDIT_FORM_PROPS,
 };
 
 export const CMS_KIT_ADMIN_ENTITY_ACTION_CONTRIBUTORS =
@@ -105,6 +120,7 @@ type EntityActionContributors = Partial<{
   [eCmsKitAdminComponents.Tags]: EntityActionContributorCallback<TagDto>[];
   [eCmsKitAdminComponents.Pages]: EntityActionContributorCallback<PageDto>[];
   [eCmsKitAdminComponents.Blogs]: EntityActionContributorCallback<BlogDto>[];
+  [eCmsKitAdminComponents.BlogPosts]: EntityActionContributorCallback<BlogPostListDto>[];
 }>;
 
 type EntityPropContributors = Partial<{
@@ -114,22 +130,26 @@ type EntityPropContributors = Partial<{
   [eCmsKitAdminComponents.Tags]: EntityPropContributorCallback<TagDto>[];
   [eCmsKitAdminComponents.Pages]: EntityPropContributorCallback<PageDto>[];
   [eCmsKitAdminComponents.Blogs]: EntityPropContributorCallback<BlogDto>[];
+  [eCmsKitAdminComponents.BlogPosts]: EntityPropContributorCallback<BlogPostListDto>[];
 }>;
 
 type ToolbarActionContributors = Partial<{
   [eCmsKitAdminComponents.Tags]: ToolbarActionContributorCallback<TagDto[]>[];
   [eCmsKitAdminComponents.Pages]: ToolbarActionContributorCallback<PageDto[]>[];
   [eCmsKitAdminComponents.Blogs]: ToolbarActionContributorCallback<BlogDto[]>[];
+  [eCmsKitAdminComponents.BlogPosts]: ToolbarActionContributorCallback<BlogPostListDto[]>[];
 }>;
 
 type CreateFormPropContributors = Partial<{
   [eCmsKitAdminComponents.Tags]: CreateFormPropContributorCallback<TagCreateDto>[];
   [eCmsKitAdminComponents.PageForm]: CreateFormPropContributorCallback<CreatePageInputDto>[];
   [eCmsKitAdminComponents.Blogs]: CreateFormPropContributorCallback<CreateBlogDto>[];
+  [eCmsKitAdminComponents.BlogPostForm]: CreateFormPropContributorCallback<CreateBlogPostDto>[];
 }>;
 
 type EditFormPropContributors = Partial<{
   [eCmsKitAdminComponents.Tags]: EditFormPropContributorCallback<TagUpdateDto>[];
   [eCmsKitAdminComponents.PageForm]: EditFormPropContributorCallback<UpdatePageInputDto>[];
   [eCmsKitAdminComponents.Blogs]: EditFormPropContributorCallback<UpdateBlogDto>[];
+  [eCmsKitAdminComponents.BlogPostForm]: EditFormPropContributorCallback<UpdateBlogPostDto>[];
 }>;

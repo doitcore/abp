@@ -11,6 +11,7 @@ export enum eCmsKitAdminComponents {
   Blogs = 'CmsKit.Admin.Blogs',
 
   BlogPosts = 'CmsKit.Admin.BlogPosts',
+  BlogPostForm = 'CmsKit.Admin.BlogPostForm',
 
   Menus = 'CmsKit.Admin.Menus',
 

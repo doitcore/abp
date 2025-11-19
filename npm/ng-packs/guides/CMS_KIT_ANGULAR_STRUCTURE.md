@@ -1203,15 +1203,15 @@ export enum eCmsKitAdminRouteNames {
 
 ### Phase 5: Admin - Blogs Feature
 
-- [ ] Create Blog components
-- [ ] Create default extension points
-- [ ] Add routes and providers
+- [x] Create Blog components
+- [x] Create default extension points
+- [x] Add routes and providers
 
 ### Phase 6: Admin - Blog Posts Feature
 
-- [ ] Create BlogPost components
-- [ ] Create default extension points
-- [ ] Add routes and providers
+- [x] Create BlogPost components
+- [x] Create default extension points
+- [x] Add routes and providers
 
 ### Phase 7: Admin - Menus Feature
 

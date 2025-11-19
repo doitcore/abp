@@ -15,6 +15,8 @@ import {
   PageListComponent,
   PageFormComponent,
   BlogListComponent,
+  BlogPostListComponent,
+  BlogPostFormComponent,
 } from './components';
 import {
   CMS_KIT_ADMIN_ENTITY_ACTION_CONTRIBUTORS,
@@ -153,6 +155,51 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
             },
           },
           title: 'CmsKit::Blogs',
+        },
+        {
+          path: 'blog-posts',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.BlogPosts',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.BlogPosts,
+              defaultComponent: BlogPostListComponent,
+            },
+          },
+          title: 'CmsKit::BlogPosts',
+        },
+        {
+          path: 'blog-posts/create',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.BlogPosts.Create',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.BlogPostForm,
+              defaultComponent: BlogPostFormComponent,
+            },
+          },
+          title: 'CmsKit::BlogPosts',
+        },
+        {
+          path: 'blog-posts/update/:id',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.BlogPosts.Update',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.BlogPostForm,
+              defaultComponent: BlogPostFormComponent,
+            },
+          },
+          title: 'CmsKit::BlogPosts',
         },
       ],
     },

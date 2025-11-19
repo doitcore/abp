@@ -9,6 +9,7 @@ var abp = abp || {};
         $all.prop("checked", $items.length === $items.filter(":checked").length);
     });
 
+    var $permissionManagementForm = $("#addResourcePermissionManagementForm");
     var $providerKey = $("#AddModel_ProviderKey");
     $providerKey.select2({
         ajax: {
@@ -44,7 +45,13 @@ var abp = abp || {};
         $providerKey.val(null).trigger('change');
     });
 
-    $('#addResourcePermissionManagementForm').submit(function () {
+    $providerKey.change(function () {
+        if ($providerKey.val()) {
+            $permissionManagementForm.valid();
+        }
+    });
+
+    $permissionManagementForm.submit(function () {
          $(this).valid();
     });
 

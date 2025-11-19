@@ -40,6 +40,9 @@ export const cmsKitAdminExtensionsResolver: ResolveFn<any> = () => {
       [eCmsKitAdminComponents.CommentApprove]: entities.Comment,
       [eCmsKitAdminComponents.CommentDetails]: entities.Comment,
       [eCmsKitAdminComponents.TagList]: entities.Tag,
+      [eCmsKitAdminComponents.PageList]: entities.Page,
+      [eCmsKitAdminComponents.PageCreate]: entities.Page,
+      [eCmsKitAdminComponents.PageEdit]: entities.Page,
     })),
     mapEntitiesToContributors(injector, 'CmsKit'),
     tap(objectExtensionContributors => {

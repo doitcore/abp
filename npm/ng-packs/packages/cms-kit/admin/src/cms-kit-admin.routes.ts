@@ -12,6 +12,8 @@ import {
   CommentApproveComponent,
   CommentDetailsComponent,
   TagListComponent,
+  PageListComponent,
+  PageFormComponent,
 } from './components';
 import {
   CMS_KIT_ADMIN_ENTITY_ACTION_CONTRIBUTORS,
@@ -90,6 +92,51 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
             },
           },
           title: 'CmsKit::Tags',
+        },
+        {
+          path: 'pages',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.Pages',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.PageList,
+              defaultComponent: PageListComponent,
+            },
+          },
+          title: 'CmsKit::Pages',
+        },
+        {
+          path: 'pages/create',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.Pages.Create',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.PageCreate,
+              defaultComponent: PageFormComponent,
+            },
+          },
+          title: 'CmsKit::Pages',
+        },
+        {
+          path: 'pages/update/:id',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.Pages.Update',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.PageEdit,
+              defaultComponent: PageFormComponent,
+            },
+          },
+          title: 'CmsKit::Pages',
         },
       ],
     },

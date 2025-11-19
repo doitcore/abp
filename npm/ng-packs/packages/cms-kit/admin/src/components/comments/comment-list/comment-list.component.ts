@@ -18,7 +18,6 @@ import { CMS_KIT_COMMENTS_REQUIRE_APPROVEMENT } from '../constants';
 
 @Component({
   selector: 'abp-comment-list',
-  standalone: true,
   templateUrl: './comment-list.component.html',
   providers: [
     ListService,

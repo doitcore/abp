@@ -1175,31 +1175,31 @@ export enum eCmsKitAdminRouteNames {
 
 ### Phase 1: Foundation
 
-- [ ] Create package structure (admin, public, proxy)
-- [ ] Set up TypeScript configurations
-- [ ] Set up ng-package.json files
-- [ ] Create base models and enums
-- [ ] Set up service base classes
+- [x] Create package structure (admin, public, proxy)
+- [x] Set up TypeScript configurations
+- [x] Set up ng-package.json files
+- [x] Create base models and enums
+- [x] Set up service base classes
 
 ### Phase 2: Admin - Comments Feature
 
-- [ ] Create CommentListComponent
-- [ ] Create CommentApproveComponent
-- [ ] Create CommentDetailsComponent
-- [ ] Create default extension points
-- [ ] Add routes and providers
+- [x] Create CommentListComponent
+- [x] Create CommentApproveComponent
+- [x] Create CommentDetailsComponent
+- [x] Create default extension points
+- [x] Add routes and providers
 
 ### Phase 3: Admin - Tags Feature
 
-- [ ] Create Tag components
-- [ ] Create default extension points
-- [ ] Add routes and providers
+- [x] Create Tag components
+- [x] Create default extension points
+- [x] Add routes and providers
 
 ### Phase 4: Admin - Pages Feature
 
-- [ ] Create Page components
-- [ ] Create default extension points
-- [ ] Add routes and providers
+- [x] Create Page components
+- [x] Create default extension points
+- [x] Add routes and providers
 
 ### Phase 5: Admin - Blogs Feature
 

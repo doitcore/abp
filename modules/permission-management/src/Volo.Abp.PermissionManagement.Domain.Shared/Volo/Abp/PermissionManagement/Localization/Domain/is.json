@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Velja allt",
     "SaveWithoutAnyPermissionsWarningMessage": "Ertu viss um að þú viljir vista án nokkurra heimilda?",
     "PermissionGroup": "Heimildahópur",
-    "Filter": "Sía"
+    "Filter": "Sía",
+    "Permission:PermissionManagement": "Heimildastjórnun",
+    "Permission:ManageResourcePermissions": "Stjórna heimildum auðlinda",
+    "ResourcePermissions": "Heimildir auðlinda",
+    "ResourcePermissionTarget": "Markmið",
+    "ResourcePermissionPermissions": "Heimildir",
+    "AddResourcePermission": "Bæta við heimildum auðlinda",
+    "ResourcePermissionDeletionConfirmationMessage": "Ertu viss um að þú viljir eyða þessum heimildum auðlinda?",
+    "AddResourcePermissions": "Bæta við heimildum auðlinda",
+    "UpdateResourcePermissions": "Uppfæra heimildir auðlinda",
+    "Resource": "Auðlind",
+    "ResourceName": "Nafn auðlindar",
+    "ResourceKey": "Lykill auðlindar",
+    "ProviderName": "Nafn veitanda",
+    "ProviderKey": "Lykill veitanda",
+    "GrantAllResourcePermissions": "Veita allt"
   }
 }

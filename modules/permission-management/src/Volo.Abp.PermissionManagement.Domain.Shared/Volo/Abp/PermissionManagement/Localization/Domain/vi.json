@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Chọn tất cả",
     "SaveWithoutAnyPermissionsWarningMessage": "Bạn có chắc chắn muốn lưu mà không có bất kỳ quyền nào không?",
     "PermissionGroup": "Nhóm quyền",
-    "Filter": "Lọc"
+    "Filter": "Lọc",
+    "Permission:PermissionManagement": "Quản lý quyền",
+    "Permission:ManageResourcePermissions": "Quản lý quyền tài nguyên",
+    "ResourcePermissions": "Quyền tài nguyên",
+    "ResourcePermissionTarget": "Mục tiêu",
+    "ResourcePermissionPermissions": "Quyền",
+    "AddResourcePermission": "Thêm quyền tài nguyên",
+    "ResourcePermissionDeletionConfirmationMessage": "Bạn có chắc chắn muốn xóa các quyền tài nguyên này không?",
+    "AddResourcePermissions": "Thêm quyền tài nguyên",
+    "UpdateResourcePermissions": "Cập nhật quyền tài nguyên",
+    "Resource": "Tài nguyên",
+    "ResourceName": "Tên tài nguyên",
+    "ResourceKey": "Khóa tài nguyên",
+    "ProviderName": "Tên nhà cung cấp",
+    "ProviderKey": "Khóa nhà cung cấp",
+    "GrantAllResourcePermissions": "Cấp tất cả"
   }
 }

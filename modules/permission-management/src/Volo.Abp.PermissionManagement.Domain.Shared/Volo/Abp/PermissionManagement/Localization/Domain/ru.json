@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Выбрать все",
     "SaveWithoutAnyPermissionsWarningMessage": "Вы уверены, что хотите сохранить без каких-либо разрешений?",
     "PermissionGroup": "Группа разрешений",
-    "Filter": "Фильтр"
+    "Filter": "Фильтр",
+    "Permission:PermissionManagement": "Управление разрешениями",
+    "Permission:ManageResourcePermissions": "Управление разрешениями ресурсов",
+    "ResourcePermissions": "Разрешения ресурсов",
+    "ResourcePermissionTarget": "Цель",
+    "ResourcePermissionPermissions": "Разрешения",
+    "AddResourcePermission": "Добавить разрешения ресурсов",
+    "ResourcePermissionDeletionConfirmationMessage": "Вы уверены, что хотите удалить эти разрешения ресурсов?",
+    "AddResourcePermissions": "Добавить разрешения ресурсов",
+    "UpdateResourcePermissions": "Обновить разрешения ресурсов",
+    "Resource": "Ресурс",
+    "ResourceName": "Имя ресурса",
+    "ResourceKey": "Ключ ресурса",
+    "ProviderName": "Имя поставщика",
+    "ProviderKey": "Ключ поставщика",
+    "GrantAllResourcePermissions": "Предоставить все"
   }
 }

@@ -166,7 +166,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         }
     }
 
-    [Authorize] //TODO: Check permission
+    [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync()
     {
         var lookupServices = await ResourcePermissionManager.GetProviderKeyLookupServicesAsync();
@@ -180,7 +180,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         };
     }
 
-    [Authorize] //TODO: Check permission
+    [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter)
     {
         var lookupService = await ResourcePermissionManager.GetProviderKeyLookupServiceAsync(serviceName);
@@ -195,7 +195,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         };
     }
 
-    [Authorize] //TODO: Check permission
+    [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task<GetResourcePermissionDefinitionListResultDto> GetResourceDefinitionsAsync(string resourceName)
     {
         var result = new GetResourcePermissionDefinitionListResultDto
@@ -216,7 +216,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         return result;
     }
 
-    [Authorize] //TODO: Check permission
+    [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task<GetResourcePermissionListResultDto> GetResourceAsync(string resourceName, string resourceKey)
     {
         var result = new GetResourcePermissionListResultDto
@@ -251,7 +251,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         return result;
     }
 
-    [Authorize] //TODO: Check permission
+    [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task<GetResourcePermissionWithProviderListResultDto> GetResourceByProviderAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
         var result = new GetResourcePermissionWithProviderListResultDto
@@ -273,7 +273,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         return result;
     }
 
-    [Authorize] //TODO: Check permission
+    [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task UpdateResourceAsync(string resourceName, string resourceKey, UpdateResourcePermissionsDto input)
     {
         var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
@@ -284,7 +284,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         }
     }
 
-    [Authorize] //TODO: Check permission
+    [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task DeleteResourceAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
         var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);

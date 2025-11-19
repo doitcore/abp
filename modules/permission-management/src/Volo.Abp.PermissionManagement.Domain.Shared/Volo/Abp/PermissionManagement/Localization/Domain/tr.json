@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Hepsini seç",
     "SaveWithoutAnyPermissionsWarningMessage": "Hiçbir izin olmadan kaydetmek istediğinize emin misiniz?",
     "PermissionGroup": "İzin Grubu",
-    "Filter": "Filtre"
+    "Filter": "Filtre",
+    "Permission:PermissionManagement": "İzin Yönetimi",
+    "Permission:ManageResourcePermissions": "Kaynak izinlerini yönet",
+    "ResourcePermissions": "Kaynak izinleri",
+    "ResourcePermissionTarget": "Hedef",
+    "ResourcePermissionPermissions": "İzinler",
+    "AddResourcePermission": "Kaynak izinleri ekle",
+    "ResourcePermissionDeletionConfirmationMessage": "Bu kaynak izinlerini silmek istediğinizden emin misiniz?",
+    "AddResourcePermissions": "Kaynak izinleri ekle",
+    "UpdateResourcePermissions": "Kaynak izinlerini güncelle",
+    "Resource": "Kaynak",
+    "ResourceName": "Kaynak adı",
+    "ResourceKey": "Kaynak anahtarı",
+    "ProviderName": "Sağlayıcı adı",
+    "ProviderKey": "Sağlayıcı anahtarı",
+    "GrantAllResourcePermissions": "Tümünü ver"
   }
 }

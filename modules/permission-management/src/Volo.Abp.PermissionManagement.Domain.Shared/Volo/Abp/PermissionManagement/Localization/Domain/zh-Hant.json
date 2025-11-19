@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "全選",
     "SaveWithoutAnyPermissionsWarningMessage": "您確定要在沒有任何權限的情況下保存嗎？",
     "PermissionGroup": "權限組",
-    "Filter": "過濾"
+    "Filter": "過濾",
+    "Permission:PermissionManagement": "權限管理",
+    "Permission:ManageResourcePermissions": "管理資源權限",
+    "ResourcePermissions": "資源權限",
+    "ResourcePermissionTarget": "目標",
+    "ResourcePermissionPermissions": "權限",
+    "AddResourcePermission": "添加資源權限",
+    "ResourcePermissionDeletionConfirmationMessage": "您確定要刪除這些資源權限嗎？",
+    "AddResourcePermissions": "添加資源權限",
+    "UpdateResourcePermissions": "更新資源權限",
+    "Resource": "資源",
+    "ResourceName": "資源名稱",
+    "ResourceKey": "資源鍵",
+    "ProviderName": "提供者名稱",
+    "ProviderKey": "提供者鍵",
+    "GrantAllResourcePermissions": "授予所有"
   }
 }

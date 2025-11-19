@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Izberi vse",
     "SaveWithoutAnyPermissionsWarningMessage": "Ali ste prepričani, da želite shraniti brez kakršnih koli dovoljenj?",
     "PermissionGroup": "Skupina dovoljenj",
-    "Filter": "Filtriraj"
+    "Filter": "Filtriraj",
+    "Permission:PermissionManagement": "Upravljanje dovoljenj",
+    "Permission:ManageResourcePermissions": "Upravljanje dovoljenj virov",
+    "ResourcePermissions": "Dovoljenja virov",
+    "ResourcePermissionTarget": "Cilj",
+    "ResourcePermissionPermissions": "Dovoljenja",
+    "AddResourcePermission": "Dodaj dovoljenja virov",
+    "ResourcePermissionDeletionConfirmationMessage": "Ali ste prepričani, da želite izbrisati ta dovoljenja virov?",
+    "AddResourcePermissions": "Dodaj dovoljenja virov",
+    "UpdateResourcePermissions": "Posodobi dovoljenja virov",
+    "Resource": "Vir",
+    "ResourceName": "Ime vira",
+    "ResourceKey": "Ključ vira",
+    "ProviderName": "Ime ponudnika",
+    "ProviderKey": "Ključ ponudnika",
+    "GrantAllResourcePermissions": "Dodeli vse"
   }
 }

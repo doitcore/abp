@@ -8,6 +8,21 @@
         "SelectAllInThisTab": "Odaberi sve",
         "SaveWithoutAnyPermissionsWarningMessage": "Jeste li sigurni da želite spremiti bez ikakvih dopuštenja?",
         "PermissionGroup": "Grupa dozvola",
-        "Filter": "Filtriraj"
+        "Filter": "Filtriraj",
+        "Permission:PermissionManagement": "Upravljanje dozvolama",
+        "Permission:ManageResourcePermissions": "Upravljanje dozvolama resursa",
+        "ResourcePermissions": "Dozvole resursa",
+        "ResourcePermissionTarget": "Cilj",
+        "ResourcePermissionPermissions": "Dozvole",
+        "AddResourcePermission": "Dodaj dozvole resursa",
+        "ResourcePermissionDeletionConfirmationMessage": "Jeste li sigurni da želite izbrisati ove dozvole resursa?",
+        "AddResourcePermissions": "Dodaj dozvole resursa",
+        "UpdateResourcePermissions": "Ažuriraj dozvole resursa",
+        "Resource": "Resurs",
+        "ResourceName": "Naziv resursa",
+        "ResourceKey": "Ključ resursa",
+        "ProviderName": "Naziv pružatelja usluga",
+        "ProviderKey": "Ključ pružatelja usluga",
+        "GrantAllResourcePermissions": "Dodijeli sve"
     }
 }

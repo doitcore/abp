@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "انتخاب همه",
     "SaveWithoutAnyPermissionsWarningMessage": "آیا مطمئن هستید که می خواهید بدون هیچ دسترسی ذخیره کنید؟",
     "PermissionGroup": "گروه دسترسی",
-    "Filter": "فیلتر"
+    "Filter": "فیلتر",
+    "Permission:PermissionManagement": "مدیریت دسترسی‌ها",
+    "Permission:ManageResourcePermissions": "مدیریت دسترسی‌های منابع",
+    "ResourcePermissions": "دسترسی‌های منابع",
+    "ResourcePermissionTarget": "هدف",
+    "ResourcePermissionPermissions": "دسترسی‌ها",
+    "AddResourcePermission": "افزودن دسترسی‌های منابع",
+    "ResourcePermissionDeletionConfirmationMessage": "آیا مطمئن هستید که می‌خواهید این دسترسی‌های منابع را حذف کنید؟",
+    "AddResourcePermissions": "افزودن دسترسی‌های منابع",
+    "UpdateResourcePermissions": "به‌روزرسانی دسترسی‌های منابع",
+    "Resource": "منبع",
+    "ResourceName": "نام منبع",
+    "ResourceKey": "کلید منبع",
+    "ProviderName": "نام ارائه‌دهنده",
+    "ProviderKey": "کلید ارائه‌دهنده",
+    "GrantAllResourcePermissions": "اعطای همه"
   }
 }

@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "تحديد الكل",
     "SaveWithoutAnyPermissionsWarningMessage": "هل أنت متأكد أنك تريد الحفظ بدون أي أذونات؟",
     "PermissionGroup": "مجموعة الأذونات",
-    "Filter": "تصفية"
+    "Filter": "تصفية",
+    "Permission:PermissionManagement": "إدارة الأذونات",
+    "Permission:ManageResourcePermissions": "إدارة أذونات الموارد",
+    "ResourcePermissions": "أذونات الموارد",
+    "ResourcePermissionTarget": "الهدف",
+    "ResourcePermissionPermissions": "الأذونات",
+    "AddResourcePermission": "إضافة أذونات الموارد",
+    "ResourcePermissionDeletionConfirmationMessage": "هل أنت متأكد أنك تريد حذف أذونات الموارد هذه؟",
+    "AddResourcePermissions": "إضافة أذونات الموارد",
+    "UpdateResourcePermissions": "تحديث أذونات الموارد",
+    "Resource": "المورد",
+    "ResourceName": "اسم المورد",
+    "ResourceKey": "مفتاح المورد",
+    "ProviderName": "اسم الموفر",
+    "ProviderKey": "مفتاح الموفر",
+    "GrantAllResourcePermissions": "منح الكل"
   }
 }

@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Vybrat vše",
     "SaveWithoutAnyPermissionsWarningMessage": "Opravdu chcete ukládat bez jakýchkoli oprávnění?",
     "PermissionGroup": "Skupina oprávnění",
-    "Filter": "Filtr"
+    "Filter": "Filtr",
+    "Permission:PermissionManagement": "Správa oprávnění",
+    "Permission:ManageResourcePermissions": "Správa oprávnění zdrojů",
+    "ResourcePermissions": "Oprávnění zdrojů",
+    "ResourcePermissionTarget": "Cíl",
+    "ResourcePermissionPermissions": "Oprávnění",
+    "AddResourcePermission": "Přidat oprávnění zdrojů",
+    "ResourcePermissionDeletionConfirmationMessage": "Opravdu chcete smazat tato oprávnění zdrojů?",
+    "AddResourcePermissions": "Přidat oprávnění zdrojů",
+    "UpdateResourcePermissions": "Aktualizovat oprávnění zdrojů",
+    "Resource": "Zdroj",
+    "ResourceName": "Název zdroje",
+    "ResourceKey": "Klíč zdroje",
+    "ProviderName": "Název poskytovatele",
+    "ProviderKey": "Klíč poskytovatele",
+    "GrantAllResourcePermissions": "Udělit vše"
   }
 }

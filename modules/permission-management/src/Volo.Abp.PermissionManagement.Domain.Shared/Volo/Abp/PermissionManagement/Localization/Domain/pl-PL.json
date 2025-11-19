@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Zaznacz wszystkie",
     "SaveWithoutAnyPermissionsWarningMessage": "Czy na pewno chcesz zapisać bez żadnych uprawnień?",
     "PermissionGroup": "Grupa uprawnień",
-    "Filter": "Filtr"
+    "Filter": "Filtr",
+    "Permission:PermissionManagement": "Zarządzanie uprawnieniami",
+    "Permission:ManageResourcePermissions": "Zarządzaj uprawnieniami zasobów",
+    "ResourcePermissions": "Uprawnienia zasobów",
+    "ResourcePermissionTarget": "Cel",
+    "ResourcePermissionPermissions": "Uprawnienia",
+    "AddResourcePermission": "Dodaj uprawnienia zasobów",
+    "ResourcePermissionDeletionConfirmationMessage": "Czy na pewno chcesz usunąć te uprawnienia zasobów?",
+    "AddResourcePermissions": "Dodaj uprawnienia zasobów",
+    "UpdateResourcePermissions": "Zaktualizuj uprawnienia zasobów",
+    "Resource": "Zasób",
+    "ResourceName": "Nazwa zasobu",
+    "ResourceKey": "Klucz zasobu",
+    "ProviderName": "Nazwa dostawcy",
+    "ProviderKey": "Klucz dostawcy",
+    "GrantAllResourcePermissions": "Przyznaj wszystko"
   }
 }

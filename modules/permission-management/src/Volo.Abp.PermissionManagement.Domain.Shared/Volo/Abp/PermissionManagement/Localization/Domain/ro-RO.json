@@ -8,6 +8,21 @@
     "SelectAllInThisTab": "Selectează toate",
     "SaveWithoutAnyPermissionsWarningMessage": "Sigur doriți să salvați fără nicio permisiune?",
     "PermissionGroup": "Grup de permisiuni",
-    "Filter": "Filtru"
+    "Filter": "Filtru",
+    "Permission:PermissionManagement": "Gestionarea permisiunilor",
+    "Permission:ManageResourcePermissions": "Gestionați permisiunile resurselor",
+    "ResourcePermissions": "Permisiuni pentru resurse",
+    "ResourcePermissionTarget": "Țintă",
+    "ResourcePermissionPermissions": "Permisiuni",
+    "AddResourcePermission": "Adăugați permisiuni pentru resurse",
+    "ResourcePermissionDeletionConfirmationMessage": "Sigur doriți să ștergeți aceste permisiuni pentru resurse?",
+    "AddResourcePermissions": "Adăugați permisiuni pentru resurse",
+    "UpdateResourcePermissions": "Actualizați permisiunile pentru resurse",
+    "Resource": "Resursă",
+    "ResourceName": "Numele resursei",
+    "ResourceKey": "Cheia resursei",
+    "ProviderName": "Numele furnizorului",
+    "ProviderKey": "Cheia furnizorului",
+    "GrantAllResourcePermissions": "Acordați toate"
   }
 }

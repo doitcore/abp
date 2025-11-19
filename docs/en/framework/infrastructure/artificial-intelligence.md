@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Integrate AI into your .NET applications effortlessly with ABP's unified workspace concept and streamlined installation process."
+}
+```
+
 # Artificial Intelligence
 
 ABP provides a simple way to integrate AI capabilities into your applications by unifying two popular .NET AI stacks under a common concept called a "workspace":

@@ -23,6 +23,7 @@
     "ResourceKey": "Clave del recurso",
     "ProviderName": "Nombre del proveedor",
     "ProviderKey": "Clave del proveedor",
-    "GrantAllResourcePermissions": "Conceder todos"
+    "GrantAllResourcePermissions": "Conceder todos",
+    "NoResourceProviderKeyLookupServiceFound": "No se encontró ningún servicio de búsqueda de clave de proveedor de recursos"
   }
 }

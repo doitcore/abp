@@ -23,6 +23,7 @@
     "ResourceKey": "Ključ vira",
     "ProviderName": "Ime ponudnika",
     "ProviderKey": "Ključ ponudnika",
-    "GrantAllResourcePermissions": "Dodeli vse"
+    "GrantAllResourcePermissions": "Dodeli vse",
+    "NoResourceProviderKeyLookupServiceFound": "Ni bilo mogoče najti storitve za iskanje ključa ponudnika virov"
   }
 }

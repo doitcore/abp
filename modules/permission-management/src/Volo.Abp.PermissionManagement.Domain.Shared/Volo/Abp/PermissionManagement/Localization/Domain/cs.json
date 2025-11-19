@@ -23,6 +23,7 @@
     "ResourceKey": "Klíč zdroje",
     "ProviderName": "Název poskytovatele",
     "ProviderKey": "Klíč poskytovatele",
-    "GrantAllResourcePermissions": "Udělit vše"
+    "GrantAllResourcePermissions": "Udělit vše",
+    "NoResourceProviderKeyLookupServiceFound": "Nebyla nalezena služba pro vyhledávání klíče poskytovatele zdrojů"
   }
 }

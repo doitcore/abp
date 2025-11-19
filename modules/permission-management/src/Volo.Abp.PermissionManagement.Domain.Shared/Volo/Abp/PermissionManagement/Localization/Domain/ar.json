@@ -23,6 +23,7 @@
     "ResourceKey": "مفتاح المورد",
     "ProviderName": "اسم الموفر",
     "ProviderKey": "مفتاح الموفر",
-    "GrantAllResourcePermissions": "منح الكل"
+    "GrantAllResourcePermissions": "منح الكل",
+    "NoResourceProviderKeyLookupServiceFound": "لم يتم العثور على خدمة البحث عن مفتاح مزود المورد"
   }
 }

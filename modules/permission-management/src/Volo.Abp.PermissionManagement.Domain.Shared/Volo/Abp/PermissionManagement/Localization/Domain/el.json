@@ -23,6 +23,7 @@
     "ResourceKey": "Κλειδί πόρου",
     "ProviderName": "Όνομα παρόχου",
     "ProviderKey": "Κλειδί παρόχου",
-    "GrantAllResourcePermissions": "Παραχώρηση όλων"
+    "GrantAllResourcePermissions": "Παραχώρηση όλων",
+    "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου πόρων"
   }
 }

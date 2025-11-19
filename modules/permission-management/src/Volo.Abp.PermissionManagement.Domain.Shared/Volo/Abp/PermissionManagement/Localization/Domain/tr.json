@@ -23,6 +23,7 @@
     "ResourceKey": "Kaynak anahtarı",
     "ProviderName": "Sağlayıcı adı",
     "ProviderKey": "Sağlayıcı anahtarı",
-    "GrantAllResourcePermissions": "Tümünü ver"
+    "GrantAllResourcePermissions": "Tümünü ver",
+    "NoResourceProviderKeyLookupServiceFound": "Herhangi bir kaynak sağlayıcı anahtar arama hizmeti bulunamadı"
   }
 }

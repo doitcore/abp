@@ -23,6 +23,7 @@
     "ResourceKey": "संसाधन कुंजी",
     "ProviderName": "प्रदाता का नाम",
     "ProviderKey": "प्रदाता कुंजी",
-    "GrantAllResourcePermissions": "सभी प्रदान करें"
+    "GrantAllResourcePermissions": "सभी प्रदान करें",
+    "NoResourceProviderKeyLookupServiceFound": "कोई संसाधन प्रदाता कुंजी खोज सेवा नहीं मिली"
   }
 }

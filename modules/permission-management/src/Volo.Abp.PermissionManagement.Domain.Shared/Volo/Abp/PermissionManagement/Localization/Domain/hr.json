@@ -24,5 +24,6 @@
         "ProviderName": "Naziv pružatelja usluga",
         "ProviderKey": "Ključ pružatelja usluga",
         "GrantAllResourcePermissions": "Dodijeli sve"
+            ,"NoResourceProviderKeyLookupServiceFound": "Nije pronađena usluga za pronalaženje ključa davatelja resursa"
     }
 }

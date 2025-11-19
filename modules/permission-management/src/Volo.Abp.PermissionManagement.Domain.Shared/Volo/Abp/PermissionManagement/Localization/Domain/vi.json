@@ -23,6 +23,7 @@
     "ResourceKey": "Khóa tài nguyên",
     "ProviderName": "Tên nhà cung cấp",
     "ProviderKey": "Khóa nhà cung cấp",
-    "GrantAllResourcePermissions": "Cấp tất cả"
+    "GrantAllResourcePermissions": "Cấp tất cả",
+    "NoResourceProviderKeyLookupServiceFound": "Không tìm thấy dịch vụ tra cứu khóa nhà cung cấp tài nguyên"
   }
 }

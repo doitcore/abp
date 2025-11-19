@@ -23,6 +23,7 @@
     "ResourceKey": "Ressourcenschlüssel",
     "ProviderName": "Anbietername",
     "ProviderKey": "Anbieterschlüssel",
-    "GrantAllResourcePermissions": "Alle gewähren"
+    "GrantAllResourcePermissions": "Alle gewähren",
+    "NoResourceProviderKeyLookupServiceFound": "Es wurde kein Dienst zum Nachschlagen des Ressourcenschlüsselanbieters gefunden"
   }
 }

@@ -23,6 +23,7 @@
     "ResourceKey": "Resource key",
     "ProviderName": "Provider name",
     "ProviderKey": "Provider key",
-    "GrantAllResourcePermissions": "Grant all"
+    "GrantAllResourcePermissions": "Grant all",
+    "NoResourceProviderKeyLookupServiceFound": "There is no resource provider key lookup service was found"
   }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.UI.RazorPages;
@@ -22,6 +23,8 @@ public class ResourcePermissionManagementModal : AbpPageModel
     [BindProperty(SupportsGet = true)]
     public string ResourceDisplayName { get; set; }
 
+    public bool HasAnyResourceProviderKeyLookupService { get; set; }
+
     public GetResourcePermissionListResultDto ResourcePermissions { get; set; }
 
     protected IPermissionAppService PermissionAppService { get; }
@@ -33,9 +36,10 @@ public class ResourcePermissionManagementModal : AbpPageModel
         PermissionAppService = permissionAppService;
     }
 
-    public virtual Task<IActionResult> OnGetAsync()
+    public virtual async Task<IActionResult> OnGetAsync()
     {
-        return Task.FromResult<IActionResult>(Page());
+        HasAnyResourceProviderKeyLookupService = (await PermissionAppService.GetResourceProviderKeyLookupServicesAsync()).Providers.Count > 0;
+        return Page();
     }
 
     public virtual async Task<IActionResult> OnPostAsync()

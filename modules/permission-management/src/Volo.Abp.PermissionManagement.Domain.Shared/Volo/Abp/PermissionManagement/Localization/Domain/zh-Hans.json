@@ -23,6 +23,7 @@
     "ResourceKey": "资源键",
     "ProviderName": "提供者名称",
     "ProviderKey": "提供者键",
-    "GrantAllResourcePermissions": "授予所有"
+    "GrantAllResourcePermissions": "授予所有",
+    "NoResourceProviderKeyLookupServiceFound": "未找到资源提供者键查找服务"
   }
 }

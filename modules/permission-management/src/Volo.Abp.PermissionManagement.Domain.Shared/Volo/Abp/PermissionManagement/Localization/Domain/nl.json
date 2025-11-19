@@ -23,6 +23,7 @@
     "ResourceKey": "Bronsleutel",
     "ProviderName": "Naam van provider",
     "ProviderKey": "Providersleutel",
-    "GrantAllResourcePermissions": "Alles toekennen"
+    "GrantAllResourcePermissions": "Alles toekennen",
+    "NoResourceProviderKeyLookupServiceFound": "Er is geen service gevonden voor het opzoeken van de sleutel van de bronprovider"
   }
 }

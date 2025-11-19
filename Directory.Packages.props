@@ -11,7 +11,7 @@
     <PackageVersion Include="Autofac" Version="8.4.0" />
     <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageVersion Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
-    <PackageVersion Include="AutoMapper" Version="15.0.1" />
+    <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.7.2" />
@@ -19,10 +19,10 @@
     <PackageVersion Include="BunnyCDN.Net.Storage" Version="1.0.4" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.25.0" />
-    <PackageVersion Include="Blazorise" Version="1.8.5" />
-    <PackageVersion Include="Blazorise.Components" Version="1.8.5" />
-    <PackageVersion Include="Blazorise.DataGrid" Version="1.8.5" />
-    <PackageVersion Include="Blazorise.Snackbar" Version="1.8.5" />
+    <PackageVersion Include="Blazorise" Version="1.8.6" />
+    <PackageVersion Include="Blazorise.Components" Version="1.8.6" />
+    <PackageVersion Include="Blazorise.DataGrid" Version="1.8.6" />
+    <PackageVersion Include="Blazorise.Snackbar" Version="1.8.6" />
     <PackageVersion Include="Castle.Core" Version="5.2.1" />
     <PackageVersion Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
     <PackageVersion Include="CommonMark.NET" Version="0.15.1" />
@@ -53,7 +53,7 @@
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.2" />
     <PackageVersion Include="LdapForNet" Version="2.7.15" />
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0" />
-    <PackageVersion Include="Magick.NET-Q16-AnyCPU" Version="14.8.2" />
+    <PackageVersion Include="Magick.NET-Q16-AnyCPU" Version="14.9.1" />
     <PackageVersion Include="MailKit" Version="4.13.0" />
     <PackageVersion Include="Markdig.Signed" Version="0.42.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
@@ -89,8 +89,8 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0" />   
-    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.61.0" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Abstractions" Version="1.61.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.67.1" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Abstractions" Version="1.67.1" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.9.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0" />
@@ -174,6 +174,7 @@
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.7" />
     <PackageVersion Include="System.Linq.Queryable" Version="4.3.0" />
     <PackageVersion Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageVersion Include="System.Security.Cryptography.Xml" Version="10.0.0" />
     <PackageVersion Include="System.Security.Permissions" Version="10.0.0" />
     <PackageVersion Include="System.Security.Principal.Windows" Version="5.0.0" />
     <PackageVersion Include="System.Text.Encoding.CodePages" Version="10.0.0" />

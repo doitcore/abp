@@ -8,12 +8,6 @@ All the new features were explained in detail in the [10.0 RC Announcement Post]
 
 ## Getting Started with 10.0
 
-### Creating New Solutions
-
-You can check the [Get Started page](https://abp.io/get-started) to see how to get started with ABP. You can either download [ABP Studio](https://abp.io/get-started#abp-studio-tab) (**recommended**, if you prefer a user-friendly GUI application - desktop application) or use the [ABP CLI](https://abp.io/docs/latest/cli) to create new solutions.
-
-> **Note**: Starting with **v2.0.0** of ABP Studio, it has support for **ABP 10.0**. If you already have ABP Studio installed, update it to v2.0.0 (or later, if available) to create new applications targeting 10.0. ABP Studio checks for updates automatically and will prompt you in-app modal to update to the latest version, or you can download the latest installer from the [ABP Studio page](https://abp.io/studio). See the [upgrading guide](https://abp.io/docs/latest/studio/installation#upgrading) for details. After updating, the New Solution wizard will create applications with ABP 10.0 by default. You can check the [ABP Studio and ABP Startup Template Version Mappings](https://abp.io/docs/latest/studio/version-mapping) documentation to see the corresponding ABP versions for other versions of Studio.
-
 ### How to Upgrade an Existing Solution
 
 You can upgrade your existing solutions with either ABP Studio or ABP CLI. In the following sections, both approaches are explained:
@@ -52,7 +46,7 @@ You can run this command in the root folder of your solution to update all ABP r
 
 ## Migration Guides
 
-There are a few breaking changes in this version that may affect your application. Please read the migration guide carefully, if you are upgrading from v9.2: [ABP Version 10.0 Migration Guide](https://abp.io/docs/10.0/release-info/migration-guides/abp-10-0)
+There are a few breaking changes in this version that may affect your application. Please read the migration guide carefully, if you are upgrading from v9.x: [ABP Version 10.0 Migration Guide](https://abp.io/docs/10.0/release-info/migration-guides/abp-10-0)
 
 ## Community News
 

@@ -12,6 +12,9 @@ import {
   PageDto,
   BlogDto,
   BlogPostListDto,
+  MenuItemDto,
+  MenuItemCreateInput,
+  MenuItemUpdateInput,
   CreatePageInputDto,
   UpdatePageInputDto,
   CreateBlogDto,
@@ -47,6 +50,7 @@ export type CmsKitAdminToolbarActionContributors = Partial<{
   [eCmsKitAdminComponents.Pages]: ToolbarActionContributorCallback<PageDto[]>[];
   [eCmsKitAdminComponents.Blogs]: ToolbarActionContributorCallback<BlogDto[]>[];
   [eCmsKitAdminComponents.BlogPosts]: ToolbarActionContributorCallback<BlogPostListDto[]>[];
+  [eCmsKitAdminComponents.Menus]: ToolbarActionContributorCallback<MenuItemDto[]>[];
 }>;
 
 export type CmsKitAdminCreateFormPropContributors = Partial<{
@@ -54,6 +58,7 @@ export type CmsKitAdminCreateFormPropContributors = Partial<{
   [eCmsKitAdminComponents.PageForm]: CreateFormPropContributorCallback<CreatePageInputDto>[];
   [eCmsKitAdminComponents.Blogs]: CreateFormPropContributorCallback<CreateBlogDto>[];
   [eCmsKitAdminComponents.BlogPostForm]: CreateFormPropContributorCallback<CreateBlogPostDto>[];
+  [eCmsKitAdminComponents.Menus]: CreateFormPropContributorCallback<MenuItemCreateInput>[];
 }>;
 
 export type CmsKitAdminEditFormPropContributors = Partial<{
@@ -61,6 +66,7 @@ export type CmsKitAdminEditFormPropContributors = Partial<{
   [eCmsKitAdminComponents.PageForm]: EditFormPropContributorCallback<UpdatePageInputDto>[];
   [eCmsKitAdminComponents.Blogs]: EditFormPropContributorCallback<UpdateBlogDto>[];
   [eCmsKitAdminComponents.BlogPostForm]: EditFormPropContributorCallback<UpdateBlogPostDto>[];
+  [eCmsKitAdminComponents.Menus]: EditFormPropContributorCallback<MenuItemUpdateInput>[];
 }>;
 
 export interface CmsKitAdminConfigOptions {

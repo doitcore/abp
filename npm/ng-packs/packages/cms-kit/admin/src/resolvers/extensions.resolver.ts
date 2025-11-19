@@ -45,6 +45,7 @@ export const cmsKitAdminExtensionsResolver: ResolveFn<any> = () => {
       [eCmsKitAdminComponents.Blogs]: entities.Blog,
       [eCmsKitAdminComponents.BlogPosts]: entities.BlogPost,
       [eCmsKitAdminComponents.BlogPostForm]: entities.BlogPost,
+      [eCmsKitAdminComponents.Menus]: entities.MenuItem,
     })),
     mapEntitiesToContributors(injector, 'CmsKit'),
     tap(objectExtensionContributors => {

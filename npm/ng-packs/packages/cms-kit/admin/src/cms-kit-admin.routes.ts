@@ -17,6 +17,7 @@ import {
   BlogListComponent,
   BlogPostListComponent,
   BlogPostFormComponent,
+  MenuItemListComponent,
 } from './components';
 import {
   CMS_KIT_ADMIN_ENTITY_ACTION_CONTRIBUTORS,
@@ -200,6 +201,21 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
             },
           },
           title: 'CmsKit::BlogPosts',
+        },
+        {
+          path: 'menus',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.Menus',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.Menus,
+              defaultComponent: MenuItemListComponent,
+            },
+          },
+          title: 'CmsKit::MenuItems',
         },
       ],
     },

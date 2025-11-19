@@ -1,0 +1,55 @@
+<abp-modal [visible]="visible()" (visibleChange)="onVisibleChange($event)">
+  <ng-template #abpHeader>
+    <h3>
+      @if (selected()?.id) {
+        {{ 'AbpUi::Edit' | abpLocalization }}
+      } @else {
+        {{ 'AbpUi::New' | abpLocalization }}
+      }
+    </h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    @if (form) {
+      <form [formGroup]="form" (ngSubmit)="save()" validateOnSubmit>
+        <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeTab">
+          <li ngbNavItem>
+            <a ngbNavLink>{{ 'CmsKit::Url' | abpLocalization }}</a>
+            <ng-template ngbNavContent>
+              <div class="mt-3">
+                <label class="form-label">{{ 'CmsKit::Url' | abpLocalization }}</label>
+                <input type="text" class="form-control" formControlName="url" />
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem>
+            <a ngbNavLink>{{ 'CmsKit::Page' | abpLocalization }}</a>
+            <ng-template ngbNavContent>
+              <div class="mt-3">
+                <label class="form-label">{{ 'CmsKit::Page' | abpLocalization }}</label>
+                <select class="form-control" formControlName="pageId">
+                  <option [ngValue]="null"></option>
+                  @for (page of pages; track page.id) {
+                    <option [ngValue]="page.id">{{ page.title }}</option>
+                  }
+                </select>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div class="mt-2 fade-in-top" [ngbNavOutlet]="nav"></div>
+        <hr />
+        <abp-extensible-form [selectedRecord]="selected() || {}" />
+      </form>
+    }
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button type="button" class="btn btn-outline-primary" abpClose>
+      {{ 'AbpUi::Cancel' | abpLocalization }}
+    </button>
+    <abp-button (click)="save()" [disabled]="form?.invalid">
+      {{ 'AbpUi::Save' | abpLocalization }}
+    </abp-button>
+  </ng-template>
+</abp-modal>

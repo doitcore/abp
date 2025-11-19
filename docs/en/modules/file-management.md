@@ -146,9 +146,9 @@ You can rename a file by clicking `Actions -> Rename` on the table.
 
 ###### File Sharing
 
-You can share a file by clicking `Actions -> Share` on the table. if you enable sharing, you can copy the shared link in the table.
+To share a file, click `Actions -> Share` in the table. Once sharing is enabled, you can copy the shared link directly from the table.
 
-> Anyone with the shared link can access this file once sharing is enabled
+> Anyone with the shared link will be able to access the file while sharing is enabled.
 
 ## Data Seed
 

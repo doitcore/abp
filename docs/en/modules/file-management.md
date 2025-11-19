@@ -144,6 +144,12 @@ You can move files by clicking `Actions -> Move` on the table.
 
 You can rename a file by clicking `Actions -> Rename` on the table.
 
+###### File Sharing
+
+You can share a file by clicking `Actions -> Share` on the table. if you enable sharing, you can copy the shared link in the table.
+
+> Anyone with the shared link can access this file once sharing is enabled
+
 ## Data Seed
 
 This module doesn't seed any data.

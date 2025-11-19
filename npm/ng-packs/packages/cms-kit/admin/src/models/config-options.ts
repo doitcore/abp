@@ -6,39 +6,53 @@ import {
   CreateFormPropContributorCallback,
   EditFormPropContributorCallback,
 } from '@abp/ng.components/extensible';
-import { CommentWithAuthorDto, TagDto, PageDto } from '@abp/ng.cms-kit/proxy';
+import {
+  CommentWithAuthorDto,
+  TagDto,
+  PageDto,
+  BlogDto,
+  CreatePageInputDto,
+  UpdatePageInputDto,
+  CreateBlogDto,
+  UpdateBlogDto,
+  TagCreateDto,
+  TagUpdateDto,
+} from '@abp/ng.cms-kit/proxy';
 
 export type CmsKitAdminEntityActionContributors = Partial<{
   [eCmsKitAdminComponents.CommentList]: EntityActionContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentApprove]: EntityActionContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentDetails]: EntityActionContributorCallback<CommentWithAuthorDto>[];
-  [eCmsKitAdminComponents.TagList]: EntityActionContributorCallback<TagDto>[];
-  [eCmsKitAdminComponents.PageList]: EntityActionContributorCallback<PageDto>[];
+  [eCmsKitAdminComponents.Tags]: EntityActionContributorCallback<TagDto>[];
+  [eCmsKitAdminComponents.Pages]: EntityActionContributorCallback<PageDto>[];
+  [eCmsKitAdminComponents.Blogs]: EntityActionContributorCallback<BlogDto>[];
 }>;
 
 export type CmsKitAdminEntityPropContributors = Partial<{
   [eCmsKitAdminComponents.CommentList]: EntityPropContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentApprove]: EntityPropContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentDetails]: EntityPropContributorCallback<CommentWithAuthorDto>[];
-  [eCmsKitAdminComponents.TagList]: EntityPropContributorCallback<TagDto>[];
-  [eCmsKitAdminComponents.PageList]: EntityPropContributorCallback<PageDto>[];
+  [eCmsKitAdminComponents.Tags]: EntityPropContributorCallback<TagDto>[];
+  [eCmsKitAdminComponents.Pages]: EntityPropContributorCallback<PageDto>[];
+  [eCmsKitAdminComponents.Blogs]: EntityPropContributorCallback<BlogDto>[];
 }>;
 
 export type CmsKitAdminToolbarActionContributors = Partial<{
-  [eCmsKitAdminComponents.TagList]: ToolbarActionContributorCallback<TagDto[]>[];
-  [eCmsKitAdminComponents.PageList]: ToolbarActionContributorCallback<PageDto[]>[];
+  [eCmsKitAdminComponents.Tags]: ToolbarActionContributorCallback<TagDto[]>[];
+  [eCmsKitAdminComponents.Pages]: ToolbarActionContributorCallback<PageDto[]>[];
+  [eCmsKitAdminComponents.Blogs]: ToolbarActionContributorCallback<BlogDto[]>[];
 }>;
 
 export type CmsKitAdminCreateFormPropContributors = Partial<{
-  [eCmsKitAdminComponents.TagList]: CreateFormPropContributorCallback<TagDto>[];
-  [eCmsKitAdminComponents.PageList]: CreateFormPropContributorCallback<PageDto>[];
-  [eCmsKitAdminComponents.PageCreate]: CreateFormPropContributorCallback<PageDto>[];
+  [eCmsKitAdminComponents.Tags]: CreateFormPropContributorCallback<TagCreateDto>[];
+  [eCmsKitAdminComponents.PageForm]: CreateFormPropContributorCallback<CreatePageInputDto>[];
+  [eCmsKitAdminComponents.Blogs]: CreateFormPropContributorCallback<CreateBlogDto>[];
 }>;
 
 export type CmsKitAdminEditFormPropContributors = Partial<{
-  [eCmsKitAdminComponents.TagList]: EditFormPropContributorCallback<TagDto>[];
-  [eCmsKitAdminComponents.PageList]: EditFormPropContributorCallback<PageDto>[];
-  [eCmsKitAdminComponents.PageEdit]: EditFormPropContributorCallback<PageDto>[];
+  [eCmsKitAdminComponents.Tags]: EditFormPropContributorCallback<TagUpdateDto>[];
+  [eCmsKitAdminComponents.PageForm]: EditFormPropContributorCallback<UpdatePageInputDto>[];
+  [eCmsKitAdminComponents.Blogs]: EditFormPropContributorCallback<UpdateBlogDto>[];
 }>;
 
 export interface CmsKitAdminConfigOptions {

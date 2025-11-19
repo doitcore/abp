@@ -1,5 +1,4 @@
 import { Component, OnInit, inject, Injector, DestroyRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -14,7 +13,11 @@ import {
 } from '@abp/ng.components/extensible';
 import { PageComponent } from '@abp/ng.components/page';
 import { ButtonComponent } from '@abp/ng.theme.shared';
-import { ToastuiEditorComponent, CodeMirrorEditorComponent } from '@abp/ng.cms-kit';
+import {
+  ToastuiEditorComponent,
+  CodeMirrorEditorComponent,
+  prepareSlugFromControl,
+} from '@abp/ng.cms-kit';
 import { PageAdminService, PageDto } from '@abp/ng.cms-kit/proxy';
 import { eCmsKitAdminComponents } from '../../../enums';
 import { PageFormService } from '../../../services';
@@ -25,14 +28,7 @@ import { PageFormService } from '../../../services';
   providers: [
     {
       provide: EXTENSIONS_IDENTIFIER,
-      useFactory: (route: ActivatedRoute) => {
-        const id = route.snapshot.params['id'];
-        if (id) {
-          return eCmsKitAdminComponents.PageEdit;
-        }
-        return eCmsKitAdminComponents.PageCreate;
-      },
-      deps: [ActivatedRoute],
+      useValue: eCmsKitAdminComponents.PageForm,
     },
   ],
   imports: [
@@ -88,7 +84,7 @@ export class PageFormComponent implements OnInit {
       script: new FormControl(this.page?.script || ''),
       style: new FormControl(this.page?.style || ''),
     });
-    this.prepareSlug();
+    prepareSlugFromControl(this.form, 'title', 'slug', this.destroyRef);
   }
 
   private executeSaveOperation(operation: 'save' | 'draft' | 'publish') {
@@ -124,18 +120,6 @@ export class PageFormComponent implements OnInit {
     }
   }
 
-  private dasharize(text: string): string {
-    return text
-      .trim()
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-      .replace(/[\s_]+/g, '-')
-      .replace(/[^\w\s-]/g, '')
-      .replace(/-+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .toLowerCase();
-  }
-
   save() {
     this.executeSaveOperation('save');
   }
@@ -146,21 +130,5 @@ export class PageFormComponent implements OnInit {
 
   publish() {
     this.executeSaveOperation('publish');
-  }
-
-  prepareSlug() {
-    const titleControl = this.form.get('title');
-    const slugControl = this.form.get('slug');
-    if (titleControl && slugControl) {
-      titleControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(title => {
-        if (title && typeof title === 'string') {
-          const dasharized = this.dasharize(title);
-          const currentSlug = slugControl.value || '';
-          if (dasharized !== currentSlug) {
-            slugControl.setValue(dasharized, { emitEvent: false });
-          }
-        }
-      });
-    }
   }
 }

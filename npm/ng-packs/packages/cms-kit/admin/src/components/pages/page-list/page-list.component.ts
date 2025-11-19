@@ -14,7 +14,7 @@ import { eCmsKitAdminComponents } from '../../../enums';
     ListService,
     {
       provide: EXTENSIONS_IDENTIFIER,
-      useValue: eCmsKitAdminComponents.PageList,
+      useValue: eCmsKitAdminComponents.Pages,
     },
   ],
   imports: [ExtensibleTableComponent, PageComponent, LocalizationPipe, FormsModule, CommonModule],

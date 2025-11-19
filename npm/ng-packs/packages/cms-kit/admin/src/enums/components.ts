@@ -3,26 +3,16 @@ export enum eCmsKitAdminComponents {
   CommentApprove = 'CmsKit.Admin.CommentApprove',
   CommentDetails = 'CmsKit.Admin.CommentDetails',
 
-  TagList = 'CmsKit.Admin.TagList',
-  TagCreate = 'CmsKit.Admin.TagCreate',
-  TagEdit = 'CmsKit.Admin.TagEdit',
+  Tags = 'CmsKit.Admin.Tags',
 
-  PageList = 'CmsKit.Admin.PageList',
-  PageCreate = 'CmsKit.Admin.PageCreate',
-  PageEdit = 'CmsKit.Admin.PageEdit',
+  Pages = 'CmsKit.Admin.Pages',
+  PageForm = 'CmsKit.Admin.PageForm',
 
-  BlogList = 'CmsKit.Admin.BlogList',
-  BlogCreate = 'CmsKit.Admin.BlogCreate',
-  BlogEdit = 'CmsKit.Admin.BlogEdit',
-  BlogFeatures = 'CmsKit.Admin.BlogFeatures',
+  Blogs = 'CmsKit.Admin.Blogs',
 
-  BlogPostList = 'CmsKit.Admin.BlogPostList',
-  BlogPostCreate = 'CmsKit.Admin.BlogPostCreate',
-  BlogPostEdit = 'CmsKit.Admin.BlogPostEdit',
+  BlogPosts = 'CmsKit.Admin.BlogPosts',
 
-  MenuItemList = 'CmsKit.Admin.MenuItemList',
-  MenuItemCreate = 'CmsKit.Admin.MenuItemCreate',
-  MenuItemEdit = 'CmsKit.Admin.MenuItemEdit',
+  Menus = 'CmsKit.Admin.Menus',
 
-  GlobalResourceList = 'CmsKit.Admin.GlobalResourceList',
+  GlobalResources = 'CmsKit.Admin.GlobalResources',
 }

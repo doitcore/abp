@@ -14,6 +14,7 @@ import {
   TagListComponent,
   PageListComponent,
   PageFormComponent,
+  BlogListComponent,
 } from './components';
 import {
   CMS_KIT_ADMIN_ENTITY_ACTION_CONTRIBUTORS,
@@ -87,7 +88,7 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
           data: {
             requiredPolicy: 'CmsKit.Tags',
             replaceableComponent: {
-              key: eCmsKitAdminComponents.TagList,
+              key: eCmsKitAdminComponents.Tags,
               defaultComponent: TagListComponent,
             },
           },
@@ -102,7 +103,7 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
           data: {
             requiredPolicy: 'CmsKit.Pages',
             replaceableComponent: {
-              key: eCmsKitAdminComponents.PageList,
+              key: eCmsKitAdminComponents.Pages,
               defaultComponent: PageListComponent,
             },
           },
@@ -117,7 +118,7 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
           data: {
             requiredPolicy: 'CmsKit.Pages.Create',
             replaceableComponent: {
-              key: eCmsKitAdminComponents.PageCreate,
+              key: eCmsKitAdminComponents.PageForm,
               defaultComponent: PageFormComponent,
             },
           },
@@ -132,11 +133,26 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
           data: {
             requiredPolicy: 'CmsKit.Pages.Update',
             replaceableComponent: {
-              key: eCmsKitAdminComponents.PageEdit,
+              key: eCmsKitAdminComponents.PageForm,
               defaultComponent: PageFormComponent,
             },
           },
           title: 'CmsKit::Pages',
+        },
+        {
+          path: 'blogs',
+          component: ReplaceableRouteContainerComponent,
+          resolve: {
+            extensions: cmsKitAdminExtensionsResolver,
+          },
+          data: {
+            requiredPolicy: 'CmsKit.Blogs',
+            replaceableComponent: {
+              key: eCmsKitAdminComponents.Blogs,
+              defaultComponent: BlogListComponent,
+            },
+          },
+          title: 'CmsKit::Blogs',
         },
       ],
     },

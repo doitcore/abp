@@ -15,7 +15,7 @@ import { TagModalComponent, TagModalVisibleChange } from '../tag-modal/tag-modal
     ListService,
     {
       provide: EXTENSIONS_IDENTIFIER,
-      useValue: eCmsKitAdminComponents.TagList,
+      useValue: eCmsKitAdminComponents.Tags,
     },
   ],
   imports: [

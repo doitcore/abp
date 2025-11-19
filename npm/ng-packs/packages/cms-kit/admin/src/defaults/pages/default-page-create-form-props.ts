@@ -21,7 +21,6 @@ export const DEFAULT_PAGE_CREATE_FORM_PROPS = FormProp.createMany<CreatePageInpu
     validators: () => [Validators.required],
     tooltip: {
       text: 'CmsKit::PageSlugInformation',
-      localizationParams: [''],
     },
   },
   {

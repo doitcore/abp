@@ -330,25 +330,15 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         var permissionNames = permissions.Select(x => x.Name).ToArray();
         var multiplePermissionWithGrantedProviders = new MultiplePermissionWithGrantedProviders(permissionNames);
 
-        var neededCheckPermissions = new List<PermissionDefinition>();
-
         var resourcePermissions = await GetAvailablePermissionsAsync(resourceName);
-        foreach (var permission in resourcePermissions)
-        {
-            if (await SimpleStateCheckerManager.IsEnabledAsync(permission))
-            {
-                neededCheckPermissions.Add(permission);
-            }
-        }
-
-        if (!neededCheckPermissions.Any())
+        if (!resourcePermissions.Any())
         {
             return multiplePermissionWithGrantedProviders;
         }
 
         foreach (var provider in ManagementProviders)
         {
-            permissionNames = neededCheckPermissions.Select(x => x.Name).ToArray();
+            permissionNames = resourcePermissions.Select(x => x.Name).ToArray();
             var multiplePermissionValueProviderGrantInfo = await provider.CheckAsync(permissionNames, resourceName, resourceKey, providerName, providerKey);
 
             foreach (var providerResultDict in multiplePermissionValueProviderGrantInfo.Result)

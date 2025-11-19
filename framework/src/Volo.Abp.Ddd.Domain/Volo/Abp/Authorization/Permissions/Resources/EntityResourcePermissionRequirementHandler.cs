@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Domain.Entities;
@@ -21,8 +20,8 @@ public class EntityResourcePermissionRequirementHandler : AuthorizationHandler<R
             return;
         }
 
-        var resourceName = resource.GetType().FullName!;
-        var resourceKey = resource.GetKeys().JoinAsString(",");
+        var resourceName = resource.GetResourceName();
+        var resourceKey = resource.GetResourceKey();
         if (await PermissionChecker.IsGrantedAsync(context.User, requirement.PermissionName, resourceName, resourceKey))
         {
             context.Succeed(requirement);

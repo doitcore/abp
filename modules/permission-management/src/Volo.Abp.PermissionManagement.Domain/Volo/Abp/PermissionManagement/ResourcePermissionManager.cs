@@ -283,6 +283,26 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         await provider.SetAsync(permissionName, resourceName, resourceKey, providerKey, isGranted);
     }
 
+    public virtual async Task<ResourcePermissionGrant> UpdateProviderKeyAsync(ResourcePermissionGrant resourcePermissionGrant, string providerKey)
+    {
+        using (CurrentTenant.Change(resourcePermissionGrant.TenantId))
+        {
+            //Invalidating the cache for the old key
+            await Cache.RemoveAsync(
+                ResourcePermissionGrantCacheItem.CalculateCacheKey(
+                    resourcePermissionGrant.Name,
+                    resourcePermissionGrant.ResourceName,
+                    resourcePermissionGrant.ResourceKey,
+                    resourcePermissionGrant.ProviderName,
+                    resourcePermissionGrant.ProviderKey
+                )
+            );
+        }
+
+        resourcePermissionGrant.ProviderKey = providerKey;
+        return await ResourcePermissionGrantRepository.UpdateAsync(resourcePermissionGrant, true);
+    }
+
     public virtual async Task<ResourcePermissionGrant> UpdateProviderKeyAsync(ResourcePermissionGrant resourcePermissionGrant, string resourceName, string resourceKey, string providerKey)
     {
         using (CurrentTenant.Change(resourcePermissionGrant.TenantId))

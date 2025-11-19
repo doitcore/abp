@@ -54,6 +54,15 @@ public class EfCoreResourcePermissionGrantRepository : EfCoreRepository<IPermiss
             ).ToListAsync(GetCancellationToken(cancellationToken));
     }
 
+    public virtual async Task<List<ResourcePermissionGrant>> GetListAsync(string providerName, string providerKey, CancellationToken cancellationToken = default)
+    {
+        return await (await GetDbSetAsync())
+            .Where(s =>
+                s.ProviderName == providerName &&
+                s.ProviderKey == providerKey
+            ).ToListAsync(GetCancellationToken(cancellationToken));
+    }
+
     public virtual async Task<List<ResourcePermissionGrant>> GetPermissionsAsync(string resourceName, string resourceKey, CancellationToken cancellationToken = default)
     {
         return await (await GetDbSetAsync())

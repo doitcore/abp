@@ -57,6 +57,16 @@ public class MongoResourcePermissionGrantRepository : MongoDbRepository<IPermiss
             ).ToListAsync(cancellationToken);
     }
 
+    public virtual async Task<List<ResourcePermissionGrant>> GetListAsync(string providerName, string providerKey, CancellationToken cancellationToken = default)
+    {
+        cancellationToken = GetCancellationToken(cancellationToken);
+        return await (await GetQueryableAsync(cancellationToken))
+            .Where(s =>
+                s.ProviderName == providerName &&
+                s.ProviderKey == providerKey
+            ).ToListAsync(cancellationToken);
+    }
+
     public virtual async Task<List<ResourcePermissionGrant>> GetPermissionsAsync(string resourceName, string resourceKey, CancellationToken cancellationToken = default)
     {
         cancellationToken = GetCancellationToken(cancellationToken);

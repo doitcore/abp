@@ -287,11 +287,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
     public virtual async Task DeleteResourceAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
-        foreach (var resourcePermission in resourcePermissions)
-        {
-            await ResourcePermissionManager.SetAsync(resourcePermission.Name, resourceName, resourceKey, providerName, providerKey, false);
-        }
+        await ResourcePermissionManager.DeleteAsync(resourceName, resourceKey, providerName, providerKey);
     }
 
     protected virtual async Task CheckProviderPolicy(string providerName)

@@ -53,4 +53,16 @@ public interface IResourcePermissionManager
         string providerKey,
         bool isGranted
     );
+
+    Task<ResourcePermissionGrant> UpdateProviderKeyAsync(
+        ResourcePermissionGrant resourcePermissionGrant,
+        string providerKey
+    );
+
+    Task DeleteAsync(
+        string resourceName,
+        string resourceKey,
+        string providerName,
+        string providerKey
+    );
 }

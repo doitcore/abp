@@ -115,6 +115,11 @@ public class PermissionDefinition :
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
     {
+        if (ResourceName != null)
+        {
+            throw new AbpException($"Resource permission cannot have child permissions. Resource: {ResourceName}");
+        }
+
         var child = new PermissionDefinition(
             name,
             displayName,

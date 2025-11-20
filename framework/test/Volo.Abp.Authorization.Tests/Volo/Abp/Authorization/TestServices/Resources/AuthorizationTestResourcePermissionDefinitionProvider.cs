@@ -1,5 +1,6 @@
 ﻿using Shouldly;
 using Volo.Abp.Authorization.Permissions;
+using Xunit;
 
 namespace Volo.Abp.Authorization.TestServices.Resources;
 
@@ -8,6 +9,10 @@ public class AuthorizationTestResourcePermissionDefinitionProvider : PermissionD
     public override void Define(IPermissionDefinitionContext context)
     {
         var permission1 = context.AddResourcePermission("MyResourcePermission1", resourceName: TestEntityResource.ResourceName);
+        Assert.Throws<AbpException>(() =>
+        {
+            permission1.AddChild("MyResourcePermission1.ChildPermission1");
+        }).Message.ShouldBe($"Resource permission cannot have child permissions. Resource: {TestEntityResource.ResourceName}");
         permission1.StateCheckers.Add(new TestRequireEditionPermissionSimpleStateChecker());;
         permission1[PermissionDefinitionContext.KnownPropertyNames.CurrentProviderName].ShouldBe(typeof(AuthorizationTestResourcePermissionDefinitionProvider).FullName);
 

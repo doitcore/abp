@@ -7,17 +7,17 @@ public class AuthorizationTestResourcePermissionDefinitionProvider : PermissionD
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var permission1 = context.AddResourcePermission("MyResourcePermissions1", resourceName: typeof(TestEntityResource).FullName!);
+        var permission1 = context.AddResourcePermission("MyResourcePermission1", resourceName: TestEntityResource.ResourceName);
+        permission1.StateCheckers.Add(new TestRequireEditionPermissionSimpleStateChecker());;
         permission1[PermissionDefinitionContext.KnownPropertyNames.CurrentProviderName].ShouldBe(typeof(AuthorizationTestResourcePermissionDefinitionProvider).FullName);
 
-        context.AddResourcePermission("MyResourcePermissions1", resourceName: typeof(TestEntityResource).FullName!).StateCheckers.Add(new TestRequireEditionPermissionSimpleStateChecker());
-        context.AddResourcePermission("MyResourcePermissions2", resourceName: typeof(TestEntityResource).FullName!);
-        context.AddResourcePermission("MyResourcePermissions3", resourceName: typeof(TestEntityResource).FullName!);
-        context.AddResourcePermission("MyResourcePermissions4", resourceName: typeof(TestEntityResource).FullName!);
-        context.AddResourcePermission("MyResourcePermissions5", resourceName: typeof(TestEntityResource).FullName!);
-        context.AddResourcePermission("MyResourcePermissions6", resourceName: typeof(TestEntityResource).FullName!).WithProviders(nameof(TestPermissionValueProvider1));
-        context.AddResourcePermission("MyResourcePermissions7", resourceName: typeof(TestEntityResource).FullName!).WithProviders(nameof(TestPermissionValueProvider2));
+        context.AddResourcePermission("MyResourcePermission2", resourceName: typeof(TestEntityResource).FullName!);
+        context.AddResourcePermission("MyResourcePermission3", resourceName: typeof(TestEntityResource).FullName!);
+        context.AddResourcePermission("MyResourcePermission4", resourceName: typeof(TestEntityResource).FullName!);
+        context.AddResourcePermission("MyResourcePermission5", resourceName: typeof(TestEntityResource).FullName!);
+        context.AddResourcePermission("MyResourcePermission6", resourceName: typeof(TestEntityResource).FullName!).WithProviders(nameof(TestResourcePermissionValueProvider1));
+        context.AddResourcePermission("MyResourcePermission7", resourceName: typeof(TestEntityResource).FullName!).WithProviders(nameof(TestResourcePermissionValueProvider2));
 
-        context.GetResourcePermissionOrNull("MyResourcePermissions1").ShouldNotBeNull();
+        context.GetResourcePermissionOrNull("MyResourcePermission1").ShouldNotBeNull();
     }
 }

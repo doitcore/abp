@@ -9,12 +9,24 @@ public class FakeResourcePermissionStore : IResourcePermissionStore, ITransientD
 {
     public Task<bool> IsGrantedAsync(string name, string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        throw new System.NotImplementedException();
+        return Task.FromResult((name == "MyResourcePermission3" || name == "MyResourcePermission5") &&
+                               resourceName == TestEntityResource.ResourceName &&
+                               (resourceKey == TestEntityResource.ResourceKey3 || resourceKey == TestEntityResource.ResourceKey5));
     }
 
     public Task<MultiplePermissionGrantResult> IsGrantedAsync(string[] names, string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        throw new System.NotImplementedException();
+        var result = new MultiplePermissionGrantResult();
+        foreach (var name in names)
+        {
+            result.Result.Add(name, (name == "MyResourcePermission3" || name == "MyResourcePermission5" &&
+                resourceName == TestEntityResource.ResourceName &&
+                (resourceKey == TestEntityResource.ResourceKey3 || resourceKey == TestEntityResource.ResourceKey5)
+                    ? PermissionGrantResult.Granted
+                    : PermissionGrantResult.Prohibited));
+        }
+
+        return Task.FromResult(result);
     }
 
     public Task<MultiplePermissionGrantResult> GetPermissionsAsync(string resourceName, string resourceKey)

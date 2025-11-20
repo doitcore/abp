@@ -16,7 +16,9 @@ public class TestResourcePermissionValueProvider1 : ResourcePermissionValueProvi
     public override Task<PermissionGrantResult> CheckAsync(ResourcePermissionValueCheckContext context)
     {
         var result = PermissionGrantResult.Undefined;
-        if (context.Permission.Name == "MyPermission6")
+        if (context.Permission.Name == "MyResourcePermission6" &&
+            context.ResourceName == TestEntityResource.ResourceName &&
+            context.ResourceKey == TestEntityResource.ResourceKey6)
         {
             result = PermissionGrantResult.Granted;
         }
@@ -29,7 +31,9 @@ public class TestResourcePermissionValueProvider1 : ResourcePermissionValueProvi
         var result = new MultiplePermissionGrantResult();
         foreach (var name in context.Permissions.Select(x => x.Name))
         {
-            result.Result.Add(name, name == "MyPermission6"
+            result.Result.Add(name, name == "MyResourcePermission6" &&
+                                    context.ResourceName == TestEntityResource.ResourceName &&
+                                    context.ResourceKey == TestEntityResource.ResourceKey6
                 ? PermissionGrantResult.Granted
                 : PermissionGrantResult.Undefined);
         }

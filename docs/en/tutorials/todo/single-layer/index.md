@@ -580,7 +580,11 @@ using TodoApp.Services;
 using TodoApp.Services.Dtos;
 {{end}}
 
+{{if UI=="Blazor"}}
 namespace TodoApp.Pages;
+{{else}}
+namespace TodoApp.Components.Pages;
+{{end}}
 
 public partial class Index
 {

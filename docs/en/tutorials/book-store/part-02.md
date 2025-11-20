@@ -357,7 +357,7 @@ The generated code places the new route definition to the `src/app/app.routes.ts
 ````js
 export const routes: Routes = [
   // other route definitions...
-  { path : 'books', loadChildren: () => import('./book/book.component').then(c => c.BookComponent) },
+  { path : 'books', loadComponent: () => import('./book/book.component').then(c => c.BookComponent) },
 ];
 ````
 
@@ -469,7 +469,7 @@ Open the `/src/app/book/book.component.html` and replace the content as shown be
   </div>
   <div class="card-body">
     <ngx-datatable [rows]="book.items" [count]="book.totalCount" [list]="list" default>
-      <ngx-datatable-column [name]="'::Name' | abpLocalization" prop="name"></ngx-datatable-column>
+      <ngx-datatable-column [name]="'::Name' | abpLocalization" prop="name" />
       <ngx-datatable-column [name]="'::Type' | abpLocalization" prop="type">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {%{{{ '::Enum:BookType.' + row.type | abpLocalization }}}%}

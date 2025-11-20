@@ -747,13 +747,13 @@ Open the `/src/app/author/author.component.html` and replace the content as belo
           </div>
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column [name]="'::Name' | abpLocalization" prop="name"></ngx-datatable-column>
+      <ngx-datatable-column [name]="'::Name' | abpLocalization" prop="name" />
       <ngx-datatable-column [name]="'::BirthDate' | abpLocalization">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {%{{{ row.birthDate | date }}}%}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column [name]="'::ShortBio' | abpLocalization" prop="shortBio"></ngx-datatable-column>
+      <ngx-datatable-column [name]="'::ShortBio' | abpLocalization" prop="shortBio" />
     </ngx-datatable>
   </div>
 </div>

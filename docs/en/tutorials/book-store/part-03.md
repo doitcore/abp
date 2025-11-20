@@ -742,8 +742,8 @@ export class BookComponent implements OnInit {
 * Imported `FormGroup`, `FormBuilder` and `Validators` from `@angular/forms`.
 * Added a `form: FormGroup` property.
 * Added a `bookTypes` property as a list of `BookType` enum members. That will be used in form options.
-* Injected with the `FormBuilder` inject function.. [FormBuilder](https://angular.io/api/forms/FormBuilder) provides convenient methods for generating form controls. It reduces the amount of boilerplate needed to build complex forms.
-* Added a `buildForm` method to the end of the file and executed  the `buildForm()` in the `createBook` method.
+* Injected the `FormBuilder` with the inject function. [FormBuilder](https://angular.io/api/forms/FormBuilder) provides convenient methods for generating form controls. It reduces the amount of boilerplate that is needed to build complex forms.
+* Added a `buildForm` method at the end of the file and executed  the `buildForm()` in the `createBook` method.
 * Added a `save` method.
 
 Open `/src/app/book/book.component.html` and replace `<ng-template #abpBody> </ng-template>`  with the following code part:
@@ -765,7 +765,11 @@ Open `/src/app/book/book.component.html` and replace `<ng-template #abpBody> </n
       <label for="book-type">Type</label><span> * </span>
       <select class="form-control" id="book-type" formControlName="type">
         <option [ngValue]="null">Select a book type</option>
-        <option [ngValue]="type.value" *ngFor="let type of bookTypes"> {%{{{ '::Enum:BookType.' + type.value | abpLocalization }}}%}</option>
+        @for (type of bookTypes; track type) {
+          <option [ngValue]="type.value"> 
+            {%{{{ '::Enum:BookType.' + type.value | abpLocalization }}}%}
+          </option>
+        }
       </select>
     </div>
 
@@ -815,7 +819,6 @@ import { NgbDateNativeAdapter, NgbDateAdapter, NgbDatepickerModule } from '@ng-b
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 
 @Component({
-  standalone: true,
   selector: 'app-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],

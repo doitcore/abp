@@ -553,6 +553,10 @@
               "path": "framework/infrastructure/audit-logging.md"
             },
             {
+              "text": "Artificial Intelligence",
+              "path": "framework/infrastructure/artificial-intelligence/index.md"
+            },
+            {
               "text": "Background Jobs",
               "items": [
                 {

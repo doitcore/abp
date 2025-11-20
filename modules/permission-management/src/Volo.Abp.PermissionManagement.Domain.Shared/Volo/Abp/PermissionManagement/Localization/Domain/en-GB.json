@@ -24,6 +24,7 @@
     "ProviderName": "Provider name",
     "ProviderKey": "Provider key",
     "GrantAllResourcePermissions": "Grant all",
-    "NoResourceProviderKeyLookupServiceFound": "There is no resource provider key lookup service was found"
+    "NoResourceProviderKeyLookupServiceFound": "There is no resource provider key lookup service was found",
+    "NoResourcePermissionFound": "There is no resource permission defined for the current resource."
   }
 }

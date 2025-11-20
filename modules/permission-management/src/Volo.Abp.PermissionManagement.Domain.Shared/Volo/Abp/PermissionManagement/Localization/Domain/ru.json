@@ -24,6 +24,7 @@
     "ProviderName": "Имя поставщика",
     "ProviderKey": "Ключ поставщика",
     "GrantAllResourcePermissions": "Предоставить все",
-    "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика ресурсов не найдена"
+    "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика ресурсов не найдена",
+    "NoResourcePermissionFound": "Для текущего ресурса не определено ни одного разрешения."
   }
 }

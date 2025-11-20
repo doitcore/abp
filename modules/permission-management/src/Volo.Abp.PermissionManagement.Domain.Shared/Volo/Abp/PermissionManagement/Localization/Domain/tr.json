@@ -24,6 +24,7 @@
     "ProviderName": "Sağlayıcı adı",
     "ProviderKey": "Sağlayıcı anahtarı",
     "GrantAllResourcePermissions": "Tümünü ver",
-    "NoResourceProviderKeyLookupServiceFound": "Herhangi bir kaynak sağlayıcı anahtar arama hizmeti bulunamadı"
+    "NoResourceProviderKeyLookupServiceFound": "Herhangi bir kaynak sağlayıcı anahtar arama hizmeti bulunamadı",
+    "NoResourcePermissionFound": "Geçerli kaynak için tanımlı bir kaynak izni yok."
   }
 }

@@ -24,6 +24,7 @@
     "ProviderName": "प्रदाता का नाम",
     "ProviderKey": "प्रदाता कुंजी",
     "GrantAllResourcePermissions": "सभी प्रदान करें",
-    "NoResourceProviderKeyLookupServiceFound": "कोई संसाधन प्रदाता कुंजी खोज सेवा नहीं मिली"
+    "NoResourceProviderKeyLookupServiceFound": "कोई संसाधन प्रदाता कुंजी खोज सेवा नहीं मिली",
+    "NoResourcePermissionFound": "वर्तमान संसाधन के लिए कोई संसाधन अनुमति परिभाषित नहीं है।"
   }
 }

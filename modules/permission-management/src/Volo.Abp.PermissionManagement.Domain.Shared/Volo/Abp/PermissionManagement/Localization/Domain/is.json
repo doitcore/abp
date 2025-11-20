@@ -24,6 +24,7 @@
     "ProviderName": "Nafn veitanda",
     "ProviderKey": "Lykill veitanda",
     "GrantAllResourcePermissions": "Veita allt",
-    "NoResourceProviderKeyLookupServiceFound": "Engin þjónusta fannst til að leita að lykli auðlindaveitanda"
+    "NoResourceProviderKeyLookupServiceFound": "Engin þjónusta fannst til að leita að lykli auðlindaveitanda",
+    "NoResourcePermissionFound": "Engin heimild er skilgreind fyrir núverandi auðlind."
   }
 }

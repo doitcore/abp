@@ -24,6 +24,7 @@
     "ProviderName": "Όνομα παρόχου",
     "ProviderKey": "Κλειδί παρόχου",
     "GrantAllResourcePermissions": "Παραχώρηση όλων",
-    "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου πόρων"
+    "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου πόρων",
+    "NoResourcePermissionFound": "Δεν έχει οριστεί καμία άδεια πόρου για τον τρέχοντα πόρο."
   }
 }

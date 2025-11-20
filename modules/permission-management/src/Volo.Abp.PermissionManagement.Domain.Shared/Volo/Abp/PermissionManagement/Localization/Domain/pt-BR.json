@@ -24,6 +24,7 @@
     "ProviderName": "Nome do provedor",
     "ProviderKey": "Chave do provedor",
     "GrantAllResourcePermissions": "Conceder tudo",
-    "NoResourceProviderKeyLookupServiceFound": "Nenhum serviço de pesquisa de chave de provedor de recursos foi encontrado"
+    "NoResourceProviderKeyLookupServiceFound": "Nenhum serviço de pesquisa de chave de provedor de recursos foi encontrado",
+    "NoResourcePermissionFound": "Não há permissão de recurso definida para o recurso atual."
   }
 }

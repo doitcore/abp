@@ -24,6 +24,7 @@
     "ProviderName": "Palveluntarjoajan nimi",
     "ProviderKey": "Palveluntarjoajan avain",
     "GrantAllResourcePermissions": "Myönnä kaikki",
-    "NoResourceProviderKeyLookupServiceFound": "Resurssin tarjoajan avaimen hakupalvelua ei löytynyt"
+    "NoResourceProviderKeyLookupServiceFound": "Resurssin tarjoajan avaimen hakupalvelua ei löytynyt",
+    "NoResourcePermissionFound": "Nykyiselle resurssille ei ole määritetty käyttöoikeutta."
   }
 }

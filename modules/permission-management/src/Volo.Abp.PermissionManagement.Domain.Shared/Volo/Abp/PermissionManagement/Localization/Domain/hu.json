@@ -24,6 +24,7 @@
     "ProviderName": "Szolgáltató neve",
     "ProviderKey": "Szolgáltató kulcs",
     "GrantAllResourcePermissions": "Összes engedély megadása",
-    "NoResourceProviderKeyLookupServiceFound": "Nem található erőforrás-szolgáltató kulcs kereső szolgáltatás"
+    "NoResourceProviderKeyLookupServiceFound": "Nem található erőforrás-szolgáltató kulcs kereső szolgáltatás",
+    "NoResourcePermissionFound": "Az aktuális erőforráshoz nincs meghatározva erőforrás-engedély."
   }
 }

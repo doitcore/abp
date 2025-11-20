@@ -24,6 +24,7 @@
     "ProviderName": "Numele furnizorului",
     "ProviderKey": "Cheia furnizorului",
     "GrantAllResourcePermissions": "Acordați toate",
-    "NoResourceProviderKeyLookupServiceFound": "Nu a fost găsit niciun serviciu de căutare a cheii furnizorului de resurse"
+    "NoResourceProviderKeyLookupServiceFound": "Nu a fost găsit niciun serviciu de căutare a cheii furnizorului de resurse",
+    "NoResourcePermissionFound": "Nu există nicio permisiune de resursă definită pentru resursa curentă."
   }
 }

@@ -24,6 +24,7 @@
     "ProviderName": "Leverantörsnamn",
     "ProviderKey": "Leverantörsnyckel",
     "GrantAllResourcePermissions": "Bevilja alla",
-    "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter nyckel till resursleverantör hittades"
+    "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter nyckel till resursleverantör hittades",
+    "NoResourcePermissionFound": "Det finns ingen resursbehörighet definierad för den aktuella resursen."
   }
 }

@@ -24,6 +24,7 @@
     "ProviderName": "Nazwa dostawcy",
     "ProviderKey": "Klucz dostawcy",
     "GrantAllResourcePermissions": "Przyznaj wszystko",
-    "NoResourceProviderKeyLookupServiceFound": "Nie znaleziono usługi wyszukiwania klucza dostawcy zasobów"
+    "NoResourceProviderKeyLookupServiceFound": "Nie znaleziono usługi wyszukiwania klucza dostawcy zasobów",
+    "NoResourcePermissionFound": "Nie zdefiniowano żadnych uprawnień do zasobów dla bieżącego zasobu."
   }
 }

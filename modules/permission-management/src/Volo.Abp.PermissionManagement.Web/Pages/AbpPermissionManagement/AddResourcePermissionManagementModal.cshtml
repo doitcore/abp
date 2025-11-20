@@ -1,5 +1,4 @@
 @page
-@using System.Web;
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
 @using Volo.Abp.Localization
@@ -24,7 +23,7 @@
         <abp-modal-body>
             <div class="mb-3">
                 <label class="form-label">@L["Resource"]:</label>
-                <p>@(HttpUtility.HtmlEncode(Model.ResourceDisplayName))</p>
+                <p>@Model.ResourceDisplayName</p>
             </div>
             <div class="mb-3">
                 <label class="form-label">@L["ProviderName"]:</label>

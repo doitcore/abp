@@ -23,7 +23,8 @@
         "ResourceKey": "Ključ resursa",
         "ProviderName": "Naziv pružatelja usluga",
         "ProviderKey": "Ključ pružatelja usluga",
-        "GrantAllResourcePermissions": "Dodijeli sve"
-            ,"NoResourceProviderKeyLookupServiceFound": "Nije pronađena usluga za pronalaženje ključa davatelja resursa"
+        "GrantAllResourcePermissions": "Dodijeli sve",
+        "NoResourceProviderKeyLookupServiceFound": "Nije pronađena usluga za pronalaženje ključa davatelja resursa",
+        "NoResourcePermissionFound": "Za trenutni resurs nije definirano nijedno dopuštenje resursa."
     }
 }

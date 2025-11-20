@@ -24,6 +24,7 @@
     "ProviderName": "Nome del provider",
     "ProviderKey": "Chiave del provider",
     "GrantAllResourcePermissions": "Concedi tutto",
-    "NoResourceProviderKeyLookupServiceFound": "Non è stato trovato alcun servizio di ricerca chiave provider risorse"
+    "NoResourceProviderKeyLookupServiceFound": "Non è stato trovato alcun servizio di ricerca chiave provider risorse",
+    "NoResourcePermissionFound": "Non è definita alcuna autorizzazione per la risorsa corrente."
   }
 }

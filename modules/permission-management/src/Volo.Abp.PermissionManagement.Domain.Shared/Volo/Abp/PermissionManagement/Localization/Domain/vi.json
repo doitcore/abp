@@ -24,6 +24,7 @@
     "ProviderName": "Tên nhà cung cấp",
     "ProviderKey": "Khóa nhà cung cấp",
     "GrantAllResourcePermissions": "Cấp tất cả",
-    "NoResourceProviderKeyLookupServiceFound": "Không tìm thấy dịch vụ tra cứu khóa nhà cung cấp tài nguyên"
+    "NoResourceProviderKeyLookupServiceFound": "Không tìm thấy dịch vụ tra cứu khóa nhà cung cấp tài nguyên",
+    "NoResourcePermissionFound": "Không có quyền tài nguyên nào được định nghĩa cho tài nguyên hiện tại."
   }
 }

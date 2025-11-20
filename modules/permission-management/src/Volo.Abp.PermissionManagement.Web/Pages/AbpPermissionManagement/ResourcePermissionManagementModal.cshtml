@@ -12,13 +12,13 @@
     Layout = null;
 }
 
-@if(Model.HasAnyResourceProviderKeyLookupService)
+@if(Model.HasAnyResourcePermission && Model.HasAnyResourceProviderKeyLookupService)
 {
     <script src="/client-proxies/permissionManagement-proxy.js"></script>
 
     <form method="post" asp-page="/AbpPermissionManagement/ResourcePermissionManagementModal">
         <abp-modal size="ExtraLarge">
-            <abp-modal-header title="@(L["ResourcePermissions"].Value) - @(HttpUtility.HtmlEncode(Model.ResourceDisplayName))"></abp-modal-header>
+            <abp-modal-header title="@(L["ResourcePermissions"].Value) - @Model.ResourceDisplayName"></abp-modal-header>
             <input asp-for="@Model.ResourceName" />
             <input asp-for="@Model.ResourceKey" />
             <input asp-for="@Model.ResourceDisplayName" />
@@ -35,10 +35,17 @@
 else
 {
     <abp-modal size="Large">
-        <abp-modal-header title="@(L["ResourcePermissions"].Value) - @(HttpUtility.HtmlEncode(Model.ResourceDisplayName))"></abp-modal-header>
+        <abp-modal-header title="@(L["ResourcePermissions"].Value) - Model.ResourceDisplayName"></abp-modal-header>
         <abp-modal-body>
             <div class="alert alert-warning" role="alert">
-                @L["NoResourceProviderKeyLookupServiceFound"]
+                @if (!Model.HasAnyResourcePermission)
+                {
+                    @L["NoResourcePermissionFound"]
+                }
+                else if(!Model.HasAnyResourceProviderKeyLookupService)
+                {
+                    @L["NoResourceProviderKeyLookupServiceFound"]
+                }
             </div>
         </abp-modal-body>
         <abp-modal-footer buttons="@AbpModalButtons.Close"></abp-modal-footer>

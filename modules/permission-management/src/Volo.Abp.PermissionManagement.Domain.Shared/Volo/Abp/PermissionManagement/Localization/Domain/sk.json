@@ -24,6 +24,7 @@
     "ProviderName": "Názov poskytovateľa",
     "ProviderKey": "Kľúč poskytovateľa",
     "GrantAllResourcePermissions": "Udeľ všetko",
-    "NoResourceProviderKeyLookupServiceFound": "Nebola nájdená služba na vyhľadávanie kľúča poskytovateľa zdrojov"
+    "NoResourceProviderKeyLookupServiceFound": "Nebola nájdená služba na vyhľadávanie kľúča poskytovateľa zdrojov",
+    "NoResourcePermissionFound": "Pre aktuálny zdroj nie je definované žiadne povolenie."
   }
 }

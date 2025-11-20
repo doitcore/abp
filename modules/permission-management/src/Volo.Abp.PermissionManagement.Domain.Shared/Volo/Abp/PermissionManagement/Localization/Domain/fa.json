@@ -24,6 +24,7 @@
     "ProviderName": "نام ارائه‌دهنده",
     "ProviderKey": "کلید ارائه‌دهنده",
     "GrantAllResourcePermissions": "اعطای همه",
-    "NoResourceProviderKeyLookupServiceFound": "هیچ سرویس جستجوی کلید ارائه‌دهنده منبع یافت نشد"
+    "NoResourceProviderKeyLookupServiceFound": "هیچ سرویس جستجوی کلید ارائه‌دهنده منبع یافت نشد",
+    "NoResourcePermissionFound": "هیچ مجوز منبعی برای منبع فعلی تعریف نشده است."
   }
 }

@@ -24,6 +24,7 @@
     "ProviderName": "提供者名稱",
     "ProviderKey": "提供者鍵",
     "GrantAllResourcePermissions": "授予所有",
-    "NoResourceProviderKeyLookupServiceFound": "未找到資源提供者鍵查找服務"
+    "NoResourceProviderKeyLookupServiceFound": "未找到資源提供者鍵查找服務",
+    "NoResourcePermissionFound": "當前資源未定義任何資源權限。"
   }
 }

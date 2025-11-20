@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,9 +22,8 @@ public class ResourcePermissionManagementModal : AbpPageModel
     [BindProperty(SupportsGet = true)]
     public string ResourceDisplayName { get; set; }
 
+    public bool HasAnyResourcePermission { get; set; }
     public bool HasAnyResourceProviderKeyLookupService { get; set; }
-
-    public GetResourcePermissionListResultDto ResourcePermissions { get; set; }
 
     protected IPermissionAppService PermissionAppService { get; }
 
@@ -38,21 +36,16 @@ public class ResourcePermissionManagementModal : AbpPageModel
 
     public virtual async Task<IActionResult> OnGetAsync()
     {
-        HasAnyResourceProviderKeyLookupService = (await PermissionAppService.GetResourceProviderKeyLookupServicesAsync()).Providers.Count > 0;
+        HasAnyResourcePermission = (await PermissionAppService.GetResourceDefinitionsAsync(ResourceName)).Permissions.Any();
+        if (HasAnyResourcePermission)
+        {
+            HasAnyResourceProviderKeyLookupService = (await PermissionAppService.GetResourceProviderKeyLookupServicesAsync()).Providers.Count > 0;
+        }
         return Page();
     }
 
-    public virtual async Task<IActionResult> OnPostAsync()
+    public virtual Task<IActionResult> OnPostAsync()
     {
-        return NoContent();
-    }
-
-    public class ResourcePermissionViewModel
-    {
-        public string ProviderName { get; set; }
-
-        public string ProviderKey { get; set; }
-
-        public List<string> Permissions { get; set; }
+        return Task.FromResult<IActionResult>(NoContent());
     }
 }

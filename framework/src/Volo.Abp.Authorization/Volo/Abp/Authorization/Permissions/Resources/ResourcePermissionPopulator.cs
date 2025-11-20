@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
@@ -10,30 +11,43 @@ public class ResourcePermissionPopulator : ITransientDependency
 
     protected IResourcePermissionChecker ResourcePermissionChecker { get; }
 
-    public ResourcePermissionPopulator(IPermissionDefinitionManager permissionDefinitionManager, IResourcePermissionChecker resourcePermissionChecker)
+    protected IResourcePermissionStore ResourcePermissionStore { get; }
+
+    public ResourcePermissionPopulator(
+        IPermissionDefinitionManager permissionDefinitionManager,
+        IResourcePermissionChecker resourcePermissionChecker,
+        IResourcePermissionStore resourcePermissionStore)
     {
         PermissionDefinitionManager = permissionDefinitionManager;
         ResourcePermissionChecker = resourcePermissionChecker;
+        ResourcePermissionStore = resourcePermissionStore;
     }
 
-    public virtual async Task PopulateAsync(IHasResourcePermissions resource, string resourceName, string resourceKey)
+    public virtual async Task PopulateAsync<TResource>(TResource resource, string resourceName)
+        where TResource : IHasResourcePermissions
     {
-        Check.NotNull(resource, nameof(resource));
-        Check.NotNull(resource.ResourcePermissions, nameof(resource.ResourcePermissions));
+        await PopulateAsync([resource], resourceName);
+    }
+
+    public virtual async Task PopulateAsync<TResource>(List<TResource> resources, string resourceName)
+        where TResource : IHasResourcePermissions
+    {
+        Check.NotNull(resources, nameof(resources));
         Check.NotNullOrWhiteSpace(resourceName, nameof(resourceName));
-        Check.NotNullOrWhiteSpace(resourceKey, nameof(resourceKey));
 
         var resopurcePermissionNames = (await PermissionDefinitionManager.GetResourcePermissionsAsync())
             .Where(x => x.ResourceName == resourceName)
             .Select(x => x.Name)
             .ToArray();
 
-        var results = await ResourcePermissionChecker.IsGrantedAsync(resopurcePermissionNames, resourceName, resourceKey);
-        foreach (var resopurcePermission in resopurcePermissionNames)
+        foreach (var resource in resources)
         {
-            var hasPermission = results.Result.TryGetValue(resopurcePermission, out var granted) &&
-                                granted == PermissionGrantResult.Granted;
-            resource.ResourcePermissions[resopurcePermission] = hasPermission;
+            var results = await ResourcePermissionChecker.IsGrantedAsync(resopurcePermissionNames, resourceName, resource.GetResourceKey());
+            foreach (var resopurcePermission in resopurcePermissionNames)
+            {
+                var hasPermission = results.Result.TryGetValue(resopurcePermission, out var granted) && granted == PermissionGrantResult.Granted;
+                resource.ResourcePermissions[resopurcePermission] = hasPermission;
+            }
         }
     }
 }

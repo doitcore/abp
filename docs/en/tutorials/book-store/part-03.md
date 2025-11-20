@@ -804,46 +804,25 @@ Also replace `<ng-template #abpFooter> </ng-template>` with the following code p
 
 We've used [NgBootstrap datepicker](https://ng-bootstrap.github.io/#/components/datepicker/overview) in this component. So, we need to arrange the dependencies related to this component.
 
-Open `/src/app/book/book.module.ts` and replace the content as below:
-
-```js
-import { NgModule } from '@angular/core';
-import { SharedModule } from '../shared/shared.module';
-import { BookRoutingModule } from './book-routing.module';
-import { BookComponent } from './book.component';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap'; // add this line
-
-@NgModule({
-  declarations: [BookComponent],
-  imports: [
-    BookRoutingModule,
-    SharedModule,
-    NgbDatepickerModule, // add this line
-  ]
-})
-export class BookModule { }
-```
-
-* We imported `NgbDatepickerModule`  to be able to use the date picker.
-
 Open `/src/app/book/book.component.ts` and replace the content as below:
 
 ```js
 import { ListService, PagedResultDto } from '@abp/ng.core';
 import { Component, OnInit, inject } from '@angular/core';
 import { BookService, BookDto, bookTypeOptions } from '@proxy/books';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-// added this line
-import { NgbDateNativeAdapter, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { NgbDateNativeAdapter, NgbDateAdapter, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { ThemeSharedModule } from '@abp/ng.theme.shared';
 
 @Component({
+  standalone: true,
   selector: 'app-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
+  imports: [ThemeSharedModule, ReactiveFormsModule, NgbDatepickerModule],
   providers: [
     ListService,
-    { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter } // add this line
+    { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }
   ],
 })
 export class BookComponent implements OnInit {

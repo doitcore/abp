@@ -5,6 +5,12 @@
 @model Volo.CmsKit.Public.Web.Pages.CmsKit.Shared.Components.Rating.RatingViewModel
 @inject IHtmlLocalizer<CmsKitResource> L
 
+@{
+    var modalId = "ratingDetail_" + Model.EntityType + "_" + Model.EntityId;
+    modalId = modalId.Replace(".", "-").Replace(":", "-").Replace("/", "-").Replace(" ", "-");
+    var modalLabelId = modalId + "_label";
+}
+
 <div class="row row">
     <div class="col">
         <div class="cms-rating-area" data-entity-type="@Model.EntityType" data-entity-id="@Model.EntityId" id="cms-rating_{@Model.EntityType}_{@Model.EntityId}">
@@ -13,15 +19,15 @@
             {
                 @if (Model.Ratings != null)
                 {
-                    <a href="#" class="text-muted ms-1 text-decoration-none" data-bs-toggle="modal" data-bs-target="#ratingDetail">
+                    <a href="#" class="text-muted ms-1 text-decoration-none" data-bs-toggle="modal" data-bs-target="#@modalId">
                         <i class="far fa-question-circle"></i>
                     </a>
 
-                    <div class="modal fade" id="ratingDetail" tabindex="-1" role="dialog" aria-labelledby="ratingDetail" aria-hidden="true">
+                    <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@modalLabelId" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Rating Detail</h5>
+                                    <h5 class="modal-title" id="@modalLabelId">Rating Detail</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">

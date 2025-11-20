@@ -17,8 +17,7 @@ export default function (options: AiConfigSchema): Rule {
     }
 
     const tools = options.tool
-      .split(/[,\s]+/)
-      .map(t => t.trim())
+      .split(/[\s,]+/)
       .filter(t => t) as AiTool[];
 
     const validTools: AiTool[] = ['claude', 'copilot', 'cursor', 'gemini', 'junie', 'windsurf'];

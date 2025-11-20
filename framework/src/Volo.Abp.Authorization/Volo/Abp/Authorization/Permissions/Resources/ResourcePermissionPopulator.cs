@@ -45,8 +45,12 @@ public class ResourcePermissionPopulator : ITransientDependency
             var results = await ResourcePermissionChecker.IsGrantedAsync(resopurcePermissionNames, resourceName, resource.GetResourceKey());
             foreach (var resopurcePermission in resopurcePermissionNames)
             {
+                if(resource.ResourcePermissions == null)
+                {
+                     ObjectHelper.TrySetProperty(resource, x => x.ResourcePermissions, () => new Dictionary<string, bool>());
+                }
                 var hasPermission = results.Result.TryGetValue(resopurcePermission, out var granted) && granted == PermissionGrantResult.Granted;
-                resource.ResourcePermissions[resopurcePermission] = hasPermission;
+                resource.ResourcePermissions![resopurcePermission] = hasPermission;
             }
         }
     }

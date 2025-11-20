@@ -3,18 +3,11 @@ import { map } from 'rxjs/operators';
 import {
   MenuItemCreateInput,
   MenuItemAdminService,
-  PageLookupDto,
   PermissionLookupDto,
 } from '@abp/ng.cms-kit/proxy';
 import { FormProp, ePropType } from '@abp/ng.components/extensible';
 
 export const DEFAULT_MENU_ITEM_CREATE_FORM_PROPS = FormProp.createMany<MenuItemCreateInput>([
-  {
-    type: ePropType.String,
-    name: 'parentId',
-    displayName: 'CmsKit::Parent',
-    id: 'parentId',
-  },
   {
     type: ePropType.String,
     name: 'displayName',
@@ -27,19 +20,13 @@ export const DEFAULT_MENU_ITEM_CREATE_FORM_PROPS = FormProp.createMany<MenuItemC
     name: 'isActive',
     displayName: 'CmsKit::IsActive',
     id: 'isActive',
-    defaultValue: false,
+    defaultValue: true,
   },
   {
     type: ePropType.String,
     name: 'icon',
     displayName: 'CmsKit::Icon',
     id: 'icon',
-  },
-  {
-    type: ePropType.Number,
-    name: 'order',
-    displayName: 'CmsKit::Order',
-    id: 'order',
   },
   {
     type: ePropType.String,

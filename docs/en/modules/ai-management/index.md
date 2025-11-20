@@ -9,7 +9,7 @@
 
 > You must have an ABP Team or a higher license to use this module.
 
-This module implements AI (Artificial Intelligence) management capabilities on top of the [Artificial Intelligence Workspaces](../../framework/infrastructure/artificial-intelligence.md) feature of the ABP Framework and allows to manage workspaces dynamically from the application including UI components and API endpoints.
+This module implements AI (Artificial Intelligence) management capabilities on top of the [Artificial Intelligence Workspaces](../../framework/infrastructure/artificial-intelligence/index.md) feature of the ABP Framework and allows to manage workspaces dynamically from the application including UI components and API endpoints.
 
 
 ## How to Install
@@ -248,7 +248,7 @@ public class MyService
 }
 ```
 
-> See [Artificial Intelligence](../../framework/infrastructure/artificial-intelligence.md) documentation for more details about workspace configuration.
+> See [Artificial Intelligence](../../framework/infrastructure/artificial-intelligence/index.md) documentation for more details about workspace configuration.
 
 ### Scenario 2: AI Management with Domain Layer Dependency (Local Execution)
 
@@ -626,6 +626,6 @@ The cache is automatically invalidated when workspaces are created, updated, or 
 
 ## See Also
 
-- [Artificial Intelligence Infrastructure](../../framework/infrastructure/artificial-intelligence.md): Learn about the underlying AI workspace infrastructure
+- [Artificial Intelligence Infrastructure](../../framework/infrastructure/artificial-intelligence/index.md): Learn about the underlying AI workspace infrastructure
 - [Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/): Microsoft's unified AI abstractions
 - [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/): Microsoft's Semantic Kernel integration

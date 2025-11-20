@@ -567,7 +567,7 @@ If you open [Swagger UI](https://swagger.io/tools/swagger-ui/) by entering the `
 
 ### Index.razor.cs
 
-Open the `Index.razor.cs` file in the `Pages` folder{{if UI=="Blazor"}} in your `Todo.Blazor` project{{end}} and replace the content with the following code block:
+Open the `Index.razor.cs` file in the {{if UI=="BlazorServer"}}`Components/Pages` {{else}} `Pages` {{end}} folder{{if UI=="Blazor"}} in your `Todo.Blazor` project{{end}} and replace the content with the following code block:
 
 ```csharp
 {{if UI=="Blazor"}}
@@ -615,7 +615,7 @@ This class uses the {{if UI=="Blazor"}}`ITodoAppService`{{else}}`TodoAppService`
 
 ### Index.razor
 
-Open the `Index.razor` file in the `Pages` folder and replace the content with the following code block:
+Open the `Index.razor` file in the {{if UI=="BlazorServer"}}`Components/Pages`{{else}}`Pages`{{end}} folder and replace the content with the following code block:
 
 ```xml
 @page "/"
@@ -658,7 +658,7 @@ Open the `Index.razor` file in the `Pages` folder and replace the content with t
 
 ### Index.razor.css
 
-As the final touch, open the `Index.razor.css` file in the `Pages` folder and add the following code block at the end of the file:
+As the final touch, open the `Index.razor.css` file in the {{if UI=="BlazorServer"}}`Components/Pages`{{else}}`Pages`{{end}} folder and add the following code block at the end of the file:
 
 ````css
 #TodoList{

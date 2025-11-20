@@ -41,6 +41,18 @@ It adds the following packages to your `package.json`:
 -   **@types/express**: Type definitions for Express.
 -   **openid-client**: A library for OpenID Connect (OIDC) relying party (RP) implementation, used for authentication on the server.
 
+```json
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "openid-client": "^5.6.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17"
+  }
+}
+```
+
 **For Webpack projects only:**
 -   **browser-sync** (Dev dependency): Used for live reloading during development.
 
@@ -54,6 +66,27 @@ If your project uses the **Application Builder** (`@angular-devkit/build-angular
 
 -   **Scripts**: Adds `serve:ssr:project-name` to serve the SSR application.
 -   **angular.json**: Updates the `build` target to enable SSR (`outputMode: 'server'`) and sets the SSR entry point.
+
+```json
+{
+  "projects": {
+    "MyProjectName": {
+      "architect": {
+        "build": {
+          "options": {
+            "outputPath": "dist/MyProjectName",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 -   **tsconfig**: Updates the application's `tsconfig` to include `server.ts`.
 
 #### Webpack Builder
@@ -69,7 +102,98 @@ If your project uses the **Webpack Builder** (`@angular-devkit/build-angular:bro
 -   **server.ts**: This file is the main entry point for the server-side application.
     -   **Standalone Projects**: Generates a server entry point compatible with `bootstrapApplication`.
     -   **NgModule Projects**: Generates a server entry point compatible with `platformBrowserDynamic`.
+
+```typescript
+import {
+  AngularNodeAppEngine,
+  createNodeRequestHandler,
+  isMainModule,
+  writeResponseToNodeResponse,
+} from '@angular/ssr/node';
+import express from 'express';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { environment } from './environments/environment';
+import { ServerCookieParser } from '@abp/ng.core';
+import * as oidc from 'openid-client';
+
+// ... (OIDC configuration and setup)
+
+const app = express();
+const angularApp = new AngularNodeAppEngine();
+
+// ... (OIDC routes: /authorize, /logout, /)
+
+/**
+ * Serve static files from /browser
+ */
+app.use(
+  express.static(browserDistFolder, {
+    maxAge: '1y',
+    index: false,
+    redirect: false,
+  }),
+);
+
+/**
+ * Handle all other requests by rendering the Angular application.
+ */
+app.use((req, res, next) => {
+  angularApp
+    .handle(req)
+    .then(response => {
+      if (response) {
+        res.cookie('ssr-init', 'true', {...secureCookie, httpOnly: false});
+        return writeResponseToNodeResponse(response, res);
+      } else {
+        return next()
+      }
+    })
+    .catch(next);
+});
+
+// ... (Start server logic)
+
+export const reqHandler = createNodeRequestHandler(app);
+```
 -   **app.routes.server.ts**: Defines server-side routes and render modes (e.g., Prerender, Server, Client). This allows fine-grained control over how each route is rendered.
+
+```typescript
+import { RenderMode, ServerRoute } from '@angular/ssr';
+
+export const serverRoutes: ServerRoute[] = [
+  {
+    path: '**',
+    renderMode: RenderMode.Server
+  }
+];
+```
+
+-   **app.config.server.ts**: Merges the application configuration with server-specific providers.
+
+```typescript
+import { mergeApplicationConfig, ApplicationConfig, provideAppInitializer, inject, PLATFORM_ID, TransferState } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { provideServerRendering, withRoutes } from '@angular/ssr';
+import { appConfig } from './app.config';
+import { serverRoutes } from './app.routes.server';
+import { SSR_FLAG } from '@abp/ng.core';
+
+const serverConfig: ApplicationConfig = {
+  providers: [
+    provideAppInitializer(() => {
+      const platformId = inject(PLATFORM_ID);
+      const transferState = inject<TransferState>(TransferState);
+      if (isPlatformServer(platformId)) {
+        transferState.set(SSR_FLAG, true);
+      }
+    }),
+    provideServerRendering(withRoutes(serverRoutes)),
+  ],
+};
+
+export const config = mergeApplicationConfig(appConfig, serverConfig);
+```
 -   **index.html**: Removes the loading spinner (`<div id="lp-page-loader"></div>`) to prevent hydration mismatches.
 
 ## 3. Running the Application

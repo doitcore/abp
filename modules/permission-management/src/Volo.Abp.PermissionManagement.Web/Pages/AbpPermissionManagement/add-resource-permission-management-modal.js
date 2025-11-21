@@ -35,7 +35,7 @@ var abp = abp || {};
                 return {
                     results: keyValues,
                     pagination: {
-                        more: keyValues.length > 0
+                        more: keyValues.length == 10
                     }
                 };
             }

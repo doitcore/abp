@@ -25,9 +25,9 @@ public class RoleResourcePermissionProviderKeyLookupService : IResourcePermissio
         DisplayName = LocalizableString.Create<IdentityResource>(nameof(RoleResourcePermissionProviderKeyLookupService));
     }
 
-    public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, CancellationToken cancellationToken = default)
+    public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, int page = 1, CancellationToken cancellationToken = default)
     {
-        var roles = await UserRoleFinder.SearchRoleAsync(filter);
+        var roles = await UserRoleFinder.SearchRoleAsync(filter, page);
         return roles.Select(r => new ResourcePermissionProviderKeyInfo(r.RoleName, r.RoleName)).ToList();
     }
 

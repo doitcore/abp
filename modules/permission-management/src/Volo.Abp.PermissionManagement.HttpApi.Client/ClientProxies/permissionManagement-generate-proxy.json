@@ -205,6 +205,14 @@
                       "typeSimple": "string",
                       "isOptional": false,
                       "defaultValue": null
+                    },
+                    {
+                      "name": "page",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
                     }
                   ],
                   "returnValue": {
@@ -599,8 +607,8 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
             },
-            "SearchResourceProviderKeyAsyncByServiceNameAndFilter": {
-              "uniqueName": "SearchResourceProviderKeyAsyncByServiceNameAndFilter",
+            "SearchResourceProviderKeyAsyncByServiceNameAndFilterAndPage": {
+              "uniqueName": "SearchResourceProviderKeyAsyncByServiceNameAndFilterAndPage",
               "name": "SearchResourceProviderKeyAsync",
               "httpMethod": "GET",
               "url": "api/permission-management/permissions/search-resource-provider-keys",
@@ -619,6 +627,14 @@
                   "typeAsString": "System.String, System.Private.CoreLib",
                   "type": "System.String",
                   "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "page",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
                   "isOptional": false,
                   "defaultValue": null
                 }
@@ -642,6 +658,18 @@
                   "jsonName": null,
                   "type": "System.String",
                   "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "page",
+                  "name": "page",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,

@@ -19,6 +19,7 @@ var abp = abp || {};
             data: function (params) {
                 var query = {};
                 query["serviceName"] = $('input[name="AddModel.ProviderName"]:checked').val();
+                query["page"] = params.page || 1;
                 query["filter"] = params.term;
                 return query;
             },
@@ -32,7 +33,10 @@ var abp = abp || {};
                     })
                 });
                 return {
-                    results: keyValues
+                    results: keyValues,
+                    pagination: {
+                        more: keyValues.length > 0
+                    }
                 };
             }
         },

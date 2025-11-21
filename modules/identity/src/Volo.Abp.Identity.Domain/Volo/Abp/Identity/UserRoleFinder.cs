@@ -29,16 +29,12 @@ public class UserRoleFinder : IUserRoleFinder, ITransientDependency
         return (await IdentityUserRepository.GetRoleNamesAsync(userId)).ToArray();
     }
 
-    public virtual async Task<List<UserFinderResult>> SearchUserAsync(string filter)
+    public virtual async Task<List<UserFinderResult>> SearchUserAsync(string filter, int page = 1)
     {
-        if (filter.IsNullOrEmpty())
-        {
-            return new List<UserFinderResult>();
-        }
-
         using (IdentityUserRepository.DisableTracking())
         {
-            var users = await IdentityUserRepository.GetListAsync(filter: filter);
+            page = page < 1 ? 1 : page;
+            var users = await IdentityUserRepository.GetListAsync(filter: filter, skipCount: (page - 1) * 10, maxResultCount: 10);
             return users.Select(user => new UserFinderResult
             {
                 Id = user.Id,
@@ -47,16 +43,12 @@ public class UserRoleFinder : IUserRoleFinder, ITransientDependency
         }
     }
 
-    public virtual async Task<List<RoleFinderResult>> SearchRoleAsync(string filter)
+    public virtual async Task<List<RoleFinderResult>> SearchRoleAsync(string filter, int page = 1)
     {
-        if (filter.IsNullOrEmpty())
-        {
-            return new List<RoleFinderResult>();
-        }
-
         using (IdentityUserRepository.DisableTracking())
         {
-            var roles = await IdentityRoleRepository.GetListAsync(filter: filter);
+            page = page < 1 ? 1 : page;
+            var roles = await IdentityRoleRepository.GetListAsync(filter: filter, skipCount: (page - 1) * 10, maxResultCount: 10);
             return roles.Select(user => new RoleFinderResult
             {
                 Id = user.Id,

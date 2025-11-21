@@ -41,9 +41,9 @@
       }, ajaxParams));
     };
 
-    volo.abp.permissionManagement.permissions.searchResourceProviderKey = function(serviceName, filter, ajaxParams) {
+    volo.abp.permissionManagement.permissions.searchResourceProviderKey = function(serviceName, filter, page, ajaxParams) {
       return abp.ajax($.extend(true, {
-        url: abp.appPath + 'api/permission-management/permissions/search-resource-provider-keys' + abp.utils.buildQueryString([{ name: 'serviceName', value: serviceName }, { name: 'filter', value: filter }]) + '',
+        url: abp.appPath + 'api/permission-management/permissions/search-resource-provider-keys' + abp.utils.buildQueryString([{ name: 'serviceName', value: serviceName }, { name: 'filter', value: filter }, { name: 'page', value: page }]) + '',
         type: 'GET'
       }, ajaxParams));
     };

@@ -31,11 +31,13 @@ public class HttpClientUserRoleFinder : IUserRoleFinder, ITransientDependency
         return await _userIntegrationService.GetRoleNamesAsync(userId);
     }
 
-    public virtual async Task<List<UserFinderResult>> SearchUserAsync(string filter)
+    public virtual async Task<List<UserFinderResult>> SearchUserAsync(string filter, int page = 1)
     {
+        page = page < 1 ? 1 : page;
         var users = await _userIntegrationService.SearchAsync(new UserLookupSearchInputDto()
         {
-            Filter = filter
+            Filter = filter,
+            SkipCount = (page - 1) * 10
         });
         return users.Items.Select(u => new UserFinderResult
         {
@@ -44,11 +46,13 @@ public class HttpClientUserRoleFinder : IUserRoleFinder, ITransientDependency
         }).ToList();
     }
 
-    public virtual async Task<List<RoleFinderResult>> SearchRoleAsync(string filter)
+    public virtual async Task<List<RoleFinderResult>> SearchRoleAsync(string filter, int page = 1)
     {
+        page = page < 1 ? 1 : page;
         var roles = await _userIntegrationService.SearchRoleAsync(new RoleLookupSearchInputDto()
         {
-            Filter = filter
+            Filter = filter,
+            SkipCount = (page - 1) * 10
         });
 
         return roles.Items.Select(r => new RoleFinderResult

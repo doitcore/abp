@@ -14,7 +14,7 @@ public interface IPermissionAppService : IApplicationService
 
     Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync();
 
-    Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter);
+    Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter, int page);
 
     Task<GetResourcePermissionDefinitionListResultDto> GetResourceDefinitionsAsync([NotNull] string resourceName);
 

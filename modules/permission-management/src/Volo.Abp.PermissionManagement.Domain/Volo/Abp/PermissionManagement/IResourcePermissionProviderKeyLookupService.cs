@@ -11,7 +11,7 @@ public interface IResourcePermissionProviderKeyLookupService
 
     public ILocalizableString DisplayName { get; }
 
-    Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, CancellationToken cancellationToken = default);
+    Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, int page = 1, CancellationToken cancellationToken = default);
 
     Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string[] keys, CancellationToken cancellationToken = default);
 }

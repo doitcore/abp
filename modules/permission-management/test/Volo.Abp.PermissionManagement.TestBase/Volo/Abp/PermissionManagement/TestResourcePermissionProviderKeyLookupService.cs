@@ -12,7 +12,7 @@ public class TestResourcePermissionProviderKeyLookupService : IResourcePermissio
 
     public ILocalizableString DisplayName => new LocalizableString("Test", "TestResource");
 
-    public Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, CancellationToken cancellationToken = default)
+    public Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, int page = 1, CancellationToken cancellationToken = default)
     {
         throw new System.NotImplementedException();
     }

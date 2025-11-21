@@ -42,9 +42,9 @@ public class PermissionsController : AbpControllerBase, IPermissionAppService
     }
 
     [HttpGet("search-resource-provider-keys")]
-    public virtual Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter)
+    public virtual Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter, int page)
     {
-        return PermissionAppService.SearchResourceProviderKeyAsync(serviceName, filter);
+        return PermissionAppService.SearchResourceProviderKeyAsync(serviceName, filter, page);
     }
 
     [HttpGet("resource-definitions")]

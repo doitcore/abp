@@ -51,12 +51,13 @@ public partial class PermissionsClientProxy : ClientProxyBase<IPermissionAppServ
         return await RequestAsync<GetResourceProviderListResultDto>(nameof(GetResourceProviderKeyLookupServicesAsync));
     }
 
-    public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter)
+    public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter, int page)
     {
         return await RequestAsync<SearchProviderKeyListResultDto>(nameof(SearchResourceProviderKeyAsync), new ClientProxyRequestTypeValue
         {
             { typeof(string), serviceName },
-            { typeof(string), filter }
+            { typeof(string), filter },
+            { typeof(int), page }
         });
     }
 

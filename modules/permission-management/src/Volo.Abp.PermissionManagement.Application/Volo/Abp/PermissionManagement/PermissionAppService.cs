@@ -181,10 +181,10 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     }
 
     [Authorize(PermissionManagementPermissions.ManageResourcePermissions)]
-    public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter)
+    public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter, int page)
     {
         var lookupService = await ResourcePermissionManager.GetProviderKeyLookupServiceAsync(serviceName);
-        var keys = await lookupService.SearchAsync(filter);
+        var keys = await lookupService.SearchAsync(filter, page);
         return new SearchProviderKeyListResultDto
         {
             Keys = keys.Select(x => new SearchProviderKeyInfo

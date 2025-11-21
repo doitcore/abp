@@ -90,9 +90,11 @@ public class ResourcePermissionStore_Tests : PermissionTestBase
             TestEntityResource.ResourceName,
             TestEntityResource.ResourceKey3);
 
-        grantedPermissions.Length.ShouldBe(2);
+        grantedPermissions.Length.ShouldBe(3);
         grantedPermissions.ShouldContain("MyResourcePermission3");
         grantedPermissions.ShouldContain("MyResourcePermission5");
+        grantedPermissions.ShouldContain("MyResourcePermission6");
+
     }
 
 

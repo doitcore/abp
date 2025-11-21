@@ -277,7 +277,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         if (provider == null)
         {
             //TODO: BusinessException
-            throw new AbpException("Unknown permission management provider: " + providerName);
+            throw new AbpException("Unknown resource permission management provider: " + providerName);
         }
 
         await provider.SetAsync(permissionName, resourceName, resourceKey, providerKey, isGranted);

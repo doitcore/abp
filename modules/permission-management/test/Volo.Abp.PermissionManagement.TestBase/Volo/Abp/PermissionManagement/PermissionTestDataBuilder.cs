@@ -110,6 +110,17 @@ public class PermissionTestDataBuilder : ITransientDependency
         await _resourcePermissionGrantRepository.InsertAsync(
             new ResourcePermissionGrant(
                 _guidGenerator.Create(),
+                "MyResourcePermission6",
+                TestEntityResource.ResourceName,
+                TestEntityResource.ResourceKey3,
+                UserPermissionValueProvider.ProviderName,
+                User1Id.ToString()
+            )
+        );
+
+        await _resourcePermissionGrantRepository.InsertAsync(
+            new ResourcePermissionGrant(
+                _guidGenerator.Create(),
                 "MyResourcePermission5",
                 TestEntityResource.ResourceName,
                 TestEntityResource.ResourceKey5,

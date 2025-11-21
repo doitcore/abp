@@ -3,7 +3,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace Volo.Abp.PermissionManagement;
 
-public class TestResourcePermissionDefinitionProvider: PermissionDefinitionProvider
+public class TestResourcePermissionDefinitionProvider : PermissionDefinitionProvider
 {
     public override void Define(IPermissionDefinitionContext context)
     {

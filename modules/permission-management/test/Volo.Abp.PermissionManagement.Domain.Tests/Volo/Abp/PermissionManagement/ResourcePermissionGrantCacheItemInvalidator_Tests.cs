@@ -58,7 +58,7 @@ public class ResourcePermissionGrantCacheItemInvalidator_Tests : PermissionTestB
             UserPermissionValueProvider.ProviderName,
             PermissionTestDataBuilder.User1Id.ToString());
         resourcePermissionGrant.ShouldNotBeNull();
-        await _resourcePermissionGrantRepository.DeleteAsync(permissionGrant);
+        await _resourcePermissionGrantRepository.DeleteAsync(resourcePermissionGrant);
 
         (await _cache.GetAsync(ResourcePermissionGrantCacheItem.CalculateCacheKey("MyResourcePermission1",
             TestEntityResource.ResourceName,

@@ -27,7 +27,7 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
         GuidGenerator = guidGenerator;
     }
 
-    public async Task<(PermissionGroupDefinitionRecord[], PermissionDefinitionRecord[])>
+    public virtual async Task<(PermissionGroupDefinitionRecord[], PermissionDefinitionRecord[])>
         SerializeAsync(IEnumerable<PermissionGroupDefinition> permissionGroups)
     {
         var permissionGroupRecords = new List<PermissionGroupDefinitionRecord>();
@@ -46,7 +46,18 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
         return (permissionGroupRecords.ToArray(), permissionRecords.ToArray());
     }
 
-    public Task<PermissionGroupDefinitionRecord> SerializeAsync(PermissionGroupDefinition permissionGroup)
+    public virtual async Task<PermissionDefinitionRecord[]> SerializeAsync(IEnumerable<PermissionDefinition> permissions)
+    {
+        var permissionRecords = new List<PermissionDefinitionRecord>();
+        foreach (var permission in permissions)
+        {
+            permissionRecords.Add(await SerializeAsync(permission, null));
+        }
+
+        return permissionRecords.ToArray();
+    }
+
+    public virtual Task<PermissionGroupDefinitionRecord> SerializeAsync(PermissionGroupDefinition permissionGroup)
     {
         using (CultureHelper.Use(CultureInfo.InvariantCulture))
         {
@@ -65,7 +76,7 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
         }
     }
 
-    public Task<PermissionDefinitionRecord> SerializeAsync(
+    public virtual Task<PermissionDefinitionRecord> SerializeAsync(
         PermissionDefinition permission,
         PermissionGroupDefinition permissionGroup)
     {

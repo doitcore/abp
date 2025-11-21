@@ -323,9 +323,18 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         return await ResourcePermissionGrantRepository.UpdateAsync(resourcePermissionGrant, true);
     }
 
-    public virtual async Task DeleteAsync(string providerName, string resourceName, string resourceKey, string providerKey)
+    public virtual async Task DeleteAsync(string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var permissionGrants = await ResourcePermissionGrantRepository.GetListAsync(providerName, resourceName, resourceKey, providerKey);
+        var permissionGrants = await ResourcePermissionGrantRepository.GetListAsync(resourceName, resourceKey, providerName, providerKey);
+        foreach (var permissionGrant in permissionGrants)
+        {
+            await ResourcePermissionGrantRepository.DeleteAsync(permissionGrant, true);
+        }
+    }
+
+    public virtual async Task DeleteAsync(string providerName, string providerKey)
+    {
+        var permissionGrants = await ResourcePermissionGrantRepository.GetListAsync(providerName, providerKey);
         foreach (var permissionGrant in permissionGrants)
         {
             await ResourcePermissionGrantRepository.DeleteAsync(permissionGrant, true);

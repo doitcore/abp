@@ -65,4 +65,9 @@ public interface IResourcePermissionManager
         string providerName,
         string providerKey
     );
+
+    Task DeleteAsync(
+        string providerName,
+        string providerKey
+    );
 }

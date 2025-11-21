@@ -233,7 +233,7 @@ public class ResourcePermissionStore : IResourcePermissionStore, ITransientDepen
 
     public virtual async Task<string[]> GetGrantedResourceKeysAsync(string resourceName, string name)
     {
-        return (await ResourcePermissionGrantRepository.GetResourceKeys(resourceName, name)).Select(x => x.Name).ToArray();
+        return (await ResourcePermissionGrantRepository.GetResourceKeys(resourceName, name)).Select(x => x.ResourceKey).ToArray();
     }
 
     protected virtual string GetPermissionNameFormCacheKeyOrNull(string key)

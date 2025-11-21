@@ -49,7 +49,7 @@ public interface IResourcePermissionStore
     /// <param name="resourceName">Resource name</param>
     /// <param name="resourceKey">Resource key</param>
     /// <returns>
-    /// A dictionary of permission names and their states.
+    /// A <see cref="MultiplePermissionGrantResult"/> object containing the grant results for each permission.
     /// </returns>
     Task<MultiplePermissionGrantResult> GetPermissionsAsync(
         string resourceName,

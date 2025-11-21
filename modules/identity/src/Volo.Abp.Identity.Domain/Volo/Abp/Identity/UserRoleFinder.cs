@@ -31,6 +31,11 @@ public class UserRoleFinder : IUserRoleFinder, ITransientDependency
 
     public virtual async Task<List<UserFinderResult>> SearchUserAsync(string filter)
     {
+        if (filter.IsNullOrEmpty())
+        {
+            return new List<UserFinderResult>();
+        }
+
         using (IdentityUserRepository.DisableTracking())
         {
             var users = await IdentityUserRepository.GetListAsync(filter: filter);
@@ -44,6 +49,11 @@ public class UserRoleFinder : IUserRoleFinder, ITransientDependency
 
     public virtual async Task<List<RoleFinderResult>> SearchRoleAsync(string filter)
     {
+        if (filter.IsNullOrEmpty())
+        {
+            return new List<RoleFinderResult>();
+        }
+
         using (IdentityUserRepository.DisableTracking())
         {
             var roles = await IdentityRoleRepository.GetListAsync(filter: filter);

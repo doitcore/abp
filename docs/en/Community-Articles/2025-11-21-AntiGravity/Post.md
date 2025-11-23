@@ -1,64 +1,92 @@
-# Breaking the Laws of Coding: Google AntiGravity
+# My First Look and Experience with Google AntiGravity
 
-Today, I tried the new code-editor AntiGravity by Google. The UI is almost same as Cursor because both are based on VS Code. That's why it was not hard to find what I'm looking for. First of all, the main difference as I see from the Cursor is; when I type a prompt in the agent section AntiGravity first creates a Task list and every time it finishes a task, it checks it. Actually Cursor has a similar functionality but AntiGravity took it one step further. Second thing which is good; AntiGravity uses Nano Banana 🍌... This is Google's image generation LLM. Why it's important because when you create a web page, you don't need to search for graphics, AntiGravity generates images automatically. 
+## Is Google AntiGravity going to replace your main code editor?
 
-Everything is not so perfect! When I tried AntiGravity, couple of times it stucked AI generation. I faced errors like this 👇
+Today, I tried the new code-editor AntiGravity by Google. They say it's beyond a code-editor. When I launch, I see the UI is almost same as Cursor. They're both based on VS Code. That's why it was not hard to find what I'm looking for. 
+
+First of all, the main difference as I see from the Cursor is; when I type a prompt in the agent section **AntiGravity first creates a Task List** (like a road-map) and every time it finishes a task, it checks the corresponding task. Actually Cursor has a similar functionality but AntiGravity took it one step further. 
+
+Second thing which was good to me; AntiGravity uses Nano Banana 🍌. This is Google's image generation LLM... Why it's important because when you create an app, you don't need to search for graphics, deal with image licenses. **AntiGravity generates images automatically and no license is required!** 
+
+Third exciting feature for me; **AntiGravity is integrated with Google Chrome and can communicate with the running website**. When I first run my web project, it setups a browser extension which can see and interact with my website. And it can see the results, click somewhere else on the page, scroll, fill up the forms.
+
+Another feature I loved is that **you can enter a new prompt even while AntiGravity is still generating a response**. It instantly prioritizes the latest input and adjusts the ongoing process if needed. But in Cursor, if you add a prompt before the cursor finishes, it simply queues it and runs it later.
+
+And lastly, **AntiGravity is working very good with Gemini 3**.
+
+Everything was not so perfect! When I tried AntiGravity, couple of times it stucked AI generation. I faced errors like this 👇
 
 ![Errors](errors.png)
 
-## Introduction
+Also you **cannot debug your .NET application with AntiGravity.** This is Microsoft's policy that's why I cannot say it's a downside of AntiGravity. You need to use Microsft's original VS Code, Visual Studio or Rider
 
-As .NET developers, we are accustomed to "heavy" lifting. We deal with heavy architectures, robust dependency injection containers, and IDEs like Visual Studio that sometimes feel like they carry the weight of the entire universe while loading.
+## How Much is AntiGravity?
 
-We constantly seek lightweight solutions—faster build times, cleaner UI, and more responsive environments. Recently, I stumbled upon a tool that takes the concept of "lightweight" quite literally.
+Currently there's only individual plan is available for personal accounts and that's free! The contents of Team and Enterprise plans and prices are not announced yet. I used it with my company Google Workspace account which we pay so Gemini 3 is free on my account.
 
-It is called **Google AntiGravity**, and while it may not replace your daily driver for ABP Framework development just yet, it introduces a radical new paradigm I like to call **Chaos-Driven Development (CDD)**.
+![Pricing](pricing.png)
+
+## More About AntiGravity
+
+There have been many AI assisted IDEs like [Windsurf](https://windsurf.com/), [Cursor](https://cursor.com/), [Zed](https://zed.dev/), [Replit](https://replit.com/) and [Fleet](https://www.jetbrains.com/fleet/). This project is backed with Google. **But this time, since it’s one of the ‘Magnificent 7’ it’s making a name for itself.**  AntiGravity, uses a standard grid layout as others based on VS Code editor. It's very similar to Cursor, Visual Studio, Rider. 
 
 ![AntiGravity UI](anti-gravity-ui.png)
 
-## The User Interface: A Crash Course in Physics
+## Supported LLMs:
 
-The first thing you will notice about the AntiGravity "editor" is its refusal to adhere to standard grid layouts. In traditional tools like Visual Studio or JetBrains Rider, windows are docked. The Solution Explorer stays on the right; the Output window stays at the bottom.
+Antigravity offers the below models which supports reasoning
 
-In AntiGravity, the UI is dynamic—perhaps *too* dynamic. Upon initialization, the entire interface collapses under simulated physics. Elements that were once rigidly defined (like the Search Bar or the "I'm Feeling Lucky" button) are now free-floating objects that interact with the cursor.
+- Gemini 3 Pro (high)
+- Gemini 3 Pro (low)
+- Claude Sonnet 4.5
+- Claude Sonnet 4.5 (thinking)
+- GPT-OSS
 
-> **Pro Tip:** If you are frustrated with a specific bug in your code, this interface allows you to physically grab the erroring module and throw it against the virtual wall. It is surprisingly therapeutic.
+![LLMs](llms.png)
 
-## Loose Coupling Taken Literally
 
-One of the core tenets of the ABP Framework is **Modularity**. We strive for loose coupling between our Domain, Application, and Infrastructure layers.
 
-AntiGravity visualizes this concept perfectly. When you interact with the environment, you will see that there are absolutely no rigid dependencies holding the visual elements together. They collide, bounce, and scatter.
+Antigravity also uses other supportive models in the background:
 
-## Feature Breakdown
+- **Nano banana**: This is used to generate images
+- **Gemini 2.5 Pro UI Checkpoint**: It's for the browser subagent to trigger browser action such as clicking, scrolling, or filling in input.
+- **Gemini 2.5 Flash**: For checkpointing and context summarization, this is used.
+- **Gemini 2.5 Flash Lite**: And when it's need to make a semantic search in your code-base, this is used.
 
-While it lacks support for C# syntax highlighting or NuGet package management, it boasts several "unique" features:
+## AntiGravity Can See Your Website
 
-1.  **Physics-Based Refactoring:** Moving a UI element isn't done via CSS or XAML. You simply drag it with your mouse and let gravity do the rest.
-2.  **Zero-Latency Crashes:** When things fall apart, they do so instantly. There is no loading bar for the chaos.
-3.  **The "Shake" Build:** If you vigorously shake your browser window, the elements react violently—a perfect metaphor for `dotnet build --force`.
+This make a big difference from traditional IDEs. AntiGravity's browser agent is taking screenshots of pages when it wants to check the page. This is achieved by a Chrome Extension as a tool to the agent, and you can also prompt the agent to take a screenshot of a page. For example; it can iterating on website designs and implementations, it can perform UI Testing, it can monitoring dashboards, it can automating routine tasks like rerunning CI.
+This is the link for the extension 👉 [chromewebstore.google.com/detail/antigravity-browser-exten/eeijfnjmjelapkebgockoeaadonbchdd](https://chromewebstore.google.com/detail/antigravity-browser-exten/eeijfnjmjelapkebgockoeaadonbchdd)
 
-## The Verdict
+![Browser Extension](extension.png)
 
-Is Google AntiGravity going to replace Visual Studio 2022 for your next enterprise ABP solution? **Absolutely not.**
+![Extension Features](extension-features.png)
 
-However, is it an incredible way to decompress after spending four hours debugging an `AsyncHelper` deadlock? **100% yes.**
+## MCP Integration
 
-Sometimes, we take our architecture too seriously. Tools like this remind us that at the end of the day, code is just digital blocks that we are trying to stack together without them falling over.
+When we need MCP in a code-editor? Simply if we want to connect to a 3rd party service to complete our task we need MCP. So AntiGravity can connect to your DB and write proper SQL queries or it can pull in recent build logs from Netlify or Heroku. Also you canask AntiGravity to to connect GitHub for the best authentication pattern. AntiGravity currently supports these MCP servers: Airweave,AlloyDB for PostgreSQL,Atlassian,BigQuery,Cloud SQL for PostgreSQL,Cloud SQL for MySQL,Cloud SQL for SQL Server,Dart,Dataplex,Figma Dev Mode MCP,Firebase,GitHub,Harness,Heroku,Linear,Locofy,Looker,MCP Toolbox for Databases,MongoDB,Neon,Netlify,Notion,PayPal,Perplexity Ask,Pinecone,Prisma,Redis,Sequential Thinking,SonarQube,Spanner,Stripe and Supabase.
+
+![MCP](mcp.png)
+
+## Agent Settings
+
+The major settings of Agent are:
+
+- **Agent Auto Fix Lints**: I enabled this setting because I want the Agent automatically fixes its own mistakes for invalid syntax, bad formatting, unused variables, unreachable code or not following project coding standards... It makes extra tool calls that's why little bit expensive.
+- **Auto Execution**: Sometimes Agent tries to build application or writing test code and running it, in these cases it executes command. I choose "Turbo"... With this option, Agent always runs the terminal command and controls my browser.
+- **Review Policy**: How much control you are giving to agent. I choose "Always Proceed" because I mostly trust AI 😀. It means the Agent will never ask for review.
+
+![Agent Settings](agent-settings.png)
 
 ## Differences Between Cursor and AntiGravity
-
-
 
 It appears there was a bit of confusion in our previous "satire" article! In this timeline (November 2025), **Google Antigravity** is indeed a real, newly released **AI-first IDE** intended to compete with **Cursor**.
 
 While **Cursor** has been the reigning champion of AI code editors, Google's **Antigravity** (powered by Gemini 3) introduces a different philosophy.
 
-
-
 ### 1. Philosophy: "Co-Pilot" vs. "Employee"
 
-- **Cursor (The Super-Suit):** Cursor is built to make **YOU** a faster coder. It acts like an exoskeleton; it predicts your next move, auto-completes your thoughts, and helps you refactor while you type.4 You are still the driver; Cursor just makes the car go 200mph.
+- **Cursor (The Super-Suit):** Cursor is built to make you a faster coder. It acts like an exoskeleton; it predicts your next move, auto-completes your thoughts, and helps you refactor while you type.4 You are still the driver; Cursor just makes the car go 200mph.
 - **Antigravity (The Manager):5** Antigravity is built to let you **manage** coding tasks.6 It is "Agent-First."7 You don't just type code; you assign tasks to autonomous agents (e.g., "Fix the bug in the login flow and verify it in the browser"). It behaves more like a junior developer that you supervise.
 
 ### 2. The Interface
@@ -66,9 +94,6 @@ While **Cursor** has been the reigning champion of AI code editors, Google's **A
 - **Cursor:** Looks and feels exactly like **VS Code**.10 If you know VS Code, you know Cursor. The AI is integrated into the text editor (CMD+K, Tab autocomplete).
 
 - **Antigravity:** Introduces two distinct views:
-
-  
-
   - **Editor View:** Similar to a standard IDE
   - **Manager View (Mission Control):** A dashboard where you see multiple "Agents" working in parallel.14 You can watch them plan, execute, and test tasks asynchronously.
 
@@ -89,26 +114,7 @@ While **Cursor** has been the reigning champion of AI code editors, Google's **A
 
 
 
-### Summary Table
-
-| **Feature**        | **Cursor**                                     | **Google Antigravity**                        |
-| ------------------ | ---------------------------------------------- | --------------------------------------------- |
-| **Core Concept**   | AI-Assisted Editing (Copilot)                  | Agentic Development (Autonomy)                |
-| **Best Feature**   | **Tab Autocomplete** (predicts your next edit) | **Mission Control** (manages multiple agents) |
-| **User Role**      | The Coder (Hands-on)                           | The Architect (Delegation)                    |
-| **Context Window** | Large, but relies on RAG/Indexing              | Massive (Native Gemini 1M+ tokens)            |
-| **Verification**   | Review Code Diffs                              | Review "Artifacts" (Screenshots, Plans)       |
-| **Speed**          | Instant / Low Latency                          | Slower (Agents take time to "think" & "act")  |
-
-
-
-If you want to write code faster and stay in the flow, stick with Cursor.27
-
-If you want to delegate tasks (like "upgrade these 50 dependencies and run tests") while you sip coffee, try Antigravity.
-
-
-
 ## Try It Yourself
 
-If you are ready to experience the chaos, you can access the tool here:
+If you are ready to experience the chaos, you can access the tool here: 
 [**Launch Google AntiGravity**](https://antigravity.google/)

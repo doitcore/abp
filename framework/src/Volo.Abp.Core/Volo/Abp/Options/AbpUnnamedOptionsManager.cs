@@ -11,7 +11,7 @@ public class AbpUnnamedOptionsManager<TOptions> : IOptions<TOptions>
     where TOptions : class
 {
     private readonly IOptionsFactory<TOptions> _factory;
-    private volatile TOptions? _value;
+    private TOptions? _value;
 
     public AbpUnnamedOptionsManager(IOptionsFactory<TOptions> factory)
     {
@@ -22,7 +22,7 @@ public class AbpUnnamedOptionsManager<TOptions> : IOptions<TOptions>
     {
         get
         {
-            if (_value is TOptions value)
+            if (_value is { } value)
             {
                 return value;
             }

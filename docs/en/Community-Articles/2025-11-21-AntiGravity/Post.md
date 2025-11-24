@@ -18,11 +18,43 @@ Everything was not so perfect! When I tried AntiGravity, couple of times it stuc
 
 ![Errors](errors.png)
 
-Also you **cannot debug your .NET application with AntiGravity.** This is Microsoft's policy that's why I cannot say it's a downside of AntiGravity. You need to use Microsft's original VS Code, Visual Studio or Rider
+
+
+## Debugging via AntiGravity
+
+⚠ There's a crucial development issue with AntiGravity (and also for Cursor, Windsurf etc...) 🤜 you **cannot debug your .NET application with AntiGravity.** This is Microsoft's policy! Microsoft doesn't allow e that's why I cannot say it's a downside of AntiGravity. You need to use Microsft's original VS Code, Visual Studio or Rider.
+
+
+
+![Debugging](debug.png)
+
+### What does this error mean?
+
+AntiGravity, Cursor, Windsurf etc... are using Visual Studio Code and  the C# extension for VS Code includes the Microsoft .NET Core Debugger "*vsdbg*". 
+VS Code is open-source but "*vsdbg*" is not open-source! It's working only with Visual Studio Code, Visual Studio and Visual Studio for Mac. This is clearly stated at [this link](https://github.com/dotnet/vscode-csharp/blob/main/docs/debugger/Microsoft-.NET-Core-Debugger-licensing-and-Microsoft-Visual-Studio-Code.md).
+
+### How to resolve debugging issue with AntiGravity?
+
+There's free C# debugger extension for Visual Studio Code based IDEs that supports AntiGravity, Cursor and Windsurf. The extension name is **C#**. 
+You can download free C# debugger extension at 👉 [open-vsx.org/extension/muhammad-sammy/csharp/](https://open-vsx.org/extension/muhammad-sammy/csharp/). For AntiGravity open Extension window and search for `C#`, there you'll see this extension.
+
+![C# Debugging Extension](csharp-debug-extension.png)
+
+After installing, I restarted AntiGravity and now I can see the red circle which allows me to add breakpoint on C# code.
+
+![Add C# Breakpoint](breakpoint.png)
+
+### Finding Website Running Port
+
+When you run the web project via C# debugger extension, normally it's not using the launch.json therefore the website port is not the one when you start from Visual Studio / Rider... So what's my website's port which I just run now? Normally for ASP.NET Core the default port is 5000. You can try navigating to http://localhost:5000/. 
+Alternatively you can write the below code in `Program.cs` which prints the full address of your website in the logs.
+If you do the steps which I showed you, you can debug your C# application via AntiGravity and other VS Code derivatives.
+
+![Find Website Port](find-website-port.png)
 
 ## How Much is AntiGravity?
 
-Currently there's only individual plan is available for personal accounts and that's free! The contents of Team and Enterprise plans and prices are not announced yet. I used it with my company Google Workspace account which we pay so Gemini 3 is free on my account.
+Currently there's only individual plan is available for personal accounts and that's free! The contents of Team and Enterprise plans and prices are not announced yet. But **Gemini 3 is not free**! I used it with my company Google Workspace account which we pay for Gemini.
 
 ![Pricing](pricing.png)
 
@@ -64,7 +96,7 @@ This is the link for the extension 👉 [chromewebstore.google.com/detail/antigr
 
 ## MCP Integration
 
-When we need MCP in a code-editor? Simply if we want to connect to a 3rd party service to complete our task we need MCP. So AntiGravity can connect to your DB and write proper SQL queries or it can pull in recent build logs from Netlify or Heroku. Also you canask AntiGravity to to connect GitHub for the best authentication pattern. AntiGravity currently supports these MCP servers: Airweave,AlloyDB for PostgreSQL,Atlassian,BigQuery,Cloud SQL for PostgreSQL,Cloud SQL for MySQL,Cloud SQL for SQL Server,Dart,Dataplex,Figma Dev Mode MCP,Firebase,GitHub,Harness,Heroku,Linear,Locofy,Looker,MCP Toolbox for Databases,MongoDB,Neon,Netlify,Notion,PayPal,Perplexity Ask,Pinecone,Prisma,Redis,Sequential Thinking,SonarQube,Spanner,Stripe and Supabase.
+When we need MCP in a code-editor? Simply if we want to connect to a 3rd party service to complete our task we need MCP. So AntiGravity can connect to your DB and write proper SQL queries or it can pull in recent build logs from Netlify or Heroku. Also you canask AntiGravity to to connect GitHub for the best authentication pattern. AntiGravity currently supports these MCP servers: Airweave, AlloyDB for PostgreSQL, Atlassian, BigQuery, Cloud SQL for PostgreSQL, Cloud SQL for MySQL,Cloud SQL for SQL Server,Dart,Dataplex,Figma Dev Mode MCP,Firebase,GitHub,Harness,Heroku,Linear,Locofy,Looker,MCP Toolbox for Databases,MongoDB,Neon,Netlify,Notion,PayPal,Perplexity Ask,Pinecone,Prisma,Redis,Sequential Thinking,SonarQube,Spanner,Stripe and Supabase.
 
 ![MCP](mcp.png)
 

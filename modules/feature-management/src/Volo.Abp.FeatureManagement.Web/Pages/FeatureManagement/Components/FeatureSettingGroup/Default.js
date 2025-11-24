@@ -12,6 +12,7 @@
             });
         });
 
+        l = abp.localization.getResource("AbpFeatureManagement");
         _featuresModal.onResult(function(){
             abp.notify.success(l('SavedSuccessfully'));
         });

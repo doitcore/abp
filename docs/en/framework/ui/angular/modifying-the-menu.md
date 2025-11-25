@@ -63,8 +63,8 @@ Add the following to your `src/styles.scss`:
 **When to use each approach:**
 
 | Approach | Use Case | Theme Support |
-|----------|----------|---------------|
-| **provideLogo** (recommended) | Cross-theme compatibility, environment-based configuration | All themes (Basic, LeptonX, custom) |
+|----------|----------|-------------|
+| **provideLogo** (recommended) | Cross-theme compatibility, environment-based configuration | All themes  |
 | **CSS Variables** | LeptonX-specific styling, fine-grained CSS control | LeptonX only |
 
 **Recommendation:** Use the `provideLogo` approach for most cases as it's theme-independent and follows ABP's standard configuration pattern. Use CSS variables only when you need LeptonX-specific styling control or have existing CSS-based theme customizations.

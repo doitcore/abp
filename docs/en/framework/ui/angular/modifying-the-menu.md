@@ -44,7 +44,6 @@ export const appConfig: ApplicationConfig = {
 
 Notes
 - This approach works across themes. If you are using LeptonX, the brand logo component reads these values automatically; you don't need any theme-specific code.
-- The `name` property is used for the **brand/logo display** in the UI. For the **browser page title**, ABP uses the `::AppName` localization key from your Domain.Shared layer (`Localization/[ProjectName]/en.json`).
 - You can still override visuals with CSS variables if desired. See the alternative approach below.
 
 ### Alternative: Using CSS Variables (LeptonX Theme)

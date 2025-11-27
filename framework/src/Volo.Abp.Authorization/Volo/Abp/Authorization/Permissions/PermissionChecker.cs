@@ -161,6 +161,7 @@ public class PermissionChecker : IPermissionChecker, ITransientDependency
                     }
                     case PermissionGrantResult.Prohibited:
                         result.Result[grantResult.Key] = PermissionGrantResult.Prohibited;
+                        permissionDefinitions.RemoveAll(x => x.Name == grantResult.Key);
                         break;
                 }
             }

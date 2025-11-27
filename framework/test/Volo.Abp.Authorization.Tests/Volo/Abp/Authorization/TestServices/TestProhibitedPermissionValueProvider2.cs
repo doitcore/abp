@@ -4,13 +4,13 @@ using Volo.Abp.Authorization.Permissions;
 
 namespace Volo.Abp.Authorization.TestServices;
 
-public class TestProhibitedPermissionValueProvider : PermissionValueProvider
+public class TestProhibitedPermissionValueProvider2 : PermissionValueProvider
 {
-    public TestProhibitedPermissionValueProvider(IPermissionStore permissionStore) : base(permissionStore)
+    public TestProhibitedPermissionValueProvider2(IPermissionStore permissionStore) : base(permissionStore)
     {
     }
 
-    public override string Name => "TestProhibitedPermissionValueProvider";
+    public override string Name => "TestProhibitedPermissionValueProvider2";
 
     public override Task<PermissionGrantResult> CheckAsync(PermissionValueCheckContext context)
     {

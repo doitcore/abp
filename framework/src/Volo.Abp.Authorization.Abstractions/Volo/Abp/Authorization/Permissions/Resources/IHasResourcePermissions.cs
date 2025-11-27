@@ -2,9 +2,7 @@ using System.Collections.Generic;
 
 namespace Volo.Abp.Authorization.Permissions.Resources;
 
-public interface IHasResourcePermissions
+public interface IHasResourcePermissions : IKeyedObject
 {
-    public Dictionary<string, bool> ResourcePermissions { get; }
-
-    string GetResourceKey();
+    Dictionary<string, bool> ResourcePermissions { get; }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,13 +43,20 @@ public class ResourcePermissionPopulator : ITransientDependency
 
         foreach (var resource in resources)
         {
-            var results = await ResourcePermissionChecker.IsGrantedAsync(resopurcePermissionNames, resourceName, resource.GetResourceKey());
+            var resourceKey = resource.GetObjectKey();
+            if (resourceKey.IsNullOrEmpty())
+            {
+                throw new AbpException("Resource key can not be null or empty.");
+            }
+            
+            var results = await ResourcePermissionChecker.IsGrantedAsync(resopurcePermissionNames, resourceName, resourceKey);
             foreach (var resopurcePermission in resopurcePermissionNames)
             {
-                if(resource.ResourcePermissions == null)
+                if (resource.ResourcePermissions == null)
                 {
                      ObjectHelper.TrySetProperty(resource, x => x.ResourcePermissions, () => new Dictionary<string, bool>());
                 }
+                
                 var hasPermission = results.Result.TryGetValue(resopurcePermission, out var granted) && granted == PermissionGrantResult.Granted;
                 resource.ResourcePermissions![resopurcePermission] = hasPermission;
             }

@@ -3,7 +3,7 @@ using Volo.Abp.Authorization.Permissions.Resources;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-public static class ResourcePermissionExtenstions
+public static class KeyedObjectResourcePermissionExtenstions
 {
     public static IServiceCollection AddKeyedObjectResourcePermissionAuthorization(this IServiceCollection services)
     {

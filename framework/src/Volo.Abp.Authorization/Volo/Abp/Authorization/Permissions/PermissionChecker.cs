@@ -48,7 +48,7 @@ public class PermissionChecker : IPermissionChecker, ITransientDependency
         {
             return false;
         }
-    
+
         if (!permission.IsEnabled)
         {
             return false;
@@ -146,16 +146,26 @@ public class PermissionChecker : IPermissionChecker, ITransientDependency
                 claimsPrincipal);
 
             var multipleResult = await provider.CheckAsync(context);
-            foreach (var grantResult in multipleResult.Result.Where(grantResult =>
-                result.Result.ContainsKey(grantResult.Key) &&
-                result.Result[grantResult.Key] == PermissionGrantResult.Undefined &&
-                grantResult.Value != PermissionGrantResult.Undefined))
+
+            foreach (var grantResult in multipleResult.Result.Where(x => result.Result.ContainsKey(x.Key)))
             {
-                result.Result[grantResult.Key] = grantResult.Value;
-                permissionDefinitions.RemoveAll(x => x.Name == grantResult.Key);
+                switch (grantResult.Value)
+                {
+                    case PermissionGrantResult.Granted:
+                    {
+                        if (result.Result[grantResult.Key] != PermissionGrantResult.Prohibited)
+                        {
+                            result.Result[grantResult.Key] = PermissionGrantResult.Granted;
+                        }
+                        break;
+                    }
+                    case PermissionGrantResult.Prohibited:
+                        result.Result[grantResult.Key] = PermissionGrantResult.Prohibited;
+                        break;
+                }
             }
 
-            if (result.AllGranted || result.AllProhibited)
+            if (result.AllProhibited)
             {
                 break;
             }

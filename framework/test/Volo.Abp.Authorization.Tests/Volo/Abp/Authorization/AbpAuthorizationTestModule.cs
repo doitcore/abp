@@ -31,6 +31,7 @@ public class AbpAuthorizationTestModule : AbpModule
         {
             options.ValueProviders.Add<TestPermissionValueProvider1>();
             options.ValueProviders.Add<TestPermissionValueProvider2>();
+            options.ValueProviders.Add<TestProhibitedPermissionValueProvider>();
         });
     }
 }

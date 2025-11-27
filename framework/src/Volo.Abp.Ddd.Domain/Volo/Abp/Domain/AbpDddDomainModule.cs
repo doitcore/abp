@@ -38,6 +38,6 @@ public class AbpDddDomainModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddEntityResourcePermissionAuthorization();
+        context.Services.AddKeyedObjectResourcePermissionAuthorization();
     }
 }

@@ -5,25 +5,25 @@ using Volo.Abp.Domain.Entities;
 
 namespace Volo.Abp.Authorization.Permissions.Resources;
 
-public static class EntityResourcePermissionStoreExtensions
+public static class KeyedObjectResourcePermissionStoreExtensions
 {
     /// <summary>
     /// Retrieves an array of granted permissions for a specific entity.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <typeparam name="TResource">The type of the resource.</typeparam>
     /// <param name="resourcePermissionStore">The resource permission store instance.</param>
-    /// <param name="entity">The entity for which the permissions are being checked.</param>
+    /// <param name="resource">The resource for which the permissions are being checked.</param>
     /// <returns>An array of granted permission names as strings.</returns>
-    public static async Task<string[]> GetGrantedPermissionsAsync<TEntity>(
+    public static async Task<string[]> GetGrantedPermissionsAsync<TResource>(
         this IResourcePermissionStore resourcePermissionStore,
-        TEntity entity
+        TResource resource
     )
-        where TEntity : class, IEntity
+        where TResource : class, IEntity
     {
         Check.NotNull(resourcePermissionStore, nameof(resourcePermissionStore));
-        Check.NotNull(entity, nameof(entity));
+        Check.NotNull(resource, nameof(resource));
 
-        return (await GetPermissionsAsync(resourcePermissionStore, entity)).Where(x => x.Value).Select(x => x.Key).ToArray();
+        return (await GetPermissionsAsync(resourcePermissionStore, resource)).Where(x => x.Value).Select(x => x.Key).ToArray();
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public static class EntityResourcePermissionStoreExtensions
 
         return await resourcePermissionStore.GetPermissionsAsync(
             entity,
-            entity.GetResourceKey()
+            entity.GetObjectKey() ?? throw new AbpException("The entity doesn't have a key.")
         );
     }
 }

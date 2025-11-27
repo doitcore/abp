@@ -5,9 +5,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ResourcePermissionExtenstions
 {
-    public static IServiceCollection AddEntityResourcePermissionAuthorization(this IServiceCollection services)
+    public static IServiceCollection AddKeyedObjectResourcePermissionAuthorization(this IServiceCollection services)
     {
-        services.AddSingleton<IAuthorizationHandler, EntityResourcePermissionRequirementHandler>();
+        services.AddSingleton<IAuthorizationHandler, KeyedObjectResourcePermissionRequirementHandler>();
         return services;
     }
 }

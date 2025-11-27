@@ -92,12 +92,12 @@ public class PermissionChecker : IPermissionChecker, ITransientDependency
         return isGranted;
     }
 
-    public async Task<MultiplePermissionGrantResult> IsGrantedAsync(string[] names)
+    public virtual async Task<MultiplePermissionGrantResult> IsGrantedAsync(string[] names)
     {
         return await IsGrantedAsync(PrincipalAccessor.Principal, names);
     }
 
-    public async Task<MultiplePermissionGrantResult> IsGrantedAsync(ClaimsPrincipal? claimsPrincipal, string[] names)
+    public virtual async Task<MultiplePermissionGrantResult> IsGrantedAsync(ClaimsPrincipal? claimsPrincipal, string[] names)
     {
         Check.NotNull(names, nameof(names));
 

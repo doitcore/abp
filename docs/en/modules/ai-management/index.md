@@ -75,7 +75,7 @@ The AI Management module includes a built-in chat interface for testing workspac
 * Test streaming responses
 * Verify workspace configuration before using in production
 
-> Access the chat interface at: `/AIManagement/Chat`
+> Access the chat interface at: `/AIManagement/Workspaces/{WorkspaceName}`
 
 ## Workspace Configuration
 

@@ -305,6 +305,10 @@ public abstract class IdentityUserRepository_Tests<TStartupModule> : AbpIdentity
 
         user = await UserRepository.FindByPasskeyIdAsync(TestData.PasskeyCredentialId2);
         user.ShouldNotBeNull();
+        user.Id.ShouldBe(TestData.UserJohnId);
+
+        user = await UserRepository.FindByPasskeyIdAsync(TestData.PasskeyCredentialId3);
+        user.ShouldNotBeNull();
         user.Id.ShouldBe(TestData.UserNeoId);
 
         (await UserRepository.FindByPasskeyIdAsync((byte[])[1, 2, 3])).ShouldBeNull();

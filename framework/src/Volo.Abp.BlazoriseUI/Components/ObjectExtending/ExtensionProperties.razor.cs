@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
@@ -29,8 +30,24 @@ public partial class ExtensionProperties<TEntityType, TResourceType> : Component
 
     public ImmutableList<ObjectExtensionPropertyInfo> Properties { get; set; } = ImmutableList<ObjectExtensionPropertyInfo>.Empty;
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        Properties = await ObjectExtensionManager.Instance.GetPropertiesAndCheckPolicyAsync<TEntityType>(ServiceProvider);
+        var properties = (await ObjectExtensionManager.Instance.GetPropertiesAndCheckPolicyAsync<TEntityType>(ServiceProvider)).ToList();
+
+        switch (ModalType)
+        {
+            case ExtensionPropertyModalType.CreateModal:
+                properties = properties
+                    .Where(p => p.UI.CreateModal.IsVisible)
+                    .ToList();
+                break;
+            case ExtensionPropertyModalType.EditModal:
+                properties = properties
+                    .Where(p => p.UI.EditModal.IsVisible)
+                    .ToList();
+                break;
+        }
+
+        Properties = properties.ToImmutableList();
     }
 }

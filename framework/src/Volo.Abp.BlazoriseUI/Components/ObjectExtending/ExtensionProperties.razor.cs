@@ -32,22 +32,11 @@ public partial class ExtensionProperties<TEntityType, TResourceType> : Component
 
     protected override async Task OnInitializedAsync()
     {
-        var properties = (await ObjectExtensionManager.Instance.GetPropertiesAndCheckPolicyAsync<TEntityType>(ServiceProvider)).ToList();
-
-        switch (ModalType)
-        {
-            case ExtensionPropertyModalType.CreateModal:
-                properties = properties
-                    .Where(p => p.UI.CreateModal.IsVisible)
-                    .ToList();
-                break;
-            case ExtensionPropertyModalType.EditModal:
-                properties = properties
-                    .Where(p => p.UI.EditModal.IsVisible)
-                    .ToList();
-                break;
-        }
-
-        Properties = properties.ToImmutableList();
+        Properties =
+            (await ObjectExtensionManager.Instance.GetPropertiesAndCheckPolicyAsync<TEntityType>(ServiceProvider))
+            .Where(p => ModalType == ExtensionPropertyModalType.CreateModal
+                ? p.UI.CreateModal.IsVisible
+                : p.UI.EditModal.IsVisible)
+            .ToImmutableList();
     }
 }

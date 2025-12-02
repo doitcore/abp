@@ -114,7 +114,7 @@ export class BookComponent implements OnInit {
 }
 ```
 
-The Angular compiler removes the services that have not been injected anywhere from the final output. See the [tree-shakable providers documentation](https://angular.io/guide/dependency-injection-providers#tree-shakable-providers).
+The Angular compiler removes the services that have not been injected anywhere from the final output. See the [tree-shakable providers documentation](https://angular.dev/guide/di/defining-dependency-providers).
 
 ### Models
 

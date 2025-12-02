@@ -21,7 +21,6 @@ npm install @abp/ng.cms-kit
 
 ```typescript
 import { provideCmsKitAdminConfig } from '@abp/ng.cms-kit/admin/config';
-import { createRoutes } from '@abp/ng.cms-kit/admin';
 
 // In your app config
 export const appConfig: ApplicationConfig = {
@@ -34,7 +33,7 @@ export const appConfig: ApplicationConfig = {
 // In your routes
 export const routes: Routes = [
   {
-    path: 'cms-kit',
+    path: 'cms',
     loadChildren: () => import('@abp/ng.cms-kit/admin').then(m => m.createRoutes()),
   },
 ];
@@ -44,7 +43,6 @@ export const routes: Routes = [
 
 ```typescript
 import { provideCmsKitPublicConfig } from '@abp/ng.cms-kit/public/config';
-import { createRoutes } from '@abp/ng.cms-kit/public';
 
 // In your app config
 export const appConfig: ApplicationConfig = {
@@ -57,7 +55,7 @@ export const appConfig: ApplicationConfig = {
 // In your routes
 export const routes: Routes = [
   {
-    path: 'cms-kit',
+    path: 'cms',
     loadChildren: () => import('@abp/ng.cms-kit/public').then(m => m.createRoutes()),
   },
 ];

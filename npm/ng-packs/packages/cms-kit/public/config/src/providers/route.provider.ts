@@ -13,17 +13,17 @@ export function configureRoutes() {
   const routesService = inject(RoutesService);
   routesService.add([
     {
-      path: '/cms-kit/pages/:slug',
+      path: '/cms/pages/:slug',
       name: eCmsKitPublicRouteNames.Pages,
       requiredPolicy: eCmsKitPublicPolicyNames.Pages,
     },
     {
-      path: '/cms-kit/blogs',
+      path: '/cms/blogs',
       name: eCmsKitPublicRouteNames.Blogs,
       requiredPolicy: eCmsKitPublicPolicyNames.Blogs,
     },
     {
-      path: '/cms-kit/blogs/:blogSlug/:blogPostSlug',
+      path: '/cms/blogs/:blogSlug/:blogPostSlug',
       name: eCmsKitPublicRouteNames.BlogPosts,
       requiredPolicy: eCmsKitPublicPolicyNames.Blogs,
     },

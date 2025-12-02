@@ -1,5 +1,5 @@
-import { AbpLocalStorageService } from '@abp/ng.core';
 import { isPlatformBrowser } from '@angular/common';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
   Component,
   AfterViewInit,
@@ -7,11 +7,11 @@ import {
   ElementRef,
   forwardRef,
   inject,
-  DOCUMENT,
   PLATFORM_ID,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import Editor from '@toast-ui/editor';
+
+import { AbpLocalStorageService } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-toastui-editor',
@@ -31,7 +31,6 @@ export class ToastuiEditorComponent implements AfterViewInit, ControlValueAccess
   private editor!: Editor;
   private value = '';
 
-  private document = inject(DOCUMENT);
   private platformId = inject(PLATFORM_ID);
   private localStorageService = inject(AbpLocalStorageService);
 

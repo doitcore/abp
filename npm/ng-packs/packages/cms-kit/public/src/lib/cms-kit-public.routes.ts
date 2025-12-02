@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Provider } from '@angular/core';
-import { RouterOutletComponent, ReplaceableRouteContainerComponent } from '@abp/ng.core';
-import { eCmsKitPublicComponents } from './enums';
+import { RouterOutletComponent } from '@abp/ng.core';
 
 export interface CmsKitPublicConfigOptions {
   // Extension point contributors

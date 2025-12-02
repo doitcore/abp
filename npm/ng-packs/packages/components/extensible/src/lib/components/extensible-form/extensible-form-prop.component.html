@@ -166,7 +166,7 @@
       {{ asterisk }}
       @if (prop.tooltip) {
         <i
-          [ngbTooltip]="prop.tooltip.text | abpLocalization"
+          [ngbTooltip]="prop.tooltip.text | abpLocalization: prop.tooltip.params"
           [placement]="prop.tooltip.placement || 'auto'"
           container="body"
           class="bi bi-info-circle"

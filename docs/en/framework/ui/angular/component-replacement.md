@@ -608,13 +608,14 @@ Open the generated `nav-items.component.html` in `src/app/nav-items` folder and 
         aria-labelledby="dropdownMenuLink"
         [class.d-block]="smallScreen && languageDropdown.isOpen()"
       >
-        <a
-          *ngFor="let lang of dropdownLanguages$ | async"
-          href="javascript:void(0)"
-          class="dropdown-item"
-          (click)="onChangeLang(lang.cultureName)"
-          >{%{{{ lang?.displayName }}}%}</a
-        >
+        @for (lang of dropdownLanguages$ | async; track lang.cultureName) {
+          <a
+            href="javascript:void(0)"
+            class="dropdown-item"
+            (click)="onChangeLang(lang.cultureName)"
+            >{%{{{ lang?.displayName }}}%}</a
+          >
+        }
       </div>
     </div>
   </li>

@@ -152,9 +152,11 @@ export class BookComponent implements OnInit {
 <!-- simplified for sake of clarity -->
 <select formControlName="genre">
   <option [ngValue]="null">Select a genre</option>
-  <option *ngFor="let genre of genres" [ngValue]="genre.value">
-    {%{{{ genre.key }}}%}
-  </option>
+  @for (genre of genres; track genre.value) {
+    <option [ngValue]="genre.value">
+      {%{{{ genre.key }}}%}
+    </option>
+  }
 </select>
 ```
 

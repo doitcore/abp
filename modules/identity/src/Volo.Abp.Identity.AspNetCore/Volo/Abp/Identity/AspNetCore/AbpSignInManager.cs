@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -119,5 +122,12 @@ public class AbpSignInManager : SignInManager<IdentityUser>
     public virtual async Task<SignInResult> CallSignInOrTwoFactorAsync(IdentityUser user, bool isPersistent, string loginProvider = null, bool bypassTwoFactor = false)
     {
         return await base.SignInOrTwoFactorAsync(user, isPersistent, loginProvider, bypassTwoFactor);
+    }
+
+    public override async Task SignInWithClaimsAsync(IdentityUser user, AuthenticationProperties authenticationProperties, IEnumerable<Claim> additionalClaims)
+    {
+        user.SetLastSignInTime(DateTimeOffset.UtcNow);
+        await UserManager.UpdateAsync(user);
+        await base.SignInWithClaimsAsync(user, authenticationProperties, additionalClaims);
     }
 }

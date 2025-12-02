@@ -127,6 +127,11 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser, IHasEntityVer
     /// </summary>
     public virtual DateTimeOffset? LastPasswordChangeTime { get; protected set; }
 
+    /// <summary>
+    /// Gets or sets the last sign-in time for the user.
+    /// </summary>
+    public virtual DateTimeOffset? LastSignInTime { get; protected set; }
+
     //TODO: Can we make collections readonly collection, which will provide encapsulation. But... can work for all ORMs?
 
     /// <summary>
@@ -407,6 +412,11 @@ public class IdentityUser : FullAuditedAggregateRoot<Guid>, IUser, IHasEntityVer
     public virtual void SetLastPasswordChangeTime(DateTimeOffset? lastPasswordChangeTime)
     {
         LastPasswordChangeTime = lastPasswordChangeTime;
+    }
+
+    public virtual void SetLastSignInTime(DateTimeOffset? lastSignInTime)
+    {
+        LastSignInTime = lastSignInTime;
     }
 
     [CanBeNull]

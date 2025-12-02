@@ -17,6 +17,7 @@ import {
   BlogPostListComponent,
   BlogPostFormComponent,
   MenuItemListComponent,
+  GlobalResourcesComponent,
 } from './components';
 import {
   CMS_KIT_ADMIN_ENTITY_ACTION_CONTRIBUTORS,
@@ -200,6 +201,14 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
             },
           },
           title: 'CmsKit::MenuItems',
+        },
+        {
+          path: 'global-resources',
+          component: GlobalResourcesComponent,
+          data: {
+            requiredPolicy: 'CmsKit.GlobalResources',
+          },
+          title: 'CmsKit::GlobalResources',
         },
       ],
     },

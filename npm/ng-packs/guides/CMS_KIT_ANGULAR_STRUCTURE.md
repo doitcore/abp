@@ -1215,9 +1215,9 @@ export enum eCmsKitAdminRouteNames {
 
 ### Phase 7: Admin - Menus Feature
 
-- [ ] Create MenuItem components
-- [ ] Create default extension points
-- [ ] Add routes and providers
+- [x] Create MenuItem components
+- [x] Create default extension points
+- [x] Add routes and providers
 
 ### Phase 8: Admin - Global Resources Feature
 

@@ -2,8 +2,8 @@ import { Component, OnInit, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
-import { LocalizationPipe } from '@abp/ng.core';
 import { forkJoin } from 'rxjs';
+import { LocalizationPipe } from '@abp/ng.core';
 import {
   ModalComponent,
   ModalCloseDirective,

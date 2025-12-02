@@ -9,7 +9,6 @@ import {
 import { eCmsKitAdminComponents } from './enums';
 import {
   CommentListComponent,
-  CommentApproveComponent,
   CommentDetailsComponent,
   TagListComponent,
   PageListComponent,
@@ -48,21 +47,6 @@ export function createRoutes(config: CmsKitAdminConfigOptions = {}): Routes {
             replaceableComponent: {
               key: eCmsKitAdminComponents.CommentList,
               defaultComponent: CommentListComponent,
-            },
-          },
-          title: 'CmsKit::Comments',
-        },
-        {
-          path: 'comments/approve',
-          component: ReplaceableRouteContainerComponent,
-          resolve: {
-            extensions: cmsKitAdminExtensionsResolver,
-          },
-          data: {
-            requiredPolicy: 'CmsKit.Comments',
-            replaceableComponent: {
-              key: eCmsKitAdminComponents.CommentApprove,
-              defaultComponent: CommentApproveComponent,
             },
           },
           title: 'CmsKit::Comments',

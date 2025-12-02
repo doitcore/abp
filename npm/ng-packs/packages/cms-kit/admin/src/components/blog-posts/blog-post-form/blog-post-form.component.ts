@@ -1,12 +1,12 @@
-import { Component, OnInit, inject, Injector, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, inject, Injector, DestroyRef } from '@angular/core';
+import { ReactiveFormsModule, FormsModule, FormGroup, FormControl } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { forkJoin, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { LocalizationPipe, RestService } from '@abp/ng.core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ExtensibleFormComponent,
   FormPropData,
@@ -67,6 +67,7 @@ export class BlogPostFormComponent implements OnInit {
   coverImagePreview: string | null = null;
   tags: string = '';
   isTagsEnabled = true;
+
   readonly BLOG_POST_ENTITY_TYPE = 'BlogPost';
 
   ngOnInit() {
@@ -93,6 +94,7 @@ export class BlogPostFormComponent implements OnInit {
   }
 
   private loadTags(blogPostId: string) {
+    // TODO: use the public service to load the tags
     this.restService
       .request<void, TagDto[]>({
         method: 'GET',
@@ -139,7 +141,8 @@ export class BlogPostFormComponent implements OnInit {
         url: `/api/cms-kit/blogs/${blogId}/features/CmsKit.Tags`,
       })
       .subscribe(feature => {
-        this.isTagsEnabled = feature?.isEnabled === true;
+        const { isEnabled } = feature || {};
+        this.isTagsEnabled = isEnabled;
       });
   }
 

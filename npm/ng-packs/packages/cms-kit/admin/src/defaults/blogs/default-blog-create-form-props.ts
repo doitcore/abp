@@ -16,6 +16,10 @@ export const DEFAULT_BLOG_CREATE_FORM_PROPS = FormProp.createMany<CreateBlogDto>
     displayName: 'CmsKit::Slug',
     id: 'slug',
     validators: () => [Validators.required],
+    tooltip: {
+      text: 'CmsKit::BlogSlugInformation',
+      // params: ['blogs'],
+    },
   },
 ]);
 

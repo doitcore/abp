@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListService, PagedResultDto, LocalizationPipe } from '@abp/ng.core';
 import { ExtensibleTableComponent, EXTENSIONS_IDENTIFIER } from '@abp/ng.components/extensible';
+import { Confirmation, ConfirmationService } from '@abp/ng.theme.shared';
 import { PageComponent } from '@abp/ng.components/page';
 import {
   BlogPostAdminService,
@@ -29,6 +30,7 @@ export class BlogPostListComponent implements OnInit {
 
   public readonly list = inject(ListService<BlogPostGetListInput>);
   private blogPostService = inject(BlogPostAdminService);
+  private confirmationService = inject(ConfirmationService);
 
   filter = '';
   statusFilter: BlogPostStatus | null = null;
@@ -63,8 +65,22 @@ export class BlogPostListComponent implements OnInit {
         };
         return this.blogPostService.getList(input);
       })
-      .subscribe(res => {
-        this.data = res;
+      .subscribe(res => (this.data = res));
+  }
+
+  delete(id: string, title: string) {
+    this.confirmationService
+      .warn('CmsKit::BlogPostDeletionConfirmationMessage', 'AbpUi::AreYouSure', {
+        yesText: 'AbpUi::Yes',
+        cancelText: 'AbpUi::Cancel',
+        messageLocalizationParams: [title],
+      })
+      .subscribe((status: Confirmation.Status) => {
+        if (status === Confirmation.Status.confirm) {
+          this.blogPostService.delete(id).subscribe(() => {
+            this.list.get();
+          });
+        }
       });
   }
 }

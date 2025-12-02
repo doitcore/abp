@@ -1,8 +1,7 @@
 import { Router } from '@angular/router';
-import { ListService } from '@abp/ng.core';
 import { EntityAction } from '@abp/ng.components/extensible';
-import { ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
-import { BlogPostAdminService, BlogPostListDto } from '@abp/ng.cms-kit/proxy';
+import { BlogPostListDto } from '@abp/ng.cms-kit/proxy';
+import { BlogPostListComponent } from '../../components/blog-posts/blog-post-list/blog-post-list.component';
 
 export const DEFAULT_BLOG_POST_ENTITY_ACTIONS = EntityAction.createMany<BlogPostListDto>([
   {
@@ -16,22 +15,8 @@ export const DEFAULT_BLOG_POST_ENTITY_ACTIONS = EntityAction.createMany<BlogPost
   {
     text: 'AbpUi::Delete',
     action: data => {
-      const blogPostService = data.getInjected(BlogPostAdminService);
-      const confirmationService = data.getInjected(ConfirmationService);
-      const list = data.getInjected(ListService);
-
-      confirmationService
-        .warn('CmsKit::BlogPostDeletionConfirmationMessage', 'AbpUi::AreYouSure', {
-          yesText: 'AbpUi::Yes',
-          cancelText: 'AbpUi::Cancel',
-        })
-        .subscribe((status: Confirmation.Status) => {
-          if (status === Confirmation.Status.confirm) {
-            blogPostService.delete(data.record.id!).subscribe(() => {
-              list.get();
-            });
-          }
-        });
+      const component = data.getInjected(BlogPostListComponent);
+      component.delete(data.record.id!, data.record.title!);
     },
     permission: 'CmsKit.BlogPosts.Delete',
   },

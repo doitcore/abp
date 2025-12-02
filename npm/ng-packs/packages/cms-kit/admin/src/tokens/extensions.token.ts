@@ -63,7 +63,6 @@ import { eCmsKitAdminComponents } from '../enums';
 
 export const DEFAULT_CMS_KIT_ADMIN_ENTITY_ACTIONS = {
   [eCmsKitAdminComponents.CommentList]: DEFAULT_COMMENT_ENTITY_ACTIONS,
-  [eCmsKitAdminComponents.CommentApprove]: DEFAULT_COMMENT_ENTITY_ACTIONS,
   [eCmsKitAdminComponents.CommentDetails]: DEFAULT_COMMENT_ENTITY_ACTIONS,
   [eCmsKitAdminComponents.Tags]: DEFAULT_TAG_ENTITY_ACTIONS,
   [eCmsKitAdminComponents.Pages]: DEFAULT_PAGE_ENTITY_ACTIONS,
@@ -73,7 +72,6 @@ export const DEFAULT_CMS_KIT_ADMIN_ENTITY_ACTIONS = {
 
 export const DEFAULT_CMS_KIT_ADMIN_ENTITY_PROPS = {
   [eCmsKitAdminComponents.CommentList]: DEFAULT_COMMENT_ENTITY_PROPS,
-  [eCmsKitAdminComponents.CommentApprove]: DEFAULT_COMMENT_ENTITY_PROPS,
   [eCmsKitAdminComponents.CommentDetails]: DEFAULT_COMMENT_ENTITY_PROPS,
   [eCmsKitAdminComponents.Tags]: DEFAULT_TAG_ENTITY_PROPS,
   [eCmsKitAdminComponents.Pages]: DEFAULT_PAGE_ENTITY_PROPS,
@@ -126,7 +124,6 @@ export const CMS_KIT_ADMIN_EDIT_FORM_PROP_CONTRIBUTORS =
 // Fix for TS4023 -> https://github.com/microsoft/TypeScript/issues/9944#issuecomment-254693497
 type EntityActionContributors = Partial<{
   [eCmsKitAdminComponents.CommentList]: EntityActionContributorCallback<CommentWithAuthorDto>[];
-  [eCmsKitAdminComponents.CommentApprove]: EntityActionContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentDetails]: EntityActionContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.Tags]: EntityActionContributorCallback<TagDto>[];
   [eCmsKitAdminComponents.Pages]: EntityActionContributorCallback<PageDto>[];
@@ -136,7 +133,6 @@ type EntityActionContributors = Partial<{
 
 type EntityPropContributors = Partial<{
   [eCmsKitAdminComponents.CommentList]: EntityPropContributorCallback<CommentWithAuthorDto>[];
-  [eCmsKitAdminComponents.CommentApprove]: EntityPropContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentDetails]: EntityPropContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.Tags]: EntityPropContributorCallback<TagDto>[];
   [eCmsKitAdminComponents.Pages]: EntityPropContributorCallback<PageDto>[];

@@ -1,6 +1,5 @@
 export enum eCmsKitAdminComponents {
   CommentList = 'CmsKit.Admin.CommentList',
-  CommentApprove = 'CmsKit.Admin.CommentApprove',
   CommentDetails = 'CmsKit.Admin.CommentDetails',
 
   Tags = 'CmsKit.Admin.Tags',

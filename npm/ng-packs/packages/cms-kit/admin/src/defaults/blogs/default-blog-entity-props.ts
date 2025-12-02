@@ -16,11 +16,4 @@ export const DEFAULT_BLOG_ENTITY_PROPS = EntityProp.createMany<BlogDto>([
     sortable: true,
     columnWidth: 250,
   },
-  {
-    type: ePropType.Number,
-    name: 'blogPostCount',
-    displayName: 'CmsKit::BlogPostCount',
-    sortable: true,
-    columnWidth: 150,
-  },
 ]);

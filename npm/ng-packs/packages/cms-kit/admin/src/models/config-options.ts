@@ -27,7 +27,6 @@ import {
 
 export type CmsKitAdminEntityActionContributors = Partial<{
   [eCmsKitAdminComponents.CommentList]: EntityActionContributorCallback<CommentWithAuthorDto>[];
-  [eCmsKitAdminComponents.CommentApprove]: EntityActionContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentDetails]: EntityActionContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.Tags]: EntityActionContributorCallback<TagDto>[];
   [eCmsKitAdminComponents.Pages]: EntityActionContributorCallback<PageDto>[];
@@ -37,7 +36,6 @@ export type CmsKitAdminEntityActionContributors = Partial<{
 
 export type CmsKitAdminEntityPropContributors = Partial<{
   [eCmsKitAdminComponents.CommentList]: EntityPropContributorCallback<CommentWithAuthorDto>[];
-  [eCmsKitAdminComponents.CommentApprove]: EntityPropContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.CommentDetails]: EntityPropContributorCallback<CommentWithAuthorDto>[];
   [eCmsKitAdminComponents.Tags]: EntityPropContributorCallback<TagDto>[];
   [eCmsKitAdminComponents.Pages]: EntityPropContributorCallback<PageDto>[];

@@ -1,15 +1,19 @@
-import { CommentWithAuthorDto } from '@abp/ng.cms-kit/proxy';
-import { EntityProp, ePropType } from '@abp/ng.components/extensible';
-import { ConfigStateService } from '@abp/ng.core';
 import { of } from 'rxjs';
+import { EntityProp, ePropType } from '@abp/ng.components/extensible';
+import { CommentWithAuthorDto } from '@abp/ng.cms-kit/proxy';
+import { CommentEntityService } from '../../services';
 
 export const DEFAULT_COMMENT_ENTITY_PROPS = EntityProp.createMany<CommentWithAuthorDto>([
   {
     type: ePropType.String,
-    name: 'author.userName',
+    name: 'userName',
     displayName: 'CmsKit::Username',
     sortable: false,
     columnWidth: 150,
+    valueResolver: data => {
+      const userName = data.record.author.userName;
+      return of(userName);
+    },
   },
   {
     type: ePropType.String,
@@ -48,30 +52,27 @@ export const DEFAULT_COMMENT_ENTITY_PROPS = EntityProp.createMany<CommentWithAut
     },
   },
   {
-    type: ePropType.Boolean,
+    type: ePropType.String,
     name: 'isApproved',
     displayName: 'CmsKit::ApproveState',
     sortable: false,
     columnWidth: 100,
     columnVisible: getInjected => {
-      const configState = getInjected(ConfigStateService);
-      return configState.getSetting('CmsKit.Comments.RequireApprovement') === 'true';
+      const commentEntityService = getInjected(CommentEntityService);
+      return commentEntityService.requireApprovement;
     },
     valueResolver: data => {
       const isApproved = data.record.isApproved;
-      if (isApproved === null || isApproved === undefined) {
-        return of('<i class="fa-solid fa-hourglass-half text-muted"></i>');
-      } else if (isApproved === true) {
-        return of('<i class="fa-solid fa-check text-success"></i>');
-      } else {
-        return of('<i class="fa-solid fa-x text-danger"></i>');
+      if (isApproved || isApproved === null) {
+        return of('<div class="text-success"><i class="fa fa-check" aria-hidden="true"></i></div>');
       }
+      return of('<div class="text-danger"><i class="fa fa-times" aria-hidden="true"></i></div>');
     },
   },
   {
     type: ePropType.Date,
     name: 'creationTime',
-    displayName: 'AbpIdentity::CreationTime',
+    displayName: 'CmsKit::CreationTime',
     sortable: true,
     columnWidth: 200,
   },

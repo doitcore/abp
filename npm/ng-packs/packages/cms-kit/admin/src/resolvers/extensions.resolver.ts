@@ -37,7 +37,6 @@ export const cmsKitAdminExtensionsResolver: ResolveFn<any> = () => {
   return getObjectExtensionEntitiesFromStore(injector, 'CmsKit').pipe(
     map(entities => ({
       [eCmsKitAdminComponents.CommentList]: entities.Comment,
-      [eCmsKitAdminComponents.CommentApprove]: entities.Comment,
       [eCmsKitAdminComponents.CommentDetails]: entities.Comment,
       [eCmsKitAdminComponents.Tags]: entities.Tag,
       [eCmsKitAdminComponents.Pages]: entities.Page,

@@ -1,6 +1,48 @@
+```json
+//[doc-seo]
+{
+    "Description": "Explore the latest features and enhancements in ABP Studio with release notes detailing major updates and improvements for developers."
+}
+```
+
 # ABP Studio Release Notes
 
 This document contains **brief release notes** for each ABP Studio release. Release notes only include **major features** and **visible enhancements**. Therefore, they don't include all the development done in the related version. 
+
+## 1.4.2 (2025-10-30)
+
+* Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.3.6`)
+* AI Assistant is now enabled for all customers.
+* Fixed CLI default language problem during solution creation.
+* Improved task auto-start logic and notification handling.
+* Fixed Angular localization function inputs.
+* Set default mobile frameworks to **None** in the UI.
+* Disallowed dots (.) in module names of microservice sub-templates.
+* Solution Runner: show vertical scrollbar when needed and disable the Properties window while the app is running.
+
+## 1.4.1 (2025-10-16)
+
+* Fixed AI Assistant chat problems.
+* Added custom steps if built with CLI.
+* Fixed Release configuration builds.   
+
+## 1.4.0 (2025-10-15)
+
+* The **Task Panel** has been introduced, providing a centralized place to manage and monitor background operations.
+* Added **CLI application properties** window, making it easier to configure and manage command-line tool settings directly within the Studio UI.
+* Added suggestion modal for building after creating service/web/gateway module.
+* Fixed mismatching hosts file record namespace problem.
+* Allow selecting `Default Profile` in Solution Runner.
+* Refactored Angular scripts.
+* Fixed: tools not browsable in Solution Runner with Aspire after Kubernetes deployment.
+
+## 1.3.3 (2025-10-06)
+
+* Upgraded template dependencies for ABP Framework and LeptonX. (targeting ABP `9.3.5`)
+* Fixed welcome page tutorial links.
+* Improved error handling during Helm chart installation and custom command execution.
+* Fixed microservice problems.
+* Fixed connection string problems.
 
 ## 1.3.2 (2025-09-25)
 

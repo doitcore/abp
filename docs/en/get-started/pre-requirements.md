@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Prepare your development environment for ABP applications with essential prerequisites and IDE recommendations for .NET development."
+}
+```
+
 # Prerequisites for Developing ABP Applications
 
 This document will guide you through preparing your development environment for ABP based application development.
@@ -101,8 +108,10 @@ If you are using Helm, you can install NGINX Ingress using the following command
 ```cs
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-helm upgrade --install --version=4.0.19 ingress-nginx ingress-nginx/ingress-nginx
+helm upgrade --install --version=4.0.19 ingress-nginx ingress-nginx/ingress-nginx --set controller.config.enable-underscores-in-headers="true"
 ```
+
+> [enable-underscores-in-headers](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#enable-underscores-in-headers) is required to allow http request use `__tenant` to pass tenant information to the backend service.
 
 ### mkcert
 

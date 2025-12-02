@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Explore the latest ABP Framework release notes, highlighting major features and enhancements for each version, including migration guidance."
+}
+```
+
 # Release Notes
 
 This document contains **brief release notes** for each release. Release notes only include **major features** and **visible enhancements**. They don't include all the development done in the related version.
@@ -7,9 +14,21 @@ Also see the following notes about ABP releases:
 * [ABP Studio release notes](../studio/release-notes.md)
 * [Change logs for ABP pro packages](https://abp.io/pro-releases)
 
+## 10.0 (2025-11-18)
+
+See the detailed **[blog post / announcement](https://abp.io/community/announcements/abp.io-platform-10.0-final-has-been-released-spknn925)** for the v10.0 release.
+
+* Upgraded to .NET 10.0
+* Upgraded to `Blazorise` **v1.8.6**
+* New PRO Module: [Elsa Workflows](../modules/elsa-pro.md)
+* New Object Mapper: **Mapperly**
+* Localization: Nested Object Support in JSON Files
+* EF Core Shared Entity Types on Repositories
+* Angular SSR Support
+
 ## 9.3 (2025-06-17)
 
-This is currently a RC (release-candidate) and you can see the detailed **[blog post / announcement](https://abp.io/community/articles/announcing-abp-9-3-release-candidate-4dqgiryf)** for the v9.3 release.
+See the detailed **[blog post / announcement](https://abp.io/community/announcements/announcing-abp-9-3-stable-release-fw4n9sng)** for the v9.3 release.
 
 * Cron Expression Support for Background Workers
 * Docs Module: PDF Export

@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to integrate microservices using HTTP API calls in ABP Framework, enhancing communication between services for seamless functionality."
+}
+```
+
 # Microservice Tutorial Part 06: Integrating the services: HTTP API Calls
 
 ````json
@@ -307,11 +314,13 @@ Open the `order.component.html` file (the `order.component.html` file under the 
                     <th>Product Name</th>
                     <th>Customer Name</th>
                 </tr>
-                <tr *ngFor="let item of items">
-                    <td>{%{{{item.id}}}%}</td>
-                    <td>{%{{{item.productName}}}%}</td>
-                    <td>{%{{{item.customerName}}}%}</td>
-                </tr>
+                @for (item of items; track item.id) {
+                    <tr>
+                        <td>{%{{{item.id}}}%}</td>
+                        <td>{%{{{item.productName}}}%}</td>
+                        <td>{%{{{item.customerName}}}%}</td>
+                    </tr>
+                }
             </thead>
         </table>
     </div>

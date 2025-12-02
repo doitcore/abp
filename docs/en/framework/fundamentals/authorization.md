@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to leverage ABP Framework's enhanced authorization features, including permissions and policies, to secure your applications efficiently."
+}
+```
+
 # Authorization
 
 Authorization is used to check if a user is allowed to perform some specific operations in the application.
@@ -459,14 +466,7 @@ public static class CurrentUserExtensions
 }
 ```
 
-> If you use Identity Server please add your claims to `RequestedClaims` of `AbpClaimsServiceOptions`.
-
-```csharp
-Configure<AbpClaimsServiceOptions>(options =>
-{
-    options.RequestedClaims.AddRange(new[]{ "SocialSecurityNumber" });
-});
-```
+> If you use OpenIddict please see [Updating Claims in Access Token and ID Token](../../modules/openiddict#updating-claims-in-access_token-and-id_token).
 
 ## See Also
 

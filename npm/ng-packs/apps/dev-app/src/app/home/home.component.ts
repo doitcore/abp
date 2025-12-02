@@ -3,11 +3,19 @@ import { Component, inject, ViewChild } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { ButtonComponent, CardBodyComponent, CardComponent } from '@abp/ng.theme.shared';
 import { DynamicFormComponent, FormFieldConfig } from '@abp/ng.components/dynamic-form';
+import { AppCustomInputComponent } from './custom-input';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  imports: [NgTemplateOutlet, LocalizationPipe, CardComponent, CardBodyComponent, ButtonComponent, DynamicFormComponent],
+  imports: [
+    NgTemplateOutlet,
+    LocalizationPipe,
+    CardComponent,
+    CardBodyComponent,
+    ButtonComponent,
+    DynamicFormComponent,
+  ],
 })
 export class HomeComponent {
   @ViewChild(DynamicFormComponent, { static: true }) dynamicFormComponent: DynamicFormComponent;
@@ -22,10 +30,11 @@ export class HomeComponent {
       required: true,
       validators: [
         { type: 'required', message: 'First name is required' },
-        { type: 'minLength', value: 2, message: 'Minimum 2 characters required' }
+        { type: 'minLength', value: 2, message: 'Minimum 2 characters required' },
       ],
       gridSize: 6,
-      order: 1
+      order: 1,
+      component: AppCustomInputComponent
     },
     {
       key: 'lastName',
@@ -33,11 +42,9 @@ export class HomeComponent {
       label: 'Last Name',
       placeholder: 'Enter last name',
       required: true,
-      validators: [
-        { type: 'required', message: 'Last name is required' }
-      ],
+      validators: [{ type: 'required', message: 'Last name is required' }],
       gridSize: 12,
-      order: 3
+      order: 3,
     },
     {
       key: 'email',
@@ -47,10 +54,10 @@ export class HomeComponent {
       required: true,
       validators: [
         { type: 'required', message: 'Email is required' },
-        { type: 'email', message: 'Please enter a valid email' }
+        { type: 'email', message: 'Please enter a valid email' },
       ],
       gridSize: 6,
-      order: 2
+      order: 2,
     },
     {
       key: 'userType',
@@ -60,12 +67,10 @@ export class HomeComponent {
       options: [
         { key: 'admin', value: 'Administrator' },
         { key: 'user', value: 'Regular User' },
-        { key: 'guest', value: 'Guest User' }
+        { key: 'guest', value: 'Guest User' },
       ],
-      validators: [
-        { type: 'required', message: 'Please select user type' }
-      ],
-      order: 4
+      validators: [{ type: 'required', message: 'Please select user type' }],
+      order: 4,
     },
     {
       key: 'adminNotes',
@@ -77,11 +82,17 @@ export class HomeComponent {
           dependsOn: 'userType',
           condition: 'equals',
           value: 'admin',
-          action: 'show'
-        }
+          action: 'show',
+        },
       ],
-      order: 5
-    }
+      order: 5,
+    },
+    {
+      key: 'isSelected',
+      type: 'checkbox',
+      label: 'Is Selected',
+      order: 6,
+    },
   ];
   loading = false;
 

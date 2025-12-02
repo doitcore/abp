@@ -13,11 +13,12 @@
                   <input
                     id="creationStartDate"
                     formControlName="creationStartDate"
-                    class="form-control"
+                    (click)="startDatePicker.open()"
+                    (keyup.space)="startDatePicker.open()"
                     ngbDatepicker
                     #startDatePicker="ngbDatepicker"
-                    (click)="startDatePicker.toggle()"
-                    readonly
+                    type="text"
+                    class="form-control"
                   />
                 </div>
               </div>

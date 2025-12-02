@@ -1,0 +1,6 @@
+<div class="container mt-4">
+    <h2>Dynamic Form Page</h2>
+    @if (formFields.length) {
+    <abp-dynamic-form [fields]="formFields" (onSubmit)="submit($event)" />
+    }
+</div>

@@ -1,81 +1,62 @@
 @if (visible()) {
-  <div [formGroup]="fieldFormGroup">
-    @if (field().type === 'text') {
-      <!-- Text Input -->
-      <div class="form-group">
-        <ng-container [ngTemplateOutlet]="labelTemplate" />
-        <input
-          [id]="field().key"
-          [placeholder]="field().placeholder || ''"
-          formControlName="value"
-          [class.is-invalid]="isInvalid"
-          class="form-control">
-        @if (isInvalid) {
-          <ng-container [ngTemplateOutlet]="errorTemplate"/>
-        }
-      </div>
-    } @else if (field().type === 'select') {
-      <!-- Select Dropdown -->
-      <div class="form-group">
-        <ng-container [ngTemplateOutlet]="labelTemplate" />
-        <select
-          [id]="field().key"
-          formControlName="value"
-          [class.is-invalid]="isInvalid"
-          class="form-control">
-          <option value="">Please select...</option>
-          @for (option of field().options; track option.key) {
-            <option
-              [value]="option.key">
-              {{ option.value }}
-            </option>
-          }
-        </select>
-        @if (isInvalid) {
-          <ng-container [ngTemplateOutlet]="errorTemplate"/>
-        }
-      </div>
-    } @else if (field().type === 'checkbox') {
-      <!-- Checkbox -->
-      <div class="form-group form-check">
-        <abp-checkbox [label]="field().label" formControlName="value" [id]="field().key" />
-        @if (isInvalid) {
-          <ng-container [ngTemplateOutlet]="errorTemplate"/>
-        }
-      </div>
-    } @else if (field().type === 'email') {
-      <!-- Email Input -->
-      <div class="form-group">
-        <label [for]="field().key">{{ field().label }}</label>
-        <input
-          type="email"
-          [id]="field().key"
-          formControlName="value"
-          [placeholder]="field().placeholder || ''"
-          [class.is-invalid]="isInvalid"
-          class="form-control">
-        @if (isInvalid) {
-          <ng-container [ngTemplateOutlet]="errorTemplate"/>
-        }
-      </div>
-    } @else if (field().type === 'textarea') {
-      <!-- Textarea -->
-      <div class="form-group">
-        <label [for]="field().key">{{ field().label }}</label>
-        <textarea
-          [id]="field().key"
-          formControlName="value"
-          [placeholder]="field().placeholder || ''"
-          [class.is-invalid]="isInvalid"
-          rows="4"
-          class="form-control">
-        </textarea>
-        @if (isInvalid) {
-          <ng-container [ngTemplateOutlet]="errorTemplate"/>
-        }
-      </div>
+<div [formGroup]="fieldFormGroup">
+  @if (field().type === 'text') {
+  <!-- Text Input -->
+  <div class="form-group mb-3">
+    <ng-container [ngTemplateOutlet]="labelTemplate" />
+    <input [id]="field().key" [placeholder]="(field().placeholder || '') | abpLocalization" formControlName="value"
+      [class.is-invalid]="isInvalid" class="form-control">
+    @if (isInvalid) {
+    <ng-container [ngTemplateOutlet]="errorTemplate" />
     }
   </div>
+  } @else if (field().type === 'select') {
+  <!-- Select Dropdown -->
+  <div class="form-group mb-3">
+    <ng-container [ngTemplateOutlet]="labelTemplate" />
+    <select [id]="field().key" formControlName="value" [class.is-invalid]="isInvalid" class="form-control">
+      <option value="">{{ '::Select' | abpLocalization }}</option>
+      @for (option of field().options; track option.key) {
+      <option [value]="option.key">
+        {{ option.value | abpLocalization }}
+      </option>
+      }
+    </select>
+    @if (isInvalid) {
+    <ng-container [ngTemplateOutlet]="errorTemplate" />
+    }
+  </div>
+  } @else if (field().type === 'checkbox') {
+  <!-- Checkbox -->
+  <div class="form-group form-check mb-3">
+    <abp-checkbox [label]="field().label | abpLocalization" formControlName="value" [id]="field().key" />
+    @if (isInvalid) {
+    <ng-container [ngTemplateOutlet]="errorTemplate" />
+    }
+  </div>
+  } @else if (field().type === 'email') {
+  <!-- Email Input -->
+  <div class="form-group mb-3">
+    <ng-container [ngTemplateOutlet]="labelTemplate" />
+    <input type="email" [id]="field().key" formControlName="value"
+      [placeholder]="(field().placeholder || '') | abpLocalization" [class.is-invalid]="isInvalid" class="form-control">
+    @if (isInvalid) {
+    <ng-container [ngTemplateOutlet]="errorTemplate" />
+    }
+  </div>
+  } @else if (field().type === 'textarea') {
+  <!-- Textarea -->
+  <div class="form-group mb-3">
+    <ng-container [ngTemplateOutlet]="labelTemplate" />
+    <textarea [id]="field().key" formControlName="value" [placeholder]="(field().placeholder || '') | abpLocalization"
+      [class.is-invalid]="isInvalid" rows="4" class="form-control">
+        </textarea>
+    @if (isInvalid) {
+    <ng-container [ngTemplateOutlet]="errorTemplate" />
+    }
+  </div>
+  }
+</div>
 }
 
 <ng-template #labelTemplate>
@@ -85,7 +66,7 @@
 <ng-template #errorTemplate>
   <div class="invalid-feedback">
     @for (error of errors; track error) {
-      <div>{{ error | abpLocalization }}</div>
+    <div>{{ error | abpLocalization }}</div>
     }
   </div>
 </ng-template>

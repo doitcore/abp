@@ -146,12 +146,13 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   selector: "app-validation-error",
   imports:[CommonModule, LocalizationPipe],
   template: `
+  @for (error of abpErrors; track $index)
     <div
       class="font-weight-bold font-italic px-1 invalid-feedback"
-      *ngFor="let error of abpErrors; trackBy: trackByFn"
     >
       {%{{{ error.message | abpLocalization: error.interpoliteParams }}}%}
     </div>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

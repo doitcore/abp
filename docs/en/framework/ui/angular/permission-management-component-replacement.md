@@ -360,19 +360,21 @@ Open the generated `permission-management.component.html` in `src/app/permission
       <div class="row">
         <div class="overflow-scroll col-md-4">
           <ul class="nav nav-pills flex-column">
-            <li *ngFor="let group of data.groups; trackBy: trackByFn" class="nav-item">
-              <a
-                *ngIf="{ assignedCount: getAssignedCount(group.name) } as count"
-                class="nav-link pointer"
-                [class.active]="selectedGroup?.name === group?.name"
-                (click)="onChangeGroup(group)"
-              >
-                <div [class.font-weight-bold]="count.assignedCount">
-                  {%{{{ group?.displayName }}}%}
-                  <span>({%{{{ count.assignedCount }}}%})</span>
-                </div>
-              </a>
-            </li>
+            @for (group of data.groups; track group.name) {
+              <li class="nav-item">
+                <a
+                  *ngIf="{ assignedCount: getAssignedCount(group.name) } as count"
+                  class="nav-link pointer"
+                  [class.active]="selectedGroup?.name === group?.name"
+                  (click)="onChangeGroup(group)"
+                >
+                  <div [class.font-weight-bold]="count.assignedCount">
+                    {%{{{ group?.displayName }}}%}
+                    <span>({%{{{ count.assignedCount }}}%})</span>
+                  </div>
+                </a>
+              </li>
+            }
           </ul>
         </div>
         <div class="col-md-8 overflow-scroll">
@@ -393,34 +395,36 @@ Open the generated `permission-management.component.html` in `src/app/permission
               }}}%}</label>
             </div>
             <hr class="mb-3" />
-            <div
-              *ngFor="let permission of selectedGroupPermissions; let i = index; trackBy: trackByFn"
-              [ngStyle]="permission.style"
-              class="custom-checkbox custom-control mb-2"
-            >
-              <input
-                #permissionCheckbox
-                type="checkbox"
-                [checked]="getChecked(permission.name)"
-                [value]="getChecked(permission.name)"
-                [attr.id]="permission.name"
-                class="custom-control-input"
-                [disabled]="isGrantedByOtherProviderName(permission.grantedProviders)"
-              />
-              <label
-                class="custom-control-label"
-                [attr.for]="permission.name"
-                (click)="onClickCheckbox(permission, permissionCheckbox.value)"
-                >{%{{{ permission.displayName }}}%}
-                <ng-container *ngIf="!hideBadges">
-                  <span
-                    *ngFor="let provider of permission.grantedProviders"
-                    class="badge badge-light"
-                    >{%{{{ provider.providerName }}}%}: {%{{{ provider.providerKey }}}%}</span
-                  >
-                </ng-container>
-              </label>
-            </div>
+            @for (permission of selectedGroupPermissions; track permission.name; let i = $index) {
+              <div
+                [ngStyle]="permission.style"
+                class="custom-checkbox custom-control mb-2"
+              >
+                <input
+                  #permissionCheckbox
+                  type="checkbox"
+                  [checked]="getChecked(permission.name)"
+                  [value]="getChecked(permission.name)"
+                  [attr.id]="permission.name"
+                  class="custom-control-input"
+                  [disabled]="isGrantedByOtherProviderName(permission.grantedProviders)"
+                />
+                <label
+                  class="custom-control-label"
+                  [attr.for]="permission.name"
+                  (click)="onClickCheckbox(permission, permissionCheckbox.value)"
+                  >{%{{{ permission.displayName }}}%}
+                  <ng-container *ngIf="!hideBadges">
+                    @for (provider of permission.grantedProviders; track provider.providerKey) {
+                      <span
+                        class="badge badge-light"
+                        >{%{{{ provider.providerName }}}%}: {%{{{ provider.providerKey }}}%}</span
+                      >
+                    }
+                  </ng-container>
+                </label>
+              </div>
+            }
           </div>
         </div>
       </div>

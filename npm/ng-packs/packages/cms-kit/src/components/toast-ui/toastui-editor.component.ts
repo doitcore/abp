@@ -72,7 +72,6 @@ export class ToastuiEditorComponent implements AfterViewInit, ControlValueAccess
       el: this.editorContainer.nativeElement,
       previewStyle: 'tab',
       height: '500px',
-      autofocus: true,
       theme: theme,
       initialValue: this.value,
     });

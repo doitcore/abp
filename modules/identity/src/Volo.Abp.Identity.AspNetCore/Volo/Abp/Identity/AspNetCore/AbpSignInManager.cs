@@ -45,7 +45,7 @@ public class AbpSignInManager : SignInManager<IdentityUser>
         _identityUserManager = userManager;
     }
 
-    public async override Task<SignInResult> PasswordSignInAsync(
+    public override async Task<SignInResult> PasswordSignInAsync(
         string userName,
         string password,
         bool isPersistent,
@@ -89,7 +89,17 @@ public class AbpSignInManager : SignInManager<IdentityUser>
         return await base.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
     }
 
-    protected async override Task<SignInResult> PreSignInCheck(IdentityUser user)
+    /// <summary>
+    /// This is to call the protection method PreSignInCheck
+    /// </summary>
+    /// <param name="user">The user</param>
+    /// <returns>Null if the user should be allowed to sign in, otherwise the SignInResult why they should be denied.</returns>
+    public virtual async Task<SignInResult?> CallPreSignInCheckAsync(IdentityUser user)
+    {
+        return await base.PreSignInCheck(user);
+    }
+
+    protected override async Task<SignInResult?> PreSignInCheck(IdentityUser user)
     {
         if (!user.IsActive)
         {

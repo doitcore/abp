@@ -96,7 +96,7 @@ public class AbpSignInManager : SignInManager<IdentityUser>
     /// <returns>Null if the user should be allowed to sign in, otherwise the SignInResult why they should be denied.</returns>
     public virtual async Task<SignInResult?> CallPreSignInCheckAsync(IdentityUser user)
     {
-        return await base.PreSignInCheck(user);
+        return await PreSignInCheck(user);
     }
 
     protected override async Task<SignInResult?> PreSignInCheck(IdentityUser user)

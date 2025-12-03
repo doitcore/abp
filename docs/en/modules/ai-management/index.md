@@ -2,7 +2,7 @@
 
 > You must have an ABP Team or a higher license to use this module.
 
-> ⚠️ Important Notice
+> **⚠️ Important Notice**
 > The **AI Management Module** is currently in **preview** and not yet production-ready. The documentation and implementation are subject to change.
 > We recommend using this module for **evaluation and experimentation** only, not in production environments for now.
 

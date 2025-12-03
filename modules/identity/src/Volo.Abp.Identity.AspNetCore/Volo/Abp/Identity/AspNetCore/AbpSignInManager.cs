@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Volo.Abp.Identity.Settings;
 using Volo.Abp.Settings;
-using Volo.Abp.Timing;
 
 namespace Volo.Abp.Identity.AspNetCore;
 
@@ -94,12 +89,12 @@ public class AbpSignInManager : SignInManager<IdentityUser>
     /// </summary>
     /// <param name="user">The user</param>
     /// <returns>Null if the user should be allowed to sign in, otherwise the SignInResult why they should be denied.</returns>
-    public virtual async Task<SignInResult?> CallPreSignInCheckAsync(IdentityUser user)
+    public virtual async Task<SignInResult> CallPreSignInCheckAsync(IdentityUser user)
     {
         return await PreSignInCheck(user);
     }
 
-    protected override async Task<SignInResult?> PreSignInCheck(IdentityUser user)
+    protected override async Task<SignInResult> PreSignInCheck(IdentityUser user)
     {
         if (!user.IsActive)
         {
@@ -132,12 +127,5 @@ public class AbpSignInManager : SignInManager<IdentityUser>
     public virtual async Task<SignInResult> CallSignInOrTwoFactorAsync(IdentityUser user, bool isPersistent, string loginProvider = null, bool bypassTwoFactor = false)
     {
         return await base.SignInOrTwoFactorAsync(user, isPersistent, loginProvider, bypassTwoFactor);
-    }
-
-    public override async Task SignInWithClaimsAsync(IdentityUser user, AuthenticationProperties authenticationProperties, IEnumerable<Claim> additionalClaims)
-    {
-        user.SetLastSignInTime(DateTimeOffset.UtcNow);
-        await UserManager.UpdateAsync(user);
-        await base.SignInWithClaimsAsync(user, authenticationProperties, additionalClaims);
     }
 }

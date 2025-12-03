@@ -13,11 +13,11 @@
                     class="form-check-input"
                     [formControl]="commentApprovalControl"
                     type="checkbox"
-                    id="AccountCMSSettings_EnableCommentApproval"
+                    id="EnableCommentApproval"
                     [checked]="commentApprovalControl.value"
                     (input)="commentApprovalControl.setValue($event.target.checked)"
                   />
-                  <label class="form-check-label" for="AccountCMSSettings_EnableCommentApproval">
+                  <label class="form-check-label" for="EnableCommentApproval">
                     {{ 'CmsKit::CmsKitCommentOptions:RequireApprovement' | abpLocalization }}
                   </label>
                   <br />

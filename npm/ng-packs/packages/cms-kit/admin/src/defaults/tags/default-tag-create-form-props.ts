@@ -30,3 +30,7 @@ export const DEFAULT_TAG_CREATE_FORM_PROPS = FormProp.createMany<TagCreateDto>([
     validators: () => [Validators.required],
   },
 ]);
+
+export const DEFAULT_TAG_EDIT_FORM_PROPS = DEFAULT_TAG_CREATE_FORM_PROPS.filter(
+  prop => prop.name !== 'entityType',
+);

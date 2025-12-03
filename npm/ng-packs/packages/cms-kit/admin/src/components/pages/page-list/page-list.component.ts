@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListService, PagedResultDto, LocalizationPipe } from '@abp/ng.core';
 import { ExtensibleTableComponent, EXTENSIONS_IDENTIFIER } from '@abp/ng.components/extensible';
+import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
 import { PageComponent } from '@abp/ng.components/page';
 import { PageAdminService, GetPagesInputDto, PageDto } from '@abp/ng.cms-kit/proxy';
 import { eCmsKitAdminComponents } from '../../../enums';
@@ -24,6 +25,8 @@ export class PageListComponent implements OnInit {
 
   public readonly list = inject(ListService<GetPagesInputDto>);
   private pageService = inject(PageAdminService);
+  private confirmationService = inject(ConfirmationService);
+  private toasterService = inject(ToasterService);
 
   filter = '';
 
@@ -52,5 +55,31 @@ export class PageListComponent implements OnInit {
       .subscribe(res => {
         this.data = res;
       });
+  }
+
+  delete(id: string) {
+    this.confirmationService
+      .warn('CmsKit::PageDeletionConfirmationMessage', 'AbpUi::AreYouSure', {
+        yesText: 'AbpUi::Yes',
+        cancelText: 'AbpUi::Cancel',
+      })
+      .subscribe((status: Confirmation.Status) => {
+        if (status === Confirmation.Status.confirm) {
+          this.pageService.delete(id).subscribe(() => {
+            this.list.get();
+          });
+        }
+      });
+  }
+
+  setAsHomePage(id: string, isHomePage: boolean) {
+    this.pageService.setAsHomePage(id).subscribe(() => {
+      this.list.get();
+      if (isHomePage) {
+        this.toasterService.warn('CmsKit::RemovedSettingAsHomePage');
+      } else {
+        this.toasterService.success('CmsKit::CompletedSettingAsHomePage');
+      }
+    });
   }
 }

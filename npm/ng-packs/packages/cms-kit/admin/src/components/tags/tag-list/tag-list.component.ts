@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ListService, PagedResultDto, LocalizationPipe } from '@abp/ng.core';
 import { ExtensibleTableComponent, EXTENSIONS_IDENTIFIER } from '@abp/ng.components/extensible';
 import { PageComponent } from '@abp/ng.components/page';
+import { Confirmation, ConfirmationService } from '@abp/ng.theme.shared';
 import { TagAdminService, TagGetListInput, TagDto, TagDefinitionDto } from '@abp/ng.cms-kit/proxy';
 import { eCmsKitAdminComponents } from '../../../enums';
 import { TagModalComponent, TagModalVisibleChange } from '../tag-modal/tag-modal.component';
@@ -32,6 +33,7 @@ export class TagListComponent implements OnInit {
 
   public readonly list = inject(ListService<TagGetListInput>);
   private tagService = inject(TagAdminService);
+  private confirmationService = inject(ConfirmationService);
 
   filter = '';
   isModalVisible = false;
@@ -93,5 +95,19 @@ export class TagListComponent implements OnInit {
     }
     this.selected = null;
     this.isModalVisible = false;
+  }
+
+  delete(id: string, name: string) {
+    this.confirmationService
+      .warn('CmsKit::TagDeletionConfirmationMessage', 'AbpUi::AreYouSure', {
+        messageLocalizationParams: [name],
+      })
+      .subscribe((status: Confirmation.Status) => {
+        if (status === Confirmation.Status.confirm) {
+          this.tagService.delete(id).subscribe(() => {
+            this.list.get();
+          });
+        }
+      });
   }
 }

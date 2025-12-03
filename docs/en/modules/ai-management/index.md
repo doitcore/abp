@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Discover how to implement AI management in your ABP Framework application, enhancing workspace dynamics with easy installation options."
+}
+```
+
 # AI Management (Pro)
 
 > You must have an ABP Team or a higher license to use this module.
@@ -68,7 +75,7 @@ The AI Management module includes a built-in chat interface for testing workspac
 * Test streaming responses
 * Verify workspace configuration before using in production
 
-> Access the chat interface at: `/AIManagement/Chat`
+> Access the chat interface at: `/AIManagement/Workspaces/{WorkspaceName}`
 
 ## Workspace Configuration
 

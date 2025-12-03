@@ -235,5 +235,46 @@ yarn run serve:ssr
 
 The schematic installs `openid-client` to handle authentication on the server side. This ensures that when a user accesses a protected route, the server can validate their session or redirect them to the login page before rendering the content.
 
-> [!NOTE]
 > Ensure your OpenID Connect configuration (in `environment.ts` or `app.config.ts`) is compatible with the server environment.
+
+## 5. Deployment
+
+To deploy your Angular SSR application to a production server, follow these steps:
+
+### 5.1. Build the Application
+
+Run the build command to generate the production artifacts:
+
+```shell
+yarn build
+# or if using Webpack builder
+yarn run build:ssr
+```
+
+### 5.2. Prepare Artifacts
+
+After the build is complete, you will find the output in the `dist` folder.
+For the **Application Builder**, the output structure typically looks like this:
+
+```
+dist/MyProjectName/
+├── browser/       # Client-side bundles
+└── server/        # Server-side bundles and entry point (server.mjs)
+```
+
+You need to copy the entire `dist/MyProjectName` folder to your server.
+
+### 5.3. Run the Server
+
+On your server, navigate to the folder where you copied the artifacts and run the server using Node.js:
+
+```shell
+node server/server.mjs
+```
+
+> [!TIP]
+> It is recommended to use a process manager like [PM2](https://pm2.keymetrics.io/) to keep your application alive and handle restarts.
+
+```shell
+pm2 start server/server.mjs --name "my-app"
+```

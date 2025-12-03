@@ -1221,9 +1221,9 @@ export enum eCmsKitAdminRouteNames {
 
 ### Phase 8: Admin - Global Resources Feature
 
-- [ ] Create GlobalResourceListComponent
-- [ ] Create default extension points
-- [ ] Add routes and providers
+- [x] Create GlobalResourceListComponent
+- [x] Create default extension points
+- [x] Add routes and providers
 
 ### Phase 9: Public - Pages Feature
 
@@ -1254,8 +1254,6 @@ export enum eCmsKitAdminRouteNames {
 - [ ] Write unit tests for services
 - [ ] Write unit tests for components
 - [ ] Write integration tests
-- [ ] Update README documentation
-- [ ] Create usage examples
 
 ## Best Practices
 

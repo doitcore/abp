@@ -9,7 +9,6 @@ import {
   CreateBlogPostDto,
   UpdateBlogPostDto,
   BlogPostDto,
-  BlogPostStatus,
 } from '@abp/ng.cms-kit/proxy';
 
 @Injectable({

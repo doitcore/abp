@@ -33,7 +33,7 @@ You can easily add SSR support to your existing ABP Angular application using th
 # Generate SSR configuration for your project
 ng generate @abp/ng.schematics:ssr-add
 
-# Or using the short form
+# Alternatively, you can use the short form
 ng g @abp/ng.schematics:ssr-add
 ```
 

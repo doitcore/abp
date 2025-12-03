@@ -62,7 +62,7 @@ The changes depend on the builder used in your project (Application Builder or W
 
 #### Application Builder (esbuild)
 
-If your project uses the **Application Builder** (`@angular-devkit/build-angular:application`), the schematic:
+If your project uses the **Application Builder** (`@angular/build:application`), the schematic:
 
 -   **Scripts**: Adds `serve:ssr:project-name` to serve the SSR application.
 -   **angular.json**: Updates the `build` target to enable SSR (`outputMode: 'server'`) and sets the SSR entry point.

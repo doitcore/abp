@@ -185,3 +185,7 @@ You can then hit *F5* or *Ctrl + F5* to run the web application. It will run and
 ![bookstore-browser-users-page](images/no-layers-bookstore-browser-users-page_dark.png)
 
 You can use `admin` as username and `1q2w3E*` as default password to login to the application.
+
+## What's next?
+
+- [TODO Application Tutorial with Single-Layer Solution](../tutorials/todo/single-layer/index.md)

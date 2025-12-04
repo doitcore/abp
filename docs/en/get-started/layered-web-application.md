@@ -277,3 +277,8 @@ You can start the following application(s):
 > For example in non-tiered MVC with public website application: 
 
 ![solution-runner-public-website](images/solution-runner-public-website.png)
+
+## What's next?
+
+- [TODO Application Tutorial with Layered Solution](../tutorials/todo/layered/index.md)
+- [Web Application Development Tutorial](../tutorials/book-store/index.md)

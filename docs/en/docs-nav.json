@@ -553,6 +553,24 @@
               "path": "framework/infrastructure/audit-logging.md"
             },
             {
+              "text": "Artificial Intelligence",
+              "items":[
+                {
+                  "text": "Overview",
+                  "path": "framework/infrastructure/artificial-intelligence/index.md",
+                  "isIndex": true
+                },
+                {
+                  "text": "Microsoft.Extensions.AI",
+                  "path": "framework/infrastructure/artificial-intelligence/microsoft-extensions-ai.md"
+                },                
+                {
+                  "text": "Semantic Kernel",
+                  "path": "framework/infrastructure/artificial-intelligence/microsoft-semantic-kernel.md"
+                }
+              ]
+            },
+            {
               "text": "Background Jobs",
               "items": [
                 {

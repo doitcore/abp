@@ -187,6 +187,7 @@ export function createRefToImportReducerCreator(params: ModelGeneratorParams) {
 
 function isOptionalProperty(prop: PropertyDef) {
   return (
+    prop.isNullable ||
     prop.typeSimple.endsWith('?') ||
     ((prop.typeSimple === 'string' || prop.typeSimple.includes('enum')) && !prop.isRequired)
   );

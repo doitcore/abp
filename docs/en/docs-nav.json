@@ -1558,6 +1558,10 @@
                       "path": "framework/ui/angular/service-proxies.md"
                     },
                     {
+                      "text": "SSR Configuration",
+                      "path": "framework/ui/angular/ssr-configuration.md"
+                    },
+                    {
                       "text": "PWA Configuration",
                       "path": "framework/ui/angular/pwa-configuration.md"
                     },
@@ -1641,7 +1645,7 @@
                       "path": "framework/ui/angular/list-service.md"
                     },
                     {
-                      "text": "Easy *ngFor trackBy",
+                      "text": "Easy @for() track",
                       "path": "framework/ui/angular/track-by-service.md"
                     },
                     {

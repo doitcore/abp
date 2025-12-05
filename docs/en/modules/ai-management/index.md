@@ -9,8 +9,11 @@
 
 > You must have an ABP Team or a higher license to use this module.
 
-This module implements AI (Artificial Intelligence) management capabilities on top of the [Artificial Intelligence Workspaces](../../framework/infrastructure/artificial-intelligence/index.md) feature of the ABP Framework and allows to manage workspaces dynamically from the application including UI components and API endpoints.
+> **⚠️ Important Notice**
+> The **AI Management Module** is currently in **preview** and not yet production-ready. The documentation and implementation are subject to change.
+> We recommend using this module for **evaluation and experimentation** only, not in production environments for now.
 
+This module implements AI (Artificial Intelligence) management capabilities on top of the [Artificial Intelligence Workspaces](../../framework/infrastructure/artificial-intelligence/index.md) feature of the ABP Framework and allows to manage workspaces dynamically from the application including UI components and API endpoints.
 
 ## How to Install
 

@@ -334,7 +334,7 @@ Open the generated `permission-management.component.html` in `src/app/permission
 
 ```html
 <abp-modal [visible]="isVisible" (visibleChange)="onVisibleChange($event)" [busy]="modalBusy">
-  <ng-container *ngIf="data.entityDisplayName">
+  @if (data.entityDisplayName) {
     <ng-template #abpHeader>
       <h4>
         {%{{{ 'AbpPermissionManagement::Permissions' | abpLocalization }}}%} -
@@ -362,17 +362,18 @@ Open the generated `permission-management.component.html` in `src/app/permission
           <ul class="nav nav-pills flex-column">
             @for (group of data.groups; track group.name) {
               <li class="nav-item">
-                <a
-                  *ngIf="{ assignedCount: getAssignedCount(group.name) } as count"
-                  class="nav-link pointer"
-                  [class.active]="selectedGroup?.name === group?.name"
-                  (click)="onChangeGroup(group)"
-                >
-                  <div [class.font-weight-bold]="count.assignedCount">
-                    {%{{{ group?.displayName }}}%}
-                    <span>({%{{{ count.assignedCount }}}%})</span>
-                  </div>
-                </a>
+                @if ({ assignedCount: getAssignedCount(group.name) } as count) {
+                  <a
+                    class="nav-link pointer"
+                    [class.active]="selectedGroup?.name === group?.name"
+                    (click)="onChangeGroup(group)"
+                  >
+                    <div [class.font-weight-bold]="count.assignedCount">
+                      {%{{{ group?.displayName }}}%}
+                      <span>({%{{{ count.assignedCount }}}%})</span>
+                    </div>
+                  </a>
+                }
               </li>
             }
           </ul>
@@ -413,15 +414,15 @@ Open the generated `permission-management.component.html` in `src/app/permission
                   class="custom-control-label"
                   [attr.for]="permission.name"
                   (click)="onClickCheckbox(permission, permissionCheckbox.value)"
-                  >{%{{{ permission.displayName }}}%}
-                  <ng-container *ngIf="!hideBadges">
+                >
+                {%{{{ permission.displayName }}}%}
+                  @if (!hideBadges) {
                     @for (provider of permission.grantedProviders; track provider.providerKey) {
-                      <span
-                        class="badge badge-light"
-                        >{%{{{ provider.providerName }}}%}: {%{{{ provider.providerKey }}}%}</span
-                      >
+                      <span class="badge badge-light">
+                        {%{{{ provider.providerName }}}%}: {%{{{ provider.providerKey }}}%}
+                      </span>
                     }
-                  </ng-container>
+                  }
                 </label>
               </div>
             }
@@ -437,7 +438,7 @@ Open the generated `permission-management.component.html` in `src/app/permission
         'AbpIdentity::Save' | abpLocalization
       }}}%}</abp-button>
     </ng-template>
-  </ng-container>
+  }
 </abp-modal>
 ```
 

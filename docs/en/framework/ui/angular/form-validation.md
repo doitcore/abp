@@ -146,12 +146,12 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   selector: "app-validation-error",
   imports:[CommonModule, LocalizationPipe],
   template: `
-  @for (error of abpErrors; track $index)
-    <div
-      class="font-weight-bold font-italic px-1 invalid-feedback"
-    >
-      {%{{{ error.message | abpLocalization: error.interpoliteParams }}}%}
-    </div>
+    @for (error of abpErrors; track $index){
+      <div
+        class="font-weight-bold font-italic px-1 invalid-feedback"
+      >
+        {%{{{ error.message | abpLocalization: error.interpoliteParams }}}%}
+      </div>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -251,7 +251,7 @@ buildForm() {
             <a ngbNavLink>{%{{ 'AbpIdentity::UserInformations' | abpLocalization }}%}</a>
             <ng-template ngbNavContent>
               <!-- Automatically displays all entity fields and their validation -->
-              <abp-extensible-form [selectedRecord]="selected"></abp-extensible-form>
+              <abp-extensible-form [selectedRecord]="selected" />
             </ng-template>
           </li>
 
@@ -264,7 +264,7 @@ buildForm() {
                   <abp-checkbox
                     [formControl]="roleGroup.controls[roles[i].name]"
                     [label]="roles[i].name"
-                  ></abp-checkbox>
+                  />
                 </div>
               }
             </ng-template>

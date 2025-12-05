@@ -742,7 +742,7 @@ export class BookComponent implements OnInit {
 * Imported `FormGroup`, `FormBuilder` and `Validators` from `@angular/forms`.
 * Added a `form: FormGroup` property.
 * Added a `bookTypes` property as a list of `BookType` enum members. That will be used in form options.
-* Injected the `FormBuilder` with the inject function. [FormBuilder](https://angular.io/api/forms/FormBuilder) provides convenient methods for generating form controls. It reduces the amount of boilerplate that is needed to build complex forms.
+* Injected the `FormBuilder` with the inject function. [FormBuilder](https://angular.dev/api/forms/FormBuilder) provides convenient methods for generating form controls. It reduces the amount of boilerplate that is needed to build complex forms.
 * Added a `buildForm` method at the end of the file and executed  the `buildForm()` in the `createBook` method.
 * Added a `save` method.
 

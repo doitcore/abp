@@ -238,8 +238,10 @@ import { Router } from '@angular/router';
   selector: 'abp-current-user-test',
   template: `
     <a class="dropdown-item pointer" (click)="data.action()">
-      <i *ngIf="data.textTemplate.icon" [class]="data.textTemplate.icon"></i>
+    @if (data.textTemplate.icon){
+      <i [class]="data.textTemplate.icon"></i>
       {%{{{ data.textTemplate.text | abpLocalization }}}%}
+    }
     </a>
   `,
 })

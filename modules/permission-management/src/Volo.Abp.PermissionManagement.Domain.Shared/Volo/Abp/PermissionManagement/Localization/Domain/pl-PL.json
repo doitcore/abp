@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Czy na pewno chcesz zapisać bez żadnych uprawnień?",
     "PermissionGroup": "Grupa uprawnień",
     "Filter": "Filtr",
-    "Permission:PermissionManagement": "Zarządzanie uprawnieniami",
-    "Permission:ManageResourcePermissions": "Zarządzaj uprawnieniami zasobów",
     "ResourcePermissions": "Uprawnienia zasobów",
     "ResourcePermissionTarget": "Cel",
     "ResourcePermissionPermissions": "Uprawnienia",

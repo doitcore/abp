@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Вы уверены, что хотите сохранить без каких-либо разрешений?",
     "PermissionGroup": "Группа разрешений",
     "Filter": "Фильтр",
-    "Permission:PermissionManagement": "Управление разрешениями",
-    "Permission:ManageResourcePermissions": "Управление разрешениями ресурсов",
     "ResourcePermissions": "Разрешения ресурсов",
     "ResourcePermissionTarget": "Цель",
     "ResourcePermissionPermissions": "Разрешения",

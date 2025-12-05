@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "您确定要在没有任何权限的情况下保存吗？",
     "PermissionGroup": "权限组",
     "Filter": "过滤",
-    "Permission:PermissionManagement": "权限管理",
-    "Permission:ManageResourcePermissions": "管理资源权限",
     "ResourcePermissions": "资源权限",
     "ResourcePermissionTarget": "目标",
     "ResourcePermissionPermissions": "权限",

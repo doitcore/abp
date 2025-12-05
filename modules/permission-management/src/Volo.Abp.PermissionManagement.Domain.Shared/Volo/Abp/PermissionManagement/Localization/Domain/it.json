@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Sei sicuro di voler salvare senza alcuna autorizzazione?",
     "PermissionGroup": "Gruppo di autorizzazioni",
     "Filter": "Filtro",
-    "Permission:PermissionManagement": "Gestione delle autorizzazioni",
-    "Permission:ManageResourcePermissions": "Gestisci le autorizzazioni delle risorse",
     "ResourcePermissions": "Autorizzazioni delle risorse",
     "ResourcePermissionTarget": "Obiettivo",
     "ResourcePermissionPermissions": "Autorizzazioni",

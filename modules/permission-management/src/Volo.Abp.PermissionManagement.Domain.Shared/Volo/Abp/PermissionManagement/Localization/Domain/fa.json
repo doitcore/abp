@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "آیا مطمئن هستید که می خواهید بدون هیچ دسترسی ذخیره کنید؟",
     "PermissionGroup": "گروه دسترسی",
     "Filter": "فیلتر",
-    "Permission:PermissionManagement": "مدیریت دسترسی‌ها",
-    "Permission:ManageResourcePermissions": "مدیریت دسترسی‌های منابع",
     "ResourcePermissions": "دسترسی‌های منابع",
     "ResourcePermissionTarget": "هدف",
     "ResourcePermissionPermissions": "دسترسی‌ها",

@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Ertu viss um að þú viljir vista án nokkurra heimilda?",
     "PermissionGroup": "Heimildahópur",
     "Filter": "Sía",
-    "Permission:PermissionManagement": "Heimildastjórnun",
-    "Permission:ManageResourcePermissions": "Stjórna heimildum auðlinda",
     "ResourcePermissions": "Heimildir auðlinda",
     "ResourcePermissionTarget": "Markmið",
     "ResourcePermissionPermissions": "Heimildir",

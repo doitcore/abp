@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Êtes-vous sûr de vouloir enregistrer sans aucune autorisation ?",
     "PermissionGroup": "Groupe d'autorisations",
     "Filter": "Filtrer",
-    "Permission:PermissionManagement": "Gestion des autorisations",
-    "Permission:ManageResourcePermissions": "Gérer les autorisations des ressources",
     "ResourcePermissions": "Autorisations des ressources",
     "ResourcePermissionTarget": "Cible",
     "ResourcePermissionPermissions": "Autorisations",

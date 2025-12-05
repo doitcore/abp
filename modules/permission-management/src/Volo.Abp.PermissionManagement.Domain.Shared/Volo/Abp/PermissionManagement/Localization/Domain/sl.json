@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Ali ste prepričani, da želite shraniti brez kakršnih koli dovoljenj?",
     "PermissionGroup": "Skupina dovoljenj",
     "Filter": "Filtriraj",
-    "Permission:PermissionManagement": "Upravljanje dovoljenj",
-    "Permission:ManageResourcePermissions": "Upravljanje dovoljenj virov",
     "ResourcePermissions": "Dovoljenja virov",
     "ResourcePermissionTarget": "Cilj",
     "ResourcePermissionPermissions": "Dovoljenja",

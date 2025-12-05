@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Naozaj chcete ukladať bez akýchkoľvek povolení?",
     "PermissionGroup": "Skupina oprávnení",
     "Filter": "Filtrovať",
-    "Permission:PermissionManagement": "Správa oprávnení",
-    "Permission:ManageResourcePermissions": "Správa oprávnení zdrojov",
     "ResourcePermissions": "Oprávnenia zdrojov",
     "ResourcePermissionTarget": "Cieľ",
     "ResourcePermissionPermissions": "Oprávnenia",

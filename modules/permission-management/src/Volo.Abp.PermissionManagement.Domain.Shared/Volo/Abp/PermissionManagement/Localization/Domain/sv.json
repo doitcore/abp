@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Är du säker på att du vill spara utan några behörigheter?",
     "PermissionGroup": "Behörighetsgrupp",
     "Filter": "Filtrera",
-    "Permission:PermissionManagement": "Behörighetshantering",
-    "Permission:ManageResourcePermissions": "Hantera resursbehörigheter",
     "ResourcePermissions": "Resursbehörigheter",
     "ResourcePermissionTarget": "Mål",
     "ResourcePermissionPermissions": "Behörigheter",

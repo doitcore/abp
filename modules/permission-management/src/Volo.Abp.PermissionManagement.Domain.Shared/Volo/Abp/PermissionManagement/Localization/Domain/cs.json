@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Opravdu chcete ukládat bez jakýchkoli oprávnění?",
     "PermissionGroup": "Skupina oprávnění",
     "Filter": "Filtr",
-    "Permission:PermissionManagement": "Správa oprávnění",
-    "Permission:ManageResourcePermissions": "Správa oprávnění zdrojů",
     "ResourcePermissions": "Oprávnění zdrojů",
     "ResourcePermissionTarget": "Cíl",
     "ResourcePermissionPermissions": "Oprávnění",

@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "¿Estás seguro de que quieres guardar sin ningún permiso?",
     "PermissionGroup": "Grupo de permisos",
     "Filter": "Filtrar",
-    "Permission:PermissionManagement": "Gestión de permisos",
-    "Permission:ManageResourcePermissions": "Gestionar permisos de recursos",
     "ResourcePermissions": "Permisos de recursos",
     "ResourcePermissionTarget": "Objetivo",
     "ResourcePermissionPermissions": "Permisos",

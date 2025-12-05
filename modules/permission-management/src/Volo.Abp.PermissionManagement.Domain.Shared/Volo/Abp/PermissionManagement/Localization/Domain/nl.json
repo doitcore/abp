@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Weet u zeker dat u zonder rechten wilt opslaan?",
     "PermissionGroup": "Rechtengroep",
     "Filter": "Filter",
-    "Permission:PermissionManagement": "Rechtenbeheer",
-    "Permission:ManageResourcePermissions": "Beheer van rechten voor bronnen",
     "ResourcePermissions": "Bronrechten",
     "ResourcePermissionTarget": "Doel",
     "ResourcePermissionPermissions": "Rechten",

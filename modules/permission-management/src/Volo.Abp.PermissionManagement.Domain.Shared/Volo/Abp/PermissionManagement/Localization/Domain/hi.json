@@ -9,8 +9,6 @@
     "SaveWithoutAnyPermissionsWarningMessage": "क्या आप वाकई बिना किसी अनुमति के सहेजना चाहते हैं?",
     "PermissionGroup": "अनुमति समूह",
     "Filter": "फ़िल्टर",
-    "Permission:PermissionManagement": "अनुमति प्रबंधन",
-    "Permission:ManageResourcePermissions": "संसाधन अनुमतियों का प्रबंधन करें",
     "ResourcePermissions": "संसाधन अनुमतियाँ",
     "ResourcePermissionTarget": "लक्ष्य",
     "ResourcePermissionPermissions": "अनुमतियाँ",

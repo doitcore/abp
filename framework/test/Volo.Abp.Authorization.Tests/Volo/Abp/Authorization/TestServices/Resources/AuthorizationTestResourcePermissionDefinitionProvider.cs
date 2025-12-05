@@ -8,7 +8,12 @@ public class AuthorizationTestResourcePermissionDefinitionProvider : PermissionD
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        context.AddGroup("TestEntityManagementPermissionGroup").AddPermission("TestEntityManagementPermission");
+        var getGroup = context.GetGroupOrNull("TestGroup");
+        if (getGroup == null)
+        {
+            getGroup = context.AddGroup("TestGroup");
+        }
+        getGroup.AddPermission("TestEntityManagementPermission");
 
         var permission1 = context.AddResourcePermission("MyResourcePermission1", resourceName: TestEntityResource.ResourceName, managementPermission: "TestEntityManagementPermission");
         Assert.Throws<AbpException>(() =>

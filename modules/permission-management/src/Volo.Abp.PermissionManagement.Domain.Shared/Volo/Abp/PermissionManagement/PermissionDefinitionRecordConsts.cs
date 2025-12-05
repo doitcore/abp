@@ -14,4 +14,6 @@ public class PermissionDefinitionRecordConsts
     public static int MaxStateCheckersLength { get; set; } = 256;
 
     public static int MaxResourceNameLength { get; set; } = 256;
+
+    public static int MaxManagementPermissionLength { get; set; } = 128;
 }

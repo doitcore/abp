@@ -72,13 +72,13 @@ public static class AbpPermissionManagementDbContextModelBuilderExtensions
                 b.Property(x => x.GroupName).HasMaxLength(PermissionGroupDefinitionRecordConsts.MaxNameLength);
                 b.Property(x => x.Name).HasMaxLength(PermissionDefinitionRecordConsts.MaxNameLength).IsRequired();
                 b.Property(x => x.ResourceName).HasMaxLength(PermissionDefinitionRecordConsts.MaxResourceNameLength);
+                b.Property(x => x.ManagementPermission).HasMaxLength(PermissionDefinitionRecordConsts.MaxManagementPermissionLength);
                 b.Property(x => x.ParentName).HasMaxLength(PermissionDefinitionRecordConsts.MaxNameLength);
-                b.Property(x => x.DisplayName).HasMaxLength(PermissionDefinitionRecordConsts.MaxDisplayNameLength)
-                    .IsRequired();
+                b.Property(x => x.DisplayName).HasMaxLength(PermissionDefinitionRecordConsts.MaxDisplayNameLength).IsRequired();
                 b.Property(x => x.Providers).HasMaxLength(PermissionDefinitionRecordConsts.MaxProvidersLength);
                 b.Property(x => x.StateCheckers).HasMaxLength(PermissionDefinitionRecordConsts.MaxStateCheckersLength);
 
-                b.HasIndex(x => new { x.Name }).IsUnique();
+                b.HasIndex(x => new { x.ResourceName, x.Name }).IsUnique();
                 b.HasIndex(x => new { x.GroupName });
 
                 b.ApplyObjectExtensionMappings();

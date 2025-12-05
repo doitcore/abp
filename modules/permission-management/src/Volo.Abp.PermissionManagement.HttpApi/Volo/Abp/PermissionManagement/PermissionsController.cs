@@ -36,15 +36,15 @@ public class PermissionsController : AbpControllerBase, IPermissionAppService
     }
 
     [HttpGet("resource-provider-key-lookup-services")]
-    public virtual Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync()
+    public virtual Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync(string resourceName)
     {
-        return PermissionAppService.GetResourceProviderKeyLookupServicesAsync();
+        return PermissionAppService.GetResourceProviderKeyLookupServicesAsync(resourceName);
     }
 
     [HttpGet("search-resource-provider-keys")]
-    public virtual Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter, int page)
+    public virtual Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string resourceName, string serviceName, string filter, int page)
     {
-        return PermissionAppService.SearchResourceProviderKeyAsync(serviceName, filter, page);
+        return PermissionAppService.SearchResourceProviderKeyAsync(resourceName, serviceName, filter, page);
     }
 
     [HttpGet("resource-definitions")]

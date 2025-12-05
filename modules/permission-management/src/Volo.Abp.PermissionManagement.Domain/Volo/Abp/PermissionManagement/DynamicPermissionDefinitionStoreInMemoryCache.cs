@@ -53,6 +53,7 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
         {
             context.AddResourcePermission(resourcePermission.Name,
                 resourcePermission.ResourceName,
+                resourcePermission.ManagementPermission,
                 resourcePermission.DisplayName != null ? LocalizableStringSerializer.Deserialize(resourcePermission.DisplayName) : null,
                 resourcePermission.MultiTenancySide,
                 resourcePermission.IsEnabled);

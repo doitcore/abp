@@ -18,6 +18,7 @@ var abp = abp || {};
             dataType: "json",
             data: function (params) {
                 var query = {};
+                query["resourceName"] = $('#ResourceName').val();
                 query["serviceName"] = $('input[name="AddModel.ProviderName"]:checked').val();
                 query["page"] = params.page || 1;
                 query["filter"] = params.term;

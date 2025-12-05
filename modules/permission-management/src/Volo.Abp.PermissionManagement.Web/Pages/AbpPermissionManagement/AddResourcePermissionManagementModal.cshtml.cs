@@ -42,7 +42,7 @@ public class AddResourcePermissionManagementModal : AbpPageModel
         ValidateModel();
 
         ResourcePermissionDefinitions = await PermissionAppService.GetResourceDefinitionsAsync(ResourceName);
-        ResourceProviders = await PermissionAppService.GetResourceProviderKeyLookupServicesAsync();
+        ResourceProviders = await PermissionAppService.GetResourceProviderKeyLookupServicesAsync(ResourceName);
 
         return Page();
     }

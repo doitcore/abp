@@ -34,16 +34,16 @@
       }, ajaxParams));
     };
 
-    volo.abp.permissionManagement.permissions.getResourceProviderKeyLookupServices = function(ajaxParams) {
+    volo.abp.permissionManagement.permissions.getResourceProviderKeyLookupServices = function(resourceName, ajaxParams) {
       return abp.ajax($.extend(true, {
-        url: abp.appPath + 'api/permission-management/permissions/resource-provider-key-lookup-services',
+        url: abp.appPath + 'api/permission-management/permissions/resource-provider-key-lookup-services' + abp.utils.buildQueryString([{ name: 'resourceName', value: resourceName }]) + '',
         type: 'GET'
       }, ajaxParams));
     };
 
-    volo.abp.permissionManagement.permissions.searchResourceProviderKey = function(serviceName, filter, page, ajaxParams) {
+    volo.abp.permissionManagement.permissions.searchResourceProviderKey = function(resourceName, serviceName, filter, page, ajaxParams) {
       return abp.ajax($.extend(true, {
-        url: abp.appPath + 'api/permission-management/permissions/search-resource-provider-keys' + abp.utils.buildQueryString([{ name: 'serviceName', value: serviceName }, { name: 'filter', value: filter }, { name: 'page', value: page }]) + '',
+        url: abp.appPath + 'api/permission-management/permissions/search-resource-provider-keys' + abp.utils.buildQueryString([{ name: 'resourceName', value: resourceName }, { name: 'serviceName', value: serviceName }, { name: 'filter', value: filter }, { name: 'page', value: page }]) + '',
         type: 'GET'
       }, ajaxParams));
     };

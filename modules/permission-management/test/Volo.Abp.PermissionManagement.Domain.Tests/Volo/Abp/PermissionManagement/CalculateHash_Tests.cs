@@ -35,7 +35,7 @@ public class CalculateHash_Tests: PermissionTestBase
         json.ShouldNotContain(id.ToString("D"));
         json = JsonSerializer.Serialize(new List<PermissionDefinitionRecord>()
             {
-                new PermissionDefinitionRecord(id, "Test", "Test", "Test", "Test", "Test")
+                new PermissionDefinitionRecord(id, "Test", "Test", "Test", "Test", "Test", "Test")
             },
             jsonSerializerOptions);
         json.ShouldNotContain("\"Id\"");

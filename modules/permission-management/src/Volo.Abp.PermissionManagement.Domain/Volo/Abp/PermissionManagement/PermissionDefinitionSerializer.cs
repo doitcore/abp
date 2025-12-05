@@ -87,6 +87,7 @@ public class PermissionDefinitionSerializer : IPermissionDefinitionSerializer, I
                 permissionGroup?.Name,
                 permission.Name,
                 permission.ResourceName,
+                permission.ManagementPermission,
                 permission.Parent?.Name,
                 LocalizableStringSerializer.Serialize(permission.DisplayName),
                 permission.IsEnabled,

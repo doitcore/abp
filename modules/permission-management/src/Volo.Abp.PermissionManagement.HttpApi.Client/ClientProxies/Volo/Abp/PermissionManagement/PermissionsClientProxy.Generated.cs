@@ -46,15 +46,19 @@ public partial class PermissionsClientProxy : ClientProxyBase<IPermissionAppServ
         });
     }
 
-    public virtual async Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync()
+    public virtual async Task<GetResourceProviderListResultDto> GetResourceProviderKeyLookupServicesAsync(string resourceName)
     {
-        return await RequestAsync<GetResourceProviderListResultDto>(nameof(GetResourceProviderKeyLookupServicesAsync));
+        return await RequestAsync<GetResourceProviderListResultDto>(nameof(GetResourceProviderKeyLookupServicesAsync), new ClientProxyRequestTypeValue
+        {
+            { typeof(string), resourceName }
+        });
     }
 
-    public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string serviceName, string filter, int page)
+    public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string resourceName, string serviceName, string filter, int page)
     {
         return await RequestAsync<SearchProviderKeyListResultDto>(nameof(SearchResourceProviderKeyAsync), new ClientProxyRequestTypeValue
         {
+            { typeof(string), resourceName },
             { typeof(string), serviceName },
             { typeof(string), filter },
             { typeof(int), page }

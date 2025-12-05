@@ -39,7 +39,7 @@ public class ResourcePermissionManagementModal : AbpPageModel
         HasAnyResourcePermission = (await PermissionAppService.GetResourceDefinitionsAsync(ResourceName)).Permissions.Any();
         if (HasAnyResourcePermission)
         {
-            HasAnyResourceProviderKeyLookupService = (await PermissionAppService.GetResourceProviderKeyLookupServicesAsync()).Providers.Count > 0;
+            HasAnyResourceProviderKeyLookupService = (await PermissionAppService.GetResourceProviderKeyLookupServicesAsync(ResourceName)).Providers.Count > 0;
         }
         return Page();
     }

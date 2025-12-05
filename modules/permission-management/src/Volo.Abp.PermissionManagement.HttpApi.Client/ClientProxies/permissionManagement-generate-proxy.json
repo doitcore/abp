@@ -181,7 +181,16 @@
                 },
                 {
                   "name": "GetResourceProviderKeyLookupServicesAsync",
-                  "parametersOnMethod": [],
+                  "parametersOnMethod": [
+                    {
+                      "name": "resourceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
                   "returnValue": {
                     "type": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto",
                     "typeSimple": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto"
@@ -190,6 +199,14 @@
                 {
                   "name": "SearchResourceProviderKeyAsync",
                   "parametersOnMethod": [
+                    {
+                      "name": "resourceName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
                     {
                       "name": "serviceName",
                       "typeAsString": "System.String, System.Private.CoreLib",
@@ -592,14 +609,36 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
             },
-            "GetResourceProviderKeyLookupServicesAsync": {
-              "uniqueName": "GetResourceProviderKeyLookupServicesAsync",
+            "GetResourceProviderKeyLookupServicesAsyncByResourceName": {
+              "uniqueName": "GetResourceProviderKeyLookupServicesAsyncByResourceName",
               "name": "GetResourceProviderKeyLookupServicesAsync",
               "httpMethod": "GET",
               "url": "api/permission-management/permissions/resource-provider-key-lookup-services",
               "supportedVersions": [],
-              "parametersOnMethod": [],
-              "parameters": [],
+              "parametersOnMethod": [
+                {
+                  "name": "resourceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "resourceName",
+                  "name": "resourceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
               "returnValue": {
                 "type": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto",
                 "typeSimple": "Volo.Abp.PermissionManagement.GetResourceProviderListResultDto"
@@ -607,13 +646,21 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.PermissionManagement.IPermissionAppService"
             },
-            "SearchResourceProviderKeyAsyncByServiceNameAndFilterAndPage": {
-              "uniqueName": "SearchResourceProviderKeyAsyncByServiceNameAndFilterAndPage",
+            "SearchResourceProviderKeyAsyncByResourceNameAndServiceNameAndFilterAndPage": {
+              "uniqueName": "SearchResourceProviderKeyAsyncByResourceNameAndServiceNameAndFilterAndPage",
               "name": "SearchResourceProviderKeyAsync",
               "httpMethod": "GET",
               "url": "api/permission-management/permissions/search-resource-provider-keys",
               "supportedVersions": [],
               "parametersOnMethod": [
+                {
+                  "name": "resourceName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
                 {
                   "name": "serviceName",
                   "typeAsString": "System.String, System.Private.CoreLib",
@@ -640,6 +687,18 @@
                 }
               ],
               "parameters": [
+                {
+                  "nameOnMethod": "resourceName",
+                  "name": "resourceName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
                 {
                   "nameOnMethod": "serviceName",
                   "name": "serviceName",

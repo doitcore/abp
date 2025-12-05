@@ -52,6 +52,7 @@ public interface IPermissionDefinitionContext
     PermissionDefinition AddResourcePermission(
         string name,
         string resourceName,
+        string managementPermission,
         ILocalizableString? displayName = null,
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true);

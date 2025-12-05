@@ -1645,7 +1645,7 @@
                       "path": "framework/ui/angular/list-service.md"
                     },
                     {
-                      "text": "Easy *ngFor trackBy",
+                      "text": "Easy @for() track",
                       "path": "framework/ui/angular/track-by-service.md"
                     },
                     {

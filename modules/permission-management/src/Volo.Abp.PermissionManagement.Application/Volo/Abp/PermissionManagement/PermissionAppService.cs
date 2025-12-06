@@ -189,10 +189,10 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     public virtual async Task<SearchProviderKeyListResultDto> SearchResourceProviderKeyAsync(string resourceName, string serviceName, string filter, int page)
     {
         var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
-        if (!resourcePermissions.Any() ||
+        if (resourcePermissions.IsNullOrEmpty() ||
             !await AuthorizationService.IsGrantedAnyAsync(resourcePermissions.Select(p => p.ManagementPermissionName!).ToArray()))
         {
-            return new SearchProviderKeyListResultDto();;
+            return new SearchProviderKeyListResultDto();
         }
 
         var lookupService = await ResourcePermissionManager.GetProviderKeyLookupServiceAsync(serviceName);
@@ -219,7 +219,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         {
             if (await AuthorizationService.IsGrantedAsync(resourcePermission.ManagementPermissionName!))
             {
-                result.Permissions.Add(new ResourcePermissionDefinitionDto()
+                result.Permissions.Add(new ResourcePermissionDefinitionDto
                 {
                     Name = resourcePermission.Name,
                     DisplayName = resourcePermission.DisplayName?.Localize(StringLocalizerFactory),
@@ -238,10 +238,10 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         };
 
         var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
-        var resourcePermissionGrantsGroup = await ResourcePermissionManager.GetAllGroupAsync(resourceName, resourceKey);
-        foreach (var resourcePermissionGrant in resourcePermissionGrantsGroup)
+        var resourcePermissionGrants = await ResourcePermissionManager.GetAllGroupAsync(resourceName, resourceKey);
+        foreach (var resourcePermissionGrant in resourcePermissionGrants)
         {
-            var resourcePermissionGrantInfoDto = new ResourcePermissionGrantInfoDto()
+            var resourcePermissionGrantInfoDto = new ResourcePermissionGrantInfoDto
             {
                 ProviderName = resourcePermissionGrant.ProviderName,
                 ProviderKey = resourcePermissionGrant.ProviderKey,

@@ -40,8 +40,7 @@ public class AbpAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
             return policyBuilder.Build();
         }
 
-        var resourcePermission = await _permissionDefinitionManager.GetResourcePermissionOrNullAsync(policyName);
-        if (resourcePermission != null)
+        if ((await _permissionDefinitionManager.GetResourcePermissionsAsync()).Any(x => x.Name == policyName))
         {
             //TODO: Optimize & Cache!
             var policyBuilder = new AuthorizationPolicyBuilder(Array.Empty<string>());

@@ -9,7 +9,7 @@ public interface IDynamicPermissionDefinitionStore
 
     Task<IReadOnlyList<PermissionDefinition>> GetPermissionsAsync();
 
-    Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string name);
+    Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string resourceName, string name);
 
     Task<IReadOnlyList<PermissionDefinition>> GetResourcePermissionsAsync();
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Volo.Abp.Localization;
 using Volo.Abp.MultiTenancy;
@@ -12,7 +13,7 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
 
     public Dictionary<string, PermissionGroupDefinition> Groups { get; }
 
-    public Dictionary<string, PermissionDefinition> ResourcePermissions { get; }
+    public List<PermissionDefinition> ResourcePermissions { get; }
 
     internal IPermissionDefinitionProvider? CurrentProvider { get; set; }
 
@@ -25,7 +26,7 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
     {
         ServiceProvider = serviceProvider;
         Groups = new Dictionary<string, PermissionGroupDefinition>();
-        ResourcePermissions = new Dictionary<string, PermissionDefinition>();
+        ResourcePermissions = new List<PermissionDefinition>();
     }
 
     public virtual PermissionGroupDefinition AddGroup(
@@ -103,9 +104,9 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
         Check.NotNull(resourceName, nameof(resourceName));
         Check.NotNull(managementPermission, nameof(managementPermission));
 
-        if (ResourcePermissions.ContainsKey(name))
+        if (ResourcePermissions.Any(x => x.ResourceName == resourceName && x.Name == name))
         {
-            throw new AbpException($"There is already an existing resource permission with name: {name}");
+            throw new AbpException($"There is already an existing resource permission with name: {name} for resource: {resourceName}");
         }
 
         var permission = new PermissionDefinition(
@@ -119,24 +120,29 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
             [KnownPropertyNames.CurrentProviderName] = CurrentProvider?.GetType().FullName
         };
 
-        ResourcePermissions[name] = permission;
+        ResourcePermissions.Add(permission);
 
         return permission;
     }
 
-    public virtual PermissionDefinition? GetResourcePermissionOrNull([NotNull] string name)
+    public virtual PermissionDefinition? GetResourcePermissionOrNull([NotNull] string resourceName, [NotNull] string name)
     {
+        Check.NotNull(resourceName, nameof(resourceName));
         Check.NotNull(name, nameof(name));
-        return ResourcePermissions.GetOrDefault(name);
+
+        return ResourcePermissions.FirstOrDefault(p => p.ResourceName == resourceName && p.Name == name);
     }
 
-    public virtual void RemoveResourcePermission([NotNull] string name)
+    public virtual void RemoveResourcePermission([NotNull] string resourceName, [NotNull] string name)
     {
+        Check.NotNull(resourceName, nameof(resourceName));
         Check.NotNull(name, nameof(name));
 
-        if (!ResourcePermissions.Remove(name))
+        var resourcePermission = GetResourcePermissionOrNull(resourceName, name);
+        if (resourcePermission == null)
         {
-            throw new AbpException($"Not found resource permission with name: {name}");
+            throw new AbpException($"Not found resource permission with name: {name} for resource: {resourceName}");
         }
+        ResourcePermissions.Remove(resourcePermission);
     }
 }

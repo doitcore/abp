@@ -72,7 +72,7 @@ public class DynamicPermissionDefinitionStore : IDynamicPermissionDefinitionStor
         }
     }
 
-    public virtual async Task<PermissionDefinition> GetResourcePermissionOrNullAsync(string name)
+    public virtual async Task<PermissionDefinition> GetResourcePermissionOrNullAsync(string resourceName, string name)
     {
         if (!PermissionManagementOptions.IsDynamicPermissionStoreEnabled)
         {
@@ -82,7 +82,7 @@ public class DynamicPermissionDefinitionStore : IDynamicPermissionDefinitionStor
         using (await StoreCache.SyncSemaphore.LockAsync())
         {
             await EnsureCacheIsUptoDateAsync();
-            return StoreCache.GetResourcePermissionOrNull(name);
+            return StoreCache.GetResourcePermissionOrNull(resourceName, name);
         }
     }
 

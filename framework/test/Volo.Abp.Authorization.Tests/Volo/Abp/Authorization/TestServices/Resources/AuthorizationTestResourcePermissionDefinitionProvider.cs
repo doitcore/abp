@@ -30,6 +30,6 @@ public class AuthorizationTestResourcePermissionDefinitionProvider : PermissionD
         context.AddResourcePermission("MyResourcePermission6", resourceName: typeof(TestEntityResource).FullName!, managementPermission: "TestEntityManagementPermission").WithProviders(nameof(TestResourcePermissionValueProvider1));
         context.AddResourcePermission("MyResourcePermission7", resourceName: typeof(TestEntityResource).FullName!, managementPermission: "TestEntityManagementPermission").WithProviders(nameof(TestResourcePermissionValueProvider2));
 
-        context.GetResourcePermissionOrNull("MyResourcePermission1").ShouldNotBeNull();
+        context.GetResourcePermissionOrNull(TestEntityResource.ResourceName, "MyResourcePermission1").ShouldNotBeNull();
     }
 }

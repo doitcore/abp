@@ -31,7 +31,7 @@ public class NullDynamicPermissionDefinitionStore : IDynamicPermissionDefinition
         return CachedPermissionsResult;
     }
 
-    public Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string name)
+    public Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string resourceName, string name)
     {
         return CachedResourcePermissionResult;
     }

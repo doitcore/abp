@@ -18,7 +18,7 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
 
     protected IDictionary<string, PermissionGroupDefinition> PermissionGroupDefinitions { get; }
     protected IDictionary<string, PermissionDefinition> PermissionDefinitions { get; }
-    protected IDictionary<string, PermissionDefinition> ResourcePermissionDefinitions { get; }
+    protected IList<PermissionDefinition> ResourcePermissionDefinitions { get; }
     protected ISimpleStateCheckerSerializer StateCheckerSerializer { get; }
     protected ILocalizableStringSerializer LocalizableStringSerializer { get; }
 
@@ -35,7 +35,7 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
 
         PermissionGroupDefinitions = new Dictionary<string, PermissionGroupDefinition>();
         PermissionDefinitions = new Dictionary<string, PermissionDefinition>();
-        ResourcePermissionDefinitions = new Dictionary<string, PermissionDefinition>();
+        ResourcePermissionDefinitions = new List<PermissionDefinition>();
     }
 
     public Task FillAsync(
@@ -101,14 +101,14 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
         return PermissionGroupDefinitions.Values.ToList();
     }
 
-    public PermissionDefinition GetResourcePermissionOrNull(string name)
+    public PermissionDefinition GetResourcePermissionOrNull(string resourceName, string name)
     {
-        return ResourcePermissionDefinitions.GetOrDefault(name);
+        return ResourcePermissionDefinitions.FirstOrDefault(p => p.ResourceName == resourceName && p.Name == name);
     }
 
     public IReadOnlyList<PermissionDefinition> GetResourcePermissions()
     {
-        return ResourcePermissionDefinitions.Values.ToList();
+        return ResourcePermissionDefinitions.ToList();
     }
 
     private void AddPermissionRecursively(ICanAddChildPermission permissionContainer,

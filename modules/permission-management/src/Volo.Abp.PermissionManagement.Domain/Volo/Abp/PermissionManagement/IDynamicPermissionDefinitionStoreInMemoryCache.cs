@@ -24,7 +24,7 @@ public interface IDynamicPermissionDefinitionStoreInMemoryCache
 
     IReadOnlyList<PermissionGroupDefinition> GetGroups();
 
-    PermissionDefinition GetResourcePermissionOrNull(string name);
+    PermissionDefinition GetResourcePermissionOrNull(string resourceName, string name);
 
     IReadOnlyList<PermissionDefinition> GetResourcePermissions();
 }

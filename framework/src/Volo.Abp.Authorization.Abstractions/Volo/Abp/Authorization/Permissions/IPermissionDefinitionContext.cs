@@ -57,7 +57,7 @@ public interface IPermissionDefinitionContext
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true);
 
-    PermissionDefinition? GetResourcePermissionOrNull([NotNull] string name);
+    PermissionDefinition? GetResourcePermissionOrNull([NotNull] string resourceName, [NotNull] string name);
 
-    void RemoveResourcePermission([NotNull] string name);
+    void RemoveResourcePermission([NotNull] string resourceName, [NotNull] string name);
 }

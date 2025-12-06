@@ -38,23 +38,23 @@ public class PermissionDefinitionManager : IPermissionDefinitionManager, ITransi
                await _dynamicStore.GetOrNullAsync(name);
     }
 
-    public virtual async Task<PermissionDefinition> GetResourcePermissionAsync(string name)
+    public virtual async Task<PermissionDefinition> GetResourcePermissionAsync(string resourceName, string name)
     {
-        var permission = await GetResourcePermissionOrNullAsync(name);
+        var permission = await GetResourcePermissionOrNullAsync(resourceName, name);
         if (permission == null)
         {
-            throw new AbpException("Undefined resource permission: " + name);
+            throw new AbpException($"Undefined resource permission: {name} for resource: {resourceName}");
         }
 
         return permission;
     }
 
-    public virtual async Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string name)
+    public virtual async Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string resourceName, string name)
     {
         Check.NotNull(name, nameof(name));
 
-        return await _staticStore.GetResourcePermissionOrNullAsync(name) ??
-               await _dynamicStore.GetResourcePermissionOrNullAsync(name);
+        return await _staticStore.GetResourcePermissionOrNullAsync(resourceName, name) ??
+               await _dynamicStore.GetResourcePermissionOrNullAsync(resourceName, name);
     }
 
     public virtual async Task<IReadOnlyList<PermissionDefinition>> GetPermissionsAsync()

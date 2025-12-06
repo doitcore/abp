@@ -101,7 +101,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
     public virtual async Task<PermissionWithGrantedProviders> GetAsync(string permissionName, string resourceName, string resourceKey, string providerName, string providerKey)
     {
-        var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(permissionName);
+        var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(resourceName, permissionName);
         if (permission == null || permission.ResourceName != resourceName)
         {
             return new PermissionWithGrantedProviders(permissionName, false);
@@ -123,7 +123,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
         foreach (var permissionName in permissionNames)
         {
-            var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(permissionName);
+            var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(resourceName, permissionName);
             if (permission != null && permission.ResourceName == resourceName)
             {
                 permissions.Add(permission);
@@ -241,7 +241,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
     public virtual async Task SetAsync(string permissionName, string resourceName, string resourceKey, string providerName, string providerKey, bool isGranted)
     {
-        var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(permissionName);
+        var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(resourceName, permissionName);
         if (permission == null || permission.ResourceName != resourceName)
         {
             /* Silently ignore undefined permissions,

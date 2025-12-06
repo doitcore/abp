@@ -12,12 +12,12 @@ namespace Volo.Abp.Authorization.Permissions;
 public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore, ISingletonDependency
 {
     protected IDictionary<string, PermissionGroupDefinition> PermissionGroupDefinitions => _lazyPermissionGroupDefinitions.Value.Item1;
-    private readonly Lazy<(Dictionary<string, PermissionGroupDefinition>, Dictionary<string, PermissionDefinition>)> _lazyPermissionGroupDefinitions;
+    private readonly Lazy<(Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)> _lazyPermissionGroupDefinitions;
 
     protected IDictionary<string, PermissionDefinition> PermissionDefinitions => _lazyPermissionDefinitions.Value;
     private readonly Lazy<Dictionary<string, PermissionDefinition>> _lazyPermissionDefinitions;
 
-    protected IDictionary<string, PermissionDefinition> ResourcePermissionDefinitions => _lazyPermissionGroupDefinitions.Value.Item2;
+    protected IList<PermissionDefinition> ResourcePermissionDefinitions => _lazyPermissionGroupDefinitions.Value.Item2;
 
     protected AbpPermissionOptions Options { get; }
 
@@ -35,7 +35,7 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
             isThreadSafe: true
         );
 
-        _lazyPermissionGroupDefinitions = new Lazy<(Dictionary<string, PermissionGroupDefinition>, Dictionary<string, PermissionDefinition>)>(
+        _lazyPermissionGroupDefinitions = new Lazy<(Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)>(
             CreatePermissionGroupDefinitions,
             isThreadSafe: true
         );
@@ -73,7 +73,7 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
         }
     }
 
-    protected virtual (Dictionary<string, PermissionGroupDefinition>, Dictionary<string, PermissionDefinition>) CreatePermissionGroupDefinitions()
+    protected virtual (Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>) CreatePermissionGroupDefinitions()
     {
         using (var scope = _serviceProvider.CreateScope())
         {
@@ -120,15 +120,15 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
         );
     }
 
-    public virtual Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string name)
+    public virtual Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string resourceName, string name)
     {
-        return Task.FromResult(ResourcePermissionDefinitions.GetOrDefault(name));
+        return Task.FromResult<PermissionDefinition?>(ResourcePermissionDefinitions.FirstOrDefault(p => p.ResourceName == resourceName && p.Name == name));
     }
 
     public virtual Task<IReadOnlyList<PermissionDefinition>> GetResourcePermissionsAsync()
     {
         return Task.FromResult<IReadOnlyList<PermissionDefinition>>(
-            ResourcePermissionDefinitions.Values.ToImmutableList()
+            ResourcePermissionDefinitions.ToImmutableList()
         );
     }
 

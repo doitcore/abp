@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Shouldly;
 using Volo.Abp.Authorization.Permissions;
+using Volo.Abp.Authorization.TestServices.Resources;
 using Xunit;
 
 namespace Volo.Abp.Authorization;
@@ -48,12 +49,12 @@ public class StaticPermissionDefinitionStore_Tests : AuthorizationTestBase
     [Fact]
     public async Task GetResourcePermissionOrNullAsync()
     {
-        var permission = await _store.GetResourcePermissionOrNullAsync("MyResourcePermission1");
+        var permission = await _store.GetResourcePermissionOrNullAsync(TestEntityResource.ResourceName, "MyResourcePermission1");
         permission.ShouldNotBeNull();
         permission.Name.ShouldBe("MyResourcePermission1");
         permission.StateCheckers.ShouldContain(x => x.GetType() == typeof(TestRequireEditionPermissionSimpleStateChecker));
 
-        permission = await _store.GetResourcePermissionOrNullAsync("NotExists");
+        permission = await _store.GetResourcePermissionOrNullAsync(TestEntityResource.ResourceName, "NotExists");
         permission.ShouldBeNull();
     }
 

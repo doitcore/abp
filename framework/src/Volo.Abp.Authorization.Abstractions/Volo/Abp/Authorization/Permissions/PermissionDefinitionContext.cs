@@ -95,14 +95,14 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
     public virtual PermissionDefinition AddResourcePermission(
         string name,
         string resourceName,
-        string managementPermission,
+        string managementPermissionName,
         ILocalizableString? displayName = null,
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
     {
         Check.NotNull(name, nameof(name));
         Check.NotNull(resourceName, nameof(resourceName));
-        Check.NotNull(managementPermission, nameof(managementPermission));
+        Check.NotNull(managementPermissionName, nameof(managementPermissionName));
 
         if (ResourcePermissions.Any(x => x.ResourceName == resourceName && x.Name == name))
         {
@@ -112,7 +112,7 @@ public class PermissionDefinitionContext : IPermissionDefinitionContext
         var permission = new PermissionDefinition(
             name,
             resourceName,
-            managementPermission,
+            managementPermissionName,
             displayName,
             multiTenancySide,
             isEnabled)

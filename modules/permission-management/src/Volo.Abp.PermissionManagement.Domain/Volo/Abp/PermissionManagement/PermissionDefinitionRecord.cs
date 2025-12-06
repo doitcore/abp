@@ -14,7 +14,7 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
 
     public string ResourceName { get; set; }
 
-    public string ManagementPermission { get; set; }
+    public string ManagementPermissionName { get; set; }
 
     public string ParentName { get; set; }
 
@@ -47,7 +47,7 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
         string groupName,
         string name,
         string resourceName,
-        string managementPermission,
+        string managementPermissionName,
         string parentName,
         string displayName,
         bool isEnabled = true,
@@ -63,7 +63,7 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
         }
         Name = Check.NotNullOrWhiteSpace(name, nameof(name), PermissionDefinitionRecordConsts.MaxNameLength);
         ResourceName = resourceName;
-        ManagementPermission = managementPermission;
+        ManagementPermissionName = managementPermissionName;
         ParentName = Check.Length(parentName, nameof(parentName), PermissionDefinitionRecordConsts.MaxNameLength);
         DisplayName =  Check.NotNullOrWhiteSpace(displayName, nameof(displayName), PermissionDefinitionRecordConsts.MaxDisplayNameLength);
         IsEnabled = isEnabled;
@@ -87,7 +87,7 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
             return false;
         }
 
-        if (ManagementPermission != otherRecord.ManagementPermission)
+        if (ManagementPermissionName != otherRecord.ManagementPermissionName)
         {
             return false;
         }
@@ -147,9 +147,9 @@ public class PermissionDefinitionRecord : BasicAggregateRoot<Guid>, IHasExtraPro
             ResourceName = otherRecord.ResourceName;
         }
 
-        if (ManagementPermission != otherRecord.ManagementPermission)
+        if (ManagementPermissionName != otherRecord.ManagementPermissionName)
         {
-            ManagementPermission = otherRecord.ManagementPermission;
+            ManagementPermissionName = otherRecord.ManagementPermissionName;
         }
 
         if (GroupName != otherRecord.GroupName)

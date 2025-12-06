@@ -111,7 +111,7 @@ public class PermissionDefinitionSerializer_Tests : PermissionTestBase
         permissionRecord.Name.ShouldBe("ResourcePermission1");
         permissionRecord.GroupName.ShouldBe(null);
         permissionRecord.ResourceName.ShouldBe(TestEntityResource.ResourceName);
-        permissionRecord.ManagementPermission.ShouldBe("Permission1");
+        permissionRecord.ManagementPermissionName.ShouldBe("Permission1");
         permissionRecord.DisplayName.ShouldBe("L:AbpPermissionManagement,ResourcePermission1");
         permissionRecord.GetProperty("CustomProperty2").ShouldBe("CustomValue2");
         permissionRecord.Providers.ShouldBe("ProviderA,ProviderB");

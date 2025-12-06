@@ -24,7 +24,7 @@ public class PermissionDefinition :
     /// <summary>
     ///  Management permission of the resource permission.
     /// </summary>
-    public string? ManagementPermission { get; set; }
+    public string? ManagementPermissionName { get; set; }
 
     /// <summary>
     /// Parent of this permission if one exists.
@@ -89,14 +89,14 @@ public class PermissionDefinition :
     protected internal PermissionDefinition(
         [NotNull] string name,
         string resourceName,
-        string managementPermission,
+        string managementPermissionName,
         ILocalizableString? displayName = null,
         MultiTenancySides multiTenancySide = MultiTenancySides.Both,
         bool isEnabled = true)
         : this(name, displayName, multiTenancySide, isEnabled)
     {
         ResourceName = Check.NotNull(resourceName, nameof(resourceName));
-        ManagementPermission = Check.NotNull(managementPermission, nameof(managementPermission));
+        ManagementPermissionName = Check.NotNull(managementPermissionName, nameof(managementPermissionName));
     }
 
     protected internal PermissionDefinition(

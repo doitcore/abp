@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Auditing;
-using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.ChangeTracking;
@@ -25,8 +24,7 @@ namespace Volo.Abp.Domain;
     typeof(AbpExceptionHandlingModule),
     typeof(AbpSpecificationsModule),
     typeof(AbpCachingModule),
-    typeof(AbpDddDomainSharedModule),
-    typeof(AbpAuthorizationAbstractionsModule)
+    typeof(AbpDddDomainSharedModule)
     )]
 public class AbpDddDomainModule : AbpModule
 {
@@ -34,10 +32,5 @@ public class AbpDddDomainModule : AbpModule
     {
         context.Services.AddConventionalRegistrar(new AbpRepositoryConventionalRegistrar());
         context.Services.OnRegistered(ChangeTrackingInterceptorRegistrar.RegisterIfNeeded);
-    }
-
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        context.Services.AddKeyedObjectResourcePermissionAuthorization();
     }
 }

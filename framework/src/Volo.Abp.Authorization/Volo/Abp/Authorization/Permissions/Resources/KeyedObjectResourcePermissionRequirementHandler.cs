@@ -7,8 +7,7 @@ public class KeyedObjectResourcePermissionRequirementHandler : AuthorizationHand
 {
     protected readonly IResourcePermissionChecker PermissionChecker;
 
-    public KeyedObjectResourcePermissionRequirementHandler(
-        IResourcePermissionChecker permissionChecker)
+    public KeyedObjectResourcePermissionRequirementHandler(IResourcePermissionChecker permissionChecker)
     {
         PermissionChecker = permissionChecker;
     }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Volo.Abp.Domain.Entities;
 
 namespace Volo.Abp.Authorization.Permissions.Resources;
 
@@ -18,7 +17,7 @@ public static class KeyedObjectResourcePermissionStoreExtensions
         this IResourcePermissionStore resourcePermissionStore,
         TResource resource
     )
-        where TResource : class, IEntity
+        where TResource : class, IKeyedObject
     {
         Check.NotNull(resourcePermissionStore, nameof(resourcePermissionStore));
         Check.NotNull(resource, nameof(resource));
@@ -37,7 +36,7 @@ public static class KeyedObjectResourcePermissionStoreExtensions
         this IResourcePermissionStore resourcePermissionStore,
         TEntity entity
     )
-        where TEntity : class, IEntity
+        where TEntity : class, IKeyedObject
     {
         Check.NotNull(resourcePermissionStore, nameof(resourcePermissionStore));
         Check.NotNull(entity, nameof(entity));

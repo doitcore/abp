@@ -33,6 +33,7 @@ public class AbpAuthorizationModule : AbpModule
     {
         context.Services.AddAuthorizationCore();
 
+        context.Services.AddKeyedObjectResourcePermissionAuthorization();
         context.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
         context.Services.AddSingleton<IAuthorizationHandler, PermissionsRequirementHandler>();
 

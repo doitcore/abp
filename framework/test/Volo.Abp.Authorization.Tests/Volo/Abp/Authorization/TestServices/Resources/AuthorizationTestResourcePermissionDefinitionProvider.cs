@@ -30,6 +30,15 @@ public class AuthorizationTestResourcePermissionDefinitionProvider : PermissionD
         context.AddResourcePermission("MyResourcePermission6", resourceName: typeof(TestEntityResource).FullName!, managementPermission: "TestEntityManagementPermission").WithProviders(nameof(TestResourcePermissionValueProvider1));
         context.AddResourcePermission("MyResourcePermission7", resourceName: typeof(TestEntityResource).FullName!, managementPermission: "TestEntityManagementPermission").WithProviders(nameof(TestResourcePermissionValueProvider2));
 
+        Assert.Throws<AbpException>(() =>
+        {
+            context.AddResourcePermission("MyResourcePermission7", resourceName: typeof(TestEntityResource).FullName!, managementPermission: "TestEntityManagementPermission");
+        }).Message.ShouldBe($"There is already an existing resource permission with name: MyResourcePermission7 for resource: {typeof(TestEntityResource).FullName}");
+
+        context.AddResourcePermission("MyResourcePermission7", resourceName: typeof(TestEntityResource2).FullName!, managementPermission: "TestEntityManagementPermission").WithProviders(nameof(TestResourcePermissionValueProvider2));
+
         context.GetResourcePermissionOrNull(TestEntityResource.ResourceName, "MyResourcePermission1").ShouldNotBeNull();
+        context.GetResourcePermissionOrNull(TestEntityResource.ResourceName, "MyResourcePermission7").ShouldNotBeNull();
+        context.GetResourcePermissionOrNull(TestEntityResource2.ResourceName, "MyResourcePermission7").ShouldNotBeNull();
     }
 }

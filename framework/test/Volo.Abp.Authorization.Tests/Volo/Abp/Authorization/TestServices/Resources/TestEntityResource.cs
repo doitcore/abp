@@ -14,3 +14,8 @@ public class TestEntityResource
     public static readonly string ResourceKey6 = Guid.NewGuid().ToString();
     public static readonly string ResourceKey7 = Guid.NewGuid().ToString();
 }
+
+public class TestEntityResource2
+{
+    public static readonly string ResourceName = typeof(TestEntityResource2).FullName;
+}

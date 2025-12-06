@@ -14,6 +14,7 @@ public class AuthorizationTestResourcePermissionDefinitionProvider : PermissionD
             getGroup = context.AddGroup("TestGroup");
         }
         getGroup.AddPermission("TestEntityManagementPermission");
+        getGroup.AddPermission("TestEntityManagementPermission2");
 
         var permission1 = context.AddResourcePermission("MyResourcePermission1", resourceName: TestEntityResource.ResourceName, "TestEntityManagementPermission");
         Assert.Throws<AbpException>(() =>
@@ -29,6 +30,7 @@ public class AuthorizationTestResourcePermissionDefinitionProvider : PermissionD
         context.AddResourcePermission("MyResourcePermission5", resourceName: typeof(TestEntityResource).FullName!, "TestEntityManagementPermission");
         context.AddResourcePermission("MyResourcePermission6", resourceName: typeof(TestEntityResource).FullName!, "TestEntityManagementPermission").WithProviders(nameof(TestResourcePermissionValueProvider1));
         context.AddResourcePermission("MyResourcePermission7", resourceName: typeof(TestEntityResource).FullName!, "TestEntityManagementPermission").WithProviders(nameof(TestResourcePermissionValueProvider2));
+        context.AddResourcePermission("MyResourcePermission8", resourceName: typeof(TestEntityResource).FullName!, "TestEntityManagementPermission2");
 
         Assert.Throws<AbpException>(() =>
         {

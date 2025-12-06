@@ -17,19 +17,22 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
     protected ICurrentTenant CurrentTenant { get; }
     protected IResourcePermissionValueProviderManager PermissionValueProviderManager { get; }
     protected ISimpleStateCheckerManager<PermissionDefinition> StateCheckerManager { get; }
+    protected IPermissionChecker PermissionChecker { get; }
 
     public ResourcePermissionChecker(
         ICurrentPrincipalAccessor principalAccessor,
         IPermissionDefinitionManager permissionDefinitionManager,
         ICurrentTenant currentTenant,
         IResourcePermissionValueProviderManager permissionValueProviderManager,
-        ISimpleStateCheckerManager<PermissionDefinition> stateCheckerManager)
+        ISimpleStateCheckerManager<PermissionDefinition> stateCheckerManager,
+        IPermissionChecker permissionChecker)
     {
         PrincipalAccessor = principalAccessor;
         PermissionDefinitionManager = permissionDefinitionManager;
         CurrentTenant = currentTenant;
         PermissionValueProviderManager = permissionValueProviderManager;
         StateCheckerManager = stateCheckerManager;
+        PermissionChecker = permissionChecker;
     }
 
     public virtual async Task<bool> IsGrantedAsync(string name, string resourceName, string resourceKey)
@@ -69,6 +72,11 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
             return false;
         }
 
+        if (!await PermissionChecker.IsGrantedAsync(claimsPrincipal, permission.ManagementPermissionName!))
+        {
+            return false;
+        }
+
         var isGranted = false;
         var context = new ResourcePermissionValueCheckContext(permission, claimsPrincipal, resourceName, resourceKey);
         foreach (var provider in PermissionValueProviderManager.ValueProviders)
@@ -96,7 +104,7 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
 
     public async Task<MultiplePermissionGrantResult> IsGrantedAsync(string[] names, string resourceName, string resourceKey)
     {
-        return await IsGrantedAsync(PrincipalAccessor.Principal, names, resourceName,resourceKey);
+        return await IsGrantedAsync(PrincipalAccessor.Principal, names, resourceName, resourceKey);
     }
 
     public async Task<MultiplePermissionGrantResult> IsGrantedAsync(ClaimsPrincipal? claimsPrincipal, string[] names, string resourceName, string resourceKey)
@@ -116,7 +124,8 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
         foreach (var name in names)
         {
             var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(resourceName, name);
-            if (permission == null)
+            if (permission == null ||
+                !await PermissionChecker.IsGrantedAsync(claimsPrincipal, permission.ManagementPermissionName!))
             {
                 result.Result.Add(name, PermissionGrantResult.Prohibited);
                 continue;

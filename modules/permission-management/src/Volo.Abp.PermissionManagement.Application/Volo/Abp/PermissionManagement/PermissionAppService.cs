@@ -267,7 +267,10 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
                 }
             }
 
-            result.Permissions.Add(resourcePermissionGrantInfoDto);
+            if(resourcePermissionGrantInfoDto.Permissions.Any())
+            {
+                result.Permissions.Add(resourcePermissionGrantInfoDto);
+            }
         }
 
         return result;

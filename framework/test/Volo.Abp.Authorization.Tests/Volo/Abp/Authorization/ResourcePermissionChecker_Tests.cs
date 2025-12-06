@@ -21,6 +21,7 @@ public class ResourcePermissionChecker_Tests: AuthorizationTestBase
     {
         (await _resourcePermissionChecker.IsGrantedAsync("MyResourcePermission5", TestEntityResource.ResourceName, TestEntityResource.ResourceKey5)).ShouldBe(true);
         (await _resourcePermissionChecker.IsGrantedAsync("UndefinedResourcePermission", TestEntityResource.ResourceName, TestEntityResource.ResourceKey5)).ShouldBe(false);
+        (await _resourcePermissionChecker.IsGrantedAsync("MyResourcePermission8", TestEntityResource.ResourceName, TestEntityResource.ResourceKey5)).ShouldBe(false);
     }
 
     [Fact]
@@ -33,7 +34,8 @@ public class ResourcePermissionChecker_Tests: AuthorizationTestBase
             "UndefinedPermission",
             "MyResourcePermission3",
             "MyResourcePermission4",
-            "MyResourcePermission5"
+            "MyResourcePermission5",
+            "MyResourcePermission8"
         }, TestEntityResource.ResourceName, TestEntityResource.ResourceKey5);
 
         result.Result["MyResourcePermission1"].ShouldBe(PermissionGrantResult.Undefined);
@@ -42,11 +44,13 @@ public class ResourcePermissionChecker_Tests: AuthorizationTestBase
         result.Result["MyResourcePermission3"].ShouldBe(PermissionGrantResult.Granted);
         result.Result["MyResourcePermission4"].ShouldBe(PermissionGrantResult.Prohibited);
         result.Result["MyResourcePermission5"].ShouldBe(PermissionGrantResult.Granted);
+        result.Result["MyResourcePermission8"].ShouldBe(PermissionGrantResult.Prohibited);
 
         result = await _resourcePermissionChecker.IsGrantedAsync(new []
         {
             "MyResourcePermission6",
         }, TestEntityResource.ResourceName, TestEntityResource.ResourceKey6);
+
         result.Result["MyResourcePermission6"].ShouldBe(PermissionGrantResult.Granted);
 
         result = await _resourcePermissionChecker.IsGrantedAsync(new []

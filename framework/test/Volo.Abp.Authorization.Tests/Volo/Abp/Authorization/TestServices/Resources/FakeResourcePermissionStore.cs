@@ -19,7 +19,7 @@ public class FakeResourcePermissionStore : IResourcePermissionStore, ITransientD
         var result = new MultiplePermissionGrantResult();
         foreach (var name in names)
         {
-            result.Result.Add(name, (name == "MyResourcePermission3" || name == "MyResourcePermission5" &&
+            result.Result.Add(name, ((name == "MyResourcePermission3" || name == "MyResourcePermission5") &&
                 resourceName == TestEntityResource.ResourceName &&
                 (resourceKey == TestEntityResource.ResourceKey3 || resourceKey == TestEntityResource.ResourceKey5)
                     ? PermissionGrantResult.Granted

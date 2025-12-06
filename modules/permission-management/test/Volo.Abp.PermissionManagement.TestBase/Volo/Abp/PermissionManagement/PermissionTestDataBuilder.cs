@@ -39,6 +39,15 @@ public class PermissionTestDataBuilder : ITransientDependency
         await _permissionGrantRepository.InsertAsync(
             new PermissionGrant(
                 _guidGenerator.Create(),
+                "TestEntityManagementPermission",
+                UserPermissionValueProvider.ProviderName,
+                User1Id.ToString()
+            )
+        );
+
+        await _permissionGrantRepository.InsertAsync(
+            new PermissionGrant(
+                _guidGenerator.Create(),
                 "MyDisabledPermission1",
                 UserPermissionValueProvider.ProviderName,
                 User1Id.ToString()

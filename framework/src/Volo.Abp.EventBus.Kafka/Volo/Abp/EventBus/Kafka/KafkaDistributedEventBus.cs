@@ -308,7 +308,7 @@ public class KafkaDistributedEventBus : DistributedEventBusBase, ISingletonDepen
         var result = await PublishAsync(topicName, eventName, body, headers);
         if (result.Status != PersistenceStatus.Persisted)
         {
-            throw new AbpException($"Failed to publish event '{eventName}' to topic '{topicName}'.");
+            throw new AbpException($"Failed to publish event '{eventName}' to topic '{topicName}'. Status: {result.Status}");
         }
     }
 

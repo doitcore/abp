@@ -215,7 +215,7 @@ public class KafkaDistributedEventBus : DistributedEventBusBase, ISingletonDepen
 
         if (result.Status != PersistenceStatus.Persisted)
         {
-            throw new AbpException($"Failed to publish event '{outgoingEvent.EventName}' to topic '{AbpKafkaEventBusOptions.TopicName}'.");
+            throw new AbpException($"Failed to publish event '{outgoingEvent.EventName}' to topic '{AbpKafkaEventBusOptions.TopicName}'. Status: {result.Status}");
         }
 
         using (CorrelationIdProvider.Change(outgoingEvent.GetCorrelationId()))

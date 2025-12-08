@@ -33,6 +33,11 @@ internal sealed class TelemetrySolutionInfoEnricher : TelemetryActivityEventEnri
     {
         try
         {
+            if (context.SolutionPath.IsNullOrEmpty())
+            {
+                return Task.CompletedTask;
+            }
+
             var jsonContent = File.ReadAllText(context.SolutionPath!);
             using var doc = JsonDocument.Parse(jsonContent, new JsonDocumentOptions
             {
@@ -91,6 +96,9 @@ internal sealed class TelemetrySolutionInfoEnricher : TelemetryActivityEventEnri
         context.Current[ActivityPropertyNames.DynamicLocalization] = TelemetryJsonExtensions.GetBooleanOrNull(config, "dynamicLocalization");
         context.Current[ActivityPropertyNames.KubernetesConfiguration] = TelemetryJsonExtensions.GetBooleanOrNull(config, "kubernetesConfiguration");
         context.Current[ActivityPropertyNames.GrafanaDashboard] = TelemetryJsonExtensions.GetBooleanOrNull(config, "grafanaDashboard");
+        context.Current[ActivityPropertyNames.SampleCrudPage] = TelemetryJsonExtensions.GetBooleanOrNull(config, "sampleCrudPage");
+        context.Current[ActivityPropertyNames.CreationTool] = TelemetryJsonExtensions.GetStringOrNull(config, "creationTool");
+        context.Current[ActivityPropertyNames.Aspire] = TelemetryJsonExtensions.GetBooleanOrNull(config, "aspire");
     }
 
     private static void AddModuleInfo(ActivityContext context, JsonElement modulesElement)
@@ -106,7 +114,10 @@ internal sealed class TelemetrySolutionInfoEnricher : TelemetryActivityEventEnri
             }
 
             var moduleJsonFileContent = File.ReadAllText(modulePath);
-            using var moduleDoc = JsonDocument.Parse(moduleJsonFileContent);
+            using var moduleDoc = JsonDocument.Parse(moduleJsonFileContent, new JsonDocumentOptions
+            {
+                AllowTrailingCommas = true
+            });
 
             if (!moduleDoc.RootElement.TryGetProperty("imports", out var imports))
             {

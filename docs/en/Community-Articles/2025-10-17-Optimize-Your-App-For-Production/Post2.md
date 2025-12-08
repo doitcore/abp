@@ -258,3 +258,10 @@ Sometimes arguing with our lover is good. We can see her/his face before marryin
 - GitHub address: https://github.com/codesenberg/bombardier
 
 [![Bombardier vs K6](11_1.png)](https://trends.google.com/trends/explore?cat=31&q=bombardier%20%2B%20benchmarking,k6%20%2B%20benchmarking)
+
+## Summary
+
+In summary, I listed 11 items for optimizing a .NET application for production; Covering build configuration, hosting setup, runtime behavior, data access, telemetry, containerization, security, startup performance and reliability under load. By applying the checklist from Part 1 and Part 2 of this series, leveraging techniques like trimmed releases, server GC, minimal payloads, pooled `DbContexts`, OpenTelemetry, multi-stage Docker builds, HTTPS enforcement, and proper shutdown handling—you’ll improve your app’s durability, scalability and maintainability under real-world traffic and production constraints. Each item is a checkpoint and you’ll be able to deliver a robust, high-performing .NET application ready for live users. 
+
+🎉 Want top-tier .NET performance without the headaches? Try [ABP Framework](https://abp.io?utm_source=alper-ebicoglu-performance-article) for best-performance and skip all the hustles of .NET app development.
+

@@ -42,7 +42,7 @@ public class PropertyApiDescriptionModel
             Type = ApiTypeNameHelper.GetTypeName(propertyInfo.PropertyType),
             TypeSimple = ApiTypeNameHelper.GetSimpleTypeName(propertyInfo.PropertyType),
             IsRequired = customAttributes.OfType<RequiredAttribute>().Any() || propertyInfo.GetCustomAttributesData().Any(attr => attr.AttributeType.Name == "RequiredMemberAttribute"),
-            IsNullable = TypeHelper.IsNullable(propertyInfo.PropertyType),
+            IsNullable = TypeHelper.IsNullableOrNotValueType(propertyInfo.PropertyType),
             Minimum = customAttributes.OfType<RangeAttribute>().Select(x => x.Minimum).FirstOrDefault()?.ToString(),
             Maximum = customAttributes.OfType<RangeAttribute>().Select(x => x.Maximum).FirstOrDefault()?.ToString(),
             MinLength = customAttributes.OfType<MinLengthAttribute>().FirstOrDefault()?.Length ?? customAttributes.OfType<StringLengthAttribute>().FirstOrDefault()?.MinimumLength,

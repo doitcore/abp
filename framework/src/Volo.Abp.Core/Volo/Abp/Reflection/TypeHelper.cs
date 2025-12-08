@@ -86,7 +86,7 @@ public static class TypeHelper
         {
             return default;
         }
-        
+
         if (IsPrimitiveExtended(typeof(TProperty), includeEnums: true))
         {
             var conversionType = typeof(TProperty);
@@ -114,6 +114,12 @@ public static class TypeHelper
     public static bool IsNullable(Type type)
     {
         return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+    }
+
+    public static bool IsNullableOrNotValueType(Type type)
+    {
+        return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)) ||
+               !type.IsValueType;
     }
 
     public static bool IsNullableEnum(Type type)

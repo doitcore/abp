@@ -3,7 +3,7 @@
   "name": "volo.blogtestapp",
   "private": true,
   "dependencies": {
-    "@abp/aspnetcore.mvc.ui.theme.basic": "~9.3.6",
-    "@abp/blogging": "~9.3.6"
+    "@abp/aspnetcore.mvc.ui.theme.basic": "~9.3.7",
+    "@abp/blogging": "~9.3.7"
   }
 }

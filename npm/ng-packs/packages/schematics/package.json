@@ -1,6 +1,6 @@
 {
   "name": "@abp/ng.schematics",
-  "version": "9.3.6",
+  "version": "9.3.7",
   "author": "",
   "schematics": "./collection.json",
   "dependencies": {

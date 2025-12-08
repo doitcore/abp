@@ -28,7 +28,7 @@ public class ResourcePermissionPopulator_Tests : AuthorizationTestBase
         );
 
         testResourceObject.ResourcePermissions.ShouldNotBeNull();
-        testResourceObject.ResourcePermissions.Count.ShouldBe(7); // Does not include MyResourcePermission8 because current user has no TestEntityManagementPermission2
+        testResourceObject.ResourcePermissions.Count.ShouldBe(8);
         testResourceObject.ResourcePermissions["MyResourcePermission1"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission2"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission3"].ShouldBe(true);
@@ -36,6 +36,7 @@ public class ResourcePermissionPopulator_Tests : AuthorizationTestBase
         testResourceObject.ResourcePermissions["MyResourcePermission5"].ShouldBe(true);
         testResourceObject.ResourcePermissions["MyResourcePermission6"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission7"].ShouldBe(false);
+        testResourceObject.ResourcePermissions["MyResourcePermission8"].ShouldBe(false);
 
         testResourceObject = new TestEntityResource(TestEntityResource.ResourceKey6);
         testResourceObject.ResourcePermissions.IsNullOrEmpty().ShouldBeTrue();
@@ -46,7 +47,7 @@ public class ResourcePermissionPopulator_Tests : AuthorizationTestBase
         );
 
         testResourceObject.ResourcePermissions.ShouldNotBeNull();
-        testResourceObject.ResourcePermissions.Count.ShouldBe(7); // Does not include MyResourcePermission8 because current user has no TestEntityManagementPermission2
+        testResourceObject.ResourcePermissions.Count.ShouldBe(7);
         testResourceObject.ResourcePermissions["MyResourcePermission1"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission2"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission3"].ShouldBe(false);
@@ -54,5 +55,6 @@ public class ResourcePermissionPopulator_Tests : AuthorizationTestBase
         testResourceObject.ResourcePermissions["MyResourcePermission5"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission6"].ShouldBe(true);
         testResourceObject.ResourcePermissions["MyResourcePermission7"].ShouldBe(false);
+        testResourceObject.ResourcePermissions["MyResourcePermission8"].ShouldBe(false);
     }
 }

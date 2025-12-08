@@ -72,11 +72,6 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
             return false;
         }
 
-        if (!await PermissionChecker.IsGrantedAsync(claimsPrincipal, permission.ManagementPermissionName!))
-        {
-            return false;
-        }
-
         var isGranted = false;
         var context = new ResourcePermissionValueCheckContext(permission, claimsPrincipal, resourceName, resourceKey);
         foreach (var provider in PermissionValueProviderManager.ValueProviders)
@@ -124,8 +119,7 @@ public class ResourcePermissionChecker : IResourcePermissionChecker, ITransientD
         foreach (var name in names)
         {
             var permission = await PermissionDefinitionManager.GetResourcePermissionOrNullAsync(resourceName, name);
-            if (permission == null ||
-                !await PermissionChecker.IsGrantedAsync(claimsPrincipal, permission.ManagementPermissionName!))
+            if (permission == null)
             {
                 result.Result.Add(name, PermissionGrantResult.Prohibited);
                 continue;

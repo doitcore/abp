@@ -4,7 +4,7 @@
 
 This module integrates [Elsa Workflows](https://docs.elsaworkflows.io/) into ABP Framework applications and is designed to make it easy for developers to use Elsa's capabilities within their ABP-based projects. For creating, managing, and customizing workflows themselves, please refer to [the official Elsa documentation](https://docs.elsaworkflows.io/).
 
-## How to install
+## How to Install
 
 The Elsa module is not installed in [the startup templates](../solution-templates/layered-web-application) by default and must be installed manually. There are two ways of installing a module into your application and each one of these approaches is explained in the next sections.
 
@@ -37,9 +37,9 @@ After adding the package references, open the module class of the project (e.g.:
 
 > If you are using Blazor Web App, you need to add the `Volo.Elsa.Admin.Blazor.WebAssembly` package to the **{ProjectName}.Blazor.Client.csproj** project and add the `Volo.Elsa.Admin.Blazor.Server` package to the **{ProjectName}.Blazor.csproj** project.
 
-### AbpElsaAspNetCoreModule and AbpElsaIdentityModule
+### `AbpElsaAspNetCoreModule` and `AbpElsaIdentityModule`
 
-These two modules generally will be added to your authentication project. Please add `Volo.Elsa.Abp.AspNetCore` and `Volo.Elsa.Abp.Identity` packages to your project and add the `AbpElsaAspNetCoreModule and AbpElsaIdentityModule` to the `DependsOn` attribute of your module class based on your project structure.
+These two modules generally will be added to your authentication project. Please add `Volo.Elsa.Abp.AspNetCore` and `Volo.Elsa.Abp.Identity` packages to your project and add the `AbpElsaAspNetCoreModule` and `AbpElsaIdentityModule` to the `DependsOn` attribute of your module class based on your project structure:
 
 ```xml
 <PackageReference Include="Volo.Abp.Elsa.AspNetCore" Version="x.x.x" />
@@ -103,9 +103,9 @@ private void ConfigureElsa(ServiceConfigurationContext context, IConfiguration c
 }
 ```
 
-## Elsa database migration
+## Elsa Database Migration
 
-Elsa module uses its own database context and migration system, ABP Elsa module doesn't contain any `aggregate root/entity` at the moment. So, you don't need to create any initial migration for Elsa module.
+Elsa module uses its own database context and migration system, ABP Elsa module doesn't contain any `aggregate root/entity` at the moment. So, **you don't need to create any initial migration for Elsa module**. You just need to configure the Elsa Services as follows:
 
 ```cs
 .UseWorkflowManagement(management => management.UseEntityFrameworkCore(ef => ef.UseSqlServer(connectionString)))

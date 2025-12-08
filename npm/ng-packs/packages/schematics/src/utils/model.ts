@@ -153,6 +153,10 @@ export function createImportRefToInterfaceReducerCreator(params: ModelGeneratorP
         type = simplifyType(prop.type);
       }
 
+      if (prop.isNullable) {
+        type = `${type} | null`;
+      }
+
       const refs = parseType(prop.type).reduce(
         (acc: string[], r) => acc.concat(parseGenerics(r).toGenerics()),
         [],
@@ -186,11 +190,7 @@ export function createRefToImportReducerCreator(params: ModelGeneratorParams) {
 }
 
 function isOptionalProperty(prop: PropertyDef) {
-  return (
-    prop.isNullable ||
-    prop.typeSimple.endsWith('?') ||
-    ((prop.typeSimple === 'string' || prop.typeSimple.includes('enum')) && !prop.isRequired)
-  );
+  return !prop.isRequired && prop.isNullable;
 }
 
 export function parseBaseTypeWithGenericTypes(type: string): string[] {

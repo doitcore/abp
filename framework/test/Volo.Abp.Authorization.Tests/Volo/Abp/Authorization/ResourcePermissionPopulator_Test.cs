@@ -47,7 +47,7 @@ public class ResourcePermissionPopulator_Tests : AuthorizationTestBase
         );
 
         testResourceObject.ResourcePermissions.ShouldNotBeNull();
-        testResourceObject.ResourcePermissions.Count.ShouldBe(7);
+        testResourceObject.ResourcePermissions.Count.ShouldBe(8);
         testResourceObject.ResourcePermissions["MyResourcePermission1"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission2"].ShouldBe(false);
         testResourceObject.ResourcePermissions["MyResourcePermission3"].ShouldBe(false);

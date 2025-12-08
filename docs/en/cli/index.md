@@ -7,11 +7,7 @@
 
 # ABP CLI
 
-ABP CLI (Command Line Interface) is a command line tool to perform some common operations for ABP based solutions or ABP Studio features.
-
-> With **v8.2+**, the old/legacy ABP CLI has been replaced with a new CLI system to align with the new templating system and [ABP Studio](../studio/index.md). The new ABP CLI commands are explained in this documentation. However, if you want to learn more about the differences between the old and new CLIs, want to learn the reason for the change, or need guidance to use the old ABP CLI, please refer to the [Old vs New CLI](differences-between-old-and-new-cli.md) documentation.
->
-> You may need to remove the Old CLI before installing the New CLI, by running the following command: `dotnet tool uninstall -g Volo.Abp.Cli`
+ABP CLI (Command Line Interface) is a command line tool to perform some common operations for ABP based solutions or [ABP Studio](../studio/index.md) features.
 
 ## Installation
 
@@ -29,16 +25,16 @@ dotnet tool update -g Volo.Abp.Studio.Cli
 
 ## Global Options
 
-While each command may have a set of options, there are some global options that can be used with any command;
+While each command may have a set of options, there are some global options that can be used with any command:
 
-* `--skip-cli-version-check` or `-scvc`: Skips to check the latest version of the ABP CLI. If you don't specify, it will check the latest version and shows a warning message if there is a newer version of the ABP CLI.
-- `--skip-extension-version-check` or `-sevc`: Skips to check the latest version of the ABP CLI extensions. If you don't specify, it will check the latest version and download the latest version if there is a newer version of the ABP CLI extensions.
+* `--skip-cli-version-check` or `-scvc`: Skips checking the latest version of the ABP CLI. If you don't specify, it will check the latest version and shows a warning message if there is a newer version of the ABP CLI.
+- `--skip-extension-version-check` or `-sevc`: Skips checking the latest version of the ABP CLI extensions. If you don't specify, it will check the latest version and download the latest version if there is a newer version of the ABP CLI extensions.
 * `--old`: ABP CLI has two variations: `Volo.Abp.Studio.Cli` and `Volo.Abp.Cli`. New features/templates are added to the `Volo.Abp.Studio.Cli`. But if you want to use the old version, you can use this option **at the end of your commands**. For example, `abp new Acme.BookStore --old`.
 * `--help` or `-h`: Shows help for the specified command.
 
 ## Commands
 
-Here, is the list of all available commands before explaining their details:
+Here is the list of all available commands before explaining their details:
 
 * **[`help`](../cli#help)**: Shows help on the usage of the ABP CLI.
 * **[`cli`](../cli#cli)**: Update or remove ABP CLI.
@@ -295,30 +291,39 @@ abp new-package --name Acme.BookStore.Domain --template lib.domain
 * `--template` or `-t`: Specifies the template name. This parameter doesn't have a default value and must be set. Available templates and their sub-options:
 	* `lib.class-library`
 	* `lib.domain-shared`
+		* `--add-localization`: Includes default localization configuration & language files. 
 	* `lib.domain`
+		* `--add-settings`: Includes default settings configuration. 
+		* `--add-db-properties`:  Includes the default Database Properties class. 
+		* `--add-domain-shared`:  Includes an additional Domain Shared package. 
 	* `lib.application-contracts`
 	* `lib.application`
-		* `--with-automapper`:  Adds automapper configuration. 
+		* `--add-mapperly`:  Adds Mapperly configuration. 
+		* `--add-application-contracts`:  Includes an additional contracts package. 
 	* `lib.ef`
 		* `--include-migrations`: Allows migration operations on this package.
 		* `--connection-string-name`: Default value is the last part of the package's namespace (or package name simply).
-		* `--connection-string`: Connection string value. Defaut value is null. You can set it alter. **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
+		* `--connection-string`: Connection string value. The default value is null. You can set it later. **Note:** When specifying the connection string, make sure to enclose it in double quotes, for example: `--connection-string "Server=localhost;Database=MyProjectName;Trusted_Connection=True"`.
 	* `lib.mongodb`
 	* `lib.http-api`
 	* `lib.http-api-client`
 	* `lib.mvc`
+		* `--add-mapperly`:  Adds Mapperly configuration. 
 	* `lib.blazor`
+		* `--add-mapperly`:  Adds Mapperly configuration. 
+		* `--add-menu-contributors`: Includes default menu contributors.
 	* `lib.blazor-wasm`
 	* `lib.blazor-server`
 	* `host.http-api`
-		* `--with-serilog`: Includes Serilog configuration.
-		* `--with-swagger`: Includes Swagger configuration.
+		* `--add-serilog`: Includes Serilog configuration.
+		* `--add-swagger`: Includes Swagger configuration.
 	* `host.mvc`
-		* `--with-serilog`: Includes Serilog configuration.
-		* `--with-swagger`: Includes Swagger configuration.
+		* `--add-serilog`: Includes Serilog configuration.
+		* `--add-swagger`: Includes Swagger configuration.
 	* `host.blazor-wasm`
 		* `--backend`: Name of the backend project in the module (not path).
 	* `host.blazor-server`
+	* `abp.console`
 	* `csharp.console`
 	* `csharp.library`
 * `--module-file` or `-m`: If set, the new package will be added to the given module. Otherwise the new package will added to the closest module in the file system. If no module found, it will throw an error.

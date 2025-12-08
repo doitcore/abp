@@ -21,9 +21,12 @@ import {
   Router,
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { inject, Injectable } from '@angular/core';
 
 @Injectable()
 class SomeService {
+  private router = inject(Router);
+
   navigationFinish$ = this.router.events.pipe(
     filter(
       event =>
@@ -33,8 +36,6 @@ class SomeService {
     ),
   );
   /* Observable<Event> */
-
-  constructor(private router: Router) {}
 }
 ```
 
@@ -45,10 +46,10 @@ import { RouterEvents } from '@abp/ng.core';
 
 @Injectable()
 class SomeService {
+  private routerEvents = inject(RouterEvents);
+
   navigationFinish$ = this.routerEvents.getNavigationEvents('End', 'Error', 'Cancel');
   /* Observable<NavigationCancel | NavigationEnd | NavigationError> */
-
-  constructor(private routerEvents: RouterEvents) {}
 }
 ```
 
@@ -69,6 +70,8 @@ import { mapTo } from 'rxjs/operators';
 
 @Injectable()
 class SomeService {
+  private routerEvents = inject(RouterEvents);
+
   navigationStart$ = this.routerEvents.getNavigationEvents('Start');
   /* Observable<NavigationStart> */
 
@@ -80,8 +83,6 @@ class SomeService {
     this.navigationFinish$.pipe(mapTo(false)),
   );
   /* Observable<boolean> */
-
-  constructor(private routerEvents: RouterEvents) {}
 }
 ```
 
@@ -95,6 +96,8 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 class SomeService {
+  private routerEvents = inject(RouterEvents);
+
   navigationEvent$ = this.routerEvents.getAllNavigationEvents();
   /* Observable<NavigationCancel | NavigationEnd | NavigationError | NavigationStart> */
 
@@ -102,8 +105,6 @@ class SomeService {
     map(event => event instanceof NavigationStart),
   );
   /* Observable<boolean> */
-
-  constructor(private routerEvents: RouterEvents) {}
 }
 ```
 
@@ -134,7 +135,7 @@ class SomeService {
 
 ### How to Get Specific Router Events
 
-You can use `getEvents` to get a stream of router events matching given event constructors.
+You can use `getEvents` to get a stream of router events matching given event classes.
 
 ```js
 import { RouterEvents } from '@abp/ng.core';
@@ -142,16 +143,16 @@ import { ActivationEnd, ChildActivationEnd } from '@angular/router';
 
 @Injectable()
 class SomeService {
+  private routerEvents = inject(RouterEvents);
+
   moduleActivation$ = this.routerEvents.getEvents(ActivationEnd, ChildActivationEnd);
   /* Observable<ActivationEnd | ChildActivationEnd> */
-
-  constructor(private routerEvents: RouterEvents) {}
 }
 ```
 
 ### How to Get All Router Events
 
-You can use `getEvents` to get a stream of all router events without passing any event constructors. This is nothing different from accessing `events` property of `Router` and is added to the service just for convenience.
+You can use `getEvents` to get a stream of all router events without passing any event classes. This is nothing different from accessing `events` property of `Router` and is added to the service just for convenience.
 
 ```js
 import { RouterEvents } from '@abp/ng.core';
@@ -159,9 +160,9 @@ import { ActivationEnd, ChildActivationEnd } from '@angular/router';
 
 @Injectable()
 class SomeService {
+  private routerEvents = inject(RouterEvents);
+
   routerEvent$ = this.routerEvents.getAllEvents();
   /* Observable<Event> */
-
-  constructor(private routerEvents: RouterEvents) {}
 }
 ```

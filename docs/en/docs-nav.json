@@ -553,6 +553,24 @@
               "path": "framework/infrastructure/audit-logging.md"
             },
             {
+              "text": "Artificial Intelligence",
+              "items":[
+                {
+                  "text": "Overview",
+                  "path": "framework/infrastructure/artificial-intelligence/index.md",
+                  "isIndex": true
+                },
+                {
+                  "text": "Microsoft.Extensions.AI",
+                  "path": "framework/infrastructure/artificial-intelligence/microsoft-extensions-ai.md"
+                },                
+                {
+                  "text": "Semantic Kernel",
+                  "path": "framework/infrastructure/artificial-intelligence/microsoft-semantic-kernel.md"
+                }
+              ]
+            },
+            {
               "text": "Background Jobs",
               "items": [
                 {
@@ -603,6 +621,10 @@
                 {
                   "text": "Storage Providers",
                   "items": [
+                    {
+                      "text": "Memory Provider",
+                      "path": "framework/infrastructure/blob-storing/memory.md"
+                    },
                     {
                       "text": "File System Provider",
                       "path": "framework/infrastructure/blob-storing/file-system.md"
@@ -2332,6 +2354,10 @@
           ]
         },
         {
+          "text": "AI Management (Pro)",
+          "path": "modules/ai-management/index.md"
+        },
+        {
           "text": "Audit Logging",
           "path": "modules/audit-logging.md"
         },
@@ -2438,6 +2464,10 @@
         {
           "text": "Docs",
           "path": "modules/docs.md"
+        },
+        {
+          "text": "Elsa (Pro)",
+          "path": "modules/elsa-pro.md"
         },
         {
           "text": "Feature Management",
@@ -2655,6 +2685,10 @@
         {
           "text": "Easy CRM",
           "path": "samples/easy-crm.md"
+        },
+        {
+          "text": "Elsa Workflows Demo",
+          "path": "samples/elsa-workflows-demo.md"
         }
       ]
     },

@@ -18,12 +18,13 @@ You do not have to provide the `LazyLoadService` at module or component level, b
 
 ```js
 import { LazyLoadService } from '@abp/ng.core';
+import { inject } from '@angular/core';
 
 @Component({
   /* class metadata here */
 })
 class DemoComponent {
-  constructor(private lazyLoadService: LazyLoadService) {}
+  private lazyLoadService = inject(LazyLoadService);
 }
 ```
 
@@ -42,6 +43,7 @@ The first parameter of `load` method expects a `LoadingStrategy`. If you pass a 
 
 ```js
 import { LazyLoadService, LOADING_STRATEGY } from '@abp/ng.core';
+import { inject } from '@angular/core';
 
 @Component({
   template: `
@@ -49,11 +51,11 @@ import { LazyLoadService, LOADING_STRATEGY } from '@abp/ng.core';
   `
 })
 class DemoComponent {
+  private lazyLoadService = inject(LazyLoadService);
+
   libraryLoaded$ = this.lazyLoadService.load(
     LOADING_STRATEGY.AppendAnonymousScriptToHead('/assets/some-library.js'),
   );
-
-  constructor(private lazyLoadService: LazyLoadService) {}
 }
 ```
 
@@ -71,6 +73,7 @@ If you pass a `StyleLoadingStrategy` instance as the first parameter of `load` m
 
 ```js
 import { LazyLoadService, LOADING_STRATEGY } from '@abp/ng.core';
+import { inject } from '@angular/core';
 
 @Component({
   template: `
@@ -78,11 +81,11 @@ import { LazyLoadService, LOADING_STRATEGY } from '@abp/ng.core';
   `
 })
 class DemoComponent {
+  private lazyLoadService = inject(LazyLoadService);
+
   stylesLoaded$ = this.lazyLoadService.load(
     LOADING_STRATEGY.AppendAnonymousStyleToHead('/assets/some-styles.css'),
   );
-
-  constructor(private lazyLoadService: LazyLoadService) {}
 }
 ```
 
@@ -121,7 +124,8 @@ A common usecase is **loading multiple scripts and/or styles before using a feat
 
 ```js
 import { LazyLoadService, LOADING_STRATEGY } from '@abp/ng.core';
-import { frokJoin } from 'rxjs';
+import { forkJoin } from 'rxjs';
+import { inject } from '@angular/core';
 
 @Component({
   template: `
@@ -129,6 +133,8 @@ import { frokJoin } from 'rxjs';
   `
 })
 class DemoComponent {
+  private lazyLoad = inject(LazyLoadService);
+
   private stylesLoaded$ = forkJoin(
     this.lazyLoad.load(
       LOADING_STRATEGY.PrependAnonymousStyleToHead('/assets/library-dark-theme.css'),
@@ -148,8 +154,6 @@ class DemoComponent {
   );
 
   scriptsAndStylesLoaded$ = forkJoin(this.scriptsLoaded$, this.stylesLoaded$);
-
-  constructor(private lazyLoadService: LazyLoadService) {}
 }
 ```
 
@@ -163,6 +167,7 @@ Another frequent usecase is **loading dependent scripts in order**:
 ```js
 import { LazyLoadService, LOADING_STRATEGY } from '@abp/ng.core';
 import { concat } from 'rxjs';
+import { inject } from '@angular/core';
 
 @Component({
   template: `
@@ -170,6 +175,8 @@ import { concat } from 'rxjs';
   `
 })
 class DemoComponent {
+  private lazyLoad = inject(LazyLoadService);
+
   scriptsLoaded$ = concat(
     this.lazyLoad.load(
       LOADING_STRATEGY.PrependAnonymousScriptToHead('/assets/library.js'),
@@ -178,8 +185,6 @@ class DemoComponent {
       LOADING_STRATEGY.AppendAnonymousScriptToHead('/assets/script-that-requires-library.js'),
     ),
   );
-
-  constructor(private lazyLoadService: LazyLoadService) {}
 }
 ```
 

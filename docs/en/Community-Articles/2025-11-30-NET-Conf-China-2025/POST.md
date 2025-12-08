@@ -10,7 +10,11 @@ This year’s conference focused on three main themes: performance improvements,
 
 ### Opening Keynote
 
-Scott Hanselman opened the event with a video keynote. In his remarks, he shared some high-level thoughts on the development of .NET and conveyed an encouraging and positive message to the community. He also touched on the ongoing exploration of emerging technology trends, including AI, encouraging developers to stay open-minded and focus on long-term value and practical innovation. At the same time, he extended his best wishes for the success of the conference, hoping that all participants would gain inspiration from the exchanges and collectively contribute to the advancement of future technologies.
+Scott Hanselman kicked off .NET Conf China 2025 with a video keynote, announcing that .NET 10 is now available on the official website. He framed the release around four pillars—AI, cloud-native, cross-platform, and performance—including integration with the Microsoft Agent Framework for building and orchestrating multi-agent systems in .NET/C#, industry-leading container and Kubernetes support with .NET Aspire simplifying local containerized development, a richer cross-platform desktop ecosystem (.NET MAUI, Avalonia, Uno Platform), and major performance gains such as Native AOT and single-file publishing for faster startup and easier distribution across platforms.
+
+He underscored China’s importance as .NET’s second-largest market, with roughly 13% of users, and noted that generative AI usage in China has doubled in 2025. The local community is seeing strong momentum around ML.NET, .NET Aspire, and the C# Dev Kit in VS Code. Reflecting on his Baby Smash game written 20 years ago, which now runs cross-platform on .NET 10, he called on developers to modernize: move existing Web, WinForms, and WPF apps to the cloud, improve performance, ship as a single executable, and weave in AI capabilities.
+
+On AI, he emphasized a human-centered stance: AI and agents should augment, not replace, developers. In the future, developers will orchestrate and govern agents, and human judgment will matter more than ever. He closed by thanking the open-source community for its many proposals and pull requests, stressing that .NET is an open-source platform built together by Microsoft and the community, and wishing everyone an inspiring conference and a joyful journey with .NET 10.
 
 ![2](./images/2.png)
 

@@ -26,14 +26,10 @@ public class AbpDbContextOptions
     internal Dictionary<Type, List<object>> ConventionActions { get; }
 
     internal Action<DbContext, ModelBuilder>? DefaultOnModelCreatingAction { get; set; }
-    
-    internal Action<DbContext, DbContextOptionsBuilder>? DefaultOnConfiguringAction { get; set; }
-
-    internal Action<DbContext, DbContextOptionsBuilder>? DefaultOnConfiguringAction { get; set; }
 
     internal Dictionary<Type, List<object>> OnModelCreatingActions { get; }
-    
-    internal Dictionary<Type, List<object>> OnConfiguringActions { get; }
+
+    internal Action<DbContext, DbContextOptionsBuilder>? DefaultOnConfiguringAction { get; set; }
 
     internal Dictionary<Type, List<object>> OnConfiguringActions { get; }
 
@@ -108,27 +104,6 @@ public class AbpDbContextOptions
         }
     }
 
-    public void ConfigureDefaultOnConfiguring([NotNull] Action<DbContext, DbContextOptionsBuilder> action, bool overrideExisting = false)
-    {
-        Check.NotNull(action, nameof(action));
-
-        if (overrideExisting)
-        {
-            DefaultOnConfiguringAction = action;
-        }
-        else
-        {
-            DefaultOnConfiguringAction += action;
-        }
-    }
-    
-    public void ConfigureDefaultOnConfiguring([NotNull] Action<DbContext, DbContextOptionsBuilder> action)
-    {
-        Check.NotNull(action, nameof(action));
-
-        DefaultOnConfiguringAction = action;
-    }
-
     public void ConfigureOnModelCreating<TDbContext>([NotNull] Action<TDbContext, ModelBuilder> action)
         where TDbContext : AbpDbContext<TDbContext>
     {
@@ -146,23 +121,19 @@ public class AbpDbContextOptions
 
         actions.Add(action);
     }
-    
-    public void ConfigureOnConfiguring<TDbContext>([NotNull] Action<TDbContext, DbContextOptionsBuilder> action)
-        where TDbContext : AbpDbContext<TDbContext>
+
+    public void ConfigureDefaultOnConfiguring([NotNull] Action<DbContext, DbContextOptionsBuilder> action, bool overrideExisting = false)
     {
         Check.NotNull(action, nameof(action));
 
-        var actions = OnConfiguringActions.GetOrDefault(typeof(TDbContext));
-        if (actions == null)
+        if (overrideExisting)
         {
-            OnConfiguringActions[typeof(TDbContext)] = new List<object>
-            {
-                new Action<DbContext, DbContextOptionsBuilder>((dbContext, builder) => action((TDbContext)dbContext, builder))
-            };
-            return;
+            DefaultOnConfiguringAction = action;
         }
-
-        actions.Add(action);
+        else
+        {
+            DefaultOnConfiguringAction += action;
+        }
     }
 
     public void ConfigureOnConfiguring<TDbContext>([NotNull] Action<TDbContext, DbContextOptionsBuilder> action)

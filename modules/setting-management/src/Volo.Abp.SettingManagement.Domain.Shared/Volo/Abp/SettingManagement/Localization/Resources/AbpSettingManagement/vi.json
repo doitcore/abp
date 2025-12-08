@@ -17,6 +17,7 @@
     "SentSuccessfully": "Gửi thành công",
     "MailSendingFailed": "Gửi email thất bại. Vui lòng kiểm tra cấu hình email của bạn và thử lại.",
     "Send": "Gửi",
+    "Menu:Settings": "Cài đặt",
     "Menu:Emailing": "Gửi email",
     "Menu:TimeZone": "Múi Giờ",
     "DisplayName:Timezone": "Múi giờ",

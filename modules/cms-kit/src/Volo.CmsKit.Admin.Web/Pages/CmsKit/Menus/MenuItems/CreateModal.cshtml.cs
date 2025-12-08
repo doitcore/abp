@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Features;
@@ -48,7 +47,6 @@ public class CreateModalModel : CmsKitAdminPageModel
         return new OkObjectResult(dto);
     }
 
-    [AutoMap(typeof(MenuItemCreateInput), ReverseMap = true)]
     public class MenuItemCreateViewModel : ExtensibleObject
     {
         [HiddenInput]

@@ -1,4 +1,11 @@
-# Artificial Intelligence
+```json
+//[doc-seo]
+{
+    "Description": "Explore ABP Framework's AI integration, enabling seamless AI capabilities, workspace management, and reusable modules for .NET developers."
+}
+```
+
+# Artificial Intelligence (AI)
 ABP Framework provides integration for AI capabilities to your application by using Microsoft's popular AI libraries. The main purpose of this integration is to provide a consistent and easy way to use AI capabilities and manage different AI providers, models and configurations in a single application.
 
 ABP introduces a concept called **AI Workspace**. A workspace allows you to configure isolated AI configurations for a named scope. You can then resolve AI services for a specific workspace when you need to use them.

@@ -52,7 +52,7 @@ public class TenantResolver : ITenantResolver, ITransientDependency
         {
             result.TenantIdOrName = Options.FallbackTenant;
             result.AppliedResolvers.Add(TenantResolverNames.FallbackTenant);
-            Logger.LogDebug($"No tenant resolved. Using fallback tenant as '{result.TenantIdOrName}'.");
+            Logger.LogDebug("No tenant resolved. Using fallback tenant as '{FallbackTenant}'.", result.TenantIdOrName);
         }
         else if (result.TenantIdOrName.IsNullOrEmpty())
         {

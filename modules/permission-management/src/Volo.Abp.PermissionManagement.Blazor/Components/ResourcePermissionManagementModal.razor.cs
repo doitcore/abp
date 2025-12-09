@@ -78,9 +78,9 @@ public partial class ResourcePermissionManagementModal
         }
     }
 
-    protected Task CloseModal()
+    protected virtual async Task CloseModal()
     {
-        return InvokeAsync(Modal.Hide);
+        await Modal.Hide();
     }
 
     protected virtual Task ClosingModal(ModalClosingEventArgs eventArgs)

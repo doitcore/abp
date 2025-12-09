@@ -9,7 +9,8 @@ namespace Volo.Abp.ObjectExtending;
 
 public static class MvcUiObjectExtensionPropertyInfoExtensions
 {
-    private static readonly FrozenSet<Type> NumberTypes = new HashSet<Type> {
+    private static readonly FrozenSet<Type> NumberTypes = new HashSet<Type>
+        {
             typeof(int),
             typeof(long),
             typeof(byte),

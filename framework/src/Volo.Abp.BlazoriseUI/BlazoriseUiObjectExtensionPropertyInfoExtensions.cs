@@ -12,7 +12,8 @@ namespace Volo.Abp.BlazoriseUI;
 
 public static class BlazoriseUiObjectExtensionPropertyInfoExtensions
 {
-    private static readonly FrozenSet<Type> NumberTypes = new HashSet<Type> {
+    private static readonly FrozenSet<Type> NumberTypes = new HashSet<Type>
+        {
             typeof(int),
             typeof(long),
             typeof(byte),
@@ -39,7 +40,8 @@ public static class BlazoriseUiObjectExtensionPropertyInfoExtensions
             typeof(decimal?)
         }.ToFrozenSet();
 
-    private static readonly FrozenSet<Type> TextEditSupportedAttributeTypes = new HashSet<Type> {
+    private static readonly FrozenSet<Type> TextEditSupportedAttributeTypes = new HashSet<Type>
+        {
             typeof(EmailAddressAttribute),
             typeof(UrlAttribute),
             typeof(PhoneAttribute)

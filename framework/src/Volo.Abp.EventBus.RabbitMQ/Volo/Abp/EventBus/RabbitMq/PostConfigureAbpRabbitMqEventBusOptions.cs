@@ -6,23 +6,23 @@ namespace Volo.Abp.EventBus.RabbitMq;
 
 public class PostConfigureAbpRabbitMqEventBusOptions : IPostConfigureOptions<AbpRabbitMqEventBusOptions>
 {
-    private readonly FrozenSet<string> _uint64QueueArguments = new HashSet<string>()
-    {
-        "x-delivery-limit",
-        "x-expires",
-        "x-message-ttl",
-        "x-max-length",
-        "x-max-length-bytes",
-        "x-quorum-initial-group-size",
-        "x-quorum-target-group-size",
-        "x-stream-filter-size-bytes",
-        "x-stream-max-segment-size-bytes",
-    }.ToFrozenSet();
+    private readonly FrozenSet<string> _uint64QueueArguments = new HashSet<string>
+        {
+            "x-delivery-limit",
+            "x-expires",
+            "x-message-ttl",
+            "x-max-length",
+            "x-max-length-bytes",
+            "x-quorum-initial-group-size",
+            "x-quorum-target-group-size",
+            "x-stream-filter-size-bytes",
+            "x-stream-max-segment-size-bytes",
+        }.ToFrozenSet();
 
-    private readonly FrozenSet<string> _boolQueueArguments = new HashSet<string>()
-    {
-        "x-single-active-consumer"
-    }.ToFrozenSet();
+    private readonly FrozenSet<string> _boolQueueArguments = new HashSet<string>
+        {
+            "x-single-active-consumer"
+        }.ToFrozenSet();
 
     public virtual void PostConfigure(string? name, AbpRabbitMqEventBusOptions options)
     {

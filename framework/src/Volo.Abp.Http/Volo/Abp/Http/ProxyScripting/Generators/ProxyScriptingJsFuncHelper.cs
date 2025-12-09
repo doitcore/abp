@@ -11,7 +11,8 @@ internal static class ProxyScriptingJsFuncHelper
 {
     private const string ValidJsVariableNameChars = "abcdefghijklmnopqrstuxwvyzABCDEFGHIJKLMNOPQRSTUXWVYZ0123456789_";
 
-    private static readonly FrozenSet<string> ReservedWords = new HashSet<string> {
+    private static readonly FrozenSet<string> ReservedWords = new HashSet<string>
+        {
             "abstract",
             "else",
             "instanceof",

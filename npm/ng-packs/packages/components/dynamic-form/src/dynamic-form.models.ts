@@ -1,7 +1,7 @@
 import { Type } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
-export interface FormFieldConfig {
+export interface FormFieldConfig<T = any> {
   key: string;
   value?: any;
   type: 'text' | 'email' | 'number' | 'select' | 'checkbox' | 'date' | 'textarea';
@@ -9,7 +9,7 @@ export interface FormFieldConfig {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
-  options?: { key: string; value: any }[];
+  options?: OptionProps<T>;
   validators?: ValidatorConfig[];
   conditionalLogic?: ConditionalRule[];
   order?: number;
@@ -35,4 +35,13 @@ export enum ConditionalAction {
   HIDE = 'hide',
   ENABLE = 'enable',
   DISABLE = 'disable'
+}
+
+export interface OptionProps<T = any> {
+  defaultValues?: T[];
+  url?: string;
+  disabled?: (option: T) => boolean;
+  labelProp?: string;
+  valueProp?: string;
+  apiName?: string;
 }

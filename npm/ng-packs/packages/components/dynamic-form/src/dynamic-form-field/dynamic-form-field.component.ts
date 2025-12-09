@@ -22,9 +22,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { LocalizationPipe } from '@abp/ng.core';
 import { FormCheckboxComponent } from '@abp/ng.theme.shared';
+import { Observable, of } from 'rxjs';
+import { DynamicFormService } from '../dynamic-form.service';
 
 export const ABP_DYNAMIC_FORM_FIELD = new InjectionToken<DynamicFormFieldComponent>('AbpDynamicFormField');
 
@@ -45,7 +47,7 @@ const DYNAMIC_FORM_FIELD_CONTROL_VALUE_ACCESSOR = {
   host: { class: 'abp-dynamic-form-field' },
   exportAs: 'abpDynamicFormField',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgTemplateOutlet, LocalizationPipe, ReactiveFormsModule, FormCheckboxComponent],
+  imports: [NgTemplateOutlet, LocalizationPipe, ReactiveFormsModule, FormCheckboxComponent, AsyncPipe],
 })
 export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   field = input.required<FormFieldConfig>();
@@ -56,6 +58,9 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   readonly destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
   private formBuilder = inject(FormBuilder);
+  private dynamicFormService = inject(DynamicFormService);
+
+  options$: Observable<{ key: string; value: any }[]> = of([]);
 
   constructor() {
     this.fieldFormGroup = this.formBuilder.group({
@@ -71,6 +76,23 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
     this.value.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
       this.onChange(value);
     });
+
+    const options = this.field().options;
+
+    if (options?.url) {
+      this.options$ = this.dynamicFormService.getOptions(options.url, options.apiName);
+    } else if (options?.defaultValues?.length) {
+      this.options$ = of(
+        options.defaultValues.map(item => {
+          return {
+            key: item[options.valueProp || 'key'] || item,
+            value: item[options.labelProp || 'value'] || item
+          };
+        })
+      );
+    } else {
+      this.options$ = of([]);
+    }
   }
 
   writeValue(value: any[]): void {
@@ -127,6 +149,6 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   get value() {
     return this.fieldFormGroup.get('value');
   }
-  private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: any) => void = () => { };
+  private onTouched: () => void = () => { };
 }

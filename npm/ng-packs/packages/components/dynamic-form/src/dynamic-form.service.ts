@@ -1,6 +1,8 @@
 import {Injectable, inject} from '@angular/core';
 import {FormControl, FormGroup, ValidatorFn, Validators, FormBuilder} from '@angular/forms';
 import {FormFieldConfig, ValidatorConfig} from './dynamic-form.models';
+import { RestService } from '@abp/ng.core';
+import type { ProfileDto } from '@abp/ng.account.core/proxy';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,8 @@ import {FormFieldConfig, ValidatorConfig} from './dynamic-form.models';
 export class DynamicFormService {
 
   private formBuilder = inject(FormBuilder);
+  private restService = inject(RestService);
+  apiName = 'DynamicFormService';
 
   createFormGroup(fields: FormFieldConfig[]): FormGroup {
     const group: any = {};
@@ -32,6 +36,14 @@ export class DynamicFormService {
       initialValues[field.key] = this.getInitialValue(field);
     });
     return initialValues;
+  }
+
+  getOptions(url: string, apiName?: string): any {
+    return this.restService.request<any, any[]>({
+        method: 'GET',
+        url,
+      },
+      { apiName: apiName || this.apiName });
   }
 
   private buildValidators(validatorConfigs: ValidatorConfig[]): ValidatorFn[] {

@@ -16,7 +16,7 @@
     <ng-container [ngTemplateOutlet]="labelTemplate" />
     <select [id]="field().key" formControlName="value" [class.is-invalid]="isInvalid" class="form-control">
       <option value="">{{ '::Select' | abpLocalization }}</option>
-      @for (option of field().options; track option.key) {
+      @for (option of options$ | async; track option.key) {
       <option [value]="option.key">
         {{ option.value | abpLocalization }}
       </option>

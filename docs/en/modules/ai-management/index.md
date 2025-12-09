@@ -574,7 +574,7 @@ After implementing and registering your factory:
 2. **Through Code** (data seeding):
 
 ```csharp
- await _applicationWorkspaceManager.CreateAsync(
+var workspace = await _applicationWorkspaceManager.CreateAsync(
     name: "MyOllamaWorkspace",
     provider: "Ollama", 
     modelName: "mistral"

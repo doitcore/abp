@@ -42,7 +42,7 @@ public class TenantResolver : ITenantResolver, ITransientDependency
                 if (context.HasResolvedTenantOrHost())
                 {
                     result.TenantIdOrName = context.TenantIdOrName;
-                    Logger.LogDebug($"Tenant resolved by '{tenantResolver.Name}' as '{result.TenantIdOrName ?? "Host"}'.");
+                    Logger.LogDebug("Tenant resolved by '{TenantResolverName}' as '{TenantIdOrName}'.", tenantResolver.Name, result.TenantIdOrName ?? "Host");
                     break;
                 }
             }

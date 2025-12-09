@@ -92,6 +92,18 @@ public class TelemetryService : ITelemetryService, IScopedDependency
                 // ignored
             }
         };
+        
+        Console.CancelKeyPress += (_, _) =>
+        {
+            try
+            {
+                telemetryTask.Wait(TimeSpan.FromSeconds(10));
+            }
+            catch
+            {
+                // ignored
+            }
+        };
 
         return Task.CompletedTask;
     }

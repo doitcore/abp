@@ -14,6 +14,11 @@ namespace Volo.Abp.PermissionManagement.EntityFrameworkCore;
     typeof(AbpPermissionManagementTestBaseModule))]
 public class AbpPermissionManagementEntityFrameworkCoreTestModule : AbpModule
 {
+    public override void PreConfigureServices(ServiceConfigurationContext context)
+    {
+        PreConfigure<AbpSqliteOptions>(x => x.BusyTimeout = null);
+    }
+
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddEntityFrameworkInMemoryDatabase();

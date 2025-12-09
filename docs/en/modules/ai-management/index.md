@@ -130,7 +130,7 @@ PreConfigure<AbpAIWorkspaceOptions>(options =>
 
 #### Dynamic Workspaces
 
-* **Created through the UI** or programmatically via `IWorkspaceRepository`
+* **Created through the UI** or programmatically via `ApplicationWorkspaceManager` and `IWorkspaceRepository`
 * **Fully manageable** - can be created, updated, activated/deactivated, and deleted
 * **Stored in database** with all configuration
 * **Ideal for** user-customizable AI features
@@ -138,15 +138,30 @@ PreConfigure<AbpAIWorkspaceOptions>(options =>
 Example (data seeding):
 
 ```csharp
-var workspace = new Workspace(
-    name: "CustomerSupportWorkspace",
-    provider: "OpenAI",
-    modelName: "gpt-4",
-    apiKey: "your-api-key"
-);
-workspace.ApplicationName = ApplicationInfoAccessor.ApplicationName;
-workspace.SystemPrompt = "You are a helpful customer support assistant.";
-await _workspaceRepository.InsertAsync(workspace);
+public class WorkspaceDataSeederContributor : IDataSeedContributor, ITransientDependency
+{
+    private readonly IWorkspaceRepository _workspaceRepository;
+    private readonly ApplicationWorkspaceManager _applicationWorkspaceManager;
+    public WorkspaceDataSeederContributor(
+        IWorkspaceRepository workspaceRepository,
+        ApplicationWorkspaceManager applicationWorkspaceManager)
+    {
+        _workspaceRepository = workspaceRepository;
+        _applicationWorkspaceManager = applicationWorkspaceManager;
+    }
+
+    public async Task SeedAsync(DataSeedContext context)
+    {
+        var workspace = await _applicationWorkspaceManager.CreateAsync(
+            name: "CustomerSupportWorkspace",
+            provider: "OpenAI",
+            modelName: "gpt-4");
+
+        workspace.ApiKey = "your-api-key";
+        workspace.SystemPrompt = "You are a helpful customer support assistant.";
+        
+        await _workspaceRepository.InsertAsync(workspace);
+    }
 ```
 
 ### Workspace Naming Rules
@@ -172,12 +187,13 @@ The AI Management module defines the following permissions:
 In addition to module-level permissions, you can restrict access to individual workspaces by setting the `RequiredPermissionName` property:
 
 ```csharp
-var workspace = new Workspace(
+var workspace = await _applicationWorkspaceManager.CreateAsync(
     name: "PremiumWorkspace",
     provider: "OpenAI",
-    modelName: "gpt-4",
-    requiredPermissionName: "MyApp.PremiumFeatures"
+    modelName: "gpt-4"
 );
+// Set a specific permission for the workspace
+workspace.RequiredPermissionName = MyAppPermissions.AccessPremiumWorkspaces;
 ```
 
 When a workspace has a required permission:
@@ -558,14 +574,14 @@ After implementing and registering your factory:
 2. **Through Code** (data seeding):
 
 ```csharp
-await _workspaceRepository.InsertAsync(new Workspace(
-    GuidGenerator.Create(),
-    "MyOllamaWorkspace",
-    provider: "Ollama",
-    modelName: "mistral",
-    apiBaseUrl: "http://localhost:11434",
-    description: "Local Ollama workspace"
-));
+var workspace = await _applicationWorkspaceManager.CreateAsync(
+    name: "MyOllamaWorkspace",
+    provider: "Ollama", 
+    modelName: "mistral"
+);
+workspace.ApiBaseUrl = "http://localhost:11434";
+workspace.Description = "Local Ollama workspace";
+await _workspaceRepository.InsertAsync(workspace);
 ```
 
 > **Tip**: The provider name you use in `AddFactory<TFactory>("ProviderName")` must match the provider name stored in the workspace configuration in the database.

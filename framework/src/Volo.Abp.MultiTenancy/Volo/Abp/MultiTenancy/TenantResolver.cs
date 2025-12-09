@@ -34,7 +34,7 @@ public class TenantResolver : ITenantResolver, ITransientDependency
 
             foreach (var tenantResolver in Options.TenantResolvers)
             {
-                Logger.LogDebug($"Trying to resolve tenant through '{tenantResolver.Name}'...");
+                Logger.LogDebug("Trying to resolve tenant through '{TenantResolverName}'...", tenantResolver.Name);
                 await tenantResolver.ResolveAsync(context);
 
                 result.AppliedResolvers.Add(tenantResolver.Name);

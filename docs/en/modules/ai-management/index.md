@@ -10,8 +10,7 @@
 > You must have an ABP Team or a higher license to use this module.
 
 > **⚠️ Important Notice**
-> The **AI Management Module** is currently in **preview** and not yet production-ready. The documentation and implementation are subject to change.
-> We recommend using this module for **evaluation and experimentation** only, not in production environments for now.
+> The **AI Management Module** is currently in **preview**. The documentation and implementation are subject to change.
 
 This module implements AI (Artificial Intelligence) management capabilities on top of the [Artificial Intelligence Workspaces](../../framework/infrastructure/artificial-intelligence/index.md) feature of the ABP Framework and allows to manage workspaces dynamically from the application including UI components and API endpoints.
 
@@ -453,6 +452,37 @@ Your application acts as a proxy, forwarding these requests to the AI Management
 | **3. Client Remote** | No | Remote Service | Remote Service | No | Microservices consuming AI centrally |
 | **4. Client Proxy** | No | Remote Service | Remote Service | Yes | API Gateway pattern, proxy services |
 
+
+## Using Dynamic Workspace Configurations for custom requirements
+The AI Management module allows you to access only configuration of a workspace without resolving pre-constructed chat client. This is useful when you want to use a workspace for your own purposes and you don't need to use the chat client.
+The `IWorkspaceConfigurationStore` service is used to access the configuration of a workspace. It has multiple implementaations according to the usage scenario.
+
+```csharp
+public class MyService
+{
+    private readonly IWorkspaceConfigurationStore _workspaceConfigurationStore;
+    public MyService(IWorkspaceConfigurationStore workspaceConfigurationStore)
+    {
+        _workspaceConfigurationStore = workspaceConfigurationStore;
+    }
+
+    public async Task DoSomethingAsync()
+    {
+        // Get the configuration of the workspace that can be managed dynamically.
+        var configuration = await _workspaceConfigurationStore.GetAsync("MyWorkspace");
+        
+        // Do something with the configuration
+        var kernel =  Kernel.CreateBuilder()
+            .AddAzureOpenAIChatClient(
+                config.ModelName!,
+                new Uri(config.ApiBaseUrl),
+                config.ApiKey
+            )
+            .Build();
+    }
+}
+```
+
 ## Implementing Custom AI Provider Factories
 
 While the AI Management module provides built-in support for OpenAI through the `Volo.AIManagement.OpenAI` package, you can easily add support for other AI providers by implementing a custom `IChatClientFactory`.
@@ -612,7 +642,7 @@ The following custom repositories are defined:
 #### Domain Services
 
 - `ApplicationWorkspaceManager`: Manages workspace operations and validations.
-- `WorkspaceConfigurationStore`: Retrieves workspace configuration with caching.
+- `WorkspaceConfigurationStore`: Retrieves workspace configuration with caching. Implements `IWorkspaceConfigurationStore` interface.
 - `ChatClientResolver`: Resolves the appropriate `IChatClient` implementation for a workspace.
 
 #### Integration Services
@@ -640,6 +670,9 @@ Workspace configurations are cached for performance. The cache key format:
 ```
 WorkspaceConfiguration:{ApplicationName}:{WorkspaceName}
 ```
+
+### HttpApi Client Layer
+- `IntegrationWorkspaceConfigurationStore`: Integration service for remote workspace configuration retrieval. Implements `IWorkspaceConfigurationStore` interface.
 
 The cache is automatically invalidated when workspaces are created, updated, or deleted.
 

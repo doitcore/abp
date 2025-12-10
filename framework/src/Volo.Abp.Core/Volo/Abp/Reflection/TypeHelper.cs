@@ -116,12 +116,6 @@ public static class TypeHelper
         return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
-    public static bool IsNullableOrNotValueType(Type type)
-    {
-        return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)) ||
-               !type.IsValueType;
-    }
-
     public static bool IsNullableEnum(Type type)
     {
         return type.IsGenericType &&

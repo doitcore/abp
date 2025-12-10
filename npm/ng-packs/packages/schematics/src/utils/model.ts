@@ -190,7 +190,7 @@ export function createRefToImportReducerCreator(params: ModelGeneratorParams) {
 }
 
 function isOptionalProperty(prop: PropertyDef) {
-  return !prop.isRequired && prop.isNullable;
+  return !prop.isRequired;
 }
 
 export function parseBaseTypeWithGenericTypes(type: string): string[] {

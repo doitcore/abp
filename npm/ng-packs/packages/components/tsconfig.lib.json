@@ -2,14 +2,24 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "target": "ES2022",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
     "types": [],
-    "lib": ["dom", "es2020"],
-    "useDefineForClassFields": false
+
+    // Tutarlı ES2022
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],           // ✅ Düzeltildi
+
+    // Angular için
+    "moduleResolution": "bundler",
+    "useDefineForClassFields": false,
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts", "jest.config.ts"],
-  "include": ["**/*.ts"]
+  "exclude": [
+    "src/test-setup.ts",
+    "src/**/*.spec.ts",                 // ✅ src/ prefix ekledim
+    "jest.config.ts"
+  ],
+  "include": ["src/**/*.ts"]            // ✅ Düzeltildi
 }

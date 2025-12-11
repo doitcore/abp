@@ -500,8 +500,9 @@ You can customize the chat widget with the following properties:
 })
 ```
 
-#### Using Conversation Id
-You can use the `ConversationId` property to specify the id of the conversation to use. When the Conversation Id is provided, the chat will be stored at the client side and will be retrieved when the user revisits the page that contains the chat widget.
+#### Using the Conversation Id
+You can use the `ConversationId` property to specify the id of the conversation to use. When the Conversation Id is provided, the chat will be stored at the client side and will be retrieved when the user revisits the page that contains the chat widget. If it's not provided or provided as **null**, the chat will be temporary and will not be saved, it'll be lost when the component lifetime ends. 
+
 ```csharp
 @await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
 {

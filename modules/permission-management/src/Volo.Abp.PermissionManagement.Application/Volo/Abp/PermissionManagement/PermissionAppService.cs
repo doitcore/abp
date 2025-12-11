@@ -293,15 +293,17 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
                 continue;
             }
 
-            if (await AuthorizationService.IsGrantedAsync(resourcePermission.ManagementPermissionName!))
+            if (!await AuthorizationService.IsGrantedAsync(resourcePermission.ManagementPermissionName!))
             {
-                result.Permissions.Add(new ResourcePermissionWithProdiverGrantInfoDto
-                {
-                    Name = resourcePermissionGrant.Name,
-                    DisplayName = resourcePermission?.DisplayName.Localize(StringLocalizerFactory),
-                    IsGranted = resourcePermissionGrant.IsGranted
-                });
+                continue;
             }
+
+            result.Permissions.Add(new ResourcePermissionWithProdiverGrantInfoDto
+            {
+                Name = resourcePermissionGrant.Name,
+                DisplayName = resourcePermission?.DisplayName.Localize(StringLocalizerFactory),
+                IsGranted = resourcePermissionGrant.IsGranted
+            });
         }
 
         return result;
@@ -310,12 +312,14 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     public virtual async Task UpdateResourceAsync(string resourceName, string resourceKey, UpdateResourcePermissionsDto input)
     {
         var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
+        
         foreach (var resourcePermission in resourcePermissions)
         {
             if (!await AuthorizationService.IsGrantedAsync(resourcePermission.ManagementPermissionName!))
             {
                 continue;
             }
+            
             var isGranted = !input.Permissions.IsNullOrEmpty() && input.Permissions.Any(p => p == resourcePermission.Name);
             await ResourcePermissionManager.SetAsync(resourcePermission.Name, resourceName, resourceKey, input.ProviderName, input.ProviderKey, isGranted);
         }
@@ -326,10 +330,12 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         var resourcePermissions = await ResourcePermissionManager.GetAvailablePermissionsAsync(resourceName);
         foreach (var resourcePermission in resourcePermissions)
         {
-            if (await AuthorizationService.IsGrantedAsync(resourcePermission.ManagementPermissionName!))
+            if (!await AuthorizationService.IsGrantedAsync(resourcePermission.ManagementPermissionName!))
             {
-                await ResourcePermissionManager.DeleteAsync(resourcePermission.Name, resourceName, resourceKey, providerName, providerKey);
+                continue;
             }
+
+            await ResourcePermissionManager.DeleteAsync(resourcePermission.Name, resourceName, resourceKey, providerName, providerKey);
         }
     }
 

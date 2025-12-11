@@ -18,18 +18,19 @@ public class AddPackageCommand : IConsoleCommand, ITransientDependency
 {
     public const string Name = "add-package";
 
-    public ILogger<AddPackageCommand> Logger { get; set; }
+    private readonly ITelemetryService _telemetryService;
     
-    public ITelemetryService TelemetryService { get; set; }
+    public ILogger<AddPackageCommand> Logger { get; set; }
 
     protected ProjectNugetPackageAdder ProjectNugetPackageAdder { get; }
 
     public ProjectNpmPackageAdder ProjectNpmPackageAdder { get; }
 
-    public AddPackageCommand(ProjectNugetPackageAdder projectNugetPackageAdder, ProjectNpmPackageAdder projectNpmPackageAdder)
+    public AddPackageCommand(ProjectNugetPackageAdder projectNugetPackageAdder, ProjectNpmPackageAdder projectNpmPackageAdder, ITelemetryService telemetryService)
     {
         ProjectNugetPackageAdder = projectNugetPackageAdder;
         ProjectNpmPackageAdder = projectNpmPackageAdder;
+        _telemetryService = telemetryService;
         Logger = NullLogger<AddPackageCommand>.Instance;
     }
 
@@ -44,8 +45,8 @@ public class AddPackageCommand : IConsoleCommand, ITransientDependency
             );
         }
         
-        await using var _ = TelemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsNewPackage);
-        await using var __ = TelemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsAddPackage);
+        await using var _ = _telemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsNewPackage);
+        await using var __ = _telemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsAddPackage);
 
         var isNpmPackage = false;
         var isNugetPackage = true;

@@ -18,20 +18,21 @@ public class CleanCommand : IConsoleCommand, ITransientDependency
     public const string Name = "clean";
 
     public ILogger<CleanCommand> Logger { get; set; }
-
-    public ITelemetryService TelemetryService { get; set; }
     
     protected ICmdHelper CmdHelper { get; }
+    
+    private readonly ITelemetryService _telemetryService;
 
-    public CleanCommand(ICmdHelper cmdHelper)
+    public CleanCommand(ICmdHelper cmdHelper, ITelemetryService telemetryService)
     {
         CmdHelper = cmdHelper;
+        _telemetryService = telemetryService;
         Logger = NullLogger<CleanCommand>.Instance;
     }
 
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
-        await using var _ = TelemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsClean);
+        await using var _ = _telemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsClean);
         var binEntries = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), "bin", SearchOption.AllDirectories);
         var objEntries = Directory.EnumerateDirectories(Directory.GetCurrentDirectory(), "obj", SearchOption.AllDirectories);
 

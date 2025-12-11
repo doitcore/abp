@@ -29,7 +29,8 @@ public class NewCommand : ProjectCreationCommandBase, IConsoleCommand, ITransien
 
     protected TemplateProjectBuilder TemplateProjectBuilder { get; }
     public ITemplateInfoProvider TemplateInfoProvider { get; }
-    public ITelemetryService TelemetryService { get; set; }
+
+    private readonly ITelemetryService _telemetryService;
 
     public NewCommand(
         ConnectionStringProvider connectionStringProvider,
@@ -45,7 +46,8 @@ public class NewCommand : ProjectCreationCommandBase, IConsoleCommand, ITransien
         ITemplateInfoProvider templateInfoProvider,
         TemplateProjectBuilder templateProjectBuilder,
         AngularThemeConfigurer angularThemeConfigurer,
-        CliVersionService cliVersionService) :
+        CliVersionService cliVersionService, 
+        ITelemetryService telemetryService) :
         base(connectionStringProvider,
             solutionPackageVersionFinder,
             cmdHelper,
@@ -61,6 +63,7 @@ public class NewCommand : ProjectCreationCommandBase, IConsoleCommand, ITransien
     {
         TemplateInfoProvider = templateInfoProvider;
         TemplateProjectBuilder = templateProjectBuilder;
+        _telemetryService = telemetryService;
     }
 
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
@@ -107,7 +110,7 @@ public class NewCommand : ProjectCreationCommandBase, IConsoleCommand, ITransien
             activityName = ActivityNameConsts.AbpCliCommandsNewModule;
         }
         
-        await TelemetryService.AddActivityAsync(activityName, o =>
+        await _telemetryService.AddActivityAsync(activityName, o =>
         {
             o[ActivityPropertyNames.CreationTool] = AbpTool.OldCli;
             o[ActivityPropertyNames.Template] = template;

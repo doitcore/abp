@@ -19,23 +19,24 @@ public class UpdateCommand : IConsoleCommand, ITransientDependency
     public const string Name = "update";
     
     public ILogger<UpdateCommand> Logger { get; set; }
-    public ITelemetryService TelemetryService { get; set; }
 
     private readonly VoloNugetPackagesVersionUpdater _nugetPackagesVersionUpdater;
     private readonly NpmPackagesUpdater _npmPackagesUpdater;
+    private readonly ITelemetryService _telemetryService;
 
     public UpdateCommand(VoloNugetPackagesVersionUpdater nugetPackagesVersionUpdater,
-        NpmPackagesUpdater npmPackagesUpdater)
+        NpmPackagesUpdater npmPackagesUpdater, ITelemetryService telemetryService)
     {
         _nugetPackagesVersionUpdater = nugetPackagesVersionUpdater;
         _npmPackagesUpdater = npmPackagesUpdater;
+        _telemetryService = telemetryService;
 
         Logger = NullLogger<UpdateCommand>.Instance;
     }
 
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
-        await using var _ = TelemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsUpdate);
+        await using var _ = _telemetryService.TrackActivityAsync(ActivityNameConsts.AbpCliCommandsUpdate);
         var updateNpm = commandLineArgs.Options.ContainsKey(Options.Packages.Npm);
         var updateNuget = commandLineArgs.Options.ContainsKey(Options.Packages.NuGet);
 

@@ -22,8 +22,9 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
     public const string Name = "add-module";
     
     private AddModuleInfoOutput _lastAddedModuleInfo;
+    private readonly ITelemetryService _telemetryService;
+    
     public ILogger<AddModuleCommand> Logger { get; set; }
-    public ITelemetryService TelemetryService { get; set; }
 
     protected SolutionModuleAdder SolutionModuleAdder { get; }
     public SolutionPackageVersionFinder SolutionPackageVersionFinder { get; }
@@ -42,11 +43,13 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
     public AddModuleCommand(
         SolutionModuleAdder solutionModuleAdder,
         SolutionPackageVersionFinder solutionPackageVersionFinder,
-        IOptions<AbpCliOptions> options)
+        IOptions<AbpCliOptions> options,
+        ITelemetryService telemetryService)
     {
         _options = options.Value;
         SolutionModuleAdder = solutionModuleAdder;
         SolutionPackageVersionFinder = solutionPackageVersionFinder;
+        _telemetryService = telemetryService;
         Logger = NullLogger<AddModuleCommand>.Instance;
     }
 
@@ -70,7 +73,7 @@ public class AddModuleCommand : IConsoleCommand, ITransientDependency
 
         var newTemplate = commandLineArgs.Options.ContainsKey(Options.NewTemplate.Long);
 
-        await using var _ = TelemetryService.TrackActivityAsync(newTemplate
+        await using var _ = _telemetryService.TrackActivityAsync(newTemplate
             ? ActivityNameConsts.AbpCliCommandsInstallLocalModule
             : ActivityNameConsts.AbpCliCommandsInstallModule);
         

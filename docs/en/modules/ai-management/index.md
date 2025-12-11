@@ -436,7 +436,7 @@ Once configured, other applications can call your application's endpoints:
 
 Your application acts as a proxy, forwarding these requests to the AI Management microservice.
 
-## Comparison Table
+### Comparison Table
 
 | Scenario | Database Required | Manages Config | Executes AI | Exposes API | Use Case |
 |----------|------------------|----------------|-------------|-------------|----------|

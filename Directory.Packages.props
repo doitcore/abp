@@ -137,7 +137,7 @@
     <PackageVersion Include="OpenIddict.Server.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="OpenIddict.Validation.AspNetCore" Version="7.2.0" />
     <PackageVersion Include="OpenIddict.Validation.ServerIntegration" Version="7.2.0" />
-    <PackageVersion Include="Oracle.EntityFrameworkCore" Version="9.23.90" />
+    <PackageVersion Include="Oracle.EntityFrameworkCore" Version="10.23.26000" />
     <PackageVersion Include="Polly" Version="8.6.3" />
     <PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />

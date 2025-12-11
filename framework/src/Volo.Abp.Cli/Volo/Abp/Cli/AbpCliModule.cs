@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Volo.Abp.Autofac;
-using Volo.Abp.Internal.Telemetry.Activity.Providers;
+﻿using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 
 namespace Volo.Abp.Cli;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
@@ -25,6 +26,18 @@ public class TelemetryCliSessionProvider : TelemetryActivityEventEnricher
         context.Current[ActivityPropertyNames.SessionId] = Guid.NewGuid();
         context.Current[ActivityPropertyNames.IsFirstSession] = !File.Exists(TelemetryPaths.ActivityStorage);
         context.Current["OldCli"] = true;
+        
+        if(context.Current.TryGetValue<Dictionary<string, object>>(ActivityPropertyNames.AdditionalProperties, out var additionalProperties))
+        {
+            additionalProperties["OldCli"] = true;
+        }
+        else
+        {
+            context.Current[ActivityPropertyNames.AdditionalProperties] = new Dictionary<string, object>
+            {
+                { "OldCli", true }
+            };
+        }
         
         return Task.CompletedTask;
     }

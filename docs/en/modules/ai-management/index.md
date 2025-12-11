@@ -469,7 +469,7 @@ AI Management uses different packages depending on the usage scenario:
 - `Volo.AIManagement.Client.Web`
 
 ### The Chat Widget
-The `Volo.AIManagement.Client.Web` package provides a chat widget to allow you easily integrate a chat interface into your application that uses a specific AI workspace named `ChatClientChatViewComponent`.
+The `Volo.AIManagement.Client.Web` package provides a chat widget to allow you to easily integrate a chat interface into your application that uses a specific AI workspace named `ChatClientChatViewComponent`.
 
 #### Basic Usage
 You can invoke the `ChatClientChatViewComponent` Widget in your razor page with the following code:
@@ -486,11 +486,11 @@ You can invoke the `ChatClientChatViewComponent` Widget in your razor page with 
 #### Properties
 You can customize the chat widget with the following properties:
 - `WorkspaceName`: The name of the workspace to use.
-- `ComponentId`: The id of the component to use.
-- `ConversationId`: The id of the conversation to store the chat history at the client side.
+- `ComponentId`: Unique identifier for accessing the component via JavaScript API (stored in abp.chatComponents).
+- `ConversationId`: The unique identifier for persisting and retrieving chat history from client-side storage.
 - `Title`: The title of the chat widget.
 - `ShowStreamCheckbox`: Whether to show the stream checkbox. Allows user to toggle streaming on and off. Default is `false`.
-- `UseStreaming`: Whether to use streaming by default. Default is `true`. _(overridden by `ShowStreamCheckbox` at UI)_
+- `UseStreaming`: Default streaming behavior. Can be overridden by user when `ShowStreamCheckbox` is true.
 
 ```csharp
 @await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel

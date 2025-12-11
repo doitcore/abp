@@ -455,7 +455,11 @@ Your application acts as a proxy, forwarding these requests to the AI Management
 
 ## Client Usage (MVC UI)
 
-AI Management has a distinction in the naming of the packages. The `Volo.AIManagement.*` packages are for the main AI operations in the process and application itself. The `Volo.AIManagement.Client.*` packages are designed to consume the AI services from out of the application that is hosting the AI features. `Volo.AIManagement.*` packages don't expose any application service and endpoints to be consumed by default. You'll need to install the `Volo.AIManagement.Client.*` packages to both of your applications to expose the AI services and to consume the AI services to both of your applications.
+AI Management uses different packages depending on the usage scenario:
+
+- **`Volo.AIManagement.*` packages**: These contain the core AI functionality and are used when your application hosts and manages its own AI operations. These packages don't expose any application service and endpoints to be consumed by default.
+
+- **`Volo.AIManagement.Client.*` packages**: These are designed for applications that need to consume AI services from a remote application. They provide both server and client side of remote access to the AI services.
 
 **List of packages:**
 - `Volo.AIManagement.Client.Application`

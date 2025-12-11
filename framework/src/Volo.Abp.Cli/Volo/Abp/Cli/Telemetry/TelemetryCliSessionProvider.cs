@@ -24,6 +24,7 @@ public class TelemetryCliSessionProvider : TelemetryActivityEventEnricher
         context.Current[ActivityPropertyNames.SessionType] = SessionType.AbpCli;
         context.Current[ActivityPropertyNames.SessionId] = Guid.NewGuid();
         context.Current[ActivityPropertyNames.IsFirstSession] = !File.Exists(TelemetryPaths.ActivityStorage);
+        context.Current["OldCli"] = true;
         
         return Task.CompletedTask;
     }

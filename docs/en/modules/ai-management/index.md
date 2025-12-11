@@ -516,7 +516,7 @@ You can use the `ConversationId` property to specify the id of the conversation 
 ```
 
 #### JavaScript API
-All the initialized components in the page is stored in the `abp.chatComponents` object. You can retrieve a specific component by its `ComponentId` which is defined while invoking the ViewComponent.
+The chat components are initialized automatically when the ViewComponent is rendered in the page. All the initialized components in the page are stored in the `abp.chatComponents` object. You can retrieve a specific component by its `ComponentId` which is defined while invoking the ViewComponent.
 
 ```csharp
 @await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
@@ -573,6 +573,28 @@ chatComponent.on('streamStarted', function(data) {
 chatComponent.off('messageSent', callbackFunction);
 ```
 
+**Best-practices:**
+- Don't try to access the component at the page load time, it's not guaranteed to be initialized yet. Get the component whenever you need it to make sure it's **initialized** and the **latest state** is applied.
+
+❌ Don't do this
+```js
+(function(){
+    var chatComponent = abp.chatComponents.get('mylama-chat');
+    $('#my-button').on('click', function() {
+        chatComponent.clearConversation();
+    });
+});
+```
+
+✅ Do this
+```js
+(function(){
+    $('#my-button').on('click', function() {
+        var chatComponent = abp.chatComponents.get('mylama-chat');
+        chatComponent.clearConversation();
+    });
+});
+```
 
 ## Using Dynamic Workspace Configurations for custom requirements
 

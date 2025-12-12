@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "क्या आप वाकई सभी अनुमतियां हटाना चाहते हैं?",
     "AddResourcePermissions": "अनुमतियां जोड़ें",
     "UpdateResourcePermissions": "अनुमतियां अपडेट करें",
-    "Resource": "संसाधन",
-    "ResourceName": "संसाधन का नाम",
-    "ResourceKey": "संसाधन कुंजी",
-    "ProviderName": "प्रदाता का नाम",
-    "ProviderKey": "प्रदाता कुंजी",
     "GrantAllResourcePermissions": "सभी प्रदान करें",
     "NoResourceProviderKeyLookupServiceFound": "कोई संसाधन प्रदाता कुंजी खोज सेवा नहीं मिली",
     "NoResourcePermissionFound": "वर्तमान संसाधन के लिए कोई संसाधन अनुमति परिभाषित नहीं है।"

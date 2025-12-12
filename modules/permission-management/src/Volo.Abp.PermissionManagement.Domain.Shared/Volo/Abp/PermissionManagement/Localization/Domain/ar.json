@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "هل أنت متأكد أنك تريد حذف جميع الأذونات؟",
     "AddResourcePermissions": "إضافة الأذونات",
     "UpdateResourcePermissions": "تحديث الأذونات",
-    "Resource": "المورد",
-    "ResourceName": "اسم المورد",
-    "ResourceKey": "مفتاح المورد",
-    "ProviderName": "اسم الموفر",
-    "ProviderKey": "مفتاح الموفر",
     "GrantAllResourcePermissions": "منح الكل",
     "NoResourceProviderKeyLookupServiceFound": "لم يتم العثور على خدمة البحث عن مفتاح مزود المورد",
     "NoResourcePermissionFound": "لا يوجد إذن مورد معرف للموارد الحالية."

@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Êtes-vous sûr de vouloir supprimer toutes les autorisations ?",
     "AddResourcePermissions": "Ajouter des autorisations",
     "UpdateResourcePermissions": "Mettre à jour les autorisations",
-    "Resource": "Ressource",
-    "ResourceName": "Nom de la ressource",
-    "ResourceKey": "Clé de la ressource",
-    "ProviderName": "Nom du fournisseur",
-    "ProviderKey": "Clé du fournisseur",
     "GrantAllResourcePermissions": "Accorder tout",
     "NoResourceProviderKeyLookupServiceFound": "Aucun service de recherche de clé de fournisseur de ressources n'a été trouvé",
     "NoResourcePermissionFound": "Aucune autorisation de ressource n'est définie pour la ressource actuelle."

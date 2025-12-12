@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Sei sicuro di voler eliminare tutte le autorizzazioni?",
     "AddResourcePermissions": "Aggiungi autorizzazioni",
     "UpdateResourcePermissions": "Aggiorna autorizzazioni",
-    "Resource": "Risorsa",
-    "ResourceName": "Nome della risorsa",
-    "ResourceKey": "Chiave della risorsa",
-    "ProviderName": "Nome del provider",
-    "ProviderKey": "Chiave del provider",
     "GrantAllResourcePermissions": "Concedi tutto",
     "NoResourceProviderKeyLookupServiceFound": "Non è stato trovato alcun servizio di ricerca chiave provider risorse",
     "NoResourcePermissionFound": "Non è definita alcuna autorizzazione per la risorsa corrente."

@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Tem certeza de que deseja excluir todas as permissões?",
     "AddResourcePermissions": "Adicionar permissões",
     "UpdateResourcePermissions": "Atualizar permissões",
-    "Resource": "Recurso",
-    "ResourceName": "Nome do recurso",
-    "ResourceKey": "Chave do recurso",
-    "ProviderName": "Nome do provedor",
-    "ProviderKey": "Chave do provedor",
     "GrantAllResourcePermissions": "Conceder tudo",
     "NoResourceProviderKeyLookupServiceFound": "Nenhum serviço de pesquisa de chave de provedor de recursos foi encontrado",
     "NoResourcePermissionFound": "Não há permissão de recurso definida para o recurso atual."

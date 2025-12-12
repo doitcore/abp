@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλα τα δικαιώματα;",
     "AddResourcePermissions": "Προσθήκη δικαιωμάτων",
     "UpdateResourcePermissions": "Ενημέρωση δικαιωμάτων",
-    "Resource": "Πόρος",
-    "ResourceName": "Όνομα πόρου",
-    "ResourceKey": "Κλειδί πόρου",
-    "ProviderName": "Όνομα παρόχου",
-    "ProviderKey": "Κλειδί παρόχου",
     "GrantAllResourcePermissions": "Παραχώρηση όλων",
     "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου πόρων",
     "NoResourcePermissionFound": "Δεν έχει οριστεί καμία άδεια πόρου για τον τρέχοντα πόρο."

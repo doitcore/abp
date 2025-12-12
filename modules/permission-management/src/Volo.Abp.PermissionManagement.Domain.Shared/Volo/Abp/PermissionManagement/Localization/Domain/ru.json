@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Вы уверены, что хотите удалить все разрешения?",
     "AddResourcePermissions": "Добавить разрешения",
     "UpdateResourcePermissions": "Обновить разрешения",
-    "Resource": "Ресурс",
-    "ResourceName": "Имя ресурса",
-    "ResourceKey": "Ключ ресурса",
-    "ProviderName": "Имя поставщика",
-    "ProviderKey": "Ключ поставщика",
     "GrantAllResourcePermissions": "Предоставить все",
     "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика ресурсов не найдена",
     "NoResourcePermissionFound": "Для текущего ресурса не определено ни одного разрешения."

@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Haluatko varmasti poistaa kaikki käyttöoikeudet?",
     "AddResourcePermissions": "Lisää käyttöoikeudet",
     "UpdateResourcePermissions": "Päivitä käyttöoikeudet",
-    "Resource": "Resurssi",
-    "ResourceName": "Resurssin nimi",
-    "ResourceKey": "Resurssiavain",
-    "ProviderName": "Palveluntarjoajan nimi",
-    "ProviderKey": "Palveluntarjoajan avain",
     "GrantAllResourcePermissions": "Myönnä kaikki",
     "NoResourceProviderKeyLookupServiceFound": "Resurssin tarjoajan avaimen hakupalvelua ei löytynyt",
     "NoResourcePermissionFound": "Nykyiselle resurssille ei ole määritetty käyttöoikeutta."

@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Czy na pewno chcesz usunąć wszystkie uprawnienia?",
     "AddResourcePermissions": "Dodaj uprawnienia",
     "UpdateResourcePermissions": "Zaktualizuj uprawnienia",
-    "Resource": "Zasób",
-    "ResourceName": "Nazwa zasobu",
-    "ResourceKey": "Klucz zasobu",
-    "ProviderName": "Nazwa dostawcy",
-    "ProviderKey": "Klucz dostawcy",
     "GrantAllResourcePermissions": "Przyznaj wszystko",
     "NoResourceProviderKeyLookupServiceFound": "Nie znaleziono usługi wyszukiwania klucza dostawcy zasobów",
     "NoResourcePermissionFound": "Nie zdefiniowano żadnych uprawnień do zasobów dla bieżącego zasobu."

@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Opravdu chcete smazat všechna oprávnění?",
     "AddResourcePermissions": "Přidat oprávnění",
     "UpdateResourcePermissions": "Aktualizovat oprávnění",
-    "Resource": "Zdroj",
-    "ResourceName": "Název zdroje",
-    "ResourceKey": "Klíč zdroje",
-    "ProviderName": "Název poskytovatele",
-    "ProviderKey": "Klíč poskytovatele",
     "GrantAllResourcePermissions": "Udělit vše",
     "NoResourceProviderKeyLookupServiceFound": "Nebyla nalezena služba pro vyhledávání klíče poskytovatele zdrojů",
     "NoResourcePermissionFound": "Pro aktuální prostředek není definováno žádné oprávnění."

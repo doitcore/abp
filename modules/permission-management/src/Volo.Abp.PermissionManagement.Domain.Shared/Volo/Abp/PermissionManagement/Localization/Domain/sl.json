@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Ali ste prepričani, da želite izbrisati vsa dovoljenja?",
     "AddResourcePermissions": "Dodaj dovoljenja",
     "UpdateResourcePermissions": "Posodobi dovoljenja",
-    "Resource": "Vir",
-    "ResourceName": "Ime vira",
-    "ResourceKey": "Ključ vira",
-    "ProviderName": "Ime ponudnika",
-    "ProviderKey": "Ključ ponudnika",
     "GrantAllResourcePermissions": "Dodeli vse",
     "NoResourceProviderKeyLookupServiceFound": "Ni bilo mogoče najti storitve za iskanje ključa ponudnika virov",
     "NoResourcePermissionFound": "Za trenutni vir ni določeno nobeno dovoljenje."

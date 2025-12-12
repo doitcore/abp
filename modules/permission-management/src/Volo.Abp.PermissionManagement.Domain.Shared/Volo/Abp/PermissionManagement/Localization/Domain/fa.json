@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "آیا مطمئن هستید که می‌خواهید همه مجوزها را حذف کنید؟",
     "AddResourcePermissions": "افزودن مجوزها",
     "UpdateResourcePermissions": "به‌روزرسانی مجوزها",
-    "Resource": "منبع",
-    "ResourceName": "نام منبع",
-    "ResourceKey": "کلید منبع",
-    "ProviderName": "نام ارائه‌دهنده",
-    "ProviderKey": "کلید ارائه‌دهنده",
     "GrantAllResourcePermissions": "اعطای همه",
     "NoResourceProviderKeyLookupServiceFound": "هیچ سرویس جستجوی کلید ارائه‌دهنده منبع یافت نشد",
     "NoResourcePermissionFound": "هیچ مجوز منبعی برای منبع فعلی تعریف نشده است."

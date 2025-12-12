@@ -16,11 +16,6 @@
     "ResourcePermissionDeletionConfirmationMessage": "Are you sure you want to delete all permissions?",
     "AddResourcePermissions": "Add permissions",
     "UpdateResourcePermissions": "Update permissions",
-    "Resource": "Resource",
-    "ResourceName": "Resource name",
-    "ResourceKey": "Resource key",
-    "ProviderName": "Provider name",
-    "ProviderKey": "Provider key",
     "GrantAllResourcePermissions": "Grant all",
     "NoResourceProviderKeyLookupServiceFound": "There is no resource provider key lookup service was found",
     "NoResourcePermissionFound": "There is no resource permission defined for the current resource."

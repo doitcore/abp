@@ -21,7 +21,6 @@ abp add-module Volo.AIManagement
 
 Open ABP Studio, navigate to your solution explorer, **Right Click** on the project and select **Import Module**. Choose `Volo.AIManagement` from `NuGet` tab and check the "Install this Module" checkbox. Click the "OK" button to install the module.
 
-
 ## Packages
 
 This module follows the [module development best practices guide](../../framework/architecture/best-practices) and consists of several NuGet and NPM packages. See the guide if you want to understand the packages and relations between them.
@@ -37,7 +36,7 @@ AI Management module packages are designed for various usage scenarios. Packages
 AI Management module adds the following items to the "Main" menu:
 
 * **AI Management**: Root menu item for AI Management module. (`AIManagement`)
-    * **Workspaces**: Workspace management page. (`AIManagement.Workspaces`)
+  * **Workspaces**: Workspace management page. (`AIManagement.Workspaces`)
 
 `AIManagementMenus` class has the constants for the menu item names.
 
@@ -80,21 +79,21 @@ Workspaces are the core concept of the AI Management module. A workspace represe
 
 When creating or managing a workspace, you can configure the following properties:
 
-| Property | Required | Description |
-|----------|----------|-------------|
-| `Name` | Yes | Unique workspace identifier (cannot contain spaces) |
-| `Provider` | Yes* | AI provider name (e.g., "OpenAI", "Ollama") |
-| `ModelName` | Yes* | Model identifier (e.g., "gpt-4", "mistral") |
-| `ApiKey` | No | API authentication key (required by some providers) |
-| `ApiBaseUrl` | No | Custom endpoint URL (defaults to provider's default) |
-| `SystemPrompt` | No | Default system prompt for all conversations |
-| `Temperature` | No | Response randomness (0.0-1.0, defaults to provider default) |
-| `Description` | No | Workspace description |
-| `IsActive` | No | Enable/disable the workspace (default: true) |
-| `ApplicationName` | No | Associate workspace with specific application |
-| `RequiredPermissionName` | No | Permission required to use this workspace |
-| `IsSystem` | No | Whether it's a system workspace (read-only) |
-| `OverrideSystemConfiguration` | No | Allow database configuration to override code-defined settings |
+| Property                      | Required | Description                                                    |
+| ----------------------------- | -------- | -------------------------------------------------------------- |
+| `Name`                        | Yes      | Unique workspace identifier (cannot contain spaces)            |
+| `Provider`                    | Yes*     | AI provider name (e.g., "OpenAI", "Ollama")                    |
+| `ModelName`                   | Yes*     | Model identifier (e.g., "gpt-4", "mistral")                    |
+| `ApiKey`                      | No       | API authentication key (required by some providers)            |
+| `ApiBaseUrl`                  | No       | Custom endpoint URL (defaults to provider's default)           |
+| `SystemPrompt`                | No       | Default system prompt for all conversations                    |
+| `Temperature`                 | No       | Response randomness (0.0-1.0, defaults to provider default)    |
+| `Description`                 | No       | Workspace description                                          |
+| `IsActive`                    | No       | Enable/disable the workspace (default: true)                   |
+| `ApplicationName`             | No       | Associate workspace with specific application                  |
+| `RequiredPermissionName`      | No       | Permission required to use this workspace                      |
+| `IsSystem`                    | No       | Whether it's a system workspace (read-only)                    |
+| `OverrideSystemConfiguration` | No       | Allow database configuration to override code-defined settings |
 
 **\*Not required for system workspaces**
 
@@ -158,7 +157,7 @@ public class WorkspaceDataSeederContributor : IDataSeedContributor, ITransientDe
 
         workspace.ApiKey = "your-api-key";
         workspace.SystemPrompt = "You are a helpful customer support assistant.";
-        
+
         await _workspaceRepository.InsertAsync(workspace);
     }
 ```
@@ -173,13 +172,12 @@ public class WorkspaceDataSeederContributor : IDataSeedContributor, ITransientDe
 
 The AI Management module defines the following permissions:
 
-| Permission | Description | Default Granted To |
-|------------|-------------|-------------------|
-| `AIManagement.Workspaces` | View workspaces | Admin role |
-| `AIManagement.Workspaces.Create` | Create new workspaces | Admin role |
-| `AIManagement.Workspaces.Update` | Edit existing workspaces | Admin role |
-| `AIManagement.Workspaces.Delete` | Delete workspaces | Admin role |
-
+| Permission                       | Description              | Default Granted To |
+| -------------------------------- | ------------------------ | ------------------ |
+| `AIManagement.Workspaces`        | View workspaces          | Admin role         |
+| `AIManagement.Workspaces.Create` | Create new workspaces    | Admin role         |
+| `AIManagement.Workspaces.Update` | Edit existing workspaces | Admin role         |
+| `AIManagement.Workspaces.Delete` | Delete workspaces        | Admin role         |
 
 ### Workspace-Level Permissions
 
@@ -196,6 +194,7 @@ workspace.RequiredPermissionName = MyAppPermissions.AccessPremiumWorkspaces;
 ```
 
 When a workspace has a required permission:
+
 * Only authorized users with that permission can access the workspace endpoints
 * Users without the permission will receive an authorization error
 
@@ -213,6 +212,7 @@ The AI Management module is designed to support various usage patterns, from sim
 In this scenario, you only use the ABP Framework's AI features directly. You configure AI providers (like OpenAI) in your code and don't need any database or management UI.
 
 **Required Packages:**
+
 - `Volo.Abp.AI`
 - Any Microsoft AI extensions (e.g., `Microsoft.Extensions.AI.OpenAI`)
 
@@ -250,7 +250,7 @@ public class MyService
     {
         _chatClient = chatClient;
     }
-    
+
     public async Task<string> GetResponseAsync(string prompt)
     {
         var response = await _chatClient.CompleteAsync(prompt);
@@ -270,10 +270,12 @@ In this scenario, you install the AI Management module with its database layer, 
 **Required Packages:**
 
 **Minimum (backend only):**
+
 - `Volo.AIManagement.EntityFrameworkCore` (or `Volo.AIManagement.MongoDB`)
 - `Volo.AIManagement.OpenAI` (or another AI provider package)
 
 **Full installation (with UI and API):**
+
 - `Volo.AIManagement.EntityFrameworkCore` (or `Volo.AIManagement.MongoDB`)
 - `Volo.AIManagement.Application`
 - `Volo.AIManagement.HttpApi`
@@ -308,6 +310,7 @@ public class YourModule : AbpModule
 **Option 2 - Dynamic Workspace (UI-based):**
 
 No code configuration needed. Define workspaces through:
+
 - The AI Management UI (navigate to AI Management > Workspaces)
 - Data seeding in your `DataSeeder` class
 
@@ -332,6 +335,7 @@ public class MyService
 In this scenario, your application communicates with a separate AI Management microservice that manages configurations and communicates with AI providers on your behalf. The AI Management service handles all AI provider interactions.
 
 **Required Packages:**
+
 - `Volo.AIManagement.Client.HttpApi.Client`
 
 **Configuration:**
@@ -392,7 +396,7 @@ public class MyService
         var response = await _chatService.ChatCompletionsAsync(workspaceName, request);
         return response.Content;
     }
-    
+
     // For streaming responses
     public async IAsyncEnumerable<string> StreamAIResponseAsync(string workspaceName, string prompt)
     {
@@ -419,6 +423,7 @@ public class MyService
 This scenario builds on Scenario 3, but your application exposes its own HTTP endpoints that other applications can call. Your application then forwards these requests to the AI Management service.
 
 **Required Packages:**
+
 - `Volo.AIManagement.Client.HttpApi.Client` (to communicate with AI Management service)
 - `Volo.AIManagement.Client.Application` (application services)
 - `Volo.AIManagement.Client.HttpApi` (to expose HTTP endpoints)
@@ -431,22 +436,168 @@ Same as Scenario 3, configure the remote AI Management service in `appsettings.j
 **Usage:**
 
 Once configured, other applications can call your application's endpoints:
+
 - `POST /api/ai-management-client/chat-completion` for chat completions
 - `POST /api/ai-management-client/stream-chat-completion` for streaming responses
 
 Your application acts as a proxy, forwarding these requests to the AI Management microservice.
 
-## Comparison Table
+### Comparison Table
 
-| Scenario | Database Required | Manages Config | Executes AI | Exposes API | Use Case |
-|----------|------------------|----------------|-------------|-------------|----------|
-| **1. No AI Management** | No | Code | Local | Optional | Simple apps, no config management needed |
-| **2. Full AI Management** | Yes | Database/UI | Local | Optional | Monoliths, services managing their own AI |
-| **3. Client Remote** | No | Remote Service | Remote Service | No | Microservices consuming AI centrally |
-| **4. Client Proxy** | No | Remote Service | Remote Service | Yes | API Gateway pattern, proxy services |
+| Scenario                  | Database Required | Manages Config | Executes AI    | Exposes API | Use Case                                  |
+| ------------------------- | ----------------- | -------------- | -------------- | ----------- | ----------------------------------------- |
+| **1. No AI Management**   | No                | Code           | Local          | Optional    | Simple apps, no config management needed  |
+| **2. Full AI Management** | Yes               | Database/UI    | Local          | Optional    | Monoliths, services managing their own AI |
+| **3. Client Remote**      | No                | Remote Service | Remote Service | No          | Microservices consuming AI centrally      |
+| **4. Client Proxy**       | No                | Remote Service | Remote Service | Yes         | API Gateway pattern, proxy services       |
 
+
+
+## Client Usage (MVC UI)
+
+AI Management uses different packages depending on the usage scenario:
+
+- **`Volo.AIManagement.*` packages**: These contain the core AI functionality and are used when your application hosts and manages its own AI operations. These packages don't expose any application service and endpoints to be consumed by default.
+
+- **`Volo.AIManagement.Client.*` packages**: These are designed for applications that need to consume AI services from a remote application. They provide both server and client side of remote access to the AI services.
+
+**List of packages:**
+- `Volo.AIManagement.Client.Application`
+- `Volo.AIManagement.Client.Application.Contracts`
+- `Volo.AIManagement.Client.HttpApi`
+- `Volo.AIManagement.Client.HttpApi.Client`
+- `Volo.AIManagement.Client.Web`
+
+### The Chat Widget
+The `Volo.AIManagement.Client.Web` package provides a chat widget to allow you to easily integrate a chat interface into your application that uses a specific AI workspace named `ChatClientChatViewComponent`.
+
+#### Basic Usage
+You can invoke the `ChatClientChatViewComponent` Widget in your razor page with the following code:
+
+```csharp
+@await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
+{
+    WorkspaceName = "mylama",
+})
+```
+
+![ai-management-workspaces](../../images/ai-management-widget.png)
+
+#### Properties
+You can customize the chat widget with the following properties:
+- `WorkspaceName`: The name of the workspace to use.
+- `ComponentId`: Unique identifier for accessing the component via JavaScript API (stored in abp.chatComponents).
+- `ConversationId`: The unique identifier for persisting and retrieving chat history from client-side storage.
+- `Title`: The title of the chat widget.
+- `ShowStreamCheckbox`: Whether to show the stream checkbox. Allows user to toggle streaming on and off. Default is `false`.
+- `UseStreaming`: Default streaming behavior. Can be overridden by user when `ShowStreamCheckbox` is true.
+
+```csharp
+@await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
+{
+    WorkspaceName = "mylama",
+    ComponentId = "mylama-chat",
+    ConversationId = "mylama-conversation-" + @CurrentUser.Id,
+    Title = "My Custom Title",
+    ShowStreamCheckbox = true,
+    UseStreaming = true
+})
+```
+
+#### Using the Conversation Id
+You can use the `ConversationId` property to specify the id of the conversation to use. When the Conversation Id is provided, the chat will be stored at the client side and will be retrieved when the user revisits the page that contains the chat widget. If it's not provided or provided as **null**, the chat will be temporary and will not be saved, it'll be lost when the component lifetime ends. 
+
+```csharp
+@await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
+{
+    WorkspaceName = "mylama",
+    ConversationId = "my-support-conversation-" + @CurrentUser.Id
+})
+```
+
+#### JavaScript API
+The chat components are initialized automatically when the ViewComponent is rendered in the page. All the initialized components in the page are stored in the `abp.chatComponents` object. You can retrieve a specific component by its `ComponentId` which is defined while invoking the ViewComponent.
+
+```csharp
+@await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
+{
+    WorkspaceName = "mylama",
+    ComponentId = "mylama-chat"
+})
+```
+
+You can then use the JavaScript API to interact with the component.
+```js
+var chatComponent = abp.chatComponents.get('mylama-chat');
+```
+
+Once you have the component, you can use the following functions to interact with it:
+
+```js
+// Switch to a different conversation
+chatComponent.switchConversation(conversationId);
+
+// Create a new conversation with a specific model
+chatComponent.createConversation(conversationId, modelName);
+
+// Clear the current conversation history
+chatComponent.clearConversation();
+
+// Get the current conversation ID (returns null for ephemeral conversations)
+var currentId = chatComponent.getCurrentConversationId();
+
+// Initialize with a specific conversation ID
+chatComponent.initialize(conversationId);
+
+// Send a message programmatically
+chatComponent.sendMessage();
+
+// Listen to events
+chatComponent.on('messageSent', function(data) {
+    console.log('Message sent:', data.message);
+    console.log('Conversation ID:', data.conversationId);
+    console.log('Is first message:', data.isFirstMessage);
+});
+
+chatComponent.on('messageReceived', function(data) {
+    console.log('AI response:', data.message);
+    console.log('Conversation ID:', data.conversationId);
+    console.log('Is streaming:', data.isStreaming);
+});
+
+chatComponent.on('streamStarted', function(data) {
+    console.log('Streaming started for conversation:', data.conversationId);
+});
+
+// Remove event listeners
+chatComponent.off('messageSent', callbackFunction);
+```
+
+**Best-practices:**
+- Don't try to access the component at the page load time, it's not guaranteed to be initialized yet. Get the component whenever you need it to make sure it's **initialized** and the **latest state** is applied.
+
+❌ Don't do this
+```js
+(function(){
+    var chatComponent = abp.chatComponents.get('mylama-chat');
+    $('#my-button').on('click', function() {
+        chatComponent.clearConversation();
+    });
+});
+```
+
+✅ Do this
+```js
+(function(){
+    $('#my-button').on('click', function() {
+        var chatComponent = abp.chatComponents.get('mylama-chat');
+        chatComponent.clearConversation();
+    });
+});
+```
 
 ## Using Dynamic Workspace Configurations for custom requirements
+
 The AI Management module allows you to access only configuration of a workspace without resolving pre-constructed chat client. This is useful when you want to use a workspace for your own purposes and you don't need to use the chat client.
 The `IWorkspaceConfigurationStore` service is used to access the configuration of a workspace. It has multiple implementaations according to the usage scenario.
 
@@ -463,7 +614,7 @@ public class MyService
     {
         // Get the configuration of the workspace that can be managed dynamically.
         var configuration = await _workspaceConfigurationStore.GetAsync("MyWorkspace");
-        
+
         // Do something with the configuration
         var kernel =  Kernel.CreateBuilder()
             .AddAzureOpenAIChatClient(
@@ -543,24 +694,23 @@ public override void ConfigureServices(ServiceConfigurationContext context)
 >  [!TIP]
 > For production scenarios, you may want to add validation for the factory configuration.
 
-
 ### Available Configuration Properties
 
 The `ChatClientCreationConfiguration` object provides the following properties from the database:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `Name` | string | Workspace name |
-| `Provider` | string | Provider name (e.g., "OpenAI", "Ollama") |
-| `ApiKey` | string? | API key for authentication |
-| `ModelName` | string | Model identifier (e.g., "gpt-4", "mistral") |
-| `SystemPrompt` | string? | Default system prompt for the workspace |
-| `Temperature` | float? | Temperature setting for response generation |
-| `ApiBaseUrl` | string? | Custom API endpoint URL |
-| `Description` | string? | Workspace description |
-| `IsActive` | bool | Whether the workspace is active |
-| `IsSystem` | bool | Whether it's a system workspace |
-| `RequiredPermissionName` | string? | Permission required to use this workspace |
+| Property                 | Type    | Description                                 |
+| ------------------------ | ------- | ------------------------------------------- |
+| `Name`                   | string  | Workspace name                              |
+| `Provider`               | string  | Provider name (e.g., "OpenAI", "Ollama")    |
+| `ApiKey`                 | string? | API key for authentication                  |
+| `ModelName`              | string  | Model identifier (e.g., "gpt-4", "mistral") |
+| `SystemPrompt`           | string? | Default system prompt for the workspace     |
+| `Temperature`            | float?  | Temperature setting for response generation |
+| `ApiBaseUrl`             | string? | Custom API endpoint URL                     |
+| `Description`            | string? | Workspace description                       |
+| `IsActive`               | bool    | Whether the workspace is active             |
+| `IsSystem`               | bool    | Whether it's a system workspace             |
+| `RequiredPermissionName` | string? | Permission required to use this workspace   |
 
 ### Example: Azure OpenAI Factory
 
@@ -597,6 +747,7 @@ public class AzureOpenAIChatClientFactory : IChatClientFactory, ITransientDepend
 After implementing and registering your factory:
 
 1. **Through UI**: Navigate to the AI Management workspaces page and create a new workspace:
+   
    - Select your provider name (e.g., "Ollama", "AzureOpenAI")
    - Configure the API settings
    - Set the model name
@@ -665,6 +816,7 @@ WorkspaceConfiguration:{ApplicationName}:{WorkspaceName}
 ```
 
 ### HttpApi Client Layer
+
 - `IntegrationWorkspaceConfigurationStore`: Integration service for remote workspace configuration retrieval. Implements `IWorkspaceConfigurationStore` interface.
 
 The cache is automatically invalidated when workspaces are created, updated, or deleted.

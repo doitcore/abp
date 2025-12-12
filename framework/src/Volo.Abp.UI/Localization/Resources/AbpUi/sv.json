@@ -61,6 +61,6 @@
     "Theme": "Tema",
     "NotAssigned": "Ej tilldelad",
     "EntityActionsDisabledTooltip": "Du har inte tillgång till dessa åtgärder.",
-    "ResourcePermissions": "Resurstillstånd"
+    "ResourcePermissions": "Behörigheter"
   }
 }

@@ -9,7 +9,7 @@
         "SaveWithoutAnyPermissionsWarningMessage": "Jeste li sigurni da želite spremiti bez ikakvih dopuštenja?",
         "PermissionGroup": "Grupa dozvola",
         "Filter": "Filtriraj",
-        "ResourcePermissions": "Dozvole resursa",
+        "ResourcePermissions": "Dozvole",
         "ResourcePermissionTarget": "Cilj",
         "ResourcePermissionPermissions": "Dozvole",
         "AddResourcePermission": "Dodaj dozvole resursa",

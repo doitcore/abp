@@ -9,7 +9,7 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Are you sure you want to save without any permissions?",
     "PermissionGroup": "Permission Group",
     "Filter": "Filter",
-    "ResourcePermissions": "Resource permissions",
+    "ResourcePermissions": "Permissions",
     "ResourcePermissionTarget": "Target",
     "ResourcePermissionPermissions": "Permissions",
     "AddResourcePermission": "Add resource permissions",

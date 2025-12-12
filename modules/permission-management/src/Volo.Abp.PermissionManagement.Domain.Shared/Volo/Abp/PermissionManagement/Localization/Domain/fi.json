@@ -9,7 +9,7 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Haluatko varmasti tallentaa ilman käyttöoikeuksia?",
     "PermissionGroup": "Käyttöoikeus",
     "Filter": "Suodatus",
-    "ResourcePermissions": "Resurssien käyttöoikeudet",
+    "ResourcePermissions": "Käyttöoikeudet",
     "ResourcePermissionTarget": "Kohde",
     "ResourcePermissionPermissions": "Käyttöoikeudet",
     "AddResourcePermission": "Lisää resurssien käyttöoikeudet",

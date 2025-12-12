@@ -9,7 +9,7 @@
     "SaveWithoutAnyPermissionsWarningMessage": "¿Estás seguro de que quieres guardar sin ningún permiso?",
     "PermissionGroup": "Grupo de permisos",
     "Filter": "Filtrar",
-    "ResourcePermissions": "Permisos de recursos",
+    "ResourcePermissions": "Permisos",
     "ResourcePermissionTarget": "Objetivo",
     "ResourcePermissionPermissions": "Permisos",
     "AddResourcePermission": "Agregar permisos de recursos",

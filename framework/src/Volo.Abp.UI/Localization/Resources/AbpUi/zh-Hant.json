@@ -62,6 +62,6 @@
     "Theme": "主題",
     "NotAssigned": "未分配",
     "EntityActionsDisabledTooltip": "您沒有權限執行任何操作。",
-    "ResourcePermissions": "資源權限"
+    "ResourcePermissions": "權限"
   }
 }

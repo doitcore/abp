@@ -9,7 +9,7 @@
     "SaveWithoutAnyPermissionsWarningMessage": "هل أنت متأكد أنك تريد الحفظ بدون أي أذونات؟",
     "PermissionGroup": "مجموعة الأذونات",
     "Filter": "تصفية",
-    "ResourcePermissions": "أذونات الموارد",
+    "ResourcePermissions": "الأذونات",
     "ResourcePermissionTarget": "الهدف",
     "ResourcePermissionPermissions": "الأذونات",
     "AddResourcePermission": "إضافة أذونات الموارد",

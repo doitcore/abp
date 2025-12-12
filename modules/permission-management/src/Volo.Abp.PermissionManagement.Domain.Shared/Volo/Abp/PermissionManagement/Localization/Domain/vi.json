@@ -9,7 +9,7 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Bạn có chắc chắn muốn lưu mà không có bất kỳ quyền nào không?",
     "PermissionGroup": "Nhóm quyền",
     "Filter": "Lọc",
-    "ResourcePermissions": "Quyền tài nguyên",
+    "ResourcePermissions": "Quyền",
     "ResourcePermissionTarget": "Mục tiêu",
     "ResourcePermissionPermissions": "Quyền",
     "AddResourcePermission": "Thêm quyền tài nguyên",

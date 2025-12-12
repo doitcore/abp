@@ -9,7 +9,7 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Biztos, hogy engedélyek nélkül akar menteni?",
     "PermissionGroup": "Engedélycsoport",
     "Filter": "Szűrő",
-    "ResourcePermissions": "Erőforrás-engedélyek",
+    "ResourcePermissions": "Engedélyek",
     "ResourcePermissionTarget": "Cél",
     "ResourcePermissionPermissions": "Engedélyek",
     "AddResourcePermission": "Erőforrás-engedélyek hozzáadása",

@@ -9,7 +9,7 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Hiçbir izin olmadan kaydetmek istediğinize emin misiniz?",
     "PermissionGroup": "İzin Grubu",
     "Filter": "Filtre",
-    "ResourcePermissions": "Kaynak izinleri",
+    "ResourcePermissions": "İzinler",
     "ResourcePermissionTarget": "Hedef",
     "ResourcePermissionPermissions": "İzinler",
     "AddResourcePermission": "Kaynak izinleri ekle",

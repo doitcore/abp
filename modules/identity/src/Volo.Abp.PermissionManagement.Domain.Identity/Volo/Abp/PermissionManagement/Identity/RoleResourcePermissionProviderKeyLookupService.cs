@@ -31,7 +31,7 @@ public class RoleResourcePermissionProviderKeyLookupService : IResourcePermissio
         return roles.Select(r => new ResourcePermissionProviderKeyInfo(r.RoleName, r.RoleName)).ToList();
     }
 
-    public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string[] keys, CancellationToken cancellationToken = new CancellationToken())
+    public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string[] keys, CancellationToken cancellationToken = default)
     {
         var ids = keys
             .Select(key => Guid.TryParse(key, out var id) ? (Guid?)id : null)

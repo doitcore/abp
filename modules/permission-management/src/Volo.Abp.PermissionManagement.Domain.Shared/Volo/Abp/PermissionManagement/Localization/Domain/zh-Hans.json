@@ -17,7 +17,7 @@
     "AddResourcePermissions": "添加权限",
     "UpdateResourcePermissions": "更新权限",
     "GrantAllResourcePermissions": "授予所有",
-    "NoResourceProviderKeyLookupServiceFound": "未找到资源提供者键查找服务",
-    "NoResourcePermissionFound": "当前资源未定义任何资源权限。"
+    "NoResourceProviderKeyLookupServiceFound": "未找到提供者键查找服务",
+    "NoResourcePermissionFound": "未定义任何权限。"
   }
 }

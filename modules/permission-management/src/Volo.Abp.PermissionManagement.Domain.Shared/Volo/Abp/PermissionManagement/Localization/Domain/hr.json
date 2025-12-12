@@ -17,7 +17,7 @@
         "AddResourcePermissions": "Dodaj dozvole",
         "UpdateResourcePermissions": "Ažuriraj dozvole",
         "GrantAllResourcePermissions": "Dodijeli sve",
-        "NoResourceProviderKeyLookupServiceFound": "Nije pronađena usluga za pronalaženje ključa davatelja resursa",
-        "NoResourcePermissionFound": "Za trenutni resurs nije definirano nijedno dopuštenje resursa."
+        "NoResourceProviderKeyLookupServiceFound": "Nije pronađena usluga za pronalaženje ključa pružatelja",
+        "NoResourcePermissionFound": "Nijedna dozvola nije definirana."
     }
 }

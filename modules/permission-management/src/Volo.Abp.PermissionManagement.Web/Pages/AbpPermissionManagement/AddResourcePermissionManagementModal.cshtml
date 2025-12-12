@@ -16,39 +16,29 @@
 
 <form method="post" asp-page="/AbpPermissionManagement/AddResourcePermissionManagementModal" id="addResourcePermissionManagementForm">
     <abp-modal id="addResourcePermissionManagementModal">
-        <abp-modal-header title="@(L["AddResourcePermissions"].Value)"></abp-modal-header>
+        <abp-modal-header title="@(L["AddResourcePermission"].Value)"></abp-modal-header>
         <input asp-for="@Model.ResourceName" />
         <input asp-for="@Model.ResourceKey" />
         <input asp-for="@Model.ResourceDisplayName" />
         <abp-modal-body>
             <div class="mb-3">
-                <label class="form-label">@L["Resource"]:</label>
-                <p>@Model.ResourceDisplayName</p>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@L["ProviderName"]:</label>
                 <div class="mb-1">
                     @foreach (var provider in Model.ResourceProviders.Providers.Select((value, i) => new { i, value }))
                     {
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" checked="@(provider.i == 0)" name="AddModel.ProviderName" id="@provider.value.Name" value="@provider.value.Name">
-                            <label class="form-check-label" for="@provider.value">@provider.value.DisplayName</label>
+                            <label class="form-check-label" for="@provider.value.Name">@provider.value.DisplayName</label>
                         </div>
                     }
                 </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="AddModel_ProviderKey">@L["ProviderKey"]:<span> * </span></label>
-                <select asp-for="@Model.AddModel.ProviderKey" data-val="true" data-val-required="The ProviderKey field is required." id="AddModel_ProviderKey" name="AddModel.ProviderKey" value="" class="form-control"></select>
+                <select asp-for="@Model.AddModel.ProviderKey" data-val="true" data-val-required="@L["ThisFieldIsRequired."].Value" id="AddModel_ProviderKey" name="AddModel.ProviderKey" value="" class="form-control"></select>
                 <span class="text-danger field-validation-valid" data-valmsg-for="AddModel.ProviderKey" data-valmsg-replace="true"></span>
             </div>
             <div class="mb-3" id="permissionList">
-                <div class="mb-1 d-flex align-items-center justify-content-between">
-                    <label class="form-labe">@L["ResourcePermissionPermissions"]:</label>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" id="grantAllresourcePermissions" type="checkbox">
-                        <label class="form-check-label" for="grantAllresourcePermissions">@L["GrantAllResourcePermissions"]</label>
-                    </div>
+                <h5>@L["ResourcePermissionPermissions"]</h5>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" id="grantAllresourcePermissions" type="checkbox">
+                    <label class="form-check-label" for="grantAllresourcePermissions">@L["GrantAllResourcePermissions"]</label>
                 </div>
                 @foreach (var permission in Model.ResourcePermissionDefinitions.Permissions)
                 {

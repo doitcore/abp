@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Aggiungi autorizzazioni",
     "UpdateResourcePermissions": "Aggiorna autorizzazioni",
     "GrantAllResourcePermissions": "Concedi tutto",
-    "NoResourceProviderKeyLookupServiceFound": "Non è stato trovato alcun servizio di ricerca chiave provider risorse",
-    "NoResourcePermissionFound": "Non è definita alcuna autorizzazione per la risorsa corrente."
+    "NoResourceProviderKeyLookupServiceFound": "Non è stato trovato alcun servizio di ricerca chiave del provider",
+    "NoResourcePermissionFound": "Non è definita alcuna autorizzazione."
   }
 }

@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Agregar permisos",
     "UpdateResourcePermissions": "Actualizar permisos",
     "GrantAllResourcePermissions": "Conceder todos",
-    "NoResourceProviderKeyLookupServiceFound": "No se encontró ningún servicio de búsqueda de clave de proveedor de recursos",
-    "NoResourcePermissionFound": "No hay ningún permiso de recurso definido para el recurso actual."
+    "NoResourceProviderKeyLookupServiceFound": "No se encontró ningún servicio de búsqueda de clave de proveedor",
+    "NoResourcePermissionFound": "No hay ningún permiso definido."
   }
 }

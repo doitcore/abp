@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Lisää käyttöoikeudet",
     "UpdateResourcePermissions": "Päivitä käyttöoikeudet",
     "GrantAllResourcePermissions": "Myönnä kaikki",
-    "NoResourceProviderKeyLookupServiceFound": "Resurssin tarjoajan avaimen hakupalvelua ei löytynyt",
-    "NoResourcePermissionFound": "Nykyiselle resurssille ei ole määritetty käyttöoikeutta."
+    "NoResourceProviderKeyLookupServiceFound": "Palveluntarjoajan avaimen hakupalvelua ei löytynyt",
+    "NoResourcePermissionFound": "Ei käyttöoikeuksia määritetty."
   }
 }

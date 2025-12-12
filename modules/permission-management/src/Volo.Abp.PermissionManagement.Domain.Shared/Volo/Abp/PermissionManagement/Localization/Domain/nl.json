@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Rechten toevoegen",
     "UpdateResourcePermissions": "Rechten bijwerken",
     "GrantAllResourcePermissions": "Alles toekennen",
-    "NoResourceProviderKeyLookupServiceFound": "Er is geen service gevonden voor het opzoeken van de sleutel van de bronprovider",
-    "NoResourcePermissionFound": "Er is geen bronmachtiging gedefinieerd voor de huidige bron."
+    "NoResourceProviderKeyLookupServiceFound": "Er is geen service gevonden voor het opzoeken van de sleutel van de provider",
+    "NoResourcePermissionFound": "Er is geen machtiging gedefinieerd."
   }
 }

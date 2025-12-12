@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Adăugați permisiuni",
     "UpdateResourcePermissions": "Actualizați permisiunile",
     "GrantAllResourcePermissions": "Acordați toate",
-    "NoResourceProviderKeyLookupServiceFound": "Nu a fost găsit niciun serviciu de căutare a cheii furnizorului de resurse",
-    "NoResourcePermissionFound": "Nu există nicio permisiune de resursă definită pentru resursa curentă."
+    "NoResourceProviderKeyLookupServiceFound": "Nu a fost găsit niciun serviciu de căutare a cheii furnizorului",
+    "NoResourcePermissionFound": "Nu există nicio permisiune definită."
   }
 }

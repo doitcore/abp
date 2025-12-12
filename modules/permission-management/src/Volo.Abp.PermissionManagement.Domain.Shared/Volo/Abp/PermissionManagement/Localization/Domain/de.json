@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Berechtigungen hinzufügen",
     "UpdateResourcePermissions": "Berechtigungen aktualisieren",
     "GrantAllResourcePermissions": "Alle gewähren",
-    "NoResourceProviderKeyLookupServiceFound": "Es wurde kein Dienst zum Nachschlagen des Ressourcenschlüsselanbieters gefunden",
-    "NoResourcePermissionFound": "Es ist keine Ressourcenberechtigung für die aktuelle Ressource definiert."
+    "NoResourceProviderKeyLookupServiceFound": "Es wurde kein Dienst zum Nachschlagen des Anbieterschlüssels gefunden",
+    "NoResourcePermissionFound": "Es ist keine Berechtigung definiert."
   }
 }

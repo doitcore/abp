@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Добавить разрешения",
     "UpdateResourcePermissions": "Обновить разрешения",
     "GrantAllResourcePermissions": "Предоставить все",
-    "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика ресурсов не найдена",
-    "NoResourcePermissionFound": "Для текущего ресурса не определено ни одного разрешения."
+    "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика не найдена",
+    "NoResourcePermissionFound": "Не определено ни одного разрешения."
   }
 }

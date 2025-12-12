@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Pridať oprávnenia",
     "UpdateResourcePermissions": "Aktualizovať oprávnenia",
     "GrantAllResourcePermissions": "Udeľ všetko",
-    "NoResourceProviderKeyLookupServiceFound": "Nebola nájdená služba na vyhľadávanie kľúča poskytovateľa zdrojov",
-    "NoResourcePermissionFound": "Pre aktuálny zdroj nie je definované žiadne povolenie."
+    "NoResourceProviderKeyLookupServiceFound": "Nebola nájdená služba na vyhľadávanie kľúča poskytovateľa",
+    "NoResourcePermissionFound": "Nie je definované žiadne povolenie."
   }
 }

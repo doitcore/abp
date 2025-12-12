@@ -17,7 +17,7 @@
     "AddResourcePermissions": "إضافة الأذونات",
     "UpdateResourcePermissions": "تحديث الأذونات",
     "GrantAllResourcePermissions": "منح الكل",
-    "NoResourceProviderKeyLookupServiceFound": "لم يتم العثور على خدمة البحث عن مفتاح مزود المورد",
-    "NoResourcePermissionFound": "لا يوجد إذن مورد معرف للموارد الحالية."
+    "NoResourceProviderKeyLookupServiceFound": "لم يتم العثور على خدمة البحث عن مفتاح المزود",
+    "NoResourcePermissionFound": "لا توجد أي أذونات محددة."
   }
 }

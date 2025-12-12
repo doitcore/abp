@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Bæta við heimildum",
     "UpdateResourcePermissions": "Uppfæra heimildir",
     "GrantAllResourcePermissions": "Veita allt",
-    "NoResourceProviderKeyLookupServiceFound": "Engin þjónusta fannst til að leita að lykli auðlindaveitanda",
-    "NoResourcePermissionFound": "Engin heimild er skilgreind fyrir núverandi auðlind."
+    "NoResourceProviderKeyLookupServiceFound": "Engin þjónusta fannst til að leita að lykli veitanda",
+    "NoResourcePermissionFound": "Engin heimild er skilgreind."
   }
 }

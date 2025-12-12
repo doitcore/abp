@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Lägg till behörigheter",
     "UpdateResourcePermissions": "Uppdatera behörigheter",
     "GrantAllResourcePermissions": "Bevilja alla",
-    "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter nyckel till resursleverantör hittades",
-    "NoResourcePermissionFound": "Det finns ingen resursbehörighet definierad för den aktuella resursen."
+    "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter leverantörsnyckel hittades",
+    "NoResourcePermissionFound": "Ingen behörighet är definierad."
   }
 }

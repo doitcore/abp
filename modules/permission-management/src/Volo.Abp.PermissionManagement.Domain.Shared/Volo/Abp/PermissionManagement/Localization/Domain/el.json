@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Προσθήκη δικαιωμάτων",
     "UpdateResourcePermissions": "Ενημέρωση δικαιωμάτων",
     "GrantAllResourcePermissions": "Παραχώρηση όλων",
-    "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου πόρων",
-    "NoResourcePermissionFound": "Δεν έχει οριστεί καμία άδεια πόρου για τον τρέχοντα πόρο."
+    "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου",
+    "NoResourcePermissionFound": "Δεν έχει οριστεί καμία άδεια."
   }
 }

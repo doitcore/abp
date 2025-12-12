@@ -17,7 +17,7 @@
     "AddResourcePermissions": "Dodaj dovoljenja",
     "UpdateResourcePermissions": "Posodobi dovoljenja",
     "GrantAllResourcePermissions": "Dodeli vse",
-    "NoResourceProviderKeyLookupServiceFound": "Ni bilo mogoče najti storitve za iskanje ključa ponudnika virov",
-    "NoResourcePermissionFound": "Za trenutni vir ni določeno nobeno dovoljenje."
+    "NoResourceProviderKeyLookupServiceFound": "Ni bilo mogoče najti storitve za iskanje ključa ponudnika",
+    "NoResourcePermissionFound": "Nobeno dovoljenje ni določeno."
   }
 }

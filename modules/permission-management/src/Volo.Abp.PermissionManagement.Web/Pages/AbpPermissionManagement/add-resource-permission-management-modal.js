@@ -54,10 +54,38 @@ var abp = abp || {};
         if ($providerKey.val()) {
             $permissionManagementForm.valid();
         }
+        var providerKey = $providerKey.val();
+        if (!providerKey) {
+            $items.prop('checked', false);
+            $all.prop("checked", false);
+            return;
+        }
+
+        $items.prop('disabled', true);
+        var resourceName = $("#ResourceName").val();
+        var resourceKey = $("#ResourceKey").val();
+        var providerName = $('input[name="AddModel.ProviderName"]:checked').val();
+        volo.abp.permissionManagement.permissions.getResourceByProvider(resourceName, resourceKey, providerName, providerKey).then(function (result) {
+            $items.prop('disabled', false);
+            var grantedPermissionNames = result.permissions.filter(function (p) {
+                return p.isGranted === true;
+            }).map(function (p) {
+                return p.name;
+            });
+            $items.each(function () {
+                var $checkbox = $(this);
+                if (grantedPermissionNames.indexOf($checkbox.val()) >= 0) {
+                    $checkbox.prop('checked', true);
+                } else {
+                    $checkbox.prop('checked', false);
+                }
+            });
+            $all.prop("checked", $items.length === $items.filter(":checked").length);
+        });
     });
 
     $permissionManagementForm.submit(function () {
-         $(this).valid();
+        $(this).valid();
     });
 
 })(jQuery);

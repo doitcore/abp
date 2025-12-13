@@ -23,7 +23,7 @@ public interface IIdentityUserIntegrationService : IApplicationService
 
     Task<ListResultDto<RoleData>> SearchRoleAsync(RoleLookupSearchInputDto input);
 
-    Task<ListResultDto<RoleData>> SearchRoleByIdsAsync(Guid[] ids);
+    Task<ListResultDto<RoleData>> SearchRoleByNamesAsync(string[] ids);
 
     Task<long> GetRoleCountAsync(RoleLookupCountInputDto input);
 }

@@ -34,7 +34,7 @@
                 <select asp-for="@Model.AddModel.ProviderKey" data-val="true" data-val-required="@L["ThisFieldIsRequired."].Value" id="AddModel_ProviderKey" name="AddModel.ProviderKey" value="" class="form-control"></select>
                 <span class="text-danger field-validation-valid" data-valmsg-for="AddModel.ProviderKey" data-valmsg-replace="true"></span>
             </div>
-            <div class="mb-3" id="permissionList">
+            <div class="position-relative mb-3" id="permissionList">
                 <h4>@L["ResourcePermissionPermissions"]</h4>
                 <div class="form-check form-switch mb-2">
                     <input class="form-check-input" id="grantAllresourcePermissions" type="checkbox">

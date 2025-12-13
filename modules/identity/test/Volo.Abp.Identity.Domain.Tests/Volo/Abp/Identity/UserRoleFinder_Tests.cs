@@ -51,9 +51,9 @@ public class UserRoleFinder_Tests : AbpIdentityDomainTestBase
     }
 
     [Fact]
-    public async Task SearchRoleByIdsAsync()
+    public async Task SearchRoleByNamesAsync()
     {
-        var roleResults = await _userRoleFinder.SearchRoleByIdsAsync(new[] { _testData.RoleModeratorId, _testData.RoleManagerId });
+        var roleResults = await _userRoleFinder.SearchRoleByNamesAsync(new[] { "moderator", "manager" });
         roleResults.ShouldNotBeEmpty();
         roleResults.Count.ShouldBe(2);
         roleResults.ShouldContain(x => x.RoleName == "moderator");

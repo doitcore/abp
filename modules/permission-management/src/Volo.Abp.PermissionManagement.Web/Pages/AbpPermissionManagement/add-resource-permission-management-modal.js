@@ -61,12 +61,12 @@ var abp = abp || {};
             return;
         }
 
-        $items.prop('disabled', true);
+        abp.ui.setBusy('#permissionList');
         var resourceName = $("#ResourceName").val();
         var resourceKey = $("#ResourceKey").val();
         var providerName = $('input[name="AddModel.ProviderName"]:checked').val();
         volo.abp.permissionManagement.permissions.getResourceByProvider(resourceName, resourceKey, providerName, providerKey).then(function (result) {
-            $items.prop('disabled', false);
+            abp.ui.clearBusy();
             var grantedPermissionNames = result.permissions.filter(function (p) {
                 return p.isGranted === true;
             }).map(function (p) {

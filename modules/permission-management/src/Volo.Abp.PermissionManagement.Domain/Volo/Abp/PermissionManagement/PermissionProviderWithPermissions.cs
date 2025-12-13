@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Volo.Abp.Localization;
 
 namespace Volo.Abp.PermissionManagement;
 
@@ -9,6 +10,8 @@ public class PermissionProviderWithPermissions
     public string ProviderKey { get; set; }
 
     public string ProviderDisplayName { get; set; }
+
+    public ILocalizableString ProviderNameDisplayName { get; set; }
 
     public List<string> Permissions { get; set; }
 

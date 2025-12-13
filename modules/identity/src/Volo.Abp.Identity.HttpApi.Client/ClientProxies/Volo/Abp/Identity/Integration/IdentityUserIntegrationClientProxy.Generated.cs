@@ -76,11 +76,11 @@ public partial class IdentityUserIntegrationClientProxy : ClientProxyBase<IIdent
         });
     }
 
-    public virtual async Task<ListResultDto<RoleData>> SearchRoleByIdsAsync(Guid[] ids)
+    public virtual async Task<ListResultDto<RoleData>> SearchRoleByNamesAsync(String[] names)
     {
-        return await RequestAsync<ListResultDto<RoleData>>(nameof(SearchRoleByIdsAsync), new ClientProxyRequestTypeValue
+        return await RequestAsync<ListResultDto<RoleData>>(nameof(SearchRoleByNamesAsync), new ClientProxyRequestTypeValue
         {
-            { typeof(Guid[]), ids }
+            { typeof(String[]), names }
         });
     }
 

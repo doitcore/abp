@@ -60,7 +60,7 @@ var abp = abp || {};
                         title: l("ResourcePermissionTarget"),
                         data: 'providerName',
                         render: function (data, type, row) {
-                            return '<span class="d-inline-block bg-light rounded-pill px-2 me-1 ms-1 mb-1">' + row.providerName + '</span>' + row.providerDisplayName;
+                            return '<span class="d-inline-block bg-light rounded-pill px-2 me-1 ms-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="' + row.providerNameDisplayName + '">' + row.providerName + '</span>' + row.providerDisplayName;
                         },
                     },
                     {

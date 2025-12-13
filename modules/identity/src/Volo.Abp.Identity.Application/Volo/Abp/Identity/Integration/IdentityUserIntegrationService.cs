@@ -105,11 +105,11 @@ public class IdentityUserIntegrationService : IdentityAppServiceBase, IIdentityU
         }
     }
 
-    public virtual async Task<ListResultDto<RoleData>> SearchRoleByIdsAsync(Guid[] ids)
+    public virtual async Task<ListResultDto<RoleData>> SearchRoleByNamesAsync(string[] names)
     {
         using (RoleRepository.DisableTracking())
         {
-            var roles = await RoleRepository.GetListAsync(ids);
+            var roles = await RoleRepository.GetListAsync(names);
             return new ListResultDto<RoleData>(roles.Select(r => new RoleData(r.Id, r.Name, r.IsDefault, r.IsStatic, r.IsPublic, r.TenantId, r.ExtraProperties)).ToList());
         }
     }

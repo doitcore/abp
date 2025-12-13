@@ -217,7 +217,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
                 {
                     continue;
                 }
-                var keys = resourcePermissionProvider.Select(rp => rp.ProviderKey).ToList();
+                var keys = resourcePermissionProvider.Select(rp => rp.ProviderKey).Distinct().ToList();
                 providerKeyInfos.Add(resourcePermissionProvider.Key, await providerKeyLookupService.SearchAsync(keys.ToArray()));
             }
 
@@ -232,6 +232,8 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
                 if (providerKeyInfo != null)
                 {
                     item.ProviderDisplayName = providerKeyInfo.ProviderDisplayName;
+                    item.ProviderNameDisplayName = providerKeyLookupServices
+                        .FirstOrDefault(s => s.Name == item.ProviderName)?.DisplayName;
                 }
             }
         }
@@ -374,7 +376,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
             return multiplePermissionWithGrantedProviders;
         }
 
-        foreach (var provider in ManagementProviders)
+        foreach (var provider in ManagementProviders.Where(x => x.Name == providerName))
         {
             permissionNames = resourcePermissions.Select(x => x.Name).ToArray();
             var multiplePermissionValueProviderGrantInfo = await provider.CheckAsync(permissionNames, resourceName, resourceKey, providerName, providerKey);

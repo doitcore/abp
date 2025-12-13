@@ -1436,12 +1436,12 @@
                   }
                 },
                 {
-                  "name": "SearchRoleByIdsAsync",
+                  "name": "SearchRoleByNamesAsync",
                   "parametersOnMethod": [
                     {
                       "name": "ids",
-                      "typeAsString": "System.Guid[], System.Private.CoreLib",
-                      "type": "System.Guid[]",
+                      "typeAsString": "System.String[], System.Private.CoreLib",
+                      "type": "System.String[]",
                       "typeSimple": "[string]",
                       "isOptional": false,
                       "defaultValue": null
@@ -1828,17 +1828,17 @@
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Identity.Integration.IIdentityUserIntegrationService"
             },
-            "SearchRoleByIdsAsyncByIds": {
-              "uniqueName": "SearchRoleByIdsAsyncByIds",
-              "name": "SearchRoleByIdsAsync",
+            "SearchRoleByNamesAsyncByNames": {
+              "uniqueName": "SearchRoleByNamesAsyncByNames",
+              "name": "SearchRoleByNamesAsync",
               "httpMethod": "GET",
-              "url": "integration-api/identity/users/search/roles/by-ids",
+              "url": "integration-api/identity/users/search/roles/by-names",
               "supportedVersions": [],
               "parametersOnMethod": [
                 {
-                  "name": "ids",
-                  "typeAsString": "System.Guid[], System.Private.CoreLib",
-                  "type": "System.Guid[]",
+                  "name": "names",
+                  "typeAsString": "System.String[], System.Private.CoreLib",
+                  "type": "System.String[]",
                   "typeSimple": "[string]",
                   "isOptional": false,
                   "defaultValue": null
@@ -1846,10 +1846,10 @@
               ],
               "parameters": [
                 {
-                  "nameOnMethod": "ids",
-                  "name": "ids",
+                  "nameOnMethod": "names",
+                  "name": "names",
                   "jsonName": null,
-                  "type": "System.Guid[]",
+                  "type": "System.String[]",
                   "typeSimple": "[string]",
                   "isOptional": false,
                   "defaultValue": null,

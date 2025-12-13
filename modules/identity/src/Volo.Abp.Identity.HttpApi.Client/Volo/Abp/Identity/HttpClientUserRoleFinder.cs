@@ -72,9 +72,9 @@ public class HttpClientUserRoleFinder : IUserRoleFinder, ITransientDependency
         }).ToList();
     }
 
-    public virtual async Task<List<RoleFinderResult>> SearchRoleByIdsAsync(Guid[] ids)
+    public virtual async Task<List<RoleFinderResult>> SearchRoleByNamesAsync(string[] names)
     {
-        var roles = await _userIntegrationService.SearchRoleByIdsAsync(ids);
+        var roles = await _userIntegrationService.SearchRoleByNamesAsync(names);
         return roles.Items.Select(r => new RoleFinderResult
         {
             Id = r.Id,

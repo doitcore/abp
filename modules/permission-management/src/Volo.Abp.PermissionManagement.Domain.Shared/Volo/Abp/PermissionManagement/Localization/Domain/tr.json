@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Hiçbir izin olmadan kaydetmek istediğinize emin misiniz?",
     "PermissionGroup": "İzin Grubu",
     "Filter": "Filtre",
-    "ResourcePermissions": "Kaynak izinleri",
+    "ResourcePermissions": "İzinler",
     "ResourcePermissionTarget": "Hedef",
     "ResourcePermissionPermissions": "İzinler",
-    "AddResourcePermission": "Kaynak izinleri ekle",
-    "ResourcePermissionDeletionConfirmationMessage": "Bu kaynak izinlerini silmek istediğinizden emin misiniz?",
-    "AddResourcePermissions": "Kaynak izinleri ekle",
-    "UpdateResourcePermissions": "Kaynak izinlerini güncelle",
-    "Resource": "Kaynak",
-    "ResourceName": "Kaynak adı",
-    "ResourceKey": "Kaynak anahtarı",
-    "ProviderName": "Sağlayıcı adı",
-    "ProviderKey": "Sağlayıcı anahtarı",
+    "AddResourcePermission": "İzin ekle",
+    "ResourcePermissionDeletionConfirmationMessage": "Tüm izinleri silmek istediğinizden emin misiniz?",
+    "AddResourcePermissions": "İzinler ekle",
+    "UpdateResourcePermissions": "İzinleri güncelle",
     "GrantAllResourcePermissions": "Tümünü ver",
-    "NoResourceProviderKeyLookupServiceFound": "Herhangi bir kaynak sağlayıcı anahtar arama hizmeti bulunamadı",
-    "NoResourcePermissionFound": "Geçerli kaynak için tanımlı bir kaynak izni yok."
+    "NoResourceProviderKeyLookupServiceFound": "Herhangi bir sağlayıcı anahtar arama hizmeti bulunamadı",
+    "NoResourcePermissionFound": "Herhangi bir izin tanımlı değil."
   }
 }

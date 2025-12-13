@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Ertu viss um að þú viljir vista án nokkurra heimilda?",
     "PermissionGroup": "Heimildahópur",
     "Filter": "Sía",
-    "ResourcePermissions": "Heimildir auðlinda",
+    "ResourcePermissions": "Heimildir",
     "ResourcePermissionTarget": "Markmið",
     "ResourcePermissionPermissions": "Heimildir",
-    "AddResourcePermission": "Bæta við heimildum auðlinda",
-    "ResourcePermissionDeletionConfirmationMessage": "Ertu viss um að þú viljir eyða þessum heimildum auðlinda?",
-    "AddResourcePermissions": "Bæta við heimildum auðlinda",
-    "UpdateResourcePermissions": "Uppfæra heimildir auðlinda",
-    "Resource": "Auðlind",
-    "ResourceName": "Nafn auðlindar",
-    "ResourceKey": "Lykill auðlindar",
-    "ProviderName": "Nafn veitanda",
-    "ProviderKey": "Lykill veitanda",
+    "AddResourcePermission": "Bæta við heimild",
+    "ResourcePermissionDeletionConfirmationMessage": "Ertu viss um að þú viljir eyða öllum heimildum?",
+    "AddResourcePermissions": "Bæta við heimildum",
+    "UpdateResourcePermissions": "Uppfæra heimildir",
     "GrantAllResourcePermissions": "Veita allt",
-    "NoResourceProviderKeyLookupServiceFound": "Engin þjónusta fannst til að leita að lykli auðlindaveitanda",
-    "NoResourcePermissionFound": "Engin heimild er skilgreind fyrir núverandi auðlind."
+    "NoResourceProviderKeyLookupServiceFound": "Engin þjónusta fannst til að leita að lykli veitanda",
+    "NoResourcePermissionFound": "Engin heimild er skilgreind."
   }
 }

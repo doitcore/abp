@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "آیا مطمئن هستید که می خواهید بدون هیچ دسترسی ذخیره کنید؟",
     "PermissionGroup": "گروه دسترسی",
     "Filter": "فیلتر",
-    "ResourcePermissions": "دسترسی‌های منابع",
+    "ResourcePermissions": "دسترسی‌ها",
     "ResourcePermissionTarget": "هدف",
     "ResourcePermissionPermissions": "دسترسی‌ها",
-    "AddResourcePermission": "افزودن دسترسی‌های منابع",
-    "ResourcePermissionDeletionConfirmationMessage": "آیا مطمئن هستید که می‌خواهید این دسترسی‌های منابع را حذف کنید؟",
-    "AddResourcePermissions": "افزودن دسترسی‌های منابع",
-    "UpdateResourcePermissions": "به‌روزرسانی دسترسی‌های منابع",
-    "Resource": "منبع",
-    "ResourceName": "نام منبع",
-    "ResourceKey": "کلید منبع",
-    "ProviderName": "نام ارائه‌دهنده",
-    "ProviderKey": "کلید ارائه‌دهنده",
+    "AddResourcePermission": "افزودن مجوز",
+    "ResourcePermissionDeletionConfirmationMessage": "آیا مطمئن هستید که می‌خواهید همه مجوزها را حذف کنید؟",
+    "AddResourcePermissions": "افزودن مجوزها",
+    "UpdateResourcePermissions": "به‌روزرسانی مجوزها",
     "GrantAllResourcePermissions": "اعطای همه",
-    "NoResourceProviderKeyLookupServiceFound": "هیچ سرویس جستجوی کلید ارائه‌دهنده منبع یافت نشد",
-    "NoResourcePermissionFound": "هیچ مجوز منبعی برای منبع فعلی تعریف نشده است."
+    "NoResourceProviderKeyLookupServiceFound": "هیچ سرویس جستجوی کلید ارائه‌دهنده یافت نشد",
+    "NoResourcePermissionFound": "هیچ مجوزی تعریف نشده است."
   }
 }

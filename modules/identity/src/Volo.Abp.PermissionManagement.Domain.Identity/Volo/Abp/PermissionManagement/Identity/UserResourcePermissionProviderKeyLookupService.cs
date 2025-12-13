@@ -37,6 +37,7 @@ public class UserResourcePermissionProviderKeyLookupService : IResourcePermissio
             .Select(key => Guid.TryParse(key, out var id) ? (Guid?)id : null)
             .Where(id => id.HasValue)
             .Select(id => id.Value)
+            .Distinct()
             .ToArray();
         var users = await UserRoleFinder.SearchUserByIdsAsync(ids.ToArray());
         return users.Select(u => new ResourcePermissionProviderKeyInfo(u.Id.ToString(), u.UserName)).ToList();

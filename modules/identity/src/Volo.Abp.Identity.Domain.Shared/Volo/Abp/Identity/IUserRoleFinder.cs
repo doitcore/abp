@@ -18,5 +18,5 @@ public interface IUserRoleFinder
 
     Task<List<UserFinderResult>> SearchUserByIdsAsync(Guid[] ids);
 
-    Task<List<RoleFinderResult>> SearchRoleByIdsAsync(Guid[] ids);
+    Task<List<RoleFinderResult>> SearchRoleByNamesAsync(string[] names);
 }

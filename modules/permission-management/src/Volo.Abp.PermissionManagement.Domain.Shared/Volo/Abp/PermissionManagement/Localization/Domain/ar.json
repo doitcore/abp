@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "هل أنت متأكد أنك تريد الحفظ بدون أي أذونات؟",
     "PermissionGroup": "مجموعة الأذونات",
     "Filter": "تصفية",
-    "ResourcePermissions": "أذونات الموارد",
+    "ResourcePermissions": "الأذونات",
     "ResourcePermissionTarget": "الهدف",
     "ResourcePermissionPermissions": "الأذونات",
-    "AddResourcePermission": "إضافة أذونات الموارد",
-    "ResourcePermissionDeletionConfirmationMessage": "هل أنت متأكد أنك تريد حذف أذونات الموارد هذه؟",
-    "AddResourcePermissions": "إضافة أذونات الموارد",
-    "UpdateResourcePermissions": "تحديث أذونات الموارد",
-    "Resource": "المورد",
-    "ResourceName": "اسم المورد",
-    "ResourceKey": "مفتاح المورد",
-    "ProviderName": "اسم الموفر",
-    "ProviderKey": "مفتاح الموفر",
+    "AddResourcePermission": "إضافة إذن",
+    "ResourcePermissionDeletionConfirmationMessage": "هل أنت متأكد أنك تريد حذف جميع الأذونات؟",
+    "AddResourcePermissions": "إضافة الأذونات",
+    "UpdateResourcePermissions": "تحديث الأذونات",
     "GrantAllResourcePermissions": "منح الكل",
-    "NoResourceProviderKeyLookupServiceFound": "لم يتم العثور على خدمة البحث عن مفتاح مزود المورد",
-    "NoResourcePermissionFound": "لا يوجد إذن مورد معرف للموارد الحالية."
+    "NoResourceProviderKeyLookupServiceFound": "لم يتم العثور على خدمة البحث عن مفتاح المزود",
+    "NoResourcePermissionFound": "لا توجد أي أذونات محددة."
   }
 }

@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Är du säker på att du vill spara utan några behörigheter?",
     "PermissionGroup": "Behörighetsgrupp",
     "Filter": "Filtrera",
-    "ResourcePermissions": "Resursbehörigheter",
+    "ResourcePermissions": "Behörigheter",
     "ResourcePermissionTarget": "Mål",
     "ResourcePermissionPermissions": "Behörigheter",
-    "AddResourcePermission": "Lägg till resursbehörigheter",
-    "ResourcePermissionDeletionConfirmationMessage": "Är du säker på att du vill ta bort dessa resursbehörigheter?",
-    "AddResourcePermissions": "Lägg till resursbehörigheter",
-    "UpdateResourcePermissions": "Uppdatera resursbehörigheter",
-    "Resource": "Resurs",
-    "ResourceName": "Resursnamn",
-    "ResourceKey": "Resursnyckel",
-    "ProviderName": "Leverantörsnamn",
-    "ProviderKey": "Leverantörsnyckel",
+    "AddResourcePermission": "Lägg till behörighet",
+    "ResourcePermissionDeletionConfirmationMessage": "Är du säker på att du vill ta bort alla behörigheter?",
+    "AddResourcePermissions": "Lägg till behörigheter",
+    "UpdateResourcePermissions": "Uppdatera behörigheter",
     "GrantAllResourcePermissions": "Bevilja alla",
-    "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter nyckel till resursleverantör hittades",
-    "NoResourcePermissionFound": "Det finns ingen resursbehörighet definierad för den aktuella resursen."
+    "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter leverantörsnyckel hittades",
+    "NoResourcePermissionFound": "Ingen behörighet är definierad."
   }
 }

@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "¿Estás seguro de que quieres guardar sin ningún permiso?",
     "PermissionGroup": "Grupo de permisos",
     "Filter": "Filtrar",
-    "ResourcePermissions": "Permisos de recursos",
+    "ResourcePermissions": "Permisos",
     "ResourcePermissionTarget": "Objetivo",
     "ResourcePermissionPermissions": "Permisos",
-    "AddResourcePermission": "Agregar permisos de recursos",
-    "ResourcePermissionDeletionConfirmationMessage": "¿Está seguro de que desea eliminar estos permisos de recursos?",
-    "AddResourcePermissions": "Agregar permisos de recursos",
-    "UpdateResourcePermissions": "Actualizar permisos de recursos",
-    "Resource": "Recurso",
-    "ResourceName": "Nombre del recurso",
-    "ResourceKey": "Clave del recurso",
-    "ProviderName": "Nombre del proveedor",
-    "ProviderKey": "Clave del proveedor",
+    "AddResourcePermission": "Agregar permiso",
+    "ResourcePermissionDeletionConfirmationMessage": "¿Está seguro de que desea eliminar todos los permisos?",
+    "AddResourcePermissions": "Agregar permisos",
+    "UpdateResourcePermissions": "Actualizar permisos",
     "GrantAllResourcePermissions": "Conceder todos",
-    "NoResourceProviderKeyLookupServiceFound": "No se encontró ningún servicio de búsqueda de clave de proveedor de recursos",
-    "NoResourcePermissionFound": "No hay ningún permiso de recurso definido para el recurso actual."
+    "NoResourceProviderKeyLookupServiceFound": "No se encontró ningún servicio de búsqueda de clave de proveedor",
+    "NoResourcePermissionFound": "No hay ningún permiso definido."
   }
 }

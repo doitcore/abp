@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Weet u zeker dat u zonder rechten wilt opslaan?",
     "PermissionGroup": "Rechtengroep",
     "Filter": "Filter",
-    "ResourcePermissions": "Bronrechten",
+    "ResourcePermissions": "Rechten",
     "ResourcePermissionTarget": "Doel",
     "ResourcePermissionPermissions": "Rechten",
-    "AddResourcePermission": "Bronrechten toevoegen",
-    "ResourcePermissionDeletionConfirmationMessage": "Weet u zeker dat u deze bronrechten wilt verwijderen?",
-    "AddResourcePermissions": "Bronrechten toevoegen",
-    "UpdateResourcePermissions": "Bronrechten bijwerken",
-    "Resource": "Bron",
-    "ResourceName": "Bronnaam",
-    "ResourceKey": "Bronsleutel",
-    "ProviderName": "Naam van provider",
-    "ProviderKey": "Providersleutel",
+    "AddResourcePermission": "Recht toevoegen",
+    "ResourcePermissionDeletionConfirmationMessage": "Weet u zeker dat u alle rechten wilt verwijderen?",
+    "AddResourcePermissions": "Rechten toevoegen",
+    "UpdateResourcePermissions": "Rechten bijwerken",
     "GrantAllResourcePermissions": "Alles toekennen",
-    "NoResourceProviderKeyLookupServiceFound": "Er is geen service gevonden voor het opzoeken van de sleutel van de bronprovider",
-    "NoResourcePermissionFound": "Er is geen bronmachtiging gedefinieerd voor de huidige bron."
+    "NoResourceProviderKeyLookupServiceFound": "Er is geen service gevonden voor het opzoeken van de sleutel van de provider",
+    "NoResourcePermissionFound": "Er is geen machtiging gedefinieerd."
   }
 }

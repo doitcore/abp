@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Είστε βέβαιοι ότι θέλετε να αποθηκεύσετε χωρίς δικαιώματα;",
     "PermissionGroup": "Ομάδα δικαιωμάτων",
     "Filter": "Φίλτρο",
-    "ResourcePermissions": "Δικαιώματα πόρων",
+    "ResourcePermissions": "Δικαιώματα",
     "ResourcePermissionTarget": "Στόχος",
     "ResourcePermissionPermissions": "Δικαιώματα",
-    "AddResourcePermission": "Προσθήκη δικαιωμάτων πόρων",
-    "ResourcePermissionDeletionConfirmationMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτά τα δικαιώματα πόρων;",
-    "AddResourcePermissions": "Προσθήκη δικαιωμάτων πόρων",
-    "UpdateResourcePermissions": "Ενημέρωση δικαιωμάτων πόρων",
-    "Resource": "Πόρος",
-    "ResourceName": "Όνομα πόρου",
-    "ResourceKey": "Κλειδί πόρου",
-    "ProviderName": "Όνομα παρόχου",
-    "ProviderKey": "Κλειδί παρόχου",
+    "AddResourcePermission": "Προσθήκη δικαιώματος",
+    "ResourcePermissionDeletionConfirmationMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλα τα δικαιώματα;",
+    "AddResourcePermissions": "Προσθήκη δικαιωμάτων",
+    "UpdateResourcePermissions": "Ενημέρωση δικαιωμάτων",
     "GrantAllResourcePermissions": "Παραχώρηση όλων",
-    "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου πόρων",
-    "NoResourcePermissionFound": "Δεν έχει οριστεί καμία άδεια πόρου για τον τρέχοντα πόρο."
+    "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου",
+    "NoResourcePermissionFound": "Δεν έχει οριστεί καμία άδεια."
   }
 }

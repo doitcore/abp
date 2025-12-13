@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Tem certeza que deseja salvar sem nenhuma permissão?",
     "PermissionGroup": "Grupo de permissão",
     "Filter": "Filtrar",
-    "ResourcePermissions": "Permissões de recursos",
+    "ResourcePermissions": "Permissões",
     "ResourcePermissionTarget": "Alvo",
     "ResourcePermissionPermissions": "Permissões",
-    "AddResourcePermission": "Adicionar permissões de recursos",
-    "ResourcePermissionDeletionConfirmationMessage": "Tem certeza de que deseja excluir essas permissões de recursos?",
-    "AddResourcePermissions": "Adicionar permissões de recursos",
-    "UpdateResourcePermissions": "Atualizar permissões de recursos",
-    "Resource": "Recurso",
-    "ResourceName": "Nome do recurso",
-    "ResourceKey": "Chave do recurso",
-    "ProviderName": "Nome do provedor",
-    "ProviderKey": "Chave do provedor",
+    "AddResourcePermission": "Adicionar permissão",
+    "ResourcePermissionDeletionConfirmationMessage": "Tem certeza de que deseja excluir todas as permissões?",
+    "AddResourcePermissions": "Adicionar permissões",
+    "UpdateResourcePermissions": "Atualizar permissões",
     "GrantAllResourcePermissions": "Conceder tudo",
-    "NoResourceProviderKeyLookupServiceFound": "Nenhum serviço de pesquisa de chave de provedor de recursos foi encontrado",
-    "NoResourcePermissionFound": "Não há permissão de recurso definida para o recurso atual."
+    "NoResourceProviderKeyLookupServiceFound": "Nenhum serviço de pesquisa de chave do provedor foi encontrado",
+    "NoResourcePermissionFound": "Nenhuma permissão foi definida."
   }
 }

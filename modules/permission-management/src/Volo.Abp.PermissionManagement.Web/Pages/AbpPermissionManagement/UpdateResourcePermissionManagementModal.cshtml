@@ -22,23 +22,17 @@
         <input asp-for="@Model.ProviderName" />
         <input asp-for="@Model.ProviderKey" />
         <abp-modal-body>
-            <div class="mb-3">
-                <label class="form-label">@L["Resource"]:</label>
-                <p>@Model.ResourceDisplayName</p>
-            </div>
             <div class="mb-3" id="permissionList">
-                <div class="mb-1 d-flex align-items-center justify-content-between">
-                    <label class="form-labe">@L["ResourcePermissionPermissions"]:</label>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" id="grantAllresourcePermissions" type="checkbox" checked="@Model.ResourcePermissions.Permissions.All(x => x.IsGranted)">
-                        <label class="form-check-label" for="grantAllresourcePermissions">Grant all</label>
-                    </div>
+                <h4>@L["ResourcePermissionPermissions"]</h4>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" id="grantAllresourcePermissions" type="checkbox" checked="@Model.ResourcePermissions.Permissions.All(x => x.IsGranted)">
+                    <label class="form-check-label" for="grantAllresourcePermissions">@L["GrantAllResourcePermissions"]</label>
                 </div>
                 @foreach (var permission in Model.ResourcePermissions.Permissions)
                 {
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="UpdateModel.Permissions[]" id="@permission.Name" value="@permission.Name" checked="@permission.IsGranted">
-                        <label class="form-check-label" for="@permission.Name">@permission.DisplayName</label>
+                        <input class="form-check-input" type="checkbox" name="UpdateModel.Permissions[]" id="@permission.Name.Replace(".", "")" value="@permission.Name" checked="@permission.IsGranted">
+                        <label class="form-check-label" for="@permission.Name.Replace(".", "")">@permission.DisplayName</label>
                     </div>
                 }
             </div>

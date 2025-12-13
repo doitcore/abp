@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Biztos, hogy engedélyek nélkül akar menteni?",
     "PermissionGroup": "Engedélycsoport",
     "Filter": "Szűrő",
-    "ResourcePermissions": "Erőforrás-engedélyek",
+    "ResourcePermissions": "Engedélyek",
     "ResourcePermissionTarget": "Cél",
     "ResourcePermissionPermissions": "Engedélyek",
-    "AddResourcePermission": "Erőforrás-engedélyek hozzáadása",
-    "ResourcePermissionDeletionConfirmationMessage": "Biztosan törölni szeretné ezeket az erőforrás-engedélyeket?",
-    "AddResourcePermissions": "Erőforrás-engedélyek hozzáadása",
-    "UpdateResourcePermissions": "Erőforrás-engedélyek frissítése",
-    "Resource": "Erőforrás",
-    "ResourceName": "Erőforrás neve",
-    "ResourceKey": "Erőforrás kulcs",
-    "ProviderName": "Szolgáltató neve",
-    "ProviderKey": "Szolgáltató kulcs",
+    "AddResourcePermission": "Engedély hozzáadása",
+    "ResourcePermissionDeletionConfirmationMessage": "Biztosan törölni szeretné az összes engedélyt?",
+    "AddResourcePermissions": "Engedélyek hozzáadása",
+    "UpdateResourcePermissions": "Engedélyek frissítése",
     "GrantAllResourcePermissions": "Összes engedély megadása",
-    "NoResourceProviderKeyLookupServiceFound": "Nem található erőforrás-szolgáltató kulcs kereső szolgáltatás",
-    "NoResourcePermissionFound": "Az aktuális erőforráshoz nincs meghatározva erőforrás-engedély."
+    "NoResourceProviderKeyLookupServiceFound": "Nem található szolgáltató kulcs kereső szolgáltatás",
+    "NoResourcePermissionFound": "Nincs meghatározva engedély."
   }
 }

@@ -70,11 +70,11 @@ public class UserRoleFinder : IUserRoleFinder, ITransientDependency
         }
     }
 
-    public virtual async Task<List<RoleFinderResult>> SearchRoleByIdsAsync(Guid[] ids)
+    public virtual async Task<List<RoleFinderResult>> SearchRoleByNamesAsync(string[] names)
     {
         using (IdentityUserRepository.DisableTracking())
         {
-            var roles = await IdentityRoleRepository.GetListAsync(ids);
+            var roles = await IdentityRoleRepository.GetListAsync(names);
             return roles.Select(user => new RoleFinderResult
             {
                 Id = user.Id,

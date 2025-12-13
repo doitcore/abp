@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Вы уверены, что хотите сохранить без каких-либо разрешений?",
     "PermissionGroup": "Группа разрешений",
     "Filter": "Фильтр",
-    "ResourcePermissions": "Разрешения ресурсов",
+    "ResourcePermissions": "Разрешения",
     "ResourcePermissionTarget": "Цель",
     "ResourcePermissionPermissions": "Разрешения",
-    "AddResourcePermission": "Добавить разрешения ресурсов",
-    "ResourcePermissionDeletionConfirmationMessage": "Вы уверены, что хотите удалить эти разрешения ресурсов?",
-    "AddResourcePermissions": "Добавить разрешения ресурсов",
-    "UpdateResourcePermissions": "Обновить разрешения ресурсов",
-    "Resource": "Ресурс",
-    "ResourceName": "Имя ресурса",
-    "ResourceKey": "Ключ ресурса",
-    "ProviderName": "Имя поставщика",
-    "ProviderKey": "Ключ поставщика",
+    "AddResourcePermission": "Добавить разрешение",
+    "ResourcePermissionDeletionConfirmationMessage": "Вы уверены, что хотите удалить все разрешения?",
+    "AddResourcePermissions": "Добавить разрешения",
+    "UpdateResourcePermissions": "Обновить разрешения",
     "GrantAllResourcePermissions": "Предоставить все",
-    "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика ресурсов не найдена",
-    "NoResourcePermissionFound": "Для текущего ресурса не определено ни одного разрешения."
+    "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика не найдена",
+    "NoResourcePermissionFound": "Не определено ни одного разрешения."
   }
 }

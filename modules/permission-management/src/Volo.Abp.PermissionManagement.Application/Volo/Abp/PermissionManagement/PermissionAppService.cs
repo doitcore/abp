@@ -262,6 +262,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
                 ProviderName = resourcePermissionGrant.ProviderName,
                 ProviderKey = resourcePermissionGrant.ProviderKey,
                 ProviderDisplayName = resourcePermissionGrant.ProviderDisplayName,
+                ProviderNameDisplayName  = resourcePermissionGrant.ProviderNameDisplayName?.Localize(StringLocalizerFactory),
                 Permissions = new List<GrantedResourcePermissionDto>()
             };
             foreach (var permission in resourcePermissionGrant.Permissions)

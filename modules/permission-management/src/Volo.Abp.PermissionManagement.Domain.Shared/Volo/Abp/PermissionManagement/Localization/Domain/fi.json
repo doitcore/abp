@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Haluatko varmasti tallentaa ilman käyttöoikeuksia?",
     "PermissionGroup": "Käyttöoikeus",
     "Filter": "Suodatus",
-    "ResourcePermissions": "Resurssien käyttöoikeudet",
+    "ResourcePermissions": "Käyttöoikeudet",
     "ResourcePermissionTarget": "Kohde",
     "ResourcePermissionPermissions": "Käyttöoikeudet",
-    "AddResourcePermission": "Lisää resurssien käyttöoikeudet",
-    "ResourcePermissionDeletionConfirmationMessage": "Oletko varma, että haluat poistaa nämä resurssien käyttöoikeudet?",
-    "AddResourcePermissions": "Lisää resurssien käyttöoikeudet",
-    "UpdateResourcePermissions": "Päivitä resurssien käyttöoikeudet",
-    "Resource": "Resurssi",
-    "ResourceName": "Resurssin nimi",
-    "ResourceKey": "Resurssiavain",
-    "ProviderName": "Palveluntarjoajan nimi",
-    "ProviderKey": "Palveluntarjoajan avain",
+    "AddResourcePermission": "Lisää käyttöoikeus",
+    "ResourcePermissionDeletionConfirmationMessage": "Haluatko varmasti poistaa kaikki käyttöoikeudet?",
+    "AddResourcePermissions": "Lisää käyttöoikeudet",
+    "UpdateResourcePermissions": "Päivitä käyttöoikeudet",
     "GrantAllResourcePermissions": "Myönnä kaikki",
-    "NoResourceProviderKeyLookupServiceFound": "Resurssin tarjoajan avaimen hakupalvelua ei löytynyt",
-    "NoResourcePermissionFound": "Nykyiselle resurssille ei ole määritetty käyttöoikeutta."
+    "NoResourceProviderKeyLookupServiceFound": "Palveluntarjoajan avaimen hakupalvelua ei löytynyt",
+    "NoResourcePermissionFound": "Ei käyttöoikeuksia määritetty."
   }
 }

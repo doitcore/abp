@@ -9,20 +9,15 @@
     "SaveWithoutAnyPermissionsWarningMessage": "Êtes-vous sûr de vouloir enregistrer sans aucune autorisation ?",
     "PermissionGroup": "Groupe d'autorisations",
     "Filter": "Filtrer",
-    "ResourcePermissions": "Autorisations des ressources",
+    "ResourcePermissions": "Autorisations",
     "ResourcePermissionTarget": "Cible",
     "ResourcePermissionPermissions": "Autorisations",
-    "AddResourcePermission": "Ajouter des autorisations de ressources",
-    "ResourcePermissionDeletionConfirmationMessage": "Êtes-vous sûr de vouloir supprimer ces autorisations de ressources ?",
-    "AddResourcePermissions": "Ajouter des autorisations de ressources",
-    "UpdateResourcePermissions": "Mettre à jour les autorisations de ressources",
-    "Resource": "Ressource",
-    "ResourceName": "Nom de la ressource",
-    "ResourceKey": "Clé de la ressource",
-    "ProviderName": "Nom du fournisseur",
-    "ProviderKey": "Clé du fournisseur",
+    "AddResourcePermission": "Ajouter une autorisation",
+    "ResourcePermissionDeletionConfirmationMessage": "Êtes-vous sûr de vouloir supprimer toutes les autorisations ?",
+    "AddResourcePermissions": "Ajouter des autorisations",
+    "UpdateResourcePermissions": "Mettre à jour les autorisations",
     "GrantAllResourcePermissions": "Accorder tout",
-    "NoResourceProviderKeyLookupServiceFound": "Aucun service de recherche de clé de fournisseur de ressources n'a été trouvé",
-    "NoResourcePermissionFound": "Aucune autorisation de ressource n'est définie pour la ressource actuelle."
+    "NoResourceProviderKeyLookupServiceFound": "Aucun service de recherche de clé de fournisseur n'a été trouvé",
+    "NoResourcePermissionFound": "Aucune autorisation n'est définie."
   }
 }

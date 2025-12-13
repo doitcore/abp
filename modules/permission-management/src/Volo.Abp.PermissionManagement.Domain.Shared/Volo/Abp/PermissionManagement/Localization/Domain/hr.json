@@ -9,20 +9,15 @@
         "SaveWithoutAnyPermissionsWarningMessage": "Jeste li sigurni da želite spremiti bez ikakvih dopuštenja?",
         "PermissionGroup": "Grupa dozvola",
         "Filter": "Filtriraj",
-        "ResourcePermissions": "Dozvole resursa",
+        "ResourcePermissions": "Dozvole",
         "ResourcePermissionTarget": "Cilj",
         "ResourcePermissionPermissions": "Dozvole",
-        "AddResourcePermission": "Dodaj dozvole resursa",
-        "ResourcePermissionDeletionConfirmationMessage": "Jeste li sigurni da želite izbrisati ove dozvole resursa?",
-        "AddResourcePermissions": "Dodaj dozvole resursa",
-        "UpdateResourcePermissions": "Ažuriraj dozvole resursa",
-        "Resource": "Resurs",
-        "ResourceName": "Naziv resursa",
-        "ResourceKey": "Ključ resursa",
-        "ProviderName": "Naziv pružatelja usluga",
-        "ProviderKey": "Ključ pružatelja usluga",
+        "AddResourcePermission": "Dodaj dozvolu",
+        "ResourcePermissionDeletionConfirmationMessage": "Jeste li sigurni da želite izbrisati sve dozvole?",
+        "AddResourcePermissions": "Dodaj dozvole",
+        "UpdateResourcePermissions": "Ažuriraj dozvole",
         "GrantAllResourcePermissions": "Dodijeli sve",
-        "NoResourceProviderKeyLookupServiceFound": "Nije pronađena usluga za pronalaženje ključa davatelja resursa",
-        "NoResourcePermissionFound": "Za trenutni resurs nije definirano nijedno dopuštenje resursa."
+        "NoResourceProviderKeyLookupServiceFound": "Nije pronađena usluga za pronalaženje ključa pružatelja",
+        "NoResourcePermissionFound": "Nijedna dozvola nije definirana."
     }
 }

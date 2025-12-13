@@ -10,5 +10,7 @@ public class ResourcePermissionGrantInfoDto
 
     public string ProviderDisplayName { get; set; }
 
+    public string ProviderNameDisplayName { get; set; }
+
     public List<GrantedResourcePermissionDto> Permissions { get; set; }
 }

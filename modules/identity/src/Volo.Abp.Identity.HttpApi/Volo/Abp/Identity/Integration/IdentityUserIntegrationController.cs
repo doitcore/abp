@@ -71,10 +71,10 @@ public class IdentityUserIntegrationController : AbpControllerBase, IIdentityUse
     }
 
     [HttpGet]
-    [Route("search/roles/by-ids")]
-    public virtual Task<ListResultDto<RoleData>> SearchRoleByIdsAsync(Guid[] ids)
+    [Route("search/roles/by-names")]
+    public virtual Task<ListResultDto<RoleData>> SearchRoleByNamesAsync(string[] names)
     {
-        return UserIntegrationService.SearchRoleByIdsAsync(ids);
+        return UserIntegrationService.SearchRoleByNamesAsync(names);
     }
 
     [HttpGet]

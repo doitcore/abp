@@ -47,7 +47,9 @@
                         <DataGridColumn TItem="ResourcePermissionGrantInfoDto" Field="@nameof(ResourcePermissionGrantInfoDto.ProviderName)" Caption="@L["ResourcePermissionTarget"]" Sortable="false">
                             <DisplayTemplate>
                                 @{
-                                    <span class="d-inline-block bg-light rounded-pill px-2 me-1 ms-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="@context.ProviderNameDisplayName">@context.ProviderName</span>
+                                    <Tooltip Text="@context.ProviderNameDisplayName" Placement="TooltipPlacement.Right" Style="float: left;">
+                                        <span class="d-inline-block bg-light rounded-pill px-2 me-1 ms-1 mb-1">@context.ProviderName</span>
+                                    </Tooltip>
                                     @context.ProviderDisplayName
                                 }
                             </DisplayTemplate>

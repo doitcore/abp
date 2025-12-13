@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "İzinler",
     "AddResourcePermission": "İzin ekle",
     "ResourcePermissionDeletionConfirmationMessage": "Tüm izinleri silmek istediğinizden emin misiniz?",
-    "AddResourcePermissions": "İzinler ekle",
-    "UpdateResourcePermissions": "İzinleri güncelle",
+    "UpdateResourcePermission": "İzni güncelle",
     "GrantAllResourcePermissions": "Tümünü ver",
     "NoResourceProviderKeyLookupServiceFound": "Herhangi bir sağlayıcı anahtar arama hizmeti bulunamadı",
     "NoResourcePermissionFound": "Herhangi bir izin tanımlı değil."

@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Permisiuni",
     "AddResourcePermission": "Adăugați permisiune",
     "ResourcePermissionDeletionConfirmationMessage": "Sigur doriți să ștergeți toate permisiunile?",
-    "AddResourcePermissions": "Adăugați permisiuni",
-    "UpdateResourcePermissions": "Actualizați permisiunile",
+    "UpdateResourcePermission": "Actualizați permisiunea",
     "GrantAllResourcePermissions": "Acordați toate",
     "NoResourceProviderKeyLookupServiceFound": "Nu a fost găsit niciun serviciu de căutare a cheii furnizorului",
     "NoResourcePermissionFound": "Nu există nicio permisiune definită."

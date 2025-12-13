@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Δικαιώματα",
     "AddResourcePermission": "Προσθήκη δικαιώματος",
     "ResourcePermissionDeletionConfirmationMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλα τα δικαιώματα;",
-    "AddResourcePermissions": "Προσθήκη δικαιωμάτων",
-    "UpdateResourcePermissions": "Ενημέρωση δικαιωμάτων",
+    "UpdateResourcePermission": "Ενημέρωση δικαιώματος",
     "GrantAllResourcePermissions": "Παραχώρηση όλων",
     "NoResourceProviderKeyLookupServiceFound": "Δεν βρέθηκε υπηρεσία αναζήτησης κλειδιού παρόχου",
     "NoResourcePermissionFound": "Δεν έχει οριστεί καμία άδεια."

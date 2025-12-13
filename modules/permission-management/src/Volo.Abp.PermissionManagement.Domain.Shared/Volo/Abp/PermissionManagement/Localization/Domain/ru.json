@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Разрешения",
     "AddResourcePermission": "Добавить разрешение",
     "ResourcePermissionDeletionConfirmationMessage": "Вы уверены, что хотите удалить все разрешения?",
-    "AddResourcePermissions": "Добавить разрешения",
-    "UpdateResourcePermissions": "Обновить разрешения",
+    "UpdateResourcePermission": "Обновить разрешение",
     "GrantAllResourcePermissions": "Предоставить все",
     "NoResourceProviderKeyLookupServiceFound": "Служба поиска ключа поставщика не найдена",
     "NoResourcePermissionFound": "Не определено ни одного разрешения."

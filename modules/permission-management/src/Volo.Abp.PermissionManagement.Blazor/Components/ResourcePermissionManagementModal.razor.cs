@@ -18,9 +18,10 @@ public partial class ResourcePermissionManagementModal
 
     protected Modal Modal { get; set; }
 
+    public bool HasAnyResourcePermission { get; set; }
+    public bool HasAnyResourceProviderKeyLookupService { get; set; }
     protected string ResourceName { get; set; }
     protected string ResourceKey { get; set; }
-    protected string ResourceDisplayName{  get; set; }
     protected int PageSize { get; set; } = 10;
 
     protected Modal CreateModal { get; set; }
@@ -57,20 +58,28 @@ public partial class ResourcePermissionManagementModal
         LocalizationResource = typeof(AbpPermissionManagementResource);
     }
 
-    public virtual async Task OpenAsync(string resourceName, string resourceKey, string resourceDisplayName = null)
+    public virtual async Task OpenAsync(string resourceName, string resourceKey)
     {
         try
         {
             ResourceName = resourceName;
             ResourceKey = resourceKey;
-            ResourceDisplayName = resourceDisplayName;
 
             ResourcePermissionDefinitions = await PermissionAppService.GetResourceDefinitionsAsync(ResourceName);
             ResourceProviderKeyLookupServices = (await PermissionAppService.GetResourceProviderKeyLookupServicesAsync(ResourceName)).Providers;
 
+            HasAnyResourcePermission = ResourcePermissionDefinitions.Permissions.Any();
+            if (HasAnyResourcePermission)
+            {
+                HasAnyResourceProviderKeyLookupService = ResourceProviderKeyLookupServices.Count > 0;
+            }
+
+            await InvokeAsync(StateHasChanged);
+
             ResourcePermissionList = await PermissionAppService.GetResourceAsync(ResourceName, ResourceKey);
 
             await Modal.Show();
+
         }
         catch (Exception ex)
         {
@@ -117,6 +126,13 @@ public partial class ResourcePermissionManagementModal
     {
         ProviderKey = value;
         ProviderDisplayName = ProviderKeys.FirstOrDefault(p => p.ProviderKey == value)?.ProviderDisplayName;
+
+        var permissionGrants = await PermissionAppService.GetResourceByProviderAsync(ResourceName, ResourceKey, CurrentLookupService, ProviderKey);
+        foreach (var permission in CreateEntity.Permissions)
+        {
+            permission.IsGranted = permissionGrants.Permissions.Any(p => p.Name == permission.Name && p.IsGranted);
+        }
+
         await InvokeAsync(StateHasChanged);
     }
 

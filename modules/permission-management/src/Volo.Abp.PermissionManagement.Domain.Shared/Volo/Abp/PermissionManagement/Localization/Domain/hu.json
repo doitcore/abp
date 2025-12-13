@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Engedélyek",
     "AddResourcePermission": "Engedély hozzáadása",
     "ResourcePermissionDeletionConfirmationMessage": "Biztosan törölni szeretné az összes engedélyt?",
-    "AddResourcePermissions": "Engedélyek hozzáadása",
-    "UpdateResourcePermissions": "Engedélyek frissítése",
+    "UpdateResourcePermission": "Engedély frissítése",
     "GrantAllResourcePermissions": "Összes engedély megadása",
     "NoResourceProviderKeyLookupServiceFound": "Nem található szolgáltató kulcs kereső szolgáltatás",
     "NoResourcePermissionFound": "Nincs meghatározva engedély."

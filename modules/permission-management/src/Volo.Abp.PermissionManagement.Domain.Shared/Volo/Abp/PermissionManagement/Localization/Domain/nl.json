@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Rechten",
     "AddResourcePermission": "Recht toevoegen",
     "ResourcePermissionDeletionConfirmationMessage": "Weet u zeker dat u alle rechten wilt verwijderen?",
-    "AddResourcePermissions": "Rechten toevoegen",
-    "UpdateResourcePermissions": "Rechten bijwerken",
+    "UpdateResourcePermission": "Recht bijwerken",
     "GrantAllResourcePermissions": "Alles toekennen",
     "NoResourceProviderKeyLookupServiceFound": "Er is geen service gevonden voor het opzoeken van de sleutel van de provider",
     "NoResourcePermissionFound": "Er is geen machtiging gedefinieerd."

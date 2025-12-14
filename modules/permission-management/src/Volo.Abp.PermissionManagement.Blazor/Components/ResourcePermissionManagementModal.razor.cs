@@ -132,7 +132,7 @@ public partial class ResourcePermissionManagementModal
         var permissionGrants = await PermissionAppService.GetResourceByProviderAsync(ResourceName, ResourceKey, CurrentLookupService, ProviderKey);
         foreach (var permission in CreateEntity.Permissions)
         {
-            permission.IsGranted = permissionGrants.Permissions.Any(p => p.Name == permission.Name && p.IsGranted);
+            permission.IsGranted = permissionGrants.Permissions.Any(p => p.Name == permission.Name && p.Providers.Contains(CurrentLookupService) && p.IsGranted);
         }
 
         await InvokeAsync(StateHasChanged);

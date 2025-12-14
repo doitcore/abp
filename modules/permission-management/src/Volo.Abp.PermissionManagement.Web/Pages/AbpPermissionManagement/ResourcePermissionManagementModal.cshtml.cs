@@ -18,6 +18,10 @@ public class ResourcePermissionManagementModal : AbpPageModel
     [BindProperty(SupportsGet = true)]
     public string ResourceKey { get; set; }
 
+    [HiddenInput]
+    [BindProperty(SupportsGet = true)]
+    public string ResourceDisplayName { get; set; }
+
     public bool HasAnyResourcePermission { get; set; }
     public bool HasAnyResourceProviderKeyLookupService { get; set; }
 

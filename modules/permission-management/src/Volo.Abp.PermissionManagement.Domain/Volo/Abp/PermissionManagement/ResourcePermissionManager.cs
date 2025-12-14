@@ -376,7 +376,7 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
             return multiplePermissionWithGrantedProviders;
         }
 
-        foreach (var provider in ManagementProviders.Where(x => x.Name == providerName))
+        foreach (var provider in ManagementProviders)
         {
             permissionNames = resourcePermissions.Select(x => x.Name).ToArray();
             var multiplePermissionValueProviderGrantInfo = await provider.CheckAsync(permissionNames, resourceName, resourceKey, providerName, providerKey);

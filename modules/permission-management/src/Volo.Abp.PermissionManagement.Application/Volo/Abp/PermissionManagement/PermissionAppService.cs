@@ -324,6 +324,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             {
                 Name = resourcePermissionGrant.Name,
                 DisplayName = resourcePermission?.DisplayName.Localize(StringLocalizerFactory),
+                Providers = resourcePermissionGrant.Providers.Select(x => x.Name).ToList(),
                 IsGranted = resourcePermissionGrant.IsGranted
             });
         }

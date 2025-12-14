@@ -18,7 +18,7 @@
 
     <form method="post" asp-page="/AbpPermissionManagement/ResourcePermissionManagementModal">
         <abp-modal size="ExtraLarge">
-            <abp-modal-header title="@(L["ResourcePermissions"].Value)"></abp-modal-header>
+            <abp-modal-header title="@(L["ResourcePermissions"].Value) - @Model.ResourceDisplayName"></abp-modal-header>
             <input asp-for="@Model.ResourceName" />
             <input asp-for="@Model.ResourceKey" />
             <abp-modal-body>

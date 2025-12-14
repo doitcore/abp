@@ -22,6 +22,7 @@ public partial class ResourcePermissionManagementModal
     public bool HasAnyResourceProviderKeyLookupService { get; set; }
     protected string ResourceName { get; set; }
     protected string ResourceKey { get; set; }
+    protected string ResourceDisplayName { get; set; }
     protected int PageSize { get; set; } = 10;
 
     protected Modal CreateModal { get; set; }
@@ -58,12 +59,13 @@ public partial class ResourcePermissionManagementModal
         LocalizationResource = typeof(AbpPermissionManagementResource);
     }
 
-    public virtual async Task OpenAsync(string resourceName, string resourceKey)
+    public virtual async Task OpenAsync(string resourceName, string resourceKey, string resourceDisplayName)
     {
         try
         {
             ResourceName = resourceName;
             ResourceKey = resourceKey;
+            ResourceDisplayName = resourceDisplayName;
 
             ResourcePermissionDefinitions = await PermissionAppService.GetResourceDefinitionsAsync(ResourceName);
             ResourceProviderKeyLookupServices = (await PermissionAppService.GetResourceProviderKeyLookupServicesAsync(ResourceName)).Providers;
@@ -285,6 +287,7 @@ public partial class ResourcePermissionManagementModal
             );
 
             ResourcePermissionList = await PermissionAppService.GetResourceAsync(ResourceName, ResourceKey);
+            await Notify.Success(L["DeletedSuccessfully"]);
             await InvokeAsync(StateHasChanged);
         }
     }

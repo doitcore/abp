@@ -68,7 +68,7 @@ var abp = abp || {};
         volo.abp.permissionManagement.permissions.getResourceByProvider(resourceName, resourceKey, providerName, providerKey).then(function (result) {
             abp.ui.clearBusy();
             var grantedPermissionNames = result.permissions.filter(function (p) {
-                return p.isGranted === true && p.providers.indexOf(providerName) >= 0;
+                return p.providers.indexOf(providerName) >= 0 && p.isGranted === true;
             }).map(function (p) {
                 return p.name;
             });

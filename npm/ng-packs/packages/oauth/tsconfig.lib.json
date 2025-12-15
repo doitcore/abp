@@ -8,8 +8,7 @@
     "inlineSources": true,
     "types": [],
     "lib": ["dom", "es2020"],
-    "useDefineForClassFields": false,
-    "moduleResolution": "bundler"
+    "useDefineForClassFields": false
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts", "jest.config.ts"],
   "include": ["**/*.ts"]

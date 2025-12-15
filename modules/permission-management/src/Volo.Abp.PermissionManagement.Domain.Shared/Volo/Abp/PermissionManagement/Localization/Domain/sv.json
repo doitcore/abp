@@ -8,6 +8,16 @@
     "SelectAllInThisTab": "Välj alla",
     "SaveWithoutAnyPermissionsWarningMessage": "Är du säker på att du vill spara utan några behörigheter?",
     "PermissionGroup": "Behörighetsgrupp",
-    "Filter": "Filtrera"
+    "Filter": "Filtrera",
+    "ResourcePermissions": "Behörigheter",
+    "ResourcePermissionTarget": "Mål",
+    "ResourcePermissionPermissions": "Behörigheter",
+    "AddResourcePermission": "Lägg till behörighet",
+    "ResourcePermissionDeletionConfirmationMessage": "Är du säker på att du vill ta bort alla behörigheter?",
+    "AddResourcePermissions": "Lägg till behörigheter",
+    "UpdateResourcePermissions": "Uppdatera behörigheter",
+    "GrantAllResourcePermissions": "Bevilja alla",
+    "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter leverantörsnyckel hittades",
+    "NoResourcePermissionFound": "Ingen behörighet är definierad."
   }
 }

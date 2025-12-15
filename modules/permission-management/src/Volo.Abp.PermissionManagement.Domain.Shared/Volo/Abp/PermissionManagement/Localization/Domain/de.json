@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Berechtigungen",
     "AddResourcePermission": "Berechtigung hinzufügen",
     "ResourcePermissionDeletionConfirmationMessage": "Sind Sie sicher, dass Sie alle Berechtigungen löschen möchten?",
-    "AddResourcePermissions": "Berechtigungen hinzufügen",
-    "UpdateResourcePermissions": "Berechtigungen aktualisieren",
+    "UpdateResourcePermission": "Berechtigung aktualisieren",
     "GrantAllResourcePermissions": "Alle gewähren",
     "NoResourceProviderKeyLookupServiceFound": "Es wurde kein Dienst zum Nachschlagen des Anbieterschlüssels gefunden",
     "NoResourcePermissionFound": "Es ist keine Berechtigung definiert."

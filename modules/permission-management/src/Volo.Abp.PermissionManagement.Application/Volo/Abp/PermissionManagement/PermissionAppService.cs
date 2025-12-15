@@ -175,7 +175,10 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         if (!resourcePermissions.Any() ||
             !await AuthorizationService.IsGrantedAnyAsync(resourcePermissions.Select(p => p.ManagementPermissionName!).ToArray()))
         {
-            return new GetResourceProviderListResultDto();
+            return new GetResourceProviderListResultDto
+            {
+                Providers = new List<ResourceProviderDto>()
+            };
         }
 
         var lookupServices = await ResourcePermissionManager.GetProviderKeyLookupServicesAsync();

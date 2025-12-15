@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "دسترسی‌ها",
     "AddResourcePermission": "افزودن مجوز",
     "ResourcePermissionDeletionConfirmationMessage": "آیا مطمئن هستید که می‌خواهید همه مجوزها را حذف کنید؟",
-    "AddResourcePermissions": "افزودن مجوزها",
-    "UpdateResourcePermissions": "به‌روزرسانی مجوزها",
+    "UpdateResourcePermission": "به‌روزرسانی مجوز",
     "GrantAllResourcePermissions": "اعطای همه",
     "NoResourceProviderKeyLookupServiceFound": "هیچ سرویس جستجوی کلید ارائه‌دهنده یافت نشد",
     "NoResourcePermissionFound": "هیچ مجوزی تعریف نشده است."

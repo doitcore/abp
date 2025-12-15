@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "الأذونات",
     "AddResourcePermission": "إضافة إذن",
     "ResourcePermissionDeletionConfirmationMessage": "هل أنت متأكد أنك تريد حذف جميع الأذونات؟",
-    "AddResourcePermissions": "إضافة الأذونات",
-    "UpdateResourcePermissions": "تحديث الأذونات",
+    "UpdateResourcePermission": "تحديث الإذن",
     "GrantAllResourcePermissions": "منح الكل",
     "NoResourceProviderKeyLookupServiceFound": "لم يتم العثور على خدمة البحث عن مفتاح المزود",
     "NoResourcePermissionFound": "لا توجد أي أذونات محددة."

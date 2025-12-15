@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Dovoljenja",
     "AddResourcePermission": "Dodaj dovoljenje",
     "ResourcePermissionDeletionConfirmationMessage": "Ali ste prepričani, da želite izbrisati vsa dovoljenja?",
-    "AddResourcePermissions": "Dodaj dovoljenja",
-    "UpdateResourcePermissions": "Posodobi dovoljenja",
+    "UpdateResourcePermission": "Posodobi dovoljenje",
     "GrantAllResourcePermissions": "Dodeli vse",
     "NoResourceProviderKeyLookupServiceFound": "Ni bilo mogoče najti storitve za iskanje ključa ponudnika",
     "NoResourcePermissionFound": "Nobeno dovoljenje ni določeno."

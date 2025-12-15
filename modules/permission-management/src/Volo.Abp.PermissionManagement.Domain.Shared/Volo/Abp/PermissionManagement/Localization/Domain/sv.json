@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Behörigheter",
     "AddResourcePermission": "Lägg till behörighet",
     "ResourcePermissionDeletionConfirmationMessage": "Är du säker på att du vill ta bort alla behörigheter?",
-    "AddResourcePermissions": "Lägg till behörigheter",
-    "UpdateResourcePermissions": "Uppdatera behörigheter",
+    "UpdateResourcePermission": "Uppdatera behörighet",
     "GrantAllResourcePermissions": "Bevilja alla",
     "NoResourceProviderKeyLookupServiceFound": "Ingen tjänst för att söka efter leverantörsnyckel hittades",
     "NoResourcePermissionFound": "Ingen behörighet är definierad."

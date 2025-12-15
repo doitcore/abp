@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Quyền",
     "AddResourcePermission": "Thêm quyền",
     "ResourcePermissionDeletionConfirmationMessage": "Bạn có chắc chắn muốn xóa tất cả quyền không?",
-    "AddResourcePermissions": "Thêm các quyền",
-    "UpdateResourcePermissions": "Cập nhật các quyền",
+    "UpdateResourcePermission": "Cập nhật quyền",
     "GrantAllResourcePermissions": "Cấp tất cả",
     "NoResourceProviderKeyLookupServiceFound": "Không tìm thấy dịch vụ tra cứu khóa nhà cung cấp",
     "NoResourcePermissionFound": "Không có quyền nào được định nghĩa."

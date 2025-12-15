@@ -14,8 +14,7 @@
     "ResourcePermissionPermissions": "Oprávnenia",
     "AddResourcePermission": "Pridať oprávnenie",
     "ResourcePermissionDeletionConfirmationMessage": "Naozaj chcete odstrániť všetky oprávnenia?",
-    "AddResourcePermissions": "Pridať oprávnenia",
-    "UpdateResourcePermissions": "Aktualizovať oprávnenia",
+    "UpdateResourcePermission": "Aktualizovať oprávnenie",
     "GrantAllResourcePermissions": "Udeľ všetko",
     "NoResourceProviderKeyLookupServiceFound": "Nebola nájdená služba na vyhľadávanie kľúča poskytovateľa",
     "NoResourcePermissionFound": "Nie je definované žiadne povolenie."

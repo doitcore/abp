@@ -6,20 +6,15 @@
     "declarationMap": true,
     "inlineSources": true,
     "types": [],
-
-    // Tutarlı ES2022
     "target": "ES2022",
-    "module": "ES2022",
-    "lib": ["ES2022", "dom"],           // ✅ Düzeltildi
-
-    // Angular için
+    "lib": ["ES2020", "dom"],
     "moduleResolution": "bundler",
-    "useDefineForClassFields": false,
+    "useDefineForClassFields": false
   },
   "exclude": [
     "src/test-setup.ts",
-    "src/**/*.spec.ts",                 // ✅ src/ prefix ekledim
+    "src/**/*.spec.ts",
     "jest.config.ts"
   ],
-  "include": ["src/**/*.ts"]            // ✅ Düzeltildi
+  "include": ["src/**/*.ts"]
 }

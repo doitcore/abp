@@ -48,12 +48,8 @@
       "@abp/ng.theme.shared": ["packages/theme-shared/src/public-api.ts"],
       "@abp/ng.theme.shared/testing": ["packages/theme-shared/testing/src/public-api.ts"],
       "@abp/nx.generators": ["packages/generators/src/index.ts"],
-      "@angular/*": ["node_modules/@angular/*"],
       "ng-zorro-antd/core/no-animation": [
         "node_modules/ng-zorro-antd/core/no-animation"
-      ],
-      "ng-zorro-antd/*": [
-        "node_modules/ng-zorro-antd/*"
       ]
     }
   },

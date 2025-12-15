@@ -589,6 +589,10 @@
                 {
                   "text": "Quartz Integration",
                   "path": "framework/infrastructure/background-jobs/quartz.md"
+                },
+                {
+                  "text": "TickerQ Integration",
+                  "path": "framework/infrastructure/background-jobs/tickerq.md"
                 }
               ]
             },
@@ -607,6 +611,10 @@
                 {
                   "text": "Hangfire Integration",
                   "path": "framework/infrastructure/background-workers/hangfire.md"
+                },
+                {
+                  "text": "TickerQ Integration",
+                  "path": "framework/infrastructure/background-workers/tickerq.md"
                 }
               ]
             },
@@ -1637,7 +1645,7 @@
                       "path": "framework/ui/angular/list-service.md"
                     },
                     {
-                      "text": "Easy *ngFor trackBy",
+                      "text": "Easy @for() track",
                       "path": "framework/ui/angular/track-by-service.md"
                     },
                     {

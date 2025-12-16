@@ -30,7 +30,7 @@ This document contains **brief release notes** for each ABP Studio release. Rele
 * Removed `ConfigureHttpClientProxies` method.
 * Fixed issue with adding new services to existing Microservices.
 * Fixed AI Management template issues.
-* Reverted notification changes.
+* Reverted browser notification overlay fix.
 
 ## 2.1.0 (2025-12-08)
 
@@ -66,7 +66,7 @@ This document contains **brief release notes** for each ABP Studio release. Rele
 * Added "Open on Start in Browser" option for .NET applications in Solution Runner.
 * Added `Mapperly` configuration.
 * Enabled user and tenant impersonation in Blazor client modules.
-* Enhanced notification system allowing text copying.
+* Enhanced notification system to allow text copying.
 * Added environment variable support for DesignTime DbContext.
 * Used C# instead of JSON for Aspire AppHost project configuration.
 * Fixed MongoDB image pulling problems.

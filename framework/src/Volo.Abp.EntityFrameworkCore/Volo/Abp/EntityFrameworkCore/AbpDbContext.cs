@@ -204,6 +204,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             case "Npgsql.EntityFrameworkCore.PostgreSQL":
                 return EfCoreDatabaseProvider.PostgreSql;
             case "Pomelo.EntityFrameworkCore.MySql":
+            case "MySql.Data.MySqlClient":
                 return EfCoreDatabaseProvider.MySql;
             case "Oracle.EntityFrameworkCore":
             case "Devart.Data.Oracle.Entity.EFCore":

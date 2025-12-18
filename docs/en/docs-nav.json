@@ -563,7 +563,11 @@
                 {
                   "text": "Microsoft.Extensions.AI",
                   "path": "framework/infrastructure/artificial-intelligence/microsoft-extensions-ai.md"
-                },                
+                },
+                {
+                  "text": "Agent Framework",
+                  "path": "framework/infrastructure/artificial-intelligence/microsoft-agent-framework.md"
+                },               
                 {
                   "text": "Semantic Kernel",
                   "path": "framework/infrastructure/artificial-intelligence/microsoft-semantic-kernel.md"

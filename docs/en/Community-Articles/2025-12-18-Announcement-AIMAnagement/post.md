@@ -1,6 +1,6 @@
 # Introducing the AI Management Module: Manage AI Integration Dynamically
 
-We are excited to announce the **AI Management Module**, a powerful new addition to ABP Commercial that makes managing AI capabilities in your applications easier than ever. Say goodbye to configuration changes that require redeployment—now you can configure, test, and manage your AI integrations on the fly through an intuitive user interface!
+We are excited to announce the **AI Management Module**, a powerful new addition to ABP Commercial that makes managing AI capabilities in your applications easier than ever. Say goodbye to configuration changes that require redeployment, now you can configure, test, and manage your AI integrations on the fly through an intuitive user interface!
 
 ## What is the AI Management Module?
 
@@ -12,7 +12,7 @@ Built on top of the [ABP Framework's AI infrastructure](https://abp.io/docs/late
 
 ### Manage AI Without Redeployment
 
-Create, configure, and update AI workspaces directly from the UI. Switch between different AI providers (OpenAI, Azure OpenAI, Ollama, etc.), change models, adjust prompts, and test configurations—all without restarting your application or deploying new code.
+Create, configure, and update AI workspaces directly from the UI. Switch between different AI providers (OpenAI, Azure OpenAI, Ollama, etc.), change models, adjust prompts, and test configurations, all without restarting your application or deploying new code.
 
 ### Built-In Chat Interface
 
@@ -36,7 +36,7 @@ Even AI Management module doesn't implement all the providers by default, it pro
   ![Using Gemini as an OpenAI provider](./images/aimanagement-workspace-geminiasopenai.png)
 
 
-You can even add your own custom AI providers—[learn how in the documentation](https://abp.io/docs/latest/modules/ai-management#implementing-custom-ai-provider-factories).
+You can even add your own custom AI providers: [learn how to implement a custom AI provider factory in the documentation](https://abp.io/docs/latest/modules/ai-management#implementing-custom-ai-provider-factories).
 
 ### Ready-to-Use Chat Widget
 

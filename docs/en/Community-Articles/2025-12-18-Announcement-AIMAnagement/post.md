@@ -97,10 +97,9 @@ Installation is straightforward using the [ABP Studio](https://abp.io/studio). Y
 The AI Management Module is available now for ABP Team and higher license holders. 
 
 **Learn More:**
-- [Complete Documentation](https://abp.io/docs/latest/modules/ai-management) - All features, scenarios, and technical details
-- [ABP AI Infrastructure](https://abp.io/docs/latest/framework/infrastructure/artificial-intelligence) - Understanding AI workspaces
-- [Installation Guide](https://abp.io/docs/latest/framework/infrastructure/artificial-intelligence#installation) - Installing to your existing projects
-- [Usage Scenarios](https://abp.io/docs/latest/modules/ai-management#usage-scenarios) - Examples for different architectures
+- [AI Management Module Documentation](https://abp.io/docs/latest/modules/ai-management) - All features, scenarios, and technical details.
+- [AI Infrastructure Documentation](https://abp.io/docs/latest/framework/infrastructure/artificial-intelligence) - Understanding AI workspaces in the framework.
+- [Usage Scenarios](https://abp.io/docs/latest/modules/ai-management#usage-scenarios) - Examples for different architectures.
 
 ---
 

@@ -18,7 +18,7 @@ Create, configure, and update AI workspaces directly from the UI. Switch between
 
 Test your AI workspaces immediately with the included chat interface in playground pages. Verify your configurations work correctly before using them in production. Perfect for experimenting with different models, prompts, and settings.
 
-![AI Management Playground](./images/ai-management-workspace-playground.png)
+  ![AI Management Playground](./images/ai-management-workspace-playground.png)
 
 ### Flexible for Any Architecture
 
@@ -31,6 +31,11 @@ Whether you're building a monolith, microservices, or something in between, the 
 
 Even AI Management module doesn't implement all the providers by default, it provides extensibility options with a good abstraction for other providers like Azure, Anthropic Claude, Google Gemini, and more. Or you can directly use the OpenAI adapter with LLMs that support OpenAI API.
 
+- Example of using Gemini as an OpenAI provider:
+
+  ![Using Gemini as an OpenAI provider](./images/aimanagement-workspace-geminiasopenai.png)
+
+
 You can even add your own custom AI providers—[learn how in the documentation](https://abp.io/docs/latest/modules/ai-management#implementing-custom-ai-provider-factories).
 
 ### Ready-to-Use Chat Widget
@@ -38,18 +43,18 @@ You can even add your own custom AI providers—[learn how in the documentation]
 Drop a beautiful, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. 
 
 - Simple to use with minimal code
-```cs
-@await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
-{
-    WorkspaceName = "StoryTeller",
-})
-```
+  ```cs
+  @await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
+  {
+      WorkspaceName = "StoryTeller",
+  })
+  ```
 
 - And result is a beautiful pre-integrated widget
 
-![AI Management Chat Widget](./images/ai-management-workspace-widget.png)
+  ![AI Management Chat Widget](./images/ai-management-workspace-widget.png)
 
-[See the widget documentation](https://abp.io/docs/latest/modules/ai-management#client-usage-mvc-ui) for details and all parameters for customization.
+- [See the widget documentation](https://abp.io/docs/latest/modules/ai-management#client-usage-mvc-ui) for details and all parameters for customization.
 
 ### Enterprise Security Built-In
 

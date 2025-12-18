@@ -4,7 +4,7 @@ We are excited to announce the **AI Management Module**, a powerful new addition
 
 ## What is the AI Management Module?
 
-Built on top of the [ABP Framework's AI infrastructure](../../framework/infrastructure/artificial-intelligence/index.md), the AI Management Module allows you to manage AI workspaces dynamically without touching your code. Whether you're building a customer support chatbot, adding AI-powered search, or creating intelligent automation workflows, this module provides everything you need to manage AI integrations through a user-friendly interface.
+Built on top of the [ABP Framework's AI infrastructure](https://abp.io/docs/latest/framework/infrastructure/artificial-intelligence), the AI Management Module allows you to manage AI workspaces dynamically without touching your code. Whether you're building a customer support chatbot, adding AI-powered search, or creating intelligent automation workflows, this module provides everything you need to manage AI integrations through a user-friendly interface.
 
 > **Note**: The AI Management Module is currently in **preview** and available to ABP Team or higher license holders.
 

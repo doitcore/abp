@@ -18,6 +18,8 @@ Create, configure, and update AI workspaces directly from the UI. Switch between
 
 Test your AI workspaces immediately with the included chat interface in playground pages. Verify your configurations work correctly before using them in production. Perfect for experimenting with different models, prompts, and settings.
 
+![AI Management Playground](./images/ai-management-workspace-playground.png)
+
 ### Flexible for Any Architecture
 
 Whether you're building a monolith, microservices, or something in between, the module adapts to your needs:
@@ -29,11 +31,11 @@ Whether you're building a monolith, microservices, or something in between, the 
 
 Even AI Management module doesn't implement all the providers by default, it provides extensibility options with a good abstraction for other providers like Azure, Anthropic Claude, Google Gemini, and more. Or you can directly use the OpenAI adapter with LLMs that support OpenAI API.
 
-You can even add your own custom AI providers—[learn how in the documentation](../../modules/ai-management/index.md#implementing-custom-ai-provider-factories).
+You can even add your own custom AI providers—[learn how in the documentation](https://abp.io/docs/latest/modules/ai-management#implementing-custom-ai-provider-factories).
 
 ### Ready-to-Use Chat Widget
 
-Drop a beautiful, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. [See the widget documentation](../../modules/ai-management/index.md#client-usage-mvc-ui) for details.
+Drop a beautiful, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. [See the widget documentation](https://abp.io/docs/latest/modules/ai-management#client-usage-mvc-ui) for details.
 
 ### Enterprise Security Built-In
 
@@ -76,10 +78,10 @@ Installation is straightforward using the [ABP Studio](https://abp.io/studio). Y
 The AI Management Module is available now for ABP Team and higher license holders. 
 
 **Learn More:**
-- [Complete Documentation](../../modules/ai-management/index.md) - All features, scenarios, and technical details
-- [ABP AI Infrastructure](../../framework/infrastructure/artificial-intelligence/index.md) - Understanding AI workspaces
-- [Installation Guide](../../modules/ai-management/index.md#how-to-install) - Get up and running quickly
-- [Usage Scenarios](../../modules/ai-management/index.md#usage-scenarios) - Examples for different architectures
+- [Complete Documentation](https://abp.io/docs/latest/modules/ai-management) - All features, scenarios, and technical details
+- [ABP AI Infrastructure](https://abp.io/docs/latest/framework/infrastructure/artificial-intelligence) - Understanding AI workspaces
+- [Installation Guide](https://abp.io/docs/latest/framework/infrastructure/artificial-intelligence#installation) - Installing to your existing projects
+- [Usage Scenarios](https://abp.io/docs/latest/modules/ai-management#usage-scenarios) - Examples for different architectures
 
 ---
 

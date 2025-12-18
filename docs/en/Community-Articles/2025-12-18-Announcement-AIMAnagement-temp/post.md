@@ -27,7 +27,7 @@ Whether you're building a monolith, microservices, or something in between, the 
 
 ### Works with Any AI Provider
 
-Even AI Management module doesn't implements all the providers by default, it provides an extensibility options with a good abstraction for other providers like Azure, Anthropic Claude, Google Gemini, and more. Or you can directly use the OpenAI adapter with LLMs that supports OpenAI API.
+Even AI Management module doesn't implement all the providers by default, it provides extensibility options with a good abstraction for other providers like Azure, Anthropic Claude, Google Gemini, and more. Or you can directly use the OpenAI adapter with LLMs that support OpenAI API.
 
 You can even add your own custom AI providers—[learn how in the documentation](../../modules/ai-management/index.md#implementing-custom-ai-provider-factories).
 

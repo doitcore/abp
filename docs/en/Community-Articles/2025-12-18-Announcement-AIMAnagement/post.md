@@ -1,6 +1,6 @@
 # Introducing the AI Management Module: Manage AI Integration Dynamically
 
-We are excited to announce the **AI Management Module**, a powerful new addition to ABP Commercial that makes managing AI capabilities in your applications easier than ever. Say goodbye to configuration changes that require redeployment, now you can configure, test, and manage your AI integrations on the fly through an intuitive user interface!
+We are excited to announce the **AI Management Module**, a powerful new module to the ABP Platform that makes managing AI capabilities in your applications easier. No need to redeploy your application, now you can configure, test, and manage your AI integrations on the fly through an intuitive user interface!
 
 ## What is the AI Management Module?
 

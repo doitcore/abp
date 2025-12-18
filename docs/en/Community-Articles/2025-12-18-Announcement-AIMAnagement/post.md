@@ -38,7 +38,7 @@ Even AI Management module doesn't implement all the providers by default, it pro
 
 You can even add your own custom AI providers: [learn how to implement a custom AI provider factory in the documentation](https://abp.io/docs/latest/modules/ai-management#implementing-custom-ai-provider-factories).
 
-### Ready-to-Use Chat Widget
+### Ready to Use Chat Widget
 
 Drop a compact, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. 
 

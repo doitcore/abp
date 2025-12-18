@@ -56,9 +56,9 @@ Drop a compact, pre-built chat widget into any page with minimal code. It includ
 
 - [See the widget documentation](https://abp.io/docs/latest/modules/ai-management#client-usage-mvc-ui) for details and all parameters for customization.
 
-### Enterprise Security Built-In
+### Security
 
-Control who can manage and use AI workspaces with permission-based access control. Protect critical AI configurations, ensure proper tenant isolation in multi-tenant applications, and store API keys securely.
+Control who can manage and use AI workspaces with permission-based access control. Isolate your AI configurations by using workspaces with different permissions. Also, resource based authorization on workspaces is on the way and will be available in the next versions. It'll allow you to manage access to specific workspaces by a user or role.
 
 ## Getting Started
 

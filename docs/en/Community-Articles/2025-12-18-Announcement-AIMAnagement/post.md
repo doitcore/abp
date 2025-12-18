@@ -40,7 +40,7 @@ You can even add your own custom AI providers: [learn how to implement a custom 
 
 ### Ready-to-Use Chat Widget
 
-Drop a beautiful, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. 
+Drop a compact, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. 
 
 - Simple to use with minimal code
   ```cs
@@ -50,7 +50,7 @@ Drop a beautiful, pre-built chat widget into any page with minimal code. It incl
   })
   ```
 
-- And result is a beautiful pre-integrated widget
+- And result is a working, pre-integrated widget
 
   ![AI Management Chat Widget](./images/ai-management-workspace-widget.png)
 

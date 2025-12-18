@@ -35,7 +35,21 @@ You can even add your own custom AI providers—[learn how in the documentation]
 
 ### Ready-to-Use Chat Widget
 
-Drop a beautiful, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. [See the widget documentation](https://abp.io/docs/latest/modules/ai-management#client-usage-mvc-ui) for details.
+Drop a beautiful, pre-built chat widget into any page with minimal code. It includes streaming support, conversation history, and API integration for customization. 
+
+- Simple to use with minimal code
+```cs
+@await Component.InvokeAsync(typeof(ChatClientChatViewComponent), new ChatClientChatViewModel
+{
+    WorkspaceName = "StoryTeller",
+})
+```
+
+- And result is a beautiful pre-integrated widget
+
+![AI Management Chat Widget](./images/ai-management-workspace-widget.png)
+
+[See the widget documentation](https://abp.io/docs/latest/modules/ai-management#client-usage-mvc-ui) for details and all parameters for customization.
 
 ### Enterprise Security Built-In
 

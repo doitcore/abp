@@ -5,6 +5,13 @@
   "sourceRoot": "packages/oauth/src",
   "prefix": "abp",
   "targets": {
+    "build-worker": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "esbuild src/lib/workers/token-storage.worker.ts --bundle --format=esm --target=es2022 --outfile=src/lib/workers/token-storage.worker.js",
+        "cwd": "packages/oauth"
+      }
+    },
     "build": {
       "executor": "@nx/angular:package",
       "outputs": ["{workspaceRoot}/dist/packages/oauth"],
@@ -19,7 +26,8 @@
           "tsConfig": "packages/oauth/tsconfig.lib.json"
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "production",
+      "dependsOn": ["build-worker"]
     },
     "test": {
       "executor": "@nx/jest:jest",

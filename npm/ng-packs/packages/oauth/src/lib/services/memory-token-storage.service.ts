@@ -31,7 +31,7 @@ export class MemoryTokenStorageService implements OAuthStorage {
         // @ts-ignore
         this.worker = new SharedWorker(
           new URL(
-            '../workers/token-storage.worker.js',
+            '../workers/token-storage.worker.ts',
             import.meta.url
           ),
           { name: 'oauth-token-storage', type: "module" }

@@ -57,8 +57,18 @@ export class MemoryTokenStorageService implements OAuthStorage {
               this.cache.clear();
               this.refreshDocument();
               break;
+            case 'get':
+              if (value !== null) {
+                this.cache.set(key, value);
+              }
+              break;
           }
         };
+
+        // Load all tokens from SharedWorker on initialization
+        this.keysShouldStoreInMemory.forEach(key => {
+          this.port?.postMessage({ action: 'get', key });
+        });
       } catch (error) {
         this.useSharedWorker = false;
       }

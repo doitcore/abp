@@ -2360,12 +2360,16 @@
               "isIndex": true
             },
             {
+              "text": "Idle Session Timeout",
+              "path": "modules/account/idle-session-timeout.md"
+            },
+            {
               "text": "Tenant impersonation & User impersonation",
               "path": "modules/account/impersonation.md"
             },
             {
-              "text": "Idle Session Timeout",
-              "path": "modules/account/idle-session-timeout.md"
+              "text": "Web Authentication API (WebAuthn) passkeys",
+              "path": "modules/account/passkey.md"
             }
           ]
         },

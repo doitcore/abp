@@ -19,7 +19,7 @@ public class SqliteBusyTimeoutSaveChangesInterceptor : SaveChangesInterceptor
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
-        if (eventData.Context != null && IsSqlite(eventData.Context))
+        if (eventData.Context != null)
         {
             eventData.Context.Database.ExecuteSqlRaw(_pragmaCommand);
         }
@@ -29,17 +29,11 @@ public class SqliteBusyTimeoutSaveChangesInterceptor : SaveChangesInterceptor
 
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
-        if (eventData.Context != null && IsSqlite(eventData.Context))
+        if (eventData.Context != null)
         {
             await eventData.Context.Database.ExecuteSqlRawAsync(_pragmaCommand, cancellationToken: cancellationToken);
         }
 
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
-    }
-    
-    
-    private bool IsSqlite(DbContext context)
-    {
-        return context.Database.ProviderName != null && context.Database.ProviderName.Contains("Sqlite");
     }
 }

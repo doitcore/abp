@@ -67,7 +67,7 @@ public class TelemetryService : ITelemetryService, IScopedDependency
 
     private Task AddActivityAsync(ActivityContext context)
     {
-        _ = Task.Run(async () =>
+        var telemetryTask = Task.Run(async () =>
         {
             using var scope = _serviceScopeFactory.CreateScope();
 
@@ -80,6 +80,30 @@ public class TelemetryService : ITelemetryService, IScopedDependency
                 telemetryActivityStorage,
                 telemetryActivitySender);
         });
+
+        AppDomain.CurrentDomain.ProcessExit += (_, _) =>
+        {
+            try
+            {
+                telemetryTask.Wait(TimeSpan.FromSeconds(10));
+            }
+            catch
+            {
+                // ignored
+            }
+        };
+        
+        Console.CancelKeyPress += (_, _) =>
+        {
+            try
+            {
+                telemetryTask.Wait(TimeSpan.FromSeconds(10));
+            }
+            catch
+            {
+                // ignored
+            }
+        };
 
         return Task.CompletedTask;
     }

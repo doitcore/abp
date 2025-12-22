@@ -135,25 +135,25 @@ export class MemoryTokenStorageService implements OAuthStorage {
     this.cache.clear();
   }
 
-  private setupCleanup(): void {
-    const cleanup = () => {
-      if (this.useSharedWorker && this.port) {
-        try {
-          this.port.postMessage({ action: 'disconnect' });
-        } catch (error) {
-          console.log('Error disconnecting port:', error);
-        }
+  private cleanupPort(): void {
+    if (this.useSharedWorker && this.port) {
+      try {
+        this.port.postMessage({ action: 'disconnect' });
+      } catch (error) {
+        console.log('Error disconnecting port:', error);
       }
-    };
+    }
+  }
 
+  private setupCleanup(): void {
     if (this._document.defaultView) {
       fromEvent(this._document.defaultView, 'beforeunload')
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => cleanup());
+        .subscribe(() => this.cleanupPort());
 
       fromEvent(this._document.defaultView, 'pagehide')
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => cleanup());
+        .subscribe(() => this.cleanupPort());
     }
   }
 
@@ -164,13 +164,7 @@ export class MemoryTokenStorageService implements OAuthStorage {
   };
 
   private refreshDocument(): void {
-    if (this.useSharedWorker && this.port) {
-      try {
-        this.port.postMessage({ action: 'disconnect' });
-      } catch (error) {
-        console.log('Error sending disconnect before reload:', error);
-      }
-    }
+    this.cleanupPort();
     setTimeout(() => {
       this._document.defaultView?.location.reload();
     }, 100);

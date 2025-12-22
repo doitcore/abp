@@ -4,13 +4,6 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "assets": [
-    {
-      "glob": "token-storage.worker.js",
-      "input": "src/lib/workers",
-      "output": "workers"
-    }
-  ],
   "allowedNonPeerDependencies": [
     "@abp/utils",
     "@abp/ng.core",

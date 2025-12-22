@@ -7,7 +7,8 @@
     "url": "https://github.com/abpframework/abp.git"
   },
   "scripts": {
-    "build:worker": "esbuild src/lib/workers/token-storage.worker.ts --bundle --format=esm --target=es2022 --outfile=src/lib/workers/token-storage.worker.js"
+    "build:worker": "esbuild src/lib/workers/token-storage.worker.ts --bundle --format=esm --target=es2022 --outfile=src/lib/workers/token-storage.worker.js",
+    "watch:worker": "esbuild src/lib/workers/token-storage.worker.ts --bundle --format=esm --target=es2022 --outfile=src/lib/workers/token-storage.worker.js --watch"
   },
   "dependencies": {
     "@abp/ng.core": "~10.0.1",

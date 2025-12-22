@@ -25,18 +25,20 @@ export class MemoryTokenStorageService implements OAuthStorage {
   }
 
   private initializeStorage(): void {
+    console.log("Initialize Storage -->>", typeof SharedWorker !== 'undefined');
     // @ts-ignore
     if (typeof SharedWorker !== 'undefined') {
       try {
+        console.log('Shared worker is loaded');
         // @ts-ignore
         this.worker = new SharedWorker(
           new URL(
-            '../workers/token-storage.worker.ts',
+            '../workers/token-storage.worker.js',
             import.meta.url
           ),
           { name: 'oauth-token-storage', type: "module" }
         );
-
+        console.log("loaded worker -->>", this.worker);
         this.port = this.worker.port;
         this.port.start();
         this.useSharedWorker = true;
@@ -70,6 +72,7 @@ export class MemoryTokenStorageService implements OAuthStorage {
           this.port?.postMessage({ action: 'get', key });
         });
       } catch (error) {
+        console.log(error);
         this.useSharedWorker = false;
       }
     } else {

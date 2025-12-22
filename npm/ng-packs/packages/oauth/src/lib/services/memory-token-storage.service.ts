@@ -221,20 +221,17 @@ self.onconnect = (event) => {
 
       case 'remove':
         if (key) {
-          console.log('remove', key);
           tokenStore.delete(key);
           broadcastToOtherPorts(port, { action: 'remove', key });
         }
         break;
 
       case 'clear':
-        console.log('clear user');
         tokenStore.clear();
         broadcastToOtherPorts(port, { action: 'clear' });
         break;
 
       case 'get':
-        console.log('get user');
         if (key) {
           const value = tokenStore.get(key) ?? null;
           port.postMessage({ action: 'get', key, value });

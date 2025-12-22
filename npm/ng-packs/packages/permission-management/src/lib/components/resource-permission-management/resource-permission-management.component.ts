@@ -1,4 +1,4 @@
-import { LocalizationPipe } from '@abp/ng.core';
+import { ListService, LocalizationPipe } from '@abp/ng.core';
 import {
     ButtonComponent,
     ModalCloseDirective,
@@ -6,10 +6,6 @@ import {
     ToasterService,
 } from '@abp/ng.theme.shared';
 import {
-    GetResourcePermissionListResultDto,
-    GetResourceProviderListResultDto,
-    GetResourcePermissionDefinitionListResultDto,
-    GetResourcePermissionWithProviderListResultDto,
     PermissionsService,
     ResourcePermissionGrantInfoDto,
     ResourceProviderDto,
@@ -18,7 +14,10 @@ import {
     ResourcePermissionWithProdiverGrantInfoDto,
 } from '@abp/ng.permission-management/proxy';
 import {
-    ChangeDetectionStrategy,
+    ExtensibleTableComponent,
+    EXTENSIONS_IDENTIFIER,
+} from '@abp/ng.components/extensible';
+import {
     Component,
     EventEmitter,
     inject,
@@ -26,9 +25,12 @@ import {
     Output,
     signal,
     computed,
+    OnInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { finalize, switchMap, of, debounceTime, Subject, distinctUntilChanged } from 'rxjs';
+import { finalize, switchMap, debounceTime, Subject, distinctUntilChanged, of } from 'rxjs';
+import { ePermissionManagementComponents } from '../../enums/components';
+import { configureResourcePermissionExtensions } from '../../services/extensions.service';
 
 type ViewMode = 'list' | 'add' | 'edit';
 
@@ -36,18 +38,26 @@ type ViewMode = 'list' | 'add' | 'edit';
     selector: 'abp-resource-permission-management',
     templateUrl: './resource-permission-management.component.html',
     exportAs: 'abpResourcePermissionManagement',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        ListService,
+        {
+            provide: EXTENSIONS_IDENTIFIER,
+            useValue: ePermissionManagementComponents.ResourcePermissions,
+        },
+    ],
     imports: [
         FormsModule,
         ModalComponent,
         LocalizationPipe,
         ButtonComponent,
         ModalCloseDirective,
+        ExtensibleTableComponent,
     ],
 })
-export class ResourcePermissionManagementComponent {
+export class ResourcePermissionManagementComponent implements OnInit {
     protected readonly service = inject(PermissionsService);
     protected readonly toasterService = inject(ToasterService);
+    readonly list = inject(ListService);
 
     @Input() resourceName!: string;
     @Input() resourceKey!: string;
@@ -81,7 +91,9 @@ export class ResourcePermissionManagementComponent {
     hasProviderKeyLookupService = signal(false);
 
     // Data
-    resourcePermissions = signal<ResourcePermissionGrantInfoDto[]>([]);
+    allResourcePermissions = signal<ResourcePermissionGrantInfoDto[]>([]); // All data for client-side pagination
+    resourcePermissions = signal<ResourcePermissionGrantInfoDto[]>([]); // Paginated data for table
+    totalCount = signal(0);
     providers = signal<ResourceProviderDto[]>([]);
     permissionDefinitions = signal<ResourcePermissionDefinitionDto[]>([]);
     searchResults = signal<SearchProviderKeyInfo[]>([]);
@@ -101,11 +113,37 @@ export class ResourcePermissionManagementComponent {
     private searchSubject = new Subject<string>();
 
     constructor() {
+        // Configure extensions for entity props
+        configureResourcePermissionExtensions();
+
         this.searchSubject.pipe(
             debounceTime(300),
             distinctUntilChanged()
         ).subscribe(filter => {
             this.performSearch(filter);
+        });
+    }
+
+    ngOnInit() {
+        // Configure list service for pagination
+        this.list.maxResultCount = 10;
+
+        // Hook to query for client-side pagination
+        this.list.hookToQuery(query => {
+            const allData = this.allResourcePermissions();
+            const skipCount = query.skipCount || 0;
+            const maxResultCount = query.maxResultCount || 10;
+
+            // Client-side pagination
+            const paginatedData = allData.slice(skipCount, skipCount + maxResultCount);
+
+            return of({
+                items: paginatedData,
+                totalCount: allData.length
+            });
+        }).subscribe(result => {
+            this.resourcePermissions.set(result.items);
+            this.totalCount.set(result.totalCount);
         });
     }
 
@@ -115,7 +153,10 @@ export class ResourcePermissionManagementComponent {
         // Load resource permissions and providers
         this.service.getResource(this.resourceName, this.resourceKey).pipe(
             switchMap(permRes => {
-                this.resourcePermissions.set(permRes.permissions || []);
+                this.allResourcePermissions.set(permRes.permissions || []);
+                this.totalCount.set(permRes.permissions?.length || 0);
+                // Trigger list refresh
+                this.list.get();
                 return this.service.getResourceProviderKeyLookupServices(this.resourceName);
             }),
             switchMap(providerRes => {
@@ -140,7 +181,9 @@ export class ResourcePermissionManagementComponent {
 
     resetState() {
         this.viewMode.set('list');
+        this.allResourcePermissions.set([]);
         this.resourcePermissions.set([]);
+        this.totalCount.set(0);
         this.selectedProviderName.set('');
         this.selectedProviderKey.set('');
         this.searchFilter.set('');
@@ -276,7 +319,8 @@ export class ResourcePermissionManagementComponent {
             finalize(() => this.modalBusy.set(false))
         ).subscribe({
             next: res => {
-                this.resourcePermissions.set(res.permissions || []);
+                this.allResourcePermissions.set(res.permissions || []);
+                this.list.get();
                 this.toasterService.success('AbpUi::SavedSuccessfully');
                 this.goToListMode();
             }
@@ -298,7 +342,8 @@ export class ResourcePermissionManagementComponent {
             finalize(() => this.modalBusy.set(false))
         ).subscribe({
             next: res => {
-                this.resourcePermissions.set(res.permissions || []);
+                this.allResourcePermissions.set(res.permissions || []);
+                this.list.get();
                 this.toasterService.success('AbpUi::SavedSuccessfully');
                 this.goToListMode();
             }
@@ -317,7 +362,8 @@ export class ResourcePermissionManagementComponent {
             finalize(() => this.modalBusy.set(false))
         ).subscribe({
             next: res => {
-                this.resourcePermissions.set(res.permissions || []);
+                this.allResourcePermissions.set(res.permissions || []);
+                this.list.get();
                 this.toasterService.success('AbpUi::SuccessfullyDeleted');
             }
         });

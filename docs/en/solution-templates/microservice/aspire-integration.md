@@ -270,15 +270,17 @@ When you add a new microservice, gateway, or application via **ABP Studio**:
 
 > You don't need to manually edit `AppHost` in most cases.
 
-## Adding a Service Manually
+## Adding a Resource Manually
 
-If you need to add a service manually (not via ABP Studio), follow these steps:
+If you need to add a resource manually (not via **ABP Studio**), follow these steps:
 
 ### 1. Reference ServiceDefaults in your new project
 
 ```xml
-<ProjectReference Include="[YOUR_RELATIVE_PATH]\aspire\service-defaults\MyCompanyName.MyProjectName.ServiceDefaults\MyCompanyName.MyProjectName.ServiceDefaults.csproj" />
+<ProjectReference Include="..\..\..\aspire\service-defaults\MyCompanyName.MyProjectName.ServiceDefaults\MyCompanyName.MyProjectName.ServiceDefaults.csproj" />
 ```
+
+> Adjust the path as necessary based on your solution structure.
 
 ### 2. Add ServiceDefaults in Program.cs
 
@@ -288,40 +290,78 @@ builder.AddServiceDefaults();
 // ... your configuration
 ```
 
-### 3. Register in AppHost
+### 3. Add Project Reference to AppHost
 
-Edit `AppHostExtensions.cs` and add your service in the `AddAdditionalResources` method:
+Add a reference to your resource project in `MySolutionName.MyProjectName.AppHost/MySolutionName.MyProjectName.AppHost.csproj`:
+
+```xml
+<ProjectReference Include="..\..\services\myresource\src\MySolutionName.MyProjectName.MyResource\MySolutionName.MyProjectName.MyResource.csproj" />
+```
+
+### 4. Register Resource in AppHost
+
+Edit `AppHostExtensions.cs` and add your resource in the `AddAdditionalResources` method:
 
 ```csharp
-public static void AddAdditionalResources(
-    this IDistributedApplicationBuilder builder,
-    IResourceBuilder<ParameterResource> infrastructureDefaultUser,
-    IResourceBuilder<ParameterResource> infrastructureDefaultUserPassword,
-    Dictionary<string, IResourceBuilder<ProjectResource>> applicationResources,
-    DatabaseReferences databases,
-    Dictionary<string, object> infrastructure)
+var myResource = builder
+    .AddProject<Projects.MySolutionName_MyProjectName_ServiceName>("myresource", "MySolutionName.MyProjectName.MyResource")
+    .WaitFor(databases.AdministrationDb)
+    .WaitFor(databases.IdentityDb)
+    .WaitFor(databases.MyServiceDb)
+    .WaitFor(databases.AuditLoggingDb)
+    .WaitFor(databases.SaasDb)
+    .WaitFor(databases.LanguageManagementDb)
+    .WaitFor(redis)
+    .WaitFor(rabbitMq)
+    .WithReference(databases.AdministrationDb)
+    .WithReference(databases.IdentityDb)
+    .WithReference(databases.BlobStoringDb)
+    .WithReference(databases.MyServiceDb)
+    .WithReference(databases.AuditLoggingDb)
+    .WithReference(databases.SaasDb)
+    .WithReference(databases.LanguageManagementDb)
+    .ConfigureRabbitMq(rabbitMq, infrastructureDefaultUser, infrastructureDefaultUserPassword)
+    .ConfigureRedis(redis)
+    .ConfigureElasticSearch(elasticsearch);
+applicationResources["MyResource"] = myResource;
+```
+> Adjust the dependencies and configurations as necessary.
+
+### 5. Configure Gateway (if needed)
+
+If your resource should be accessible through a gateway, add the gateway configuration in the `AddAdditionalResources` method:
+
+```csharp
+var webgateway = applicationResources.FirstOrDefault(x => x.Key == "WebGateway").Value;
+if (webgateway != null)
 {
-    var redis = (IResourceBuilder<RedisResource>)infrastructure["Redis"];
-    var rabbitMq = (IResourceBuilder<RabbitMQServerResource>)infrastructure["RabbitMq"];
-    var elasticsearch = (IResourceBuilder<ElasticsearchResource>)infrastructure["Elasticsearch"];
-    
-    // Add your custom resource here
-    var myService = builder
-        .AddProject<Projects.MyCompanyName_MyProjectName_MyResource>("myresource", "MyCompanyName.MyProjectName.MyResource")
-        .WaitFor(databases.AdministrationDb)
-        .WaitFor(redis)
-        .WaitFor(rabbitMq)
-        .WithReference(databases.AdministrationDb)
-        .ConfigureRabbitMq(rabbitMq, infrastructureDefaultUser, infrastructureDefaultUserPassword)
-        .ConfigureRedis(redis)
-        .ConfigureElasticSearch(elasticsearch);
-    applicationResources["MyService"] = myService;
+    webgateway
+        .WaitFor(applicationResources["MyResource"])
+        .WithReference(applicationResources["MyResource"])
+        .WithEnvironment("ReverseProxy__Clusters__MyResource__Destinations__MyResource__Address", "http://MyResource");
 }
 ```
 
-### 4. Add to Gateway (if needed)
+### 6. Configure Authentication Server (if needed)
 
-If your service should be accessible through a gateway, add the reverse proxy configuration in `ConfigureWebGateway` or the appropriate gateway configuration method.
+If your resource needs to be added to CORS and RedirectAllowedUrls configuration for the authentication server, update the `allowedUrls` variable in the `ConfigureAuthServer` method:
+
+```csharp
+var allowedUrls = ReferenceExpression.Create($"{applicationResources["MyService"].GetEndpoint("http")},...");
+```
+
+### 7. Add Database (if needed)
+
+If your resource requires a dedicated database, add it in the `AddDatabases` method:
+
+```csharp
+var myServiceDb = databaseServers.Postgres.AddDatabase("MyService", "MySolutionName.MyProjectName_MyService");
+```
+> Adjust the database management system as necessary.
+
+### 8. Add to Solution Runner Profiles (optional)
+
+To run your resource in **Solution Runner** profiles(Default or Aspire), add it following the instructions in the [Studio running applications documentation](../../studio/running-applications.md#add).
 
 ## Deploying the Application
 

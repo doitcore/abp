@@ -7,7 +7,7 @@
 
 # ABP Penetration Test Report
 
-The ABP Commercial MVC `v9.1.0` application template has been tested against security vulnerabilities by the [OWASP ZAP v2.14.0](https://www.zaproxy.org/) tool. The demo web application was started on the `https://localhost:44349` address. The below alerts have been reported by the pentest tool. These alerts are sorted by the risk level as high, medium, and low. The informational alerts are not mentioned in this document. 
+The ABP Commercial MVC `v10.0.1` application template has been tested against security vulnerabilities by the [OWASP ZAP v2.14.0](https://www.zaproxy.org/) tool. The demo web application was started on the `https://localhost:44349` address. The below alerts have been reported by the pentest tool. These alerts are sorted by the risk level as high, medium, and low. The informational alerts are not mentioned in this document. 
 
 Many of these alerts are **false-positive**, meaning the vulnerability scanner detected these issues, but they are not exploitable. It's clearly explained for each false-positive alert why this alert is a false-positive. 
 
@@ -17,15 +17,15 @@ In the next sections, you will find the affected URLs, attack parameters (reques
 
 There are high _(red flag)_, medium _(orange flag)_, low _(yellow flag)_, and informational _(blue flag)_ alerts. 
 
-![penetration-test-9.1.0](../images/pen-test-alert-list-10.1.png)
+![penetration-test-10.0.1](../images/pen-test-alert-list-10.1.png)
 
-> The informational alerts are not mentioned in this document. These alerts are not raising any risks on your application and they are optional.
+> The informational alerts are not mentioned in this document. These alerts don't raise any risks for your application and they are optional.
 
 ### Cross Site Scripting (Reflected) [Risk: High] - Positive
 
-- *[GET] - https://localhost:44305/Identity/OrganizationUnits/AddMemberModal?title=SelectAUser&organizationUnitId=...&OrganizationUnitName=%3C%2Fh5%3E%3CscrIpt%3Ealert%281%29%3B%3C%2FscRipt%3E%3Ch5%3E*
-- *[GET] - https://localhost:44305/Identity/OrganizationUnits/AddRoleModal?organizationUnitId=...&OrganizationUnitName=%3C%2Fh5%3E%3CscrIpt%3Ealert%281%29%3B%3C%2FscRipt%3E%3Ch5%3E*
-- *[GET] - https://localhost:44305/Saas/Host/Tenants/ImpersonateTenantModal?tenantId=...&tenantName=%3C%2Fh5%3E%3CscrIpt%3Ealert%281%29%3B%3C%2FscRipt%3E%3Ch5%3E*
+- *[GET] - https://localhost:44349/Identity/OrganizationUnits/AddMemberModal?title=SelectAUser&organizationUnitId=...&OrganizationUnitName=%3C%2Fh5%3E%3CscrIpt%3Ealert%281%29%3B%3C%2FscRipt%3E%3Ch5%3E*
+- *[GET] - https://localhost:44349/Identity/OrganizationUnits/AddRoleModal?organizationUnitId=...&OrganizationUnitName=%3C%2Fh5%3E%3CscrIpt%3Ealert%281%29%3B%3C%2FscRipt%3E%3Ch5%3E*
+- *[GET] - https://localhost:44349/Saas/Host/Tenants/ImpersonateTenantModal?tenantId=...&tenantName=%3C%2Fh5%3E%3CscrIpt%3Ealert%281%29%3B%3C%2FscRipt%3E%3Ch5%3E*
 
 **Description**:
 
@@ -37,8 +37,8 @@ This is a **Positive** alert. The application reflects the `OrganizationUnitName
 
 ### PII Disclosure [Risk: High] - False Positive
 
-- *[GET] - https://localhost:44305/* (Evidence: 639002492030480000)
-- *[GET] - https://localhost:44305/?page=...*
+- *[GET] - https://localhost:44349/* (Evidence: 639002492030480000)
+- *[GET] - https://localhost:44349/?page=...*
 
 **Description**:
 
@@ -50,8 +50,8 @@ This is a **false-positive** alert. The detected numbers (e.g., `639002492030480
 
 ### Path Traversal [Risk: High] - False Positive
 
-- *[GET] - https://localhost:44305/Account/Login?returnUrl=Login*
-- *[GET] - https://localhost:44305/api/account/security-logs?action=\security-logs*
+- *[GET] - https://localhost:44349/Account/Login?returnUrl=Login*
+- *[GET] - https://localhost:44349/api/account/security-logs?action=\security-logs*
 
 **Description**:
 
@@ -63,8 +63,8 @@ This is a **false-positive** alert. ABP Framework automatically validates `retur
 
 ### SQL Injection [Risk: High] - False Positive
 
-- *[GET] - https://localhost:44305/AbpPermissionManagement/PermissionManagementModal?providerKey=AbpSolution16711_Swagger+AND+1%3D1+--+*
-- *[GET] - https://localhost:44305/Account/Manage?CurrentPassword=ZAP%27+AND+%271%27%3D%271%27+--+*
+- *[GET] - https://localhost:44349/AbpPermissionManagement/PermissionManagementModal?providerKey=AbpSolution16711_Swagger+AND+1%3D1+--+*
+- *[GET] - https://localhost:44349/Account/Manage?CurrentPassword=ZAP%27+AND+%271%27%3D%271%27+--+*
 
 **Description**:
 
@@ -76,8 +76,8 @@ This is a **false-positive** alert. ABP Framework uses Entity Framework Core, wh
 
 ### SQL Injection - SQLite [Risk: High] - False Positive
 
-- *[POST] - https://localhost:44305/Account/ForgotPassword?returnUrl=%2FAccount%2FManage* (Attack: `case randomblob(100000) ...`)
-- *[POST] - https://localhost:44305/FeatureManagement/FeatureManagementModal*
+- *[POST] - https://localhost:44349/Account/ForgotPassword?returnUrl=%2FAccount%2FManage* (Attack: `case randomblob(100000) ...`)
+- *[POST] - https://localhost:44349/FeatureManagement/FeatureManagementModal*
 
 **Description**:
 

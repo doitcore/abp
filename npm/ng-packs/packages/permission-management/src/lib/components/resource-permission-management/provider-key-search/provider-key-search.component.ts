@@ -7,36 +7,7 @@ import { ResourcePermissionStateService } from '../../../services/resource-permi
 
 @Component({
     selector: 'abp-provider-key-search',
-    template: `
-        <div class="position-relative">
-            <label class="form-label">{{ 'AbpPermissionManagement::SearchProviderKey' | abpLocalization }}</label>
-            <input
-                type="text"
-                class="form-control"
-                [placeholder]="'AbpPermissionManagement::SearchProviderKey' | abpLocalization"
-                [ngModel]="state.searchFilter()"
-                (ngModelChange)="onSearchInput($event)"
-                (focus)="onSearchFocus()"
-                (blur)="onSearchBlur($event)"
-            />
-            @if (state.searchResults().length > 0 && state.showDropdown()) {
-                <div
-                    class="list-group position-absolute w-100 shadow"
-                    style="z-index: 1000; max-height: 200px; overflow-y: auto;"
-                >
-                    @for (result of state.searchResults(); track result.providerKey) {
-                        <button
-                            type="button"
-                            class="list-group-item list-group-item-action"
-                            (mousedown)="selectProviderKey(result)"
-                        >
-                            {{ result.providerDisplayName || result.providerKey }}
-                        </button>
-                    }
-                </div>
-            }
-        </div>
-    `,
+    templateUrl: './provider-key-search.component.html',
     imports: [FormsModule, LocalizationPipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -5,7 +5,7 @@ We are happy to share some exciting news. We launched **ABP.IO Referral Program*
 If you already use ABP.IO and believe in it, you can now get benefits by recommending it to others.
 
 ## **What is ABP.IO Referral Program?**
-<img width="1200" height="628" alt="Referral_System_1" src="https://github.com/user-attachments/assets/e00cd51e-ab1d-495c-8581-521189579a5b" />
+<img width="1200" height="628" alt="Referral_Program_-_doneson" src="https://github.com/user-attachments/assets/411d0e28-f813-4720-8fd0-8e8b83861125" />
 
 ABP.IO Referral Program rewards people who bring new customers to ABP.IO.
 

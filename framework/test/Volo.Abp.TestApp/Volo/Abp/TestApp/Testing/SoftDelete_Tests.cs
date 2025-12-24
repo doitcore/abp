@@ -158,7 +158,7 @@ public abstract class SoftDelete_Tests<TStartupModule> : TestAppTestBase<TStartu
         // can still be soft deleted without raising a concurrency exception.
         douglas.ChangeName("Changed Name");
 
-        // Try again with the correct ConcurrencyStamp will be not throw exception
+        // Try again with the correct ConcurrencyStamp - this will not throw an exception
         await PersonRepository.DeleteAsync(douglas);
     }
 }

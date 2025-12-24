@@ -40,7 +40,7 @@ When you enable .NET Aspire in an ABP microservice solution, you get a fully int
 When creating a new microservice solution via ABP Studio:
 
 1. In the solution creation wizard, look for the **".NET Aspire Integration"** step.
-2. Toggle the option to **enable Aspire**.
+2. Toggle the option to **enable .NET Aspire**.
 3. Complete the wizard—Aspire projects will be generated along with your solution.
 
 ![Enable Aspire in ABP Studio](images/aspire-configuration.png)
@@ -114,7 +114,7 @@ builder.AddServiceDefaults();  // Adds all cloud-native defaults
 ### Without Aspire
 
 1. Open **Solution Runner** in ABP Studio.
-2. Start all resources in Solution Runner (services, gateways, applications, and tools such as databases, Redis, RabbitMQ, etc.) individually or collectively using the default profile.
+2. Start all resources in Solution Runner (services, gateways, applications, and tools such as databases, Redis, RabbitMQ, etc.) individually or collectively using the `Default` profile.
 
 ![Solution Runner without Aspire](images/solution-runner-default-profile.png)
 
@@ -187,7 +187,7 @@ Monitor real-time metrics including HTTP requests, response times, garbage colle
 
 AppHost pre-configures the following observability and tools. The URLs below are for their **management/dashboard interfaces** (these tools may expose additional internal endpoints for service communication).
 
-All URLs and configurations are defined in the `AppHost` project. If you need to change ports or other settings, you can modify them in the `AppHost` configuration.
+All URLs and configurations are defined in the `AppHost` project. If you need to change ports or other settings, you can modify them in the `AppHost` project.
 
 After running AppHost, you can access these tools either by opening the URLs directly in your browser or via Solution Runner **Tools** tab.
 
@@ -344,7 +344,7 @@ if (webgateway != null)
 
 ### 6. Configure Authentication Server (if needed)
 
-If your resource needs to be added to CORS and RedirectAllowedUrls configuration for the authentication server, update the `allowedUrls` variable in the `ConfigureAuthServer` method:
+If your resource needs to be added to `CORS` and `RedirectAllowedUrls` configuration for the authentication server, update the `allowedUrls` variable in the `ConfigureAuthServer` method:
 
 ```csharp
 var allowedUrls = ReferenceExpression.Create($"{applicationResources["MyService"].GetEndpoint("http")},...");

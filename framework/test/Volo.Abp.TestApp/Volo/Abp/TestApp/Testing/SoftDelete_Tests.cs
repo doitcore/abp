@@ -154,6 +154,8 @@ public abstract class SoftDelete_Tests<TStartupModule> : TestAppTestBase<TStartu
 
         douglas = await PersonRepository.GetAsync(TestDataBuilder.UserDouglasId);
         douglas.ConcurrencyStamp.ShouldNotBeNull();
+        // Modify the entity to verify that a changed entity with a correct ConcurrencyStamp
+        // can still be soft deleted without raising a concurrency exception.
         douglas.ChangeName("Changed Name");
 
         // Try again with the correct ConcurrencyStamp will be not throw exception

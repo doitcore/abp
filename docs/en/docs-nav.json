@@ -2291,6 +2291,10 @@
               "path": "solution-templates/microservice/helm-charts-and-kubernetes.md"
             },
             {
+              "text": ".NET Aspire Integration",
+              "path": "solution-templates/microservice/aspire-integration.md"
+            },
+            {
               "text": "Guides",
               "items": [
                 {

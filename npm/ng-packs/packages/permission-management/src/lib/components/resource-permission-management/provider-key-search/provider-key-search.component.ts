@@ -1,14 +1,19 @@
-import { Component, input, inject, output, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, input, inject, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { LocalizationPipe } from '@abp/ng.core';
 import { PermissionsService, SearchProviderKeyInfo } from '@abp/ng.permission-management/proxy';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { LookupSearchComponent, LookupItem } from '@abp/ng.components/lookup';
+import { Observable, map, Subject, takeUntil } from 'rxjs';
 import { ResourcePermissionStateService } from '../../../services/resource-permission-state.service';
+
+interface ProviderKeyLookupItem extends LookupItem {
+    providerKey: string;
+    providerDisplayName?: string;
+}
 
 @Component({
     selector: 'abp-provider-key-search',
     templateUrl: './provider-key-search.component.html',
-    imports: [FormsModule, LocalizationPipe],
+    imports: [LocalizationPipe, LookupSearchComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProviderKeySearchComponent implements OnInit, OnDestroy {
@@ -17,19 +22,12 @@ export class ProviderKeySearchComponent implements OnInit, OnDestroy {
 
     readonly resourceName = input.required<string>();
 
-    readonly keySelected = output<SearchProviderKeyInfo>();
-
-    private readonly searchSubject = new Subject<string>();
     private readonly destroy$ = new Subject<void>();
 
+    searchFn: (filter: string) => Observable<ProviderKeyLookupItem[]> = () => new Observable();
+
     ngOnInit() {
-        this.searchSubject.pipe(
-            debounceTime(300),
-            distinctUntilChanged(),
-            takeUntil(this.destroy$)
-        ).subscribe(filter => {
-            this.loadProviderKeys(filter);
-        });
+        this.searchFn = (filter: string) => this.loadProviderKeys(filter);
     }
 
     ngOnDestroy() {
@@ -37,40 +35,33 @@ export class ProviderKeySearchComponent implements OnInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    onSearchInput(filter: string) {
-        this.state.searchFilter.set(filter);
-        this.state.showDropdown.set(true);
-        this.searchSubject.next(filter);
+    onItemSelected(item: ProviderKeyLookupItem) {
+        // State is already updated via displayValue and selectedValue bindings
+        // This handler can be used for additional side effects if needed
     }
 
-    onSearchFocus() {
-        this.state.showDropdown.set(true);
-        this.loadProviderKeys(this.state.searchFilter() || '');
-    }
-
-    onSearchBlur(event: FocusEvent) {
-        const relatedTarget = event.relatedTarget as HTMLElement;
-        if (!relatedTarget?.closest('.list-group')) {
-            this.state.showDropdown.set(false);
-        }
-    }
-
-    selectProviderKey(key: SearchProviderKeyInfo) {
-        this.state.selectProviderKey(key);
-        this.keySelected.emit(key);
-    }
-
-    private loadProviderKeys(filter: string) {
+    private loadProviderKeys(filter: string): Observable<ProviderKeyLookupItem[]> {
         const providerName = this.state.selectedProviderName();
-        if (!providerName) return;
+        if (!providerName) {
+            return new Observable(subscriber => {
+                subscriber.next([]);
+                subscriber.complete();
+            });
+        }
 
-        this.service.searchResourceProviderKey(
+        return this.service.searchResourceProviderKey(
             this.resourceName(),
             providerName,
             filter,
             1
-        ).subscribe(res => {
-            this.state.searchResults.set(res.keys || []);
-        });
+        ).pipe(
+            map(res => (res.keys || []).map(k => ({
+                key: k.providerKey || '',
+                displayName: k.providerDisplayName || k.providerKey || '',
+                providerKey: k.providerKey || '',
+                providerDisplayName: k.providerDisplayName || undefined,
+            }))),
+            takeUntil(this.destroy$)
+        );
     }
 }

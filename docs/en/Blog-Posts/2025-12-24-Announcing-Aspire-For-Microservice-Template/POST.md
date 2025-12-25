@@ -1,6 +1,6 @@
 # Announcing .NET Aspire Integration for ABP Microservice Template
 
-We are excited to announce the integration of **.NET Aspire** into the ABP microservice solution. This integration brings a unified development experience for building, running, debugging, and deploying distributed applications. With Aspire, you can now orchestrate your entire microservice ecosystem with a single command, eliminating complex configurations and making local development effortless.
+We are excited to announce the integration of **.NET Aspire** into the ABP microservice solution, available starting with **ABP Studio v2.0.0**. This integration brings a unified development experience for building, running, debugging, and deploying distributed applications. With Aspire, you can now orchestrate your entire microservice ecosystem with a single command, eliminating complex configurations and making local development effortless.
 
 ## What is .NET Aspire?
 

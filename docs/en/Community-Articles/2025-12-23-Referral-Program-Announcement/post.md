@@ -1,5 +1,3 @@
-## **Introducing ABP.IO Referral Program**
-
 We are happy to share some exciting news. We launched **ABP.IO Referral Program** as a way to thank our customers and community members who help introduce ABP.IO to new professionals and organizations\!
 
 If you already use ABP.IO and believe in it, you can now get benefits by recommending it to others.
@@ -10,6 +8,8 @@ If you already use ABP.IO and believe in it, you can now get benefits by recomme
 ABP.IO Referral Program rewards people who bring new customers to ABP.IO.
 
 When someone you refer purchases an ABP.IO license, you earn a commission as a thank-you for your contribution.
+
+*\*This referral program is available to users who have an organization.*
 
 ## **What Benefits Do You Get?**
 

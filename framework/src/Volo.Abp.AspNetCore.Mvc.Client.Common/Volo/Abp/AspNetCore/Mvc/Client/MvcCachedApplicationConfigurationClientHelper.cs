@@ -21,6 +21,6 @@ public class MvcCachedApplicationConfigurationClientHelper : ITransientDependenc
                              () => Task.FromResult(new MvcCachedApplicationVersionCacheItem(Guid.NewGuid().ToString()))) ??
                          new MvcCachedApplicationVersionCacheItem(Guid.NewGuid().ToString());
         var userKey = userId?.ToString("N") ?? "Anonymous";
-        return $"ApplicationConfiguration_{appVersion}_{userKey}_{CultureInfo.CurrentUICulture.Name}";
+        return $"ApplicationConfiguration_{appVersion.Version}_{userKey}_{CultureInfo.CurrentUICulture.Name}";
     }
 }

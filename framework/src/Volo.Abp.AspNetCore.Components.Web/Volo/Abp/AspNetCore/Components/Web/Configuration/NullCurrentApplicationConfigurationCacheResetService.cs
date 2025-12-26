@@ -6,7 +6,7 @@ namespace Volo.Abp.AspNetCore.Components.Web.Configuration;
 
 public class NullCurrentApplicationConfigurationCacheResetService : ICurrentApplicationConfigurationCacheResetService, ISingletonDependency
 {
-    public  Task ResetAsync(Guid? userId = null)
+    public Task ResetAsync(Guid? userId = null)
     {
         return Task.CompletedTask;
     }

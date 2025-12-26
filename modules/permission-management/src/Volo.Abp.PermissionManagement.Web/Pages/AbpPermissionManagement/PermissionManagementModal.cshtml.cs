@@ -108,7 +108,7 @@ public class PermissionManagementModal : AbpPageModel
         );
 
         Guid? userId = null;
-        if (ProviderName == UserPermissionValueProvider.ProviderName && Guid.TryParse(ProviderName, out var parsedUserId))
+        if (ProviderName == UserPermissionValueProvider.ProviderName && Guid.TryParse(ProviderKey, out var parsedUserId))
         {
             userId = parsedUserId;
         }

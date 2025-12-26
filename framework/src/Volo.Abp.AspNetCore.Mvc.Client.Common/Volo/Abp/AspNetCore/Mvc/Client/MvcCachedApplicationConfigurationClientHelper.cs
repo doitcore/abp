@@ -18,8 +18,8 @@ public class MvcCachedApplicationConfigurationClientHelper : ITransientDependenc
     public virtual async Task<string> CreateCacheKeyAsync(Guid? userId)
     {
         var appVersion = await ApplicationVersionCache.GetOrAddAsync(MvcCachedApplicationVersionCacheItem.CacheKey,
-                             () => Task.FromResult(new MvcCachedApplicationVersionCacheItem(Guid.NewGuid().ToString()))) ??
-                         new MvcCachedApplicationVersionCacheItem(Guid.NewGuid().ToString());
+                             () => Task.FromResult(new MvcCachedApplicationVersionCacheItem(Guid.NewGuid().ToString("N")))) ??
+                         new MvcCachedApplicationVersionCacheItem(Guid.NewGuid().ToString("N"));
         var userKey = userId?.ToString("N") ?? "Anonymous";
         return $"ApplicationConfiguration_{appVersion.Version}_{userKey}_{CultureInfo.CurrentUICulture.Name}";
     }

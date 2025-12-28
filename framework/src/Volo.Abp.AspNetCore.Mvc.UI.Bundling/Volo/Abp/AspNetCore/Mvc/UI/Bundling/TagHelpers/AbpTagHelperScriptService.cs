@@ -19,9 +19,10 @@ public class AbpTagHelperScriptService : AbpTagHelperResourceService
     public AbpTagHelperScriptService(
         IBundleManager bundleManager,
         IOptions<AbpBundlingOptions> options,
-        IWebHostEnvironment hostingEnvironment,
-        HtmlEncoder encoder)
-        : base(bundleManager, options, hostingEnvironment, encoder)
+        IWebHostEnvironment hostingEnvironment) : base(
+        bundleManager,
+        options,
+        hostingEnvironment)
     {
     }
 

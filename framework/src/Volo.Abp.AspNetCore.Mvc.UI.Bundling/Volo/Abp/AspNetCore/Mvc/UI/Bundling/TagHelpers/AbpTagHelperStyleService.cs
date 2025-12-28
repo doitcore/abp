@@ -22,12 +22,10 @@ public class AbpTagHelperStyleService : AbpTagHelperResourceService
         IBundleManager bundleManager,
         IOptions<AbpBundlingOptions> options,
         IWebHostEnvironment hostingEnvironment,
-        IOptions<AbpSecurityHeadersOptions> securityHeadersOptions,
-        HtmlEncoder encoder) : base(
-            bundleManager,
-            options,
-            hostingEnvironment,
-            encoder)
+        IOptions<AbpSecurityHeadersOptions> securityHeadersOptions) : base(
+        bundleManager,
+        options,
+        hostingEnvironment)
     {
         SecurityHeadersOptions = securityHeadersOptions.Value;
     }

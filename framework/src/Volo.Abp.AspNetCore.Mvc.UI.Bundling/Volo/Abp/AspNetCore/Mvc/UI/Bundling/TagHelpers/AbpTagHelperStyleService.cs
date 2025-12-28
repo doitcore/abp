@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,10 +22,12 @@ public class AbpTagHelperStyleService : AbpTagHelperResourceService
         IBundleManager bundleManager,
         IOptions<AbpBundlingOptions> options,
         IWebHostEnvironment hostingEnvironment,
-        IOptions<AbpSecurityHeadersOptions> securityHeadersOptions) : base(
+        IOptions<AbpSecurityHeadersOptions> securityHeadersOptions,
+        HtmlEncoder encoder) : base(
             bundleManager,
             options,
-            hostingEnvironment)
+            hostingEnvironment,
+            encoder)
     {
         SecurityHeadersOptions = securityHeadersOptions.Value;
     }

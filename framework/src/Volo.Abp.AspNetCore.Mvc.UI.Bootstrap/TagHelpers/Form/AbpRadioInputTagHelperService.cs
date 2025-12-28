@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Encodings.Web;
 using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Extensions;
 
 namespace Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
@@ -14,10 +15,12 @@ namespace Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 public class AbpRadioInputTagHelperService : AbpTagHelperService<AbpRadioInputTagHelper>
 {
     private readonly IAbpTagHelperLocalizer _tagHelperLocalizer;
+    private readonly HtmlEncoder _htmlEncoder ;
 
-    public AbpRadioInputTagHelperService(IAbpTagHelperLocalizer tagHelperLocalizer)
+    public AbpRadioInputTagHelperService(IAbpTagHelperLocalizer tagHelperLocalizer, HtmlEncoder htmlEncoder)
     {
         _tagHelperLocalizer = tagHelperLocalizer;
+        _htmlEncoder = htmlEncoder;
     }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -74,7 +77,7 @@ public class AbpRadioInputTagHelperService : AbpTagHelperService<AbpRadioInputTa
             var label = new TagBuilder("label");
             label.AddCssClass("form-check-label");
             label.Attributes.Add("for", id);
-            label.InnerHtml.AppendHtml(selectItem.Text);
+            label.InnerHtml.AppendHtml(_htmlEncoder.Encode(selectItem.Text));
 
             var wrapper = new TagBuilder("div");
             wrapper.AddCssClass("form-check" + inlineClass);

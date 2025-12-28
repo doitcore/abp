@@ -24,7 +24,7 @@ public class StaticDefinitionCache<TKey, TValue> : IStaticDefinitionCache<TKey, 
 
     public virtual Task ClearAsync()
     {
-        _lazy = null;
+        Interlocked.Exchange(ref _lazy, null);
         return Task.CompletedTask;
     }
 }

@@ -15,7 +15,7 @@ namespace Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Form;
 public class AbpRadioInputTagHelperService : AbpTagHelperService<AbpRadioInputTagHelper>
 {
     private readonly IAbpTagHelperLocalizer _tagHelperLocalizer;
-    private readonly HtmlEncoder _htmlEncoder ;
+    private readonly HtmlEncoder _htmlEncoder;
 
     public AbpRadioInputTagHelperService(IAbpTagHelperLocalizer tagHelperLocalizer, HtmlEncoder htmlEncoder)
     {

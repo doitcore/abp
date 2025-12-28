@@ -14,7 +14,7 @@ using Volo.Abp.Threading;
 
 namespace Volo.Abp.FeatureManagement;
 
-public class FeatureDynamicInitializer : ISingletonDependency
+public class FeatureDynamicInitializer : ITransientDependency
 {
     private Task _initializeDynamicFeaturesTask;
 

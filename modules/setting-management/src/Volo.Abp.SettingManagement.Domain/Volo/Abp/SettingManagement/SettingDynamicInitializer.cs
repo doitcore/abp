@@ -14,7 +14,7 @@ using Volo.Abp.Threading;
 
 namespace Volo.Abp.SettingManagement;
 
-public class SettingDynamicInitializer : ISingletonDependency
+public class SettingDynamicInitializer : ITransientDependency
 {
     private Task _initializeDynamicSettingsTask;
 

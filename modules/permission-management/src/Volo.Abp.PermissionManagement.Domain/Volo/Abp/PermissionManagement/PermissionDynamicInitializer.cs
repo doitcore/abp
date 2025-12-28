@@ -14,7 +14,7 @@ using Volo.Abp.Threading;
 
 namespace Volo.Abp.PermissionManagement;
 
-public class PermissionDynamicInitializer : ISingletonDependency
+public class PermissionDynamicInitializer : ITransientDependency
 {
     private Task _initializeDynamicPermissionsTask;
 

@@ -116,7 +116,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
     /// <returns>A <see cref="IdentityResult"/> representing whether validation was successful.</returns>
     public virtual async Task<IdentityResult> CallValidateUserAsync(IdentityUser user)
     {
-        return await base.ValidateUserAsync(user);
+        return await ValidateUserAsync(user);
     }
 
     /// <summary>
@@ -129,7 +129,20 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
     /// <returns>A <see cref="IdentityResult"/> representing whether validation was successful.</returns>
     public virtual async Task<IdentityResult> CallValidatePasswordAsync(IdentityUser user, string password)
     {
-        return await base.ValidatePasswordAsync(user, password);
+        return await ValidatePasswordAsync(user, password);
+    }
+
+    /// <summary>
+    /// This is to call the protection method UpdatePasswordHash
+    /// Updates a user's password hash.
+    /// </summary>
+    /// <param name="user">The user.</param>
+    /// <param name="newPassword">The new password.</param>
+    /// <param name="validatePassword">Whether to validate the password.</param>
+    /// <returns>Whether the password has was successfully updated.</returns>
+    public virtual async Task<IdentityResult> CallUpdatePasswordHash(IdentityUser user, string newPassword, bool validatePassword)
+    {
+        return await UpdatePasswordHash(user, newPassword, validatePassword);
     }
 
     public virtual async Task<IdentityUser> GetByIdAsync(Guid id)
@@ -392,6 +405,22 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
                     OldUserName = oldUserName
                 });
         }
+
+        return result;
+    }
+
+    public override async Task<IdentityResult> ChangePasswordAsync(IdentityUser user, string currentPassword, string newPassword)
+    {
+        var result = await base.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        result.CheckErrors();
+
+        await DistributedEventBus.PublishAsync(new IdentityUserPasswordChangedEto
+        {
+            Id = user.Id,
+            TenantId = user.TenantId,
+            Email =  user.Email,
+        });
 
         return result;
     }

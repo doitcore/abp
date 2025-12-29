@@ -1,9 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Shouldly;
 using Volo.Abp.Identity.Localization;
+using Volo.Abp.MultiTenancy;
 using Xunit;
 
 namespace Volo.Abp.Identity.AspNetCore;
@@ -58,5 +61,17 @@ public class AbpIdentityUserValidator_Tests : AbpIdentityAspNetCoreTestBase
         identityResult.Errors.Count().ShouldBe(1);
         identityResult.Errors.First().Code.ShouldBe("InvalidEmail");
         identityResult.Errors.First().Description.ShouldBe(Localizer["Volo.Abp.Identity:InvalidEmail", "user1@volosoft.com"]);
+    }
+}
+
+public class SharedTenantUserSharingStrategy_AbpIdentityUserValidator_Tests : AbpIdentityUserValidator_Tests
+{
+    protected override void ConfigureServices(HostBuilderContext context, IServiceCollection services)
+    {
+        services.Configure<AbpMultiTenancyOptions>(options =>
+        {
+            options.IsEnabled = true;
+            options.UserSharingStrategy = TenantUserSharingStrategy.Shared;
+        });
     }
 }

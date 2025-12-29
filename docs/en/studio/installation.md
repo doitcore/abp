@@ -65,3 +65,11 @@ When you see the "New Version Available" window, follow these steps to upgrade A
 2. A progress indicator will display the download status.
 3. Once the download is complete, a new modal will appear with the "Install and Relaunch" buttons.
 4. Click on the "Install and Relaunch" button to complete the installation process.
+
+## Installing a Specific Version
+
+If you want to install an older version of ABP Studio, you can download [Abp Studio Version Switcher](https://github.com/abpframework/abp/tree/dev/tools/abp-studio-version-switcher/abp-studio-version-switcher.ps1) script and run it as shown below;
+
+```bash
+./switch-abp-studio-version.ps1 2.0.0
+```

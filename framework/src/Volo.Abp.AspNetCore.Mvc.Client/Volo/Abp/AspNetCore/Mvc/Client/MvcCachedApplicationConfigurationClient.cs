@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
@@ -17,10 +18,12 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
     protected AbpApplicationConfigurationClientProxy ApplicationConfigurationAppService { get; }
     protected AbpApplicationLocalizationClientProxy ApplicationLocalizationClientProxy { get; }
     protected ICurrentUser CurrentUser { get; }
+    protected MvcCachedApplicationConfigurationClientHelper CacheHelper { get; }
     protected IDistributedCache<ApplicationConfigurationDto> Cache { get; }
     protected AbpAspNetCoreMvcClientCacheOptions Options { get; }
 
     public MvcCachedApplicationConfigurationClient(
+        MvcCachedApplicationConfigurationClientHelper cacheHelper,
         IDistributedCache<ApplicationConfigurationDto> cache,
         AbpApplicationConfigurationClientProxy applicationConfigurationAppService,
         ICurrentUser currentUser,
@@ -33,12 +36,13 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
         HttpContextAccessor = httpContextAccessor;
         ApplicationLocalizationClientProxy = applicationLocalizationClientProxy;
         Options = options.Value;
+        CacheHelper = cacheHelper;
         Cache = cache;
     }
 
-    public async Task<ApplicationConfigurationDto> GetAsync()
+    public virtual async Task<ApplicationConfigurationDto> GetAsync()
     {
-        var cacheKey = CreateCacheKey();
+        var cacheKey = await CreateCacheKeyAsync();
         var httpContext = HttpContextAccessor?.HttpContext;
 
         if (httpContext != null && httpContext.Items[cacheKey] is ApplicationConfigurationDto configuration)
@@ -86,7 +90,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
 
     public ApplicationConfigurationDto Get()
     {
-        var cacheKey = CreateCacheKey();
+        var cacheKey = AsyncHelper.RunSync(CreateCacheKeyAsync);
         var httpContext = HttpContextAccessor?.HttpContext;
 
         if (httpContext != null && httpContext.Items[cacheKey] is ApplicationConfigurationDto configuration)
@@ -97,8 +101,8 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
         return AsyncHelper.RunSync(GetAsync);
     }
 
-    protected virtual string CreateCacheKey()
+    protected virtual async Task<string> CreateCacheKeyAsync()
     {
-        return MvcCachedApplicationConfigurationClientHelper.CreateCacheKey(CurrentUser);
+        return await CacheHelper.CreateCacheKeyAsync(CurrentUser.Id);
     }
 }

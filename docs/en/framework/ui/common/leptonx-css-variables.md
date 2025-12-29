@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Explore LeptonX CSS Variables to customize theming with ease, controlling colors, spacing, and styles for a cohesive application design."
+}
+```
+
 # LeptonX CSS Variables Documentation
 
 LeptonX uses CSS custom properties (variables) prefixed with `--lpx-*` to provide a flexible theming system. These variables control colors, spacing, shadows, and component-specific styles throughout the application.

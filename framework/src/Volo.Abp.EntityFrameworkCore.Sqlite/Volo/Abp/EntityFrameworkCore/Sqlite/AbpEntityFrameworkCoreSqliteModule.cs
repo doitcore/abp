@@ -1,3 +1,5 @@
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore.GlobalFilters;
 using Volo.Abp.EntityFrameworkCore.Interceptors;
@@ -32,7 +34,10 @@ public class AbpEntityFrameworkCoreSqliteModule : AbpModule
             {
                 options.ConfigureDefaultOnConfiguring((dbContext, dbContextOptionsBuilder) =>
                 {
-                    dbContextOptionsBuilder.AddInterceptors(new SqliteBusyTimeoutSaveChangesInterceptor(sqliteOptions.BusyTimeout.Value));
+                    if (dbContextOptionsBuilder.Options.Extensions.Any(extension => extension is SqliteOptionsExtension))
+                    {
+                        dbContextOptionsBuilder.AddInterceptors(new SqliteBusyTimeoutSaveChangesInterceptor(sqliteOptions.BusyTimeout.Value));
+                    }
                 }, overrideExisting: false);
             });
         }

@@ -606,7 +606,7 @@ chatComponent.off('messageSent', callbackFunction);
 ## Using Dynamic Workspace Configurations for custom requirements
 
 The AI Management module allows you to access only configuration of a workspace without resolving pre-constructed chat client. This is useful when you want to use a workspace for your own purposes and you don't need to use the chat client.
-The `IWorkspaceConfigurationStore` service is used to access the configuration of a workspace. It has multiple implementaations according to the usage scenario.
+The `IWorkspaceConfigurationStore` service is used to access the configuration of a workspace. It has multiple implementations according to the usage scenario.
 
 ```csharp
 public class MyService
@@ -832,4 +832,5 @@ The cache is automatically invalidated when workspaces are created, updated, or 
 
 - [Artificial Intelligence Infrastructure](../../framework/infrastructure/artificial-intelligence/index.md): Learn about the underlying AI workspace infrastructure
 - [Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/): Microsoft's unified AI abstractions
+- [Microsoft Agent Framework](https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview): Microsoft's Agent Framework
 - [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/): Microsoft's Semantic Kernel integration

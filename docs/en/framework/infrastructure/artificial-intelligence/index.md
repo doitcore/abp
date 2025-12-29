@@ -27,12 +27,14 @@ abp add-package Volo.Abp.AI
 The `Volo.Abp.AI` package provides integration with the following libraries:
 
 * [Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/microsoft-extensions-ai)
+* [Microsoft.Agents.AI (Agent Framework)](https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview)
 * [Microsoft.SemanticKernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/)
 
-The Microsoft.Extensions.AI library is suggested for library developers to keep the library dependency minimum and simple (since it provides basic abstractions and fundamental AI provider integrations), while Semantic Kernel is suggested for applications that need rich and advanced AI integration features.
+The **Microsoft.Extensions.AI** library is suggested for library developers to keep the library dependency minimum and simple (since it provides basic abstractions and fundamental AI provider integrations). For applications, **Microsoft Agent Framework** is the recommended choice as it combines the best of both AutoGen and Semantic Kernel (it's direct successor of these two frameworks), offering simple abstractions for single- and multi-agent patterns along with advanced features like thread-based state management, type safety, filters, and telemetry. **Semantic Kernel** can still be used if you need its specific AI integration features.
 
 Check the following documentation to learn how to use these libraries with the ABP integration:
 
 - [ABP Microsoft.Extensions.AI integration](./microsoft-extensions-ai.md)
+- [ABP Microsoft.Agents.AI (Agent Framework) integration](./microsoft-agent-framework.md)
 - [ABP Microsoft.SemanticKernel integration](./microsoft-semantic-kernel.md)
 

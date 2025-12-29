@@ -14,6 +14,8 @@ namespace Volo.Abp.AspNetCore.Mvc.Client;
 
 public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigurationClient, ITransientDependency
 {
+    private const string ApplicationConfigurationDtoCacheKey = "ApplicationConfigurationDto_CacheKey";
+
     protected IHttpContextAccessor HttpContextAccessor { get; }
     protected AbpApplicationConfigurationClientProxy ApplicationConfigurationAppService { get; }
     protected AbpApplicationLocalizationClientProxy ApplicationLocalizationClientProxy { get; }
@@ -44,7 +46,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
     {
         string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
-        if (httpContext != null && httpContext.Items["ApplicationConfigurationDto_CacheKey"] is string key)
+        if (httpContext != null && httpContext.Items[ApplicationConfigurationDtoCacheKey] is string key)
         {
             cacheKey = key;
         }
@@ -54,7 +56,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
             cacheKey = await CreateCacheKeyAsync();
             if (httpContext != null)
             {
-                httpContext.Items["ApplicationConfigurationDto_CacheKey"] = cacheKey;
+                httpContext.Items[ApplicationConfigurationDtoCacheKey] = cacheKey;
             }
         }
 
@@ -105,7 +107,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
     {
         string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
-        if (httpContext != null && httpContext.Items["ApplicationConfigurationDto_CacheKey"] is string key)
+        if (httpContext != null && httpContext.Items[ApplicationConfigurationDtoCacheKey] is string key)
         {
             cacheKey = key;
         }
@@ -115,7 +117,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
             cacheKey = AsyncHelper.RunSync(CreateCacheKeyAsync);
             if (httpContext != null)
             {
-                httpContext.Items["ApplicationConfigurationDto_CacheKey"] = cacheKey;
+                httpContext.Items[ApplicationConfigurationDtoCacheKey] = cacheKey;
             }
         }
 

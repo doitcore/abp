@@ -42,8 +42,21 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
 
     public virtual async Task<ApplicationConfigurationDto> GetAsync()
     {
-        var cacheKey = await CreateCacheKeyAsync();
+        string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
+        if (httpContext != null && httpContext.Items["ApplicationConfigurationDto_CacheKey"] is string key)
+        {
+            cacheKey = key;
+        }
+
+        if (cacheKey.IsNullOrWhiteSpace())
+        {
+            cacheKey = await CreateCacheKeyAsync();
+            if (httpContext != null)
+            {
+                httpContext.Items["ApplicationConfigurationDto_CacheKey"] = cacheKey;
+            }
+        }
 
         if (httpContext != null && httpContext.Items[cacheKey] is ApplicationConfigurationDto configuration)
         {
@@ -90,8 +103,21 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
 
     public ApplicationConfigurationDto Get()
     {
-        var cacheKey = AsyncHelper.RunSync(CreateCacheKeyAsync);
+        string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
+        if (httpContext != null && httpContext.Items["ApplicationConfigurationDto_CacheKey"] is string key)
+        {
+            cacheKey = key;
+        }
+
+        if (cacheKey.IsNullOrWhiteSpace())
+        {
+            cacheKey = AsyncHelper.RunSync(CreateCacheKeyAsync);
+            if (httpContext != null)
+            {
+                httpContext.Items["ApplicationConfigurationDto_CacheKey"] = cacheKey;
+            }
+        }
 
         if (httpContext != null && httpContext.Items[cacheKey] is ApplicationConfigurationDto configuration)
         {

@@ -32,6 +32,7 @@ public class AbpFeatureManagementDomainModule : AbpModule
         Configure<FeatureManagementOptions>(options =>
         {
             options.Providers.Add<DefaultValueFeatureManagementProvider>();
+            options.Providers.Add<ConfigurationFeatureManagementProvider>();
             options.Providers.Add<EditionFeatureManagementProvider>();
 
             //TODO: Should be moved to the Tenant Management module

@@ -1870,6 +1870,10 @@
                   "path": "framework/architecture/modularity/extending/overriding-user-interface.md"
                 },
                 {
+                  "text": "How to Override LeptonX CSS Variables",
+                  "path": "framework/ui/common/leptonx-css-variables.md"
+                },
+                {
                   "text": "Utilities",
                   "items": [
                     {

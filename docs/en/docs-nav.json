@@ -1562,6 +1562,10 @@
                       "path": "framework/ui/angular/ssr-configuration.md"
                     },
                     {
+                      "text": "AI Tools Configuration",
+                      "path": "framework/ui/angular/ai-config.md"
+                    },
+                    {
                       "text": "PWA Configuration",
                       "path": "framework/ui/angular/pwa-configuration.md"
                     },

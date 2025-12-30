@@ -56,13 +56,13 @@ public class KeyedLock_Tests
             });
 
             // While holding the outer lock, inner waiter should not complete
-            await Task.Delay(150);
+            await Task.Delay(200);
             inner.IsCompleted.ShouldBeFalse();
         }
 
         // After releasing, inner should complete; elapsed >= hold time
         await inner;
-        sw.ElapsedMilliseconds.ShouldBeGreaterThanOrEqualTo(150);
+        sw.ElapsedMilliseconds.ShouldBeGreaterThanOrEqualTo(180);
     }
 
     [Fact]

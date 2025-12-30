@@ -15,7 +15,7 @@ public static class KeyedLock
 
     public static async Task<IDisposable> LockAsync(object key)
     {
-        return await LockAsync(key, CancellationToken.None).ConfigureAwait(false);
+        return await LockAsync(key, CancellationToken.None);
     }
 
     public static async Task<IDisposable> LockAsync(object key, CancellationToken cancellationToken)
@@ -23,7 +23,7 @@ public static class KeyedLock
         var semaphore = GetOrCreate(key);
         try
         {
-            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+            await semaphore.WaitAsync(cancellationToken);
         }
         catch (OperationCanceledException)
         {
@@ -36,7 +36,7 @@ public static class KeyedLock
 
     public static async Task<IDisposable?> TryLockAsync(object key)
     {
-        return await TryLockAsync(key, default, CancellationToken.None).ConfigureAwait(false);
+        return await TryLockAsync(key, default, CancellationToken.None);
     }
 
     public static async Task<IDisposable?> TryLockAsync(object key, TimeSpan timeout, CancellationToken cancellationToken = default)
@@ -47,11 +47,11 @@ public static class KeyedLock
         {
             if (timeout == default)
             {
-                acquired = await semaphore.WaitAsync(0, cancellationToken).ConfigureAwait(false);
+                acquired = await semaphore.WaitAsync(0, cancellationToken);
             }
             else
             {
-                acquired = await semaphore.WaitAsync(timeout, cancellationToken).ConfigureAwait(false);
+                acquired = await semaphore.WaitAsync(timeout, cancellationToken);
             }
         }
         catch (OperationCanceledException)
@@ -99,9 +99,17 @@ public static class KeyedLock
 
     private sealed class Releaser(object key) : IDisposable
     {
+        private int _disposed;
+
         public void Dispose()
         {
+            if (Interlocked.Exchange(ref _disposed, 1) == 1)
+            {
+                return;
+            }
+
             RefCounted<SemaphoreSlim> item;
+            var shouldDispose = false;
             lock (SemaphoreSlims)
             {
                 if (!SemaphoreSlims.TryGetValue(key, out item!))
@@ -109,25 +117,20 @@ public static class KeyedLock
                     return;
                 }
                 --item.RefCount;
-            }
-            item.Value.Release();
-
-            bool shouldDispose = false;
-            lock (SemaphoreSlims)
-            {
-                if (SemaphoreSlims.TryGetValue(key, out var current) && ReferenceEquals(current, item))
+                if (item.RefCount == 0)
                 {
-                    if (item.RefCount == 0)
-                    {
-                        SemaphoreSlims.Remove(key);
-                        shouldDispose = true;
-                    }
+                    SemaphoreSlims.Remove(key);
+                    shouldDispose = true;
                 }
             }
 
             if (shouldDispose)
             {
                 item.Value.Dispose();
+            }
+            else
+            {
+                item.Value.Release();
             }
         }
     }

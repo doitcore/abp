@@ -110,7 +110,7 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
 
         var entityType = entity.GetType();
         var entityFullName = entityType.FullName!;
-        if (entityEntry.Metadata.HasSharedClrType)
+        if (entityEntry.Metadata.HasSharedClrType && !entityEntry.Metadata.IsOwned())
         {
             entityFullName = entityEntry.Metadata.Name;
         }

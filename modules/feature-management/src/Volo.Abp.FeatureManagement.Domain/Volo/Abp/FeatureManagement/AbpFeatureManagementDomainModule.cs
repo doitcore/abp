@@ -25,7 +25,6 @@ namespace Volo.Abp.FeatureManagement;
 public class AbpFeatureManagementDomainModule : AbpModule
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private Task _initializeDynamicFeaturesTask;
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -64,17 +63,11 @@ public class AbpFeatureManagementDomainModule : AbpModule
         var rootServiceProvider = context.ServiceProvider.GetRequiredService<IRootServiceProvider>();
         var initializer = rootServiceProvider.GetRequiredService<FeatureDynamicInitializer>();
         await initializer.InitializeAsync(true, _cancellationTokenSource.Token);
-        _initializeDynamicFeaturesTask = initializer.GetInitializationTask();
     }
 
     public override Task OnApplicationShutdownAsync(ApplicationShutdownContext context)
     {
         _cancellationTokenSource.Cancel();
         return Task.CompletedTask;
-    }
-
-    public Task GetInitializeDynamicFeaturesTask()
-    {
-        return _initializeDynamicFeaturesTask ?? Task.CompletedTask;
     }
 }

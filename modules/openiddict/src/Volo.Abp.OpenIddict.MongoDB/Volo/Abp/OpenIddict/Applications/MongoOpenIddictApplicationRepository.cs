@@ -17,7 +17,7 @@ public class MongoOpenIddictApplicationRepository : MongoDbRepository<OpenIddict
     public MongoOpenIddictApplicationRepository(IMongoDbContextProvider<OpenIddictMongoDbContext> dbContextProvider) : base(dbContextProvider)
     {
     }
-    
+
     public virtual async Task<List<OpenIddictApplication>> GetListAsync(string sorting, int skipCount, int maxResultCount, string filter = null,
         CancellationToken cancellationToken = default)
     {
@@ -62,6 +62,13 @@ public class MongoOpenIddictApplicationRepository : MongoDbRepository<OpenIddict
             .OrderBy(x => x.Id)
             .SkipIf<OpenIddictApplication, IQueryable<OpenIddictApplication>>(offset.HasValue, offset)
             .TakeIf<OpenIddictApplication, IQueryable<OpenIddictApplication>>(count.HasValue, count)
+            .ToListAsync(GetCancellationToken(cancellationToken));
+    }
+
+    public virtual async Task<List<OpenIddictApplication>> GetListByIdsAsync(Guid[] ids, CancellationToken cancellationToken = default)
+    {
+        return await (await GetQueryableAsync(cancellationToken))
+            .Where(x => ids.Contains(x.Id))
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
 }

@@ -29,6 +29,14 @@ public class ApplicationPermissionManagementProvider : PermissionManagementProvi
         }
     }
 
+    public override Task<MultiplePermissionValueProviderGrantInfo> CheckAsync(string[] names, string providerName, string providerKey)
+    {
+        using (CurrentTenant.Change(null))
+        {
+            return base.CheckAsync(names, providerName, providerKey);
+        }
+    }
+
     protected override Task GrantAsync(string name, string providerKey)
     {
         using (CurrentTenant.Change(null))

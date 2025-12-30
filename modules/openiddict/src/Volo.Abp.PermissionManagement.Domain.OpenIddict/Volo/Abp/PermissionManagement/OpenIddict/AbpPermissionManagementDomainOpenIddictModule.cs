@@ -17,11 +17,5 @@ public class AbpPermissionManagementDomainOpenIddictModule : AbpModule
             options.ManagementProviders.Add<ApplicationPermissionManagementProvider>();
             options.ProviderPolicies[ClientPermissionValueProvider.ProviderName] = "OpenIddictPro.Application.ManagePermissions";
         });
-
-        PostConfigure<PermissionManagementOptions>(options =>
-        {
-            options.ResourceManagementProviders.Add<ApplicationResourcePermissionManagementProvider>();
-            options.ResourcePermissionProviderKeyLookupServices.Add<ApplicationResourcePermissionProviderKeyLookupService>();
-        });
     }
 }

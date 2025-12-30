@@ -33,7 +33,7 @@ public class ApplicationResourcePermissionManagementProvider : ResourcePermissio
         }
     }
 
-    public override Task SetAsync(string name,  string resourceName,string resourceKey, string providerKey, bool isGranted)
+    public override Task SetAsync(string name,  string resourceName, string resourceKey, string providerKey, bool isGranted)
     {
         using (CurrentTenant.Change(null))
         {

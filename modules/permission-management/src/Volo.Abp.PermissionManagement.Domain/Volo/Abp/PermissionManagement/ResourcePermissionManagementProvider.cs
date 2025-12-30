@@ -55,7 +55,7 @@ public abstract class ResourcePermissionManagementProvider : IResourcePermission
         }
     }
 
-    public virtual Task SetAsync(string name,  string resourceName,string resourceKey, string providerKey, bool isGranted)
+    public virtual Task SetAsync(string name,  string resourceName, string resourceKey, string providerKey, bool isGranted)
     {
         return isGranted
             ? GrantAsync(name, resourceName, resourceKey, providerKey)

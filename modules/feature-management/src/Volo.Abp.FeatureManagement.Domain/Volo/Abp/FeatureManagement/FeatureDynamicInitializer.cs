@@ -16,8 +16,6 @@ namespace Volo.Abp.FeatureManagement;
 
 public class FeatureDynamicInitializer : ITransientDependency
 {
-    private Task _initializeDynamicFeaturesTask;
-
     public ILogger<FeatureDynamicInitializer> Logger { get; set; }
 
     protected IServiceProvider ServiceProvider { get; }
@@ -56,7 +54,7 @@ public class FeatureDynamicInitializer : ITransientDependency
 
         if (runInBackground)
         {
-            _initializeDynamicFeaturesTask = Task.Run(async () =>
+            Task.Run(async () =>
             {
                 if (cancellationToken == default && ApplicationLifetime?.ApplicationStopping != null)
                 {
@@ -67,13 +65,7 @@ public class FeatureDynamicInitializer : ITransientDependency
             return Task.CompletedTask;
         }
 
-        _initializeDynamicFeaturesTask = ExecuteInitializationAsync(options, cancellationToken);
-        return _initializeDynamicFeaturesTask;
-    }
-
-    public virtual Task GetInitializationTask()
-    {
-        return _initializeDynamicFeaturesTask ?? Task.CompletedTask;
+        return ExecuteInitializationAsync(options, cancellationToken);
     }
 
     protected virtual async Task ExecuteInitializationAsync(FeatureManagementOptions options, CancellationToken cancellationToken)

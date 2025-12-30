@@ -26,7 +26,6 @@ namespace Volo.Abp.PermissionManagement;
 public class AbpPermissionManagementDomainModule : AbpModule
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private Task _initializeDynamicPermissionsTask;
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -50,17 +49,11 @@ public class AbpPermissionManagementDomainModule : AbpModule
         var rootServiceProvider = context.ServiceProvider.GetRequiredService<IRootServiceProvider>();
         var initializer = rootServiceProvider.GetRequiredService<PermissionDynamicInitializer>();
         await initializer.InitializeAsync(true, _cancellationTokenSource.Token);
-        _initializeDynamicPermissionsTask = initializer.GetInitializationTask();
     }
 
     public override Task OnApplicationShutdownAsync(ApplicationShutdownContext context)
     {
         _cancellationTokenSource.Cancel();
         return Task.CompletedTask;
-    }
-
-    public Task GetInitializeDynamicPermissionsTask()
-    {
-        return _initializeDynamicPermissionsTask ?? Task.CompletedTask;
     }
 }

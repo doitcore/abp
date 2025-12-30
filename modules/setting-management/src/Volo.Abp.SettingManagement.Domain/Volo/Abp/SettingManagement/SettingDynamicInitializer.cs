@@ -16,8 +16,6 @@ namespace Volo.Abp.SettingManagement;
 
 public class SettingDynamicInitializer : ITransientDependency
 {
-    private Task _initializeDynamicSettingsTask;
-
     public ILogger<SettingDynamicInitializer> Logger { get; set; }
 
     protected IServiceProvider ServiceProvider { get; }
@@ -56,7 +54,7 @@ public class SettingDynamicInitializer : ITransientDependency
 
         if (runInBackground)
         {
-            _initializeDynamicSettingsTask = Task.Run(async () =>
+            Task.Run(async () =>
             {
                 if (cancellationToken == default && ApplicationLifetime?.ApplicationStopping != null)
                 {
@@ -68,13 +66,7 @@ public class SettingDynamicInitializer : ITransientDependency
             return Task.CompletedTask;
         }
 
-        _initializeDynamicSettingsTask = ExecuteInitializationAsync(options, cancellationToken);
-        return _initializeDynamicSettingsTask;
-    }
-
-    public virtual Task GetInitializationTask()
-    {
-        return _initializeDynamicSettingsTask ?? Task.CompletedTask;
+        return ExecuteInitializationAsync(options, cancellationToken);
     }
 
     protected virtual async Task ExecuteInitializationAsync(SettingManagementOptions options, CancellationToken cancellationToken)

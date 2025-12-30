@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Volo.Abp.DistributedLocking;
+
+namespace Volo.Abp.DistributedLocking;
 
 public class LocalAbpDistributedLockHandle : IAbpDistributedLockHandle
 {

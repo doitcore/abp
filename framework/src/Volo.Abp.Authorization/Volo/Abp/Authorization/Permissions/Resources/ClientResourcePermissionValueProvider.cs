@@ -30,7 +30,7 @@ public class ClientResourcePermissionValueProvider : ResourcePermissionValueProv
 
         using (CurrentTenant.Change(null))
         {
-            return await ResourcePermissionStore.IsGrantedAsync(context.ResourceName, context.ResourceKey, context.Permission.Name, Name, clientId)
+            return await ResourcePermissionStore.IsGrantedAsync(context.Permission.Name, context.ResourceName, context.ResourceKey, Name, clientId)
                 ? PermissionGrantResult.Granted
                 : PermissionGrantResult.Undefined;
         }

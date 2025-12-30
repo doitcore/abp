@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Volo.Abp.IdentityServer.Clients;
 
-public class ClientFinder: IClientFinder, ITransientDependency
+public class ClientFinder : IClientFinder, ITransientDependency
 {
     protected IClientRepository ClientRepository { get; }
 

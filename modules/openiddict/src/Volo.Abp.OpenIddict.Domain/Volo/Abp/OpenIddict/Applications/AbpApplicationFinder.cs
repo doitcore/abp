@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Identity;
 
 namespace Volo.Abp.OpenIddict.Applications;
 

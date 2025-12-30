@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -108,12 +109,17 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
         }
 
         var entityType = entity.GetType();
+        var entityFullName = entityType.FullName!;
+        if (entityEntry.Metadata.HasSharedClrType)
+        {
+            entityFullName = entityEntry.Metadata.Name;
+        }
         var entityChange = new EntityChangeInfo
         {
             ChangeType = changeType,
             EntityEntry = entityEntry,
             EntityId = entityId,
-            EntityTypeFullName = entityType.FullName,
+            EntityTypeFullName = entityFullName,
             PropertyChanges = GetPropertyChanges(entityEntry),
             EntityTenantId = GetTenantId(entity)
         };
@@ -184,12 +190,14 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
             var propertyEntry = entityEntry.Property(property.Name);
             if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted) && !IsSoftDeleted(entityEntry))
             {
+                var propertyType = DeterminePropertyTypeFromEntry(property, propertyEntry);
+
                 propertyChanges.Add(new EntityPropertyChangeInfo
                 {
                     NewValue = isDeleted ? null : JsonSerializer.Serialize(propertyEntry.CurrentValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
                     OriginalValue = isCreated ? null : JsonSerializer.Serialize(propertyEntry.OriginalValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
                     PropertyName = property.Name,
-                    PropertyTypeFullName = property.ClrType.GetFirstGenericArgumentIfNullable().FullName!
+                    PropertyTypeFullName = propertyType.FullName!
                 });
             }
         }
@@ -208,19 +216,48 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
                 if (AbpEfCoreNavigationHelper.IsNavigationEntryModified(entityEntry, index))
                 {
                     var abpNavigationEntry = AbpEfCoreNavigationHelper.GetNavigationEntry(entityEntry, index);
-                    var isCollection = navigationEntry.Metadata.IsCollection;
-                    propertyChanges.Add(new EntityPropertyChangeInfo
+                    if (navigationEntry.Metadata.TargetEntityType.IsMappedToJson() && navigationEntry is ReferenceEntry referenceEntry && referenceEntry.TargetEntry != null)
                     {
-                        PropertyName = navigationEntry.Metadata.Name,
-                        PropertyTypeFullName = navigationEntry.Metadata.ClrType.GetFirstGenericArgumentIfNullable().FullName!,
-                        OriginalValue = GetNavigationPropertyValue(abpNavigationEntry?.OriginalValue, isCollection),
-                        NewValue = GetNavigationPropertyValue(abpNavigationEntry?.CurrentValue, isCollection)
-                    });
+                        var jsonPropertyChanges = GetPropertyChanges(referenceEntry.TargetEntry);
+                        propertyChanges.AddRange(jsonPropertyChanges);
+                    }
+                    else
+                    {
+                        var isCollection = navigationEntry.Metadata.IsCollection;
+                        propertyChanges.Add(new EntityPropertyChangeInfo
+                        {
+                            PropertyName = navigationEntry.Metadata.Name,
+                            PropertyTypeFullName = navigationEntry.Metadata.ClrType.GetFirstGenericArgumentIfNullable().FullName!,
+                            OriginalValue = GetNavigationPropertyValue(abpNavigationEntry?.OriginalValue, isCollection),
+                            NewValue = GetNavigationPropertyValue(abpNavigationEntry?.CurrentValue, isCollection)
+                        });
+                    }
                 }
             }
         }
 
         return propertyChanges;
+    }
+
+    protected virtual Type DeterminePropertyTypeFromEntry(IProperty property, PropertyEntry propertyEntry)
+    {
+        var propertyType = property.ClrType.GetFirstGenericArgumentIfNullable();
+
+        if (propertyType != typeof(object))
+        {
+            return propertyType;
+        }
+
+        if (propertyEntry.CurrentValue != null)
+        {
+            propertyType = propertyEntry.CurrentValue.GetType().GetFirstGenericArgumentIfNullable();
+        }
+        else if (propertyEntry.OriginalValue != null)
+        {
+            propertyType = propertyEntry.OriginalValue.GetType().GetFirstGenericArgumentIfNullable();
+        }
+
+        return propertyType;
     }
 
     protected virtual string? GetNavigationPropertyValue(object? entity, bool isCollection)

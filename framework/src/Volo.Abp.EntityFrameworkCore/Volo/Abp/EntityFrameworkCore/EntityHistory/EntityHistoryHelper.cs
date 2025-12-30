@@ -202,37 +202,47 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
             }
         }
 
-        if (AbpEfCoreNavigationHelper != null)
+        if (AbpEfCoreNavigationHelper == null)
         {
-            foreach (var (navigationEntry, index) in entityEntry.Navigations.Select((value, i) => ( value, i )))
-            {
-                var propertyInfo = navigationEntry.Metadata.PropertyInfo;
-                if (propertyInfo != null &&
-                    propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
-                {
-                    continue;
-                }
+            return propertyChanges;
+        }
 
-                if (AbpEfCoreNavigationHelper.IsNavigationEntryModified(entityEntry, index))
+        foreach (var (navigationEntry, index) in entityEntry.Navigations.Select((value, i) => ( value, i )))
+        {
+            var propertyInfo = navigationEntry.Metadata.PropertyInfo;
+            if (propertyInfo != null &&
+                propertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
+            {
+                continue;
+            }
+                
+            if (navigationEntry.Metadata.TargetEntityType.IsMappedToJson() && navigationEntry is ReferenceEntry referenceEntry && referenceEntry.TargetEntry != null)
+            {
+                foreach (var propertyChange in GetPropertyChanges(referenceEntry.TargetEntry))
                 {
-                    var abpNavigationEntry = AbpEfCoreNavigationHelper.GetNavigationEntry(entityEntry, index);
-                    if (navigationEntry.Metadata.TargetEntityType.IsMappedToJson() && navigationEntry is ReferenceEntry referenceEntry && referenceEntry.TargetEntry != null)
+                    if (propertyChanges.Any(pc => pc.PropertyName == propertyChange.PropertyName))
                     {
-                        var jsonPropertyChanges = GetPropertyChanges(referenceEntry.TargetEntry);
-                        propertyChanges.AddRange(jsonPropertyChanges);
+                        propertyChange.PropertyName = $"{referenceEntry.Metadata.Name}.{propertyChange.PropertyName}";
                     }
-                    else
-                    {
-                        var isCollection = navigationEntry.Metadata.IsCollection;
-                        propertyChanges.Add(new EntityPropertyChangeInfo
-                        {
-                            PropertyName = navigationEntry.Metadata.Name,
-                            PropertyTypeFullName = navigationEntry.Metadata.ClrType.GetFirstGenericArgumentIfNullable().FullName!,
-                            OriginalValue = GetNavigationPropertyValue(abpNavigationEntry?.OriginalValue, isCollection),
-                            NewValue = GetNavigationPropertyValue(abpNavigationEntry?.CurrentValue, isCollection)
-                        });
-                    }
+
+                    propertyChanges.Add(propertyChange);
                 }
+                
+                continue;
+            }
+
+            if (AbpEfCoreNavigationHelper.IsNavigationEntryModified(entityEntry, index))
+            {
+                var abpNavigationEntry = AbpEfCoreNavigationHelper.GetNavigationEntry(entityEntry, index);
+                    
+                var isCollection = navigationEntry.Metadata.IsCollection;
+                propertyChanges.Add(new EntityPropertyChangeInfo
+                {
+                    PropertyName = navigationEntry.Metadata.Name,
+                    PropertyTypeFullName = navigationEntry.Metadata.ClrType.GetFirstGenericArgumentIfNullable().FullName!,
+                    OriginalValue = GetNavigationPropertyValue(abpNavigationEntry?.OriginalValue, isCollection),
+                    NewValue = GetNavigationPropertyValue(abpNavigationEntry?.CurrentValue, isCollection)
+                });
             }
         }
 

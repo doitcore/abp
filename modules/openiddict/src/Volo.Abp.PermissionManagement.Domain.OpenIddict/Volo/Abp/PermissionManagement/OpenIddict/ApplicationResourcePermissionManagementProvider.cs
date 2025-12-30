@@ -49,7 +49,7 @@ public class ApplicationResourcePermissionManagementProvider : ResourcePermissio
         }
     }
 
-    protected override Task RevokeAsync(string name, string resourceName,string resourceKey, string providerKey)
+    protected override Task RevokeAsync(string name, string resourceName, string resourceKey, string providerKey)
     {
         using (CurrentTenant.Change(null))
         {

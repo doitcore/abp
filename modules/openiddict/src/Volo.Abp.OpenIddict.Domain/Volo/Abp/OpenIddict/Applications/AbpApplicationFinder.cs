@@ -22,7 +22,7 @@ public class AbpApplicationFinder : IApplicationFinder, ITransientDependency
         using (ApplicationRepository.DisableTracking())
         {
             page = page < 1 ? 1 : page;
-            var applications = await ApplicationRepository.GetListAsync(nameof(OpenIddictApplication.ClientId), filter: filter, skipCount: (page - 1) * 10, maxResultCount: 10);
+            var applications = await ApplicationRepository.GetListAsync(nameof(OpenIddictApplication.CreationTime), filter: filter, skipCount: (page - 1) * 10, maxResultCount: 10);
             return applications.Select(x => new ApplicationFinderResult
             {
                 Id = x.Id,

@@ -69,4 +69,11 @@ public class MongoClientRepository : MongoDbRepository<IAbpIdentityServerMongoDb
         return await (await GetQueryableAsync(cancellationToken))
             .AnyAsync(c => c.Id != expectedId && c.ClientId == clientId, GetCancellationToken(cancellationToken));
     }
+
+    public virtual async Task<List<Client>> GetListByIdsAsync(Guid[] ids, CancellationToken cancellationToken = default)
+    {
+        return await (await GetQueryableAsync(cancellationToken))
+            .Where(c => ids.Contains(c.Id))
+            .ToListAsync(GetCancellationToken(cancellationToken));
+    }
 }

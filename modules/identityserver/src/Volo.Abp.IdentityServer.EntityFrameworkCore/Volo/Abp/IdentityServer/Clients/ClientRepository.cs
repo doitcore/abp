@@ -61,6 +61,13 @@ public class ClientRepository : EfCoreRepository<IIdentityServerDbContext, Clien
         return await (await GetDbSetAsync()).AnyAsync(c => c.Id != expectedId && c.ClientId == clientId, GetCancellationToken(cancellationToken));
     }
 
+    public virtual async Task<List<Client>> GetListByIdsAsync(Guid[] ids, CancellationToken cancellationToken = default)
+    {
+        return await (await GetDbSetAsync())
+            .Where(c => ids.Contains(c.Id))
+            .ToListAsync(GetCancellationToken(cancellationToken));
+    }
+
     public async override Task DeleteAsync(Guid id, bool autoSave = false, CancellationToken cancellationToken = default)
     {
         var dbContext = await GetDbContextAsync();

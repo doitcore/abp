@@ -18,7 +18,6 @@ public class ApplicationPermissionManagementProvider : PermissionManagementProvi
             guidGenerator,
             currentTenant)
     {
-
     }
 
     public override Task<PermissionValueProviderGrantInfo> CheckAsync(string name, string providerName, string providerKey)

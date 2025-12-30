@@ -17,7 +17,7 @@ public class ApplicationResourcePermissionManagementProvider : ResourcePermissio
     {
     }
 
-    public override Task<ResourcePermissionValueProviderGrantInfo> CheckAsync(string name, string resourceName,string resourceKey, string providerName, string providerKey)
+    public override Task<ResourcePermissionValueProviderGrantInfo> CheckAsync(string name, string resourceName, string resourceKey, string providerName, string providerKey)
     {
         using (CurrentTenant.Change(null))
         {

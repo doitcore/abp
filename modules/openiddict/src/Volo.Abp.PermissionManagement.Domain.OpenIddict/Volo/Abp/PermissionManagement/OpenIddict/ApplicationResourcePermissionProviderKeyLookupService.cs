@@ -28,8 +28,8 @@ public class ApplicationResourcePermissionProviderKeyLookupService : IResourcePe
 
     public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, int page = 1, CancellationToken cancellationToken = default)
     {
-        var users = await ApplicationFinder.SearchAsync(filter, page);
-        return users.Select(u => new ResourcePermissionProviderKeyInfo(u.Id.ToString(), u.ClientId)).ToList();
+        var applications = await ApplicationFinder.SearchAsync(filter, page);
+        return applications.Select(x => new ResourcePermissionProviderKeyInfo(x.Id.ToString(), x.ClientId)).ToList();
     }
 
     public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string[] keys, CancellationToken cancellationToken = default)
@@ -40,7 +40,7 @@ public class ApplicationResourcePermissionProviderKeyLookupService : IResourcePe
             .Select(id => id.Value)
             .Distinct()
             .ToArray();
-        var users = await ApplicationFinder.SearchByIdsAsync(ids.ToArray());
-        return users.Select(u => new ResourcePermissionProviderKeyInfo(u.Id.ToString(), u.ClientId)).ToList();
+        var applications = await ApplicationFinder.SearchByIdsAsync(ids.ToArray());
+        return applications.Select(x => new ResourcePermissionProviderKeyInfo(x.Id.ToString(), x.ClientId)).ToList();
     }
 }

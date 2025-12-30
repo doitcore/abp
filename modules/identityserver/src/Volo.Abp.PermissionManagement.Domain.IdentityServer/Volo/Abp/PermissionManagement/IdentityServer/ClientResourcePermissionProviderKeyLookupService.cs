@@ -27,8 +27,8 @@ public class ClientResourcePermissionProviderKeyLookupService : IResourcePermiss
 
     public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, int page = 1, CancellationToken cancellationToken = default)
     {
-        var users = await ClientFinder.SearchAsync(filter, page);
-        return users.Select(u => new ResourcePermissionProviderKeyInfo(u.Id.ToString(), u.ClientId)).ToList();
+        var clients = await ClientFinder.SearchAsync(filter, page);
+        return clients.Select(x => new ResourcePermissionProviderKeyInfo(x.Id.ToString(), x.ClientId)).ToList();
     }
 
     public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string[] keys, CancellationToken cancellationToken = default)
@@ -39,7 +39,7 @@ public class ClientResourcePermissionProviderKeyLookupService : IResourcePermiss
             .Select(id => id.Value)
             .Distinct()
             .ToArray();
-        var users = await ClientFinder.SearchByIdsAsync(ids.ToArray());
-        return users.Select(u => new ResourcePermissionProviderKeyInfo(u.Id.ToString(), u.ClientId)).ToList();
+        var clients = await ClientFinder.SearchByIdsAsync(ids.ToArray());
+        return clients.Select(x => new ResourcePermissionProviderKeyInfo(x.Id.ToString(), x.ClientId)).ToList();
     }
 }

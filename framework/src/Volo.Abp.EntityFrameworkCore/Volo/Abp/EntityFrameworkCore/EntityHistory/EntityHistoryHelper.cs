@@ -239,6 +239,18 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
         return propertyChanges;
     }
 
+    /// <summary>
+    /// Determines the CLR type of a property based on its EF Core metadata and the values in the given <see cref="PropertyEntry"/>.
+    /// </summary>
+    /// <param name="property">The EF Core property metadata that provides the declared CLR type.</param>
+    /// <param name="propertyEntry">The property entry that contains the current and original values for the property.</param>
+    /// <returns>
+    /// The most specific CLR type inferred for the property. This is normally the property's declared CLR type (with
+    /// nullable wrappers removed). If the declared type is <see cref="object"/>, the type is inferred from the
+    /// runtime type of <see cref="PropertyEntry.CurrentValue"/> or, if that is <c>null</c>, from
+    /// <see cref="PropertyEntry.OriginalValue"/>. If both values are <c>null</c>, the declared CLR type
+    /// (which may remain <see cref="object"/>) is returned.
+    /// </returns>
     protected virtual Type DeterminePropertyTypeFromEntry(IProperty property, PropertyEntry propertyEntry)
     {
         var propertyType = property.ClrType.GetFirstGenericArgumentIfNullable();

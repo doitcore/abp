@@ -68,8 +68,4 @@ When you see the "New Version Available" window, follow these steps to upgrade A
 
 ## Installing a Specific Version
 
-If you want to install an older version of ABP Studio, you can download [Abp Studio Version Switcher](https://github.com/abpframework/abp/tree/dev/tools/abp-studio-version-switcher/abp-studio-version-switcher.ps1) script and run it as shown below;
-
-```bash
-./switch-abp-studio-version.ps1 2.0.0
-```
+There is no official support for installing an older version of ABP Studio yet. But, if you want to install an older version of ABP Studio, you can use approach explanined here [https://github.com/enisn/AbpDevTools?tab=readme-ov-file#switch-abp-studio-version](https://github.com/enisn/AbpDevTools?tab=readme-ov-file#switch-abp-studio-version)

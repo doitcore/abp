@@ -8,6 +8,7 @@ using Volo.Abp.Authorization.Permissions.Resources;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Localization;
 using Volo.Abp.OpenIddict.Applications;
+using Volo.Abp.OpenIddict.Localization;
 
 namespace Volo.Abp.PermissionManagement.OpenIddict;
 
@@ -22,7 +23,7 @@ public class ApplicationResourcePermissionProviderKeyLookupService : IResourcePe
     public ApplicationResourcePermissionProviderKeyLookupService(IApplicationFinder applicationFinder)
     {
         ApplicationFinder = applicationFinder;
-        DisplayName = LocalizableString.Create<OpenIddictResources>(nameof(ApplicationResourcePermissionProviderKeyLookupService));
+        DisplayName = LocalizableString.Create<AbpOpenIddictResource>(nameof(ApplicationResourcePermissionProviderKeyLookupService));
     }
 
     public virtual async Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, int page = 1, CancellationToken cancellationToken = default)

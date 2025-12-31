@@ -202,6 +202,11 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
             }
         }
 
+        if (AbpEfCoreNavigationHelper == null)
+        {
+            return propertyChanges;
+        }
+
         foreach (var (navigationEntry, index) in entityEntry.Navigations.Select((value, i) => ( value, i )))
         {
             var propertyInfo = navigationEntry.Metadata.PropertyInfo;
@@ -224,11 +229,6 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
                 }
                 
                 continue;
-            }
-            
-            if (AbpEfCoreNavigationHelper == null)
-            {
-                return propertyChanges;
             }
 
             if (AbpEfCoreNavigationHelper.IsNavigationEntryModified(entityEntry, index))

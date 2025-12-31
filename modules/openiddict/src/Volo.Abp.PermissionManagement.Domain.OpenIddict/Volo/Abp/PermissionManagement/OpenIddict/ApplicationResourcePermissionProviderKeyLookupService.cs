@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenIddict.Abstractions;
 using Volo.Abp.Authorization.Permissions.Resources;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Localization;

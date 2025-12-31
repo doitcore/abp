@@ -11,6 +11,6 @@
     "ScopesRequested": "Domenii de aplicare solicitate",
     "Accept": "Accept",
     "Deny": "Negați",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Aplicație"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Client"
   }
 }

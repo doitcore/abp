@@ -11,6 +11,6 @@
     "ScopesRequested": "Poproszono o zakresy",
     "Accept": "Zaakceptować",
     "Deny": "Zaprzeczyć",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Aplikacja"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Klient"
   }
 }

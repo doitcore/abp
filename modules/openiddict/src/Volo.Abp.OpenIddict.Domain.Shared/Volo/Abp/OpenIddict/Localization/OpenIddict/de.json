@@ -11,6 +11,6 @@
     "ScopesRequested": "Umfänge angefordert",
     "Accept": "Akzeptieren",
     "Deny": "Leugnen",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Anwendung"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Client"
   }
 }

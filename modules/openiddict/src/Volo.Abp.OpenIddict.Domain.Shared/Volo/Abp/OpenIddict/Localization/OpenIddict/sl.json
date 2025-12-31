@@ -11,6 +11,6 @@
     "ScopesRequested": "Zahtevani obsegi",
     "Accept": "Sprejmi",
     "Deny": "Zanikati",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Aplikacija"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Odjemalec"
   }
 }

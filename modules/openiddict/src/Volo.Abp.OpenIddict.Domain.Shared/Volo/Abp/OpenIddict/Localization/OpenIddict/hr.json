@@ -11,6 +11,6 @@
     "ScopesRequested": "Traženi dometi",
     "Accept": "Prihvatiti",
     "Deny": "poreći",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Aplikacija"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Klijent"
   }
 }

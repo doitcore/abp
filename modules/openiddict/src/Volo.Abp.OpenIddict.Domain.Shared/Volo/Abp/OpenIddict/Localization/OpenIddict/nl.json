@@ -11,6 +11,6 @@
     "ScopesRequested": "Scopes gevraagd",
     "Accept": "Aanvaarden",
     "Deny": "Ontkennen",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Applicatie"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Client"
   }
 }

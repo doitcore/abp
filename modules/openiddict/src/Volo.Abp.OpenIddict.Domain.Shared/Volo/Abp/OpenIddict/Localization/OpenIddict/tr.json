@@ -11,6 +11,6 @@
     "ScopesRequested": "İstenen kapsamlar",
     "Accept": "Kabul etmek",
     "Deny": "Reddetmek",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Uygulama"
+    "ApplicationResourcePermissionProviderKeyLookupService": "İstemci"
   }
 }

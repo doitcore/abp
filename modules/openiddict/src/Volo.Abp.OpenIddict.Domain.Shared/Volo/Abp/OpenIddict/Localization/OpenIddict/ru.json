@@ -11,6 +11,6 @@
     "ScopesRequested": "Запрошенные объемы",
     "Accept": "Принимать",
     "Deny": "Отрицать",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Приложение"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Клиент"
   }
 }

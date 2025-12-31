@@ -11,6 +11,6 @@
     "ScopesRequested": "Begärda omfattningar",
     "Accept": "Acceptera",
     "Deny": "Förneka",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Applikation"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Klient"
   }
 }

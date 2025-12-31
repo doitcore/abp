@@ -12,6 +12,6 @@
     "ScopesRequested": "要求的Scope",
     "Accept": "接受",
     "Deny": "拒絕",
-    "ApplicationResourcePermissionProviderKeyLookupService": "應用程式"
+    "ApplicationResourcePermissionProviderKeyLookupService": "客戶端"
   }
 }

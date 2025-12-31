@@ -11,6 +11,6 @@
     "ScopesRequested": "Kért hatókörök",
     "Accept": "Elfogad",
     "Deny": "Tiltás",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Alkalmazás"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Kliens"
   }
 }

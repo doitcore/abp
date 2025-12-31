@@ -11,6 +11,6 @@
     "ScopesRequested": "दायरे का अनुरोध किया गया",
     "Accept": "स्वीकार करना",
     "Deny": "अस्वीकार करना",
-    "ApplicationResourcePermissionProviderKeyLookupService": "एप्लिकेशन"
+    "ApplicationResourcePermissionProviderKeyLookupService": "क्लाइंट"
   }
 }

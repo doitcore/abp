@@ -11,6 +11,6 @@
     "ScopesRequested": "Ζητούνται πεδία εφαρμογής",
     "Accept": "Αποδοχή",
     "Deny": "Άρνηση",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Εφαρμογή"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Πελάτης"
   }
 }

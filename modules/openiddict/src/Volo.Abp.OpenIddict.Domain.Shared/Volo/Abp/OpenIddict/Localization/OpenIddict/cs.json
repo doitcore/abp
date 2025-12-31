@@ -11,6 +11,6 @@
     "ScopesRequested": "Požadované rozsahy",
     "Accept": "Akceptovat",
     "Deny": "Odmítnout",
-    "ApplicationResourcePermissionProviderKeyLookupService": "Aplikace"
+    "ApplicationResourcePermissionProviderKeyLookupService": "Klient"
   }
 }

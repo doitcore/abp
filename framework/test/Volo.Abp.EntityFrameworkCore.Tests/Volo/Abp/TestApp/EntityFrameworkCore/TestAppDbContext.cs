@@ -40,9 +40,11 @@ public class TestAppDbContext : AbpDbContext<TestAppDbContext>, IThirdDbContext,
 
     public DbSet<Blog> Blogs { get; set; }
     public DbSet<BlogPost> BlogPosts { get; set; }
-
+    
     public DbSet<TestSharedEntity> TestSharedEntity => Set<TestSharedEntity>("TestSharedEntity1");
     public DbSet<TestSharedEntity> TestSharedEntity2 => Set<TestSharedEntity>("TestSharedEntity2");
+    
+    public DbSet<AppEntityWithJsonProperty> EntitiesWithObjectProperty { get; set; }
 
     public TestAppDbContext(DbContextOptions<TestAppDbContext> options)
         : base(options)
@@ -164,6 +166,27 @@ public class TestAppDbContext : AbpDbContext<TestAppDbContext>, IThirdDbContext,
         modelBuilder.Entity<BlogPost>(b =>
         {
             b.ConfigureByConvention();
+        });
+
+        modelBuilder.Entity<AppEntityWithJsonProperty>(b =>
+        {
+            b.ConfigureByConvention();
+            b.OwnsOne(x => x.Data, b2 =>
+            {
+                b2.ToJson();
+                
+                b2.Property<object>("Name")
+                    .HasConversion<string>(
+                        v => v.ToString(),
+                        v => v
+                    );
+                
+                b2.Property<object>("Value")
+                    .HasConversion<string>(
+                        v => v.ToString(),
+                        v => v
+                    );
+            });
         });
 
         modelBuilder.TryConfigureObjectExtensions<TestAppDbContext>();

@@ -37,6 +37,8 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
 
     public DbSet<TestSharedEntity> TestSharedEntity => Set<TestSharedEntity>("TestSharedEntity1");
     public DbSet<TestSharedEntity> TestSharedEntity2 => Set<TestSharedEntity>("TestSharedEntity2");
+    
+    public DbSet<AppEntityWithJsonProperty> EntitiesWithObjectProperty { get; set; }
 
     public TestMigrationsDbContext(DbContextOptions<TestMigrationsDbContext> options)
         : base(options)
@@ -139,6 +141,27 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
         modelBuilder.Entity<BlogPost>(b =>
         {
             b.ConfigureByConvention();
+        });
+        
+        modelBuilder.Entity<AppEntityWithJsonProperty>(b =>
+        {
+            b.ConfigureByConvention();
+            b.OwnsOne(x => x.Data, b2 =>
+            {
+                b2.ToJson();
+                
+                b2.Property<object>("Name")
+                    .HasConversion<string>(
+                        v => v.ToString(),
+                        v => v
+                    );
+                
+                b2.Property<object>("Value")
+                    .HasConversion<string>(
+                        v => v.ToString(),
+                        v => v
+                    );
+            });
         });
     }
 }

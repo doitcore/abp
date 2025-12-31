@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Auditing;
 using Volo.Abp.Autofac;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EntityFrameworkCore.Domain;
@@ -85,6 +86,12 @@ public class AbpEntityFrameworkCoreTestModule : AbpModule
             {
                 abpDbContextConfigurationContext.DbContextOptions.UseSqlite(sqliteConnection).AddAbpDbContextOptionsExtension();
             });
+        });
+        
+        Configure<AbpAuditingOptions>(options =>
+        {
+            options.EntityHistorySelectors.Add(new NamedTypeSelector(nameof(AppEntityWithJsonProperty), type => type == typeof(AppEntityWithJsonProperty)));
+            options.EntityHistorySelectors.Add(new NamedTypeSelector(nameof(TestSharedEntity), type => type == typeof(TestSharedEntity)));
         });
     }
 

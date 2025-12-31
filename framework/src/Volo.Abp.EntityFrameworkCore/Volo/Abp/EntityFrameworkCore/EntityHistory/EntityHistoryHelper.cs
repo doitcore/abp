@@ -187,6 +187,11 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
 
         foreach (var property in properties)
         {
+            if (entityEntry.Metadata.IsMappedToJson() && property.GetJsonPropertyName() == null)
+            {
+                continue;
+            }
+
             var propertyEntry = entityEntry.Property(property.Name);
             if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted) && !IsSoftDeleted(entityEntry))
             {
@@ -215,26 +220,22 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
             {
                 continue;
             }
-                
+
             if (navigationEntry.Metadata.TargetEntityType.IsMappedToJson() && navigationEntry is ReferenceEntry referenceEntry && referenceEntry.TargetEntry != null)
             {
                 foreach (var propertyChange in GetPropertyChanges(referenceEntry.TargetEntry))
                 {
-                    if (propertyChanges.Any(pc => pc.PropertyName == propertyChange.PropertyName))
-                    {
-                        propertyChange.PropertyName = $"{referenceEntry.Metadata.Name}.{propertyChange.PropertyName}";
-                    }
-
+                    propertyChange.PropertyName = $"{referenceEntry.Metadata.Name}.{propertyChange.PropertyName}";
                     propertyChanges.Add(propertyChange);
                 }
-                
+
                 continue;
             }
 
             if (AbpEfCoreNavigationHelper.IsNavigationEntryModified(entityEntry, index))
             {
                 var abpNavigationEntry = AbpEfCoreNavigationHelper.GetNavigationEntry(entityEntry, index);
-                    
+
                 var isCollection = navigationEntry.Metadata.IsCollection;
                 propertyChanges.Add(new EntityPropertyChangeInfo
                 {

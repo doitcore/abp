@@ -19,6 +19,4 @@ public interface IOpenIddictApplicationRepository : IBasicRepository<OpenIddictA
     Task<List<OpenIddictApplication>> FindByRedirectUriAsync(string address, CancellationToken cancellationToken = default);
 
     Task<List<OpenIddictApplication>> ListAsync(int? count, int? offset, CancellationToken cancellationToken = default);
-
-    Task<List<OpenIddictApplication>> GetListByIdsAsync(Guid[] ids, CancellationToken cancellationToken = default);
 }

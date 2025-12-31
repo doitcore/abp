@@ -64,11 +64,4 @@ public class MongoOpenIddictApplicationRepository : MongoDbRepository<OpenIddict
             .TakeIf<OpenIddictApplication, IQueryable<OpenIddictApplication>>(count.HasValue, count)
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
-
-    public virtual async Task<List<OpenIddictApplication>> GetListByIdsAsync(Guid[] ids, CancellationToken cancellationToken = default)
-    {
-        return await (await GetQueryableAsync(cancellationToken))
-            .Where(x => ids.Contains(x.Id))
-            .ToListAsync(GetCancellationToken(cancellationToken));
-    }
 }

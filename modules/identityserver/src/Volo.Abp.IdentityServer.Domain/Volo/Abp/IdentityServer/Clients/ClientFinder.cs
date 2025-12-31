@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,19 +21,6 @@ public class ClientFinder : IClientFinder, ITransientDependency
         {
             page = page < 1 ? 1 : page;
             var clients = await ClientRepository.GetListAsync(nameof(Client.ClientName), filter: filter, skipCount: (page - 1) * 10, maxResultCount: 10);
-            return clients.Select(x => new ClientFinderResult
-            {
-                Id = x.Id,
-                ClientId = x.ClientId
-            }).ToList();
-        }
-    }
-
-    public virtual async Task<List<ClientFinderResult>> SearchByIdsAsync(Guid[] ids)
-    {
-        using (ClientRepository.DisableTracking())
-        {
-            var clients = await ClientRepository.GetListByIdsAsync(ids);
             return clients.Select(x => new ClientFinderResult
             {
                 Id = x.Id,

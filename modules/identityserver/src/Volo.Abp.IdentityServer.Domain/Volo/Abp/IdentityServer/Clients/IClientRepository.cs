@@ -36,6 +36,4 @@ public interface IClientRepository : IBasicRepository<Client, Guid>
         Guid? expectedId = null,
         CancellationToken cancellationToken = default
     );
-
-    Task<List<Client>> GetListByIdsAsync(Guid[] ids, CancellationToken cancellationToken = default);
 }

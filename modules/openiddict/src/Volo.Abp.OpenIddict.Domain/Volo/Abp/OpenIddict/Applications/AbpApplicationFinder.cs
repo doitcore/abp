@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,19 +21,6 @@ public class AbpApplicationFinder : IApplicationFinder, ITransientDependency
         {
             page = page < 1 ? 1 : page;
             var applications = await ApplicationRepository.GetListAsync(nameof(OpenIddictApplication.CreationTime), filter: filter, skipCount: (page - 1) * 10, maxResultCount: 10);
-            return applications.Select(x => new ApplicationFinderResult
-            {
-                Id = x.Id,
-                ClientId = x.ClientId
-            }).ToList();
-        }
-    }
-
-    public virtual async Task<List<ApplicationFinderResult>> SearchByIdsAsync(Guid[] ids)
-    {
-        using (ApplicationRepository.DisableTracking())
-        {
-            var applications = await ApplicationRepository.GetListByIdsAsync(ids);
             return applications.Select(x => new ApplicationFinderResult
             {
                 Id = x.Id,

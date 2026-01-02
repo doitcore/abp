@@ -20,6 +20,7 @@ public static class CookieAuthenticationOptionsExtensions
     {
         advance ??= TimeSpan.FromMinutes(3);
         validationInterval ??= TimeSpan.FromMinutes(1);
+        var previousHandler = options.Events.OnValidatePrincipal;
         options.Events.OnValidatePrincipal = async principalContext =>
         {
             if (principalContext.Principal == null || principalContext.Principal.Identity == null || !principalContext.Principal.Identity.IsAuthenticated)
@@ -30,25 +31,37 @@ public static class CookieAuthenticationOptionsExtensions
             var logger = principalContext.HttpContext.RequestServices.GetRequiredService<ILogger<CookieAuthenticationOptions>>();
 
             var tokenExpiresAt = principalContext.Properties.GetString(".Token.expires_at");
-            if (!tokenExpiresAt.IsNullOrWhiteSpace() && DateTimeOffset.TryParseExact(tokenExpiresAt, "o", null, DateTimeStyles.RoundtripKind, out var expiresAt) &&
-                expiresAt < DateTimeOffset.UtcNow.Subtract(advance.Value))
+            if (!tokenExpiresAt.IsNullOrWhiteSpace() && DateTimeOffset.TryParseExact(tokenExpiresAt, "o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var expiresAt) &&
+                expiresAt <= DateTimeOffset.UtcNow.Add(advance.Value))
             {
-                logger.LogInformation("The access_token is expired.");
+                logger.LogInformation("The access_token expires within {AdvanceSeconds}s; signing out.", advance.Value.TotalSeconds);
                 await SignOutAsync(principalContext);
                 return;
             }
 
             if (principalContext.Properties.IssuedUtc != null && DateTimeOffset.UtcNow.Subtract(principalContext.Properties.IssuedUtc.Value) > validationInterval)
             {
-                logger.LogInformation($"Check the access_token is active every {validationInterval.Value.TotalSeconds} seconds.");
+                logger.LogInformation("Checking access_token activity every {Seconds} seconds.", validationInterval.Value.TotalSeconds);
                 var accessToken = principalContext.Properties.GetTokenValue("access_token");
                 if (!accessToken.IsNullOrWhiteSpace())
                 {
                     var openIdConnectOptions = await GetOpenIdConnectOptions(principalContext, oidcAuthenticationScheme);
 
+                    var introspectionEndpoint = openIdConnectOptions.Configuration?.IntrospectionEndpoint;
+                    if (introspectionEndpoint.IsNullOrWhiteSpace() && !openIdConnectOptions.Authority.IsNullOrWhiteSpace())
+                    {
+                        introspectionEndpoint = openIdConnectOptions.Authority.EnsureEndsWith('/') + "connect/introspect";
+                    }
+
+                    if (introspectionEndpoint.IsNullOrWhiteSpace())
+                    {
+                        logger.LogWarning("No introspection endpoint configured. Skipping token activity check.");
+                        return;
+                    }
+
                     var response = await openIdConnectOptions.Backchannel.IntrospectTokenAsync(new TokenIntrospectionRequest
                     {
-                        Address = openIdConnectOptions.Configuration?.IntrospectionEndpoint ?? openIdConnectOptions.Authority!.EnsureEndsWith('/') + "connect/introspect",
+                        Address = introspectionEndpoint,
                         ClientId = openIdConnectOptions.ClientId!,
                         ClientSecret = openIdConnectOptions.ClientSecret,
                         Token = accessToken
@@ -56,7 +69,7 @@ public static class CookieAuthenticationOptionsExtensions
 
                     if (response.IsError)
                     {
-                        logger.LogError(response.Error);
+                        logger.LogError("Token introspection error: {Error}", response.Error);
                         await SignOutAsync(principalContext);
                         return;
                     }
@@ -73,16 +86,21 @@ public static class CookieAuthenticationOptionsExtensions
                 }
                 else
                 {
-                    logger.LogError("The access_token is not found in the cookie properties, Please make sure SaveTokens of OpenIdConnectOptions is set as true.");
+                    logger.LogError("The access_token is not found in the cookie properties. Ensure SaveTokens of OpenIdConnectOptions is true.");
                     await SignOutAsync(principalContext);
                 }
+            }
+
+            if (previousHandler != null)
+            {
+                await previousHandler(principalContext);
             }
         };
 
         return options;
     }
 
-    private async static Task<OpenIdConnectOptions> GetOpenIdConnectOptions(CookieValidatePrincipalContext principalContext, string oidcAuthenticationScheme)
+    private static async Task<OpenIdConnectOptions> GetOpenIdConnectOptions(CookieValidatePrincipalContext principalContext, string oidcAuthenticationScheme)
     {
         var openIdConnectOptions = principalContext.HttpContext.RequestServices.GetRequiredService<IOptionsMonitor<OpenIdConnectOptions>>().Get(oidcAuthenticationScheme);
         var cancellationTokenProvider = principalContext.HttpContext.RequestServices.GetRequiredService<ICancellationTokenProvider>();
@@ -94,7 +112,7 @@ public static class CookieAuthenticationOptionsExtensions
         return openIdConnectOptions;
     }
 
-    private async static Task SignOutAsync(CookieValidatePrincipalContext principalContext)
+    private static async Task SignOutAsync(CookieValidatePrincipalContext principalContext)
     {
         principalContext.RejectPrincipal();
         await principalContext.HttpContext.SignOutAsync(principalContext.Scheme.Name);

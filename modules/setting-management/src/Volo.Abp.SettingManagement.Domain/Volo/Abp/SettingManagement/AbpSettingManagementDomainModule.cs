@@ -25,7 +25,6 @@ namespace Volo.Abp.SettingManagement;
 public class AbpSettingManagementDomainModule : AbpModule
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private Task _initializeDynamicSettingsTask;
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -58,17 +57,11 @@ public class AbpSettingManagementDomainModule : AbpModule
         var rootServiceProvider = context.ServiceProvider.GetRequiredService<IRootServiceProvider>();
         var initializer = rootServiceProvider.GetRequiredService<SettingDynamicInitializer>();
         await initializer.InitializeAsync(true, _cancellationTokenSource.Token);
-        _initializeDynamicSettingsTask = initializer.GetInitializationTask();
     }
 
     public override Task OnApplicationShutdownAsync(ApplicationShutdownContext context)
     {
         _cancellationTokenSource.Cancel();
         return Task.CompletedTask;
-    }
-
-    public Task GetInitializeDynamicSettingsTask()
-    {
-        return _initializeDynamicSettingsTask ?? Task.CompletedTask;
     }
 }

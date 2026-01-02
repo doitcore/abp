@@ -16,8 +16,6 @@ namespace Volo.Abp.PermissionManagement;
 
 public class PermissionDynamicInitializer : ITransientDependency
 {
-    private Task _initializeDynamicPermissionsTask;
-
     public ILogger<PermissionDynamicInitializer> Logger { get; set; }
 
     protected IServiceProvider ServiceProvider { get; }
@@ -56,7 +54,7 @@ public class PermissionDynamicInitializer : ITransientDependency
 
         if (runInBackground)
         {
-            _initializeDynamicPermissionsTask = Task.Run(async () =>
+            Task.Run(async () =>
             {
                 if (cancellationToken == default && ApplicationLifetime?.ApplicationStopping != null)
                 {
@@ -67,13 +65,7 @@ public class PermissionDynamicInitializer : ITransientDependency
             return Task.CompletedTask;
         }
 
-        _initializeDynamicPermissionsTask = ExecuteInitializationAsync(options, cancellationToken);
-        return _initializeDynamicPermissionsTask;
-    }
-
-    public virtual Task GetInitializationTask()
-    {
-        return _initializeDynamicPermissionsTask ?? Task.CompletedTask;
+        return ExecuteInitializationAsync(options, cancellationToken);
     }
 
     protected virtual async Task ExecuteInitializationAsync(PermissionManagementOptions options, CancellationToken cancellationToken)

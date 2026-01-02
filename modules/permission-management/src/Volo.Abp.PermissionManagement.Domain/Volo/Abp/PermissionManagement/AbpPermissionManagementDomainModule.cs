@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,7 @@ using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Caching;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.DistributedLocking;
 using Volo.Abp.Domain;
 using Volo.Abp.Json;
 using Volo.Abp.Modularity;
@@ -26,10 +28,11 @@ namespace Volo.Abp.PermissionManagement;
 public class AbpPermissionManagementDomainModule : AbpModule
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
-    private Task _initializeDynamicPermissionsTask;
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        context.Services.Replace(ServiceDescriptor.Singleton<IAbpDistributedLock, NullAbpDistributedLock>());
+
         if (context.Services.IsDataMigrationEnvironment())
         {
             Configure<PermissionManagementOptions>(options =>
@@ -50,17 +53,11 @@ public class AbpPermissionManagementDomainModule : AbpModule
         var rootServiceProvider = context.ServiceProvider.GetRequiredService<IRootServiceProvider>();
         var initializer = rootServiceProvider.GetRequiredService<PermissionDynamicInitializer>();
         await initializer.InitializeAsync(true, _cancellationTokenSource.Token);
-        _initializeDynamicPermissionsTask = initializer.GetInitializationTask();
     }
 
     public override Task OnApplicationShutdownAsync(ApplicationShutdownContext context)
     {
         _cancellationTokenSource.Cancel();
         return Task.CompletedTask;
-    }
-
-    public Task GetInitializeDynamicPermissionsTask()
-    {
-        return _initializeDynamicPermissionsTask ?? Task.CompletedTask;
     }
 }

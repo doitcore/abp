@@ -2,7 +2,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { provideRouter, Route, Router } from '@angular/router';
-import { createSpyObject, SpyObject } from '@ngneat/spectator/jest';
+import { createSpyObject, SpyObject } from '@ngneat/spectator/vitest';
 import { of } from 'rxjs';
 import { permissionGuard } from '../guards/permission.guard';
 import { HttpErrorReporterService } from '../services/http-error-reporter.service';

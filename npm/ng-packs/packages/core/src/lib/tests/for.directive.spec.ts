@@ -1,4 +1,4 @@
-import { SpectatorDirective, createDirectiveFactory } from '@ngneat/spectator/jest';
+import { SpectatorDirective, createDirectiveFactory } from '@ngneat/spectator/vitest';
 import { ForDirective } from '../directives/for.directive';
 
 describe('ForDirective', () => {

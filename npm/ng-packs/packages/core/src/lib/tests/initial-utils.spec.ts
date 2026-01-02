@@ -8,7 +8,7 @@ import * as multiTenancyUtils from '../utils/multi-tenancy-utils';
 import { RestService } from '../services/rest.service';
 import { CHECK_AUTHENTICATION_STATE_FN_KEY } from '../tokens/check-authentication-state';
 import { Component, Injector } from '@angular/core';
-import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
+import { createComponentFactory, Spectator } from '@ngneat/spectator/vitest';
 import { of } from 'rxjs';
 import { AbpApplicationConfigurationService, SessionStateService } from '@abp/ng.core';
 import { ApplicationConfigurationDto } from '@abp/ng.core';

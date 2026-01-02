@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(yarn nx g:*)"
+      "Bash(yarn nx g:*)",
+      "Bash(npx vitest:*)"
     ]
   }
 }

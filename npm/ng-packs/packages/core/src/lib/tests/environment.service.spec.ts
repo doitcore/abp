@@ -1,5 +1,5 @@
 import { waitForAsync } from '@angular/core/testing';
-import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator/vitest';
 import { Environment } from '../models/environment';
 import { EnvironmentService } from '../services/environment.service';
 

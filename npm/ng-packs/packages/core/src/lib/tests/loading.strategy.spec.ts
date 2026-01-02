@@ -24,7 +24,7 @@ describe('ScriptLoadingStrategy', () => {
       const domStrategy = DOM_STRATEGY.PrependToHead();
       const crossOriginStrategy = CROSS_ORIGIN_STRATEGY.UseCredentials();
 
-      domStrategy.insertElement = jest.fn((el: HTMLScriptElement) => {
+      domStrategy.insertElement = vi.fn((el: HTMLScriptElement) => {
         setTimeout(() => {
           el.onload(
             new CustomEvent('success', {
@@ -64,7 +64,7 @@ describe('StyleLoadingStrategy', () => {
       const domStrategy = DOM_STRATEGY.PrependToHead();
       const crossOriginStrategy = CROSS_ORIGIN_STRATEGY.UseCredentials();
 
-      domStrategy.insertElement = jest.fn((el: HTMLLinkElement) => {
+      domStrategy.insertElement = vi.fn((el: HTMLLinkElement) => {
         setTimeout(() => {
           el.onload(
             new CustomEvent('success', {

@@ -22,8 +22,8 @@ describe('StyleContentStrategy', () => {
       const domStrategy = DOM_STRATEGY.PrependToHead();
       const contentSecurityStrategy = CONTENT_SECURITY_STRATEGY.None();
 
-      contentSecurityStrategy.applyCSP = jest.fn((el: HTMLScriptElement) => {});
-      domStrategy.insertElement = jest.fn((el: HTMLScriptElement) => {}) as any;
+      contentSecurityStrategy.applyCSP = vi.fn((el: HTMLScriptElement) => {});
+      domStrategy.insertElement = vi.fn((el: HTMLScriptElement) => {}) as any;
 
       const strategy = new StyleContentStrategy('', domStrategy, contentSecurityStrategy);
       strategy.createElement();
@@ -53,8 +53,8 @@ describe('ScriptContentStrategy', () => {
       const domStrategy = DOM_STRATEGY.PrependToHead();
       const contentSecurityStrategy = CONTENT_SECURITY_STRATEGY.Loose(nonce);
 
-      contentSecurityStrategy.applyCSP = jest.fn((el: HTMLScriptElement) => {});
-      domStrategy.insertElement = jest.fn((el: HTMLScriptElement) => {}) as any;
+      contentSecurityStrategy.applyCSP = vi.fn((el: HTMLScriptElement) => {});
+      domStrategy.insertElement = vi.fn((el: HTMLScriptElement) => {}) as any;
 
       const strategy = new ScriptContentStrategy('', domStrategy, contentSecurityStrategy);
       const element = strategy.createElement();

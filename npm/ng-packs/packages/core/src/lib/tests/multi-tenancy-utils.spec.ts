@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
+import { createComponentFactory, Spectator } from '@ngneat/spectator/vitest';
 import clone from 'just-clone';
 import { of } from 'rxjs';
 
@@ -68,9 +68,9 @@ describe('MultiTenancyUtils', () => {
     test('should get the tenancyName, set replaced environment and call the findTenantByName method of AbpTenantService', async () => {
       const environmentService = spectator.inject(EnvironmentService);
       const multiTenancyService = spectator.inject(MultiTenancyService);
-      const setTenantByName = jest.spyOn(multiTenancyService, 'setTenantByName');
-      const getEnvironmentSpy = jest.spyOn(environmentService, 'getEnvironment');
-      const setStateSpy = jest.spyOn(environmentService, 'setState');
+      const setTenantByName = vi.spyOn(multiTenancyService, 'setTenantByName');
+      const getEnvironmentSpy = vi.spyOn(environmentService, 'getEnvironment');
+      const setStateSpy = vi.spyOn(environmentService, 'setState');
 
       getEnvironmentSpy.mockReturnValue(clone(environment));
 

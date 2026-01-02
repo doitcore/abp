@@ -2,13 +2,13 @@ import { TestBed} from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
 
 import { InternetConnectionService } from '../services/internet-connection-service';
-import { first } from 'rxjs';
+import { first , firstValueFrom } from 'rxjs';
 
 let service: InternetConnectionService;
 
 describe('Internet connection when disconnected', () => {
   const events = {};
-  const addEventListener =  jest.fn((event, callback) => {
+  const addEventListener =  vi.fn((event, callback) => {
     events[event] = callback;
   });
   const mockDocument = { defaultView: {navigator: {onLine: false}, addEventListener } }
@@ -54,7 +54,7 @@ describe('Internet connection when disconnected', () => {
 
 describe('when connection value changes for signals', () => {
   const events = {};
-  const addEventListener =  jest.fn((event, callback) => {
+  const addEventListener =  vi.fn((event, callback) => {
     events[event] = callback;
   });
   const mockDocument = { defaultView: {navigator: {onLine: false}, addEventListener } }

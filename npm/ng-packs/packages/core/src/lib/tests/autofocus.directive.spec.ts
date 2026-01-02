@@ -1,6 +1,6 @@
-import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/jest';
+import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/vitest';
 import { AutofocusDirective } from '../directives/autofocus.directive';
-import { timer } from 'rxjs';
+import { timer , firstValueFrom } from 'rxjs';
 
 describe('AutofocusDirective', () => {
   let spectator: SpectatorDirective<AutofocusDirective>;

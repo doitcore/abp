@@ -1,14 +1,14 @@
-import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/jest';
+import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/vitest';
 import { FormSubmitDirective } from '../directives/form-submit.directive';
 import { FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { timer } from 'rxjs';
+import { timer , firstValueFrom } from 'rxjs';
 
 describe('FormSubmitDirective', () => {
   let spectator: SpectatorDirective<FormSubmitDirective>;
   let directive: FormSubmitDirective;
 
   const formGroup = new FormGroup({});
-  const submitEventFn = jest.fn(() => {});
+  const submitEventFn = vi.fn(() => {});
 
   const createDirective = createDirectiveFactory({
     directive: FormSubmitDirective,

@@ -1,4 +1,4 @@
-import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/jest';
+import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/vitest';
 import { Subject } from 'rxjs';
 import { PermissionDirective } from '../directives/permission.directive';
 import { PermissionService } from '../services/permission.service';
@@ -13,8 +13,8 @@ describe('PermissionDirective', () => {
     directive: PermissionDirective,
     providers: [
       { provide: PermissionService, useValue: { getGrantedPolicy$: () => grantedPolicy$ } },
-      { provide: QUEUE_MANAGER, useValue: { add: jest.fn() } },
-      { provide: ChangeDetectorRef, useValue: { detectChanges: jest.fn() } },
+      { provide: QUEUE_MANAGER, useValue: { add: vi.fn() } },
+      { provide: ChangeDetectorRef, useValue: { detectChanges: vi.fn() } },
     ],
   });
 

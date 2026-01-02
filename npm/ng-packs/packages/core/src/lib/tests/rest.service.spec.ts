@@ -1,7 +1,8 @@
-import { createHttpFactory, HttpMethod, SpectatorHttp, SpyObject } from '@ngneat/spectator/jest';
+import { createHttpFactory, HttpMethod, SpectatorHttp, SpyObject } from '@ngneat/spectator/vitest';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { Rest } from '../models/rest';
 import { EnvironmentService } from '../services/environment.service';
 import { HttpErrorReporterService } from '../services/http-error-reporter.service';
@@ -75,7 +76,7 @@ describe('HttpClient testing', () => {
   });
 
   test('should complete upon successful request', done => {
-    const complete = jest.fn(done);
+    const complete = vi.fn(done);
 
     spectator.service.request({ method: HttpMethod.GET, url: '/test' }).subscribe({ complete });
 
@@ -84,7 +85,7 @@ describe('HttpClient testing', () => {
   });
 
   test('should handle the error', () => {
-    const spy = jest.spyOn(httpErrorReporter, 'reportError');
+    const spy = vi.spyOn(httpErrorReporter, 'reportError');
 
     spectator.service
       .request({ method: HttpMethod.GET, url: '/test' }, { observe: Rest.Observe.Events })
@@ -102,7 +103,7 @@ describe('HttpClient testing', () => {
   });
 
   test('should not handle the error when skipHandleError is true', () => {
-    const spy = jest.spyOn(httpErrorReporter, 'reportError');
+    const spy = vi.spyOn(httpErrorReporter, 'reportError');
 
     spectator.service
       .request(

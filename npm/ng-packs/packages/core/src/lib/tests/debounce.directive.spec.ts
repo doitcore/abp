@@ -1,12 +1,12 @@
-import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/jest';
+import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/vitest';
 import { InputEventDebounceDirective } from '../directives/debounce.directive';
-import { timer } from 'rxjs';
+import { timer , firstValueFrom } from 'rxjs';
 
 describe('InputEventDebounceDirective', () => {
   let spectator: SpectatorDirective<InputEventDebounceDirective>;
   let directive: InputEventDebounceDirective;
   let input: HTMLInputElement;
-  const inputEventFn = jest.fn(() => {});
+  const inputEventFn = vi.fn(() => {});
 
   const createDirective = createDirectiveFactory({
     directive: InputEventDebounceDirective,

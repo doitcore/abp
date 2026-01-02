@@ -1,6 +1,7 @@
-import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
+import { createServiceFactory, SpectatorService } from '@ngneat/spectator/vitest';
 import { of } from 'rxjs';
 import { bufferCount, take } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { ABP } from '../models';
 import { ListService, QueryStreamCreatorCallback } from '../services/list.service';
 import { LIST_QUERY_DEBOUNCE_TIME } from '../tokens';

@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class CookieAuthenticationOptionsExtensions
 {
     /// <summary>
-    /// Check the access_token is expired or inactive.
+    /// Check if the access_token is expired or inactive.
     /// </summary>
     public static CookieAuthenticationOptions CheckTokenExpiration(this CookieAuthenticationOptions options, string oidcAuthenticationScheme = "oidc", TimeSpan? advance = null, TimeSpan? validationInterval = null)
     {
@@ -25,6 +25,7 @@ public static class CookieAuthenticationOptionsExtensions
         {
             if (principalContext.Principal == null || principalContext.Principal.Identity == null || !principalContext.Principal.Identity.IsAuthenticated)
             {
+                await InvokePreviousHandlerAsync(principalContext, previousHandler);
                 return;
             }
 
@@ -35,7 +36,7 @@ public static class CookieAuthenticationOptionsExtensions
                 expiresAt <= DateTimeOffset.UtcNow.Add(advance.Value))
             {
                 logger.LogInformation("The access_token expires within {AdvanceSeconds}s; signing out.", advance.Value.TotalSeconds);
-                await SignOutAsync(principalContext);
+                await SignOutAndInvokePreviousHandlerAsync(principalContext, previousHandler);
                 return;
             }
 
@@ -56,6 +57,7 @@ public static class CookieAuthenticationOptionsExtensions
                     if (introspectionEndpoint.IsNullOrWhiteSpace())
                     {
                         logger.LogWarning("No introspection endpoint configured. Skipping token activity check.");
+                        await InvokePreviousHandlerAsync(principalContext, previousHandler);
                         return;
                     }
 
@@ -70,14 +72,14 @@ public static class CookieAuthenticationOptionsExtensions
                     if (response.IsError)
                     {
                         logger.LogError("Token introspection error: {Error}", response.Error);
-                        await SignOutAsync(principalContext);
+                        await SignOutAndInvokePreviousHandlerAsync(principalContext, previousHandler);
                         return;
                     }
 
                     if (!response.IsActive)
                     {
                         logger.LogError("The access_token is not active.");
-                        await SignOutAsync(principalContext);
+                        await SignOutAndInvokePreviousHandlerAsync(principalContext, previousHandler);
                         return;
                     }
 
@@ -91,10 +93,7 @@ public static class CookieAuthenticationOptionsExtensions
                 }
             }
 
-            if (previousHandler != null)
-            {
-                await previousHandler(principalContext);
-            }
+            await InvokePreviousHandlerAsync(principalContext, previousHandler);
         };
 
         return options;
@@ -116,5 +115,16 @@ public static class CookieAuthenticationOptionsExtensions
     {
         principalContext.RejectPrincipal();
         await principalContext.HttpContext.SignOutAsync(principalContext.Scheme.Name);
+    }
+
+    private static Task InvokePreviousHandlerAsync(CookieValidatePrincipalContext principalContext, Func<CookieValidatePrincipalContext, Task>? previousHandler)
+    {
+        return previousHandler != null ? previousHandler(principalContext) : Task.CompletedTask;
+    }
+
+    private static async Task SignOutAndInvokePreviousHandlerAsync(CookieValidatePrincipalContext principalContext, Func<CookieValidatePrincipalContext, Task>? previousHandler)
+    {
+        await SignOutAsync(principalContext);
+        await InvokePreviousHandlerAsync(principalContext, previousHandler);
     }
 }

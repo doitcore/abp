@@ -82,6 +82,7 @@
     "@nx/jest": "~22.2.0",
     "@nx/js": "~22.2.0",
     "@nx/plugin": "~22.2.0",
+    "@nx/vitest": "^22.3.3",
     "@nx/web": "~22.2.0",
     "@nx/workspace": "~22.2.0",
     "@popperjs/core": "~2.11.0",

@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -15,6 +17,9 @@ namespace Volo.Abp.Json.Newtonsoft;
 public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
 {
     private const string DefaultDateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK";
+
+    public ILogger<AbpDateTimeConverter> Logger { get; set; }
+
     private readonly DateTimeStyles _dateTimeStyles = DateTimeStyles.RoundtripKind;
     private readonly CultureInfo _culture = CultureInfo.InvariantCulture;
     private readonly IClock _clock;
@@ -25,6 +30,8 @@ public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
 
     public AbpDateTimeConverter(IClock clock, IOptions<AbpJsonOptions> options, ICurrentTimezoneProvider currentTimezoneProvider, ITimezoneProvider timezoneProvider)
     {
+        Logger = NullLogger<AbpDateTimeConverter>.Instance;
+
         _clock = clock;
         _currentTimezoneProvider = currentTimezoneProvider;
         _timezoneProvider = timezoneProvider;
@@ -134,7 +141,7 @@ public class AbpDateTimeConverter : DateTimeConverterBase, ITransientDependency
         }
         catch
         {
-            // ignored
+            Logger.LogWarning("Could not convert DateTime with unspecified Kind using timezone '{TimeZone}'.", _currentTimezoneProvider.TimeZone);
         }
 
         return _skipDateTimeNormalization

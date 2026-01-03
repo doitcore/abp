@@ -2,19 +2,27 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.Extensions.Logging;
 using Volo.Abp.Timing;
 
 namespace Volo.Abp.AspNetCore.Mvc.ModelBinding;
 
 public class AbpDateTimeModelBinder : IModelBinder
 {
+    private readonly ILogger<AbpDateTimeModelBinder> _logger;
     private readonly DateTimeModelBinder _dateTimeModelBinder;
     private readonly IClock _clock;
     private readonly ICurrentTimezoneProvider _currentTimezoneProvider;
     private readonly ITimezoneProvider _timezoneProvider;
 
-    public AbpDateTimeModelBinder(DateTimeModelBinder dateTimeModelBinder, IClock clock, ICurrentTimezoneProvider currentTimezoneProvider, ITimezoneProvider timezoneProvider)
+    public AbpDateTimeModelBinder(
+        ILogger<AbpDateTimeModelBinder> logger,
+        DateTimeModelBinder dateTimeModelBinder,
+        IClock clock,
+        ICurrentTimezoneProvider currentTimezoneProvider,
+        ITimezoneProvider timezoneProvider)
     {
+        _logger = logger;
         _dateTimeModelBinder = dateTimeModelBinder;
         _clock = clock;
         _currentTimezoneProvider = currentTimezoneProvider;
@@ -41,7 +49,7 @@ public class AbpDateTimeModelBinder : IModelBinder
             }
             catch
             {
-                // ignored
+                _logger.LogWarning("Could not convert DateTime with unspecified Kind using timezone '{TimeZone}'.", _currentTimezoneProvider.TimeZone);
             }
         }
 

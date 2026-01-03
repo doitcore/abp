@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Timing;
 
@@ -10,6 +12,8 @@ namespace Volo.Abp.Json.SystemTextJson.JsonConverters;
 
 public abstract class AbpDateTimeConverterBase<T> : JsonConverter<T>
 {
+    public ILogger<AbpDateTimeConverterBase<T>> Logger { get; set; }
+
     protected IClock Clock { get; }
     protected AbpJsonOptions Options { get; }
     protected ICurrentTimezoneProvider CurrentTimezoneProvider { get; }
@@ -22,6 +26,8 @@ public abstract class AbpDateTimeConverterBase<T> : JsonConverter<T>
         ICurrentTimezoneProvider currentTimezoneProvider,
         ITimezoneProvider timezoneProvider)
     {
+        Logger = NullLogger<AbpDateTimeConverterBase<T>>.Instance;
+
         Clock = clock;
         CurrentTimezoneProvider = currentTimezoneProvider;
         TimezoneProvider = timezoneProvider;
@@ -102,7 +108,7 @@ public abstract class AbpDateTimeConverterBase<T> : JsonConverter<T>
         }
         catch
         {
-            // ignored
+            Logger.LogWarning("Could not convert DateTime with unspecified Kind using timezone '{TimeZone}'.", CurrentTimezoneProvider.TimeZone);
         }
 
         return IsSkipDateTimeNormalization ? dateTime : Clock.Normalize(dateTime);

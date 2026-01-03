@@ -6,44 +6,58 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.StaticDefinitions;
 
 namespace Volo.Abp.Authorization.Permissions;
 
 public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore, ISingletonDependency
 {
-    protected IDictionary<string, PermissionGroupDefinition> PermissionGroupDefinitions => _lazyPermissionGroupDefinitions.Value;
-    private readonly Lazy<Dictionary<string, PermissionGroupDefinition>> _lazyPermissionGroupDefinitions;
-
-    protected IDictionary<string, PermissionDefinition> PermissionDefinitions => _lazyPermissionDefinitions.Value;
-    private readonly Lazy<Dictionary<string, PermissionDefinition>> _lazyPermissionDefinitions;
-
+    protected IServiceProvider ServiceProvider { get; }
     protected AbpPermissionOptions Options { get; }
-
-    private readonly IServiceProvider _serviceProvider;
+    protected IStaticDefinitionCache<PermissionGroupDefinition, Dictionary<string, PermissionGroupDefinition>> GroupCache { get; }
+    protected IStaticDefinitionCache<PermissionDefinition, Dictionary<string, PermissionDefinition>> DefinitionCache { get; }
 
     public StaticPermissionDefinitionStore(
         IServiceProvider serviceProvider,
-        IOptions<AbpPermissionOptions> options)
+        IOptions<AbpPermissionOptions> options,
+        IStaticDefinitionCache<PermissionGroupDefinition, Dictionary<string, PermissionGroupDefinition>> groupCache,
+        IStaticDefinitionCache<PermissionDefinition, Dictionary<string, PermissionDefinition>> definitionCache)
     {
-        _serviceProvider = serviceProvider;
+        ServiceProvider = serviceProvider;
         Options = options.Value;
-
-        _lazyPermissionDefinitions = new Lazy<Dictionary<string, PermissionDefinition>>(
-            CreatePermissionDefinitions,
-            isThreadSafe: true
-        );
-
-        _lazyPermissionGroupDefinitions = new Lazy<Dictionary<string, PermissionGroupDefinition>>(
-            CreatePermissionGroupDefinitions,
-            isThreadSafe: true
-        );
+        GroupCache = groupCache;
+        DefinitionCache = definitionCache;
     }
-    
-    protected virtual Dictionary<string, PermissionDefinition> CreatePermissionDefinitions()
+
+    public async Task<PermissionDefinition?> GetOrNullAsync(string name)
+    {
+        var defs = await GetPermissionDefinitionsAsync();
+        return defs.GetOrDefault(name);
+    }
+
+    public virtual async Task<IReadOnlyList<PermissionDefinition>> GetPermissionsAsync()
+    {
+        var defs = await GetPermissionDefinitionsAsync();
+        return defs.Values.ToImmutableList();
+    }
+
+    public async Task<IReadOnlyList<PermissionGroupDefinition>> GetGroupsAsync()
+    {
+        var groups = await GetPermissionGroupDefinitionsAsync();
+        return groups.Values.ToImmutableList();
+    }
+
+    protected virtual async Task<Dictionary<string, PermissionDefinition>> GetPermissionDefinitionsAsync()
+    {
+        return await DefinitionCache.GetOrCreateAsync(CreatePermissionDefinitionsAsync);
+    }
+
+    protected virtual async Task<Dictionary<string, PermissionDefinition>> CreatePermissionDefinitionsAsync()
     {
         var permissions = new Dictionary<string, PermissionDefinition>();
 
-        foreach (var groupDefinition in PermissionGroupDefinitions.Values)
+        var groups = await GetPermissionGroupDefinitionsAsync();
+        foreach (var groupDefinition in groups.Values)
         {
             foreach (var permission in groupDefinition.Permissions)
             {
@@ -71,9 +85,14 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
         }
     }
 
-    protected virtual Dictionary<string, PermissionGroupDefinition> CreatePermissionGroupDefinitions()
+    protected virtual async Task<Dictionary<string, PermissionGroupDefinition>> GetPermissionGroupDefinitionsAsync()
     {
-        using (var scope = _serviceProvider.CreateScope())
+        return await GroupCache.GetOrCreateAsync(CreatePermissionGroupDefinitionsAsync);
+    }
+
+    protected virtual Task<Dictionary<string, PermissionGroupDefinition>> CreatePermissionGroupDefinitionsAsync()
+    {
+        using (var scope = ServiceProvider.CreateScope())
         {
             var context = new PermissionDefinitionContext(scope.ServiceProvider);
 
@@ -99,29 +118,10 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
                 context.CurrentProvider = provider;
                 provider.PostDefine(context);
             }
-            
+
             context.CurrentProvider = null;
 
-            return context.Groups;
+            return Task.FromResult(context.Groups);
         }
-    }
-
-    public Task<PermissionDefinition?> GetOrNullAsync(string name)
-    {
-        return Task.FromResult(PermissionDefinitions.GetOrDefault(name));
-    }
-    
-    public virtual Task<IReadOnlyList<PermissionDefinition>> GetPermissionsAsync()
-    {
-        return Task.FromResult<IReadOnlyList<PermissionDefinition>>(
-            PermissionDefinitions.Values.ToImmutableList()
-        );
-    }
-
-    public Task<IReadOnlyList<PermissionGroupDefinition>> GetGroupsAsync()
-    {
-        return Task.FromResult<IReadOnlyList<PermissionGroupDefinition>>(
-            PermissionGroupDefinitions.Values.ToImmutableList()
-        );
     }
 }

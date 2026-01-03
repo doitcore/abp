@@ -10,45 +10,41 @@ public class AbpDateTimeModelBinder : IModelBinder
 {
     private readonly DateTimeModelBinder _dateTimeModelBinder;
     private readonly IClock _clock;
+    private readonly ICurrentTimezoneProvider _currentTimezoneProvider;
+    private readonly ITimezoneProvider _timezoneProvider;
 
-    public AbpDateTimeModelBinder(IClock clock, DateTimeModelBinder dateTimeModelBinder)
+    public AbpDateTimeModelBinder(DateTimeModelBinder dateTimeModelBinder, IClock clock, ICurrentTimezoneProvider currentTimezoneProvider, ITimezoneProvider timezoneProvider)
     {
-        _clock = clock;
         _dateTimeModelBinder = dateTimeModelBinder;
+        _clock = clock;
+        _currentTimezoneProvider = currentTimezoneProvider;
+        _timezoneProvider = timezoneProvider;
     }
 
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
         await _dateTimeModelBinder.BindModelAsync(bindingContext);
-    
+
         if (!bindingContext.Result.IsModelSet || bindingContext.Result.Model is not DateTime dateTime)
         {
             return;
         }
-    
-        // If the DateTime has no timezone info (most cases from input)
-        if (dateTime.Kind == DateTimeKind.Unspecified)
+
+        if (dateTime.Kind == DateTimeKind.Unspecified &&
+            _clock.SupportsMultipleTimezone &&
+            !_currentTimezoneProvider.TimeZone.IsNullOrWhiteSpace())
         {
-            // Try to get user's timezone
-            var userTz = _currentTimezoneProvider.TimeZone;
-            if (!userTz.IsNullOrWhiteSpace())
+            try
             {
-                try
-                {
-                    var tzInfo = _timezoneProvider.GetTimeZoneInfo(userTz);
-                    // Treat the input as user's local time and convert to UTC
-                    var utc = TimeZoneInfo.ConvertTimeToUtc(dateTime, tzInfo);
-                    bindingContext.Result = ModelBindingResult.Success(utc);
-                    return;
-                }
-                catch
-                {
-                    // fallback to default clock normalization if invalid TZ
-                }
+                var timezoneInfo = _timezoneProvider.GetTimeZoneInfo(_currentTimezoneProvider.TimeZone);
+                dateTime = new DateTimeOffset(dateTime, timezoneInfo.BaseUtcOffset).UtcDateTime;
+            }
+            catch
+            {
+                // ignored
             }
         }
-    
-        // fallback: original behavior
+
         bindingContext.Result = ModelBindingResult.Success(_clock.Normalize(dateTime));
     }
 }

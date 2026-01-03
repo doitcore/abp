@@ -37,7 +37,7 @@ public class AbpDateTimeModelBinder : IModelBinder
             try
             {
                 var timezoneInfo = _timezoneProvider.GetTimeZoneInfo(_currentTimezoneProvider.TimeZone);
-                dateTime = new DateTimeOffset(dateTime, timezoneInfo.BaseUtcOffset).UtcDateTime;
+                dateTime = new DateTimeOffset(dateTime, timezoneInfo.GetUtcOffset(dateTime)).UtcDateTime;
             }
             catch
             {

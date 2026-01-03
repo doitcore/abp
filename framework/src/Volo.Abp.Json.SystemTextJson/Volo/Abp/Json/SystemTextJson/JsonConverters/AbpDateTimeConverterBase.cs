@@ -98,7 +98,7 @@ public abstract class AbpDateTimeConverterBase<T> : JsonConverter<T>
         try
         {
             var timezoneInfo = TimezoneProvider.GetTimeZoneInfo(CurrentTimezoneProvider.TimeZone);
-            dateTime = new DateTimeOffset(dateTime, timezoneInfo.BaseUtcOffset).UtcDateTime;
+            dateTime = new DateTimeOffset(dateTime, timezoneInfo.GetUtcOffset(dateTime)).UtcDateTime;
         }
         catch
         {

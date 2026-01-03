@@ -89,7 +89,6 @@ public class ModelBindingController : AbpController
                input.InnerModel.Time4.ToString("O").ToLower();
     }
 
-
     [HttpPost("Guid_Json_Test")]
     public GuidJsonModel Guid_Json_Test([FromBody] GuidJsonModel input)
     {

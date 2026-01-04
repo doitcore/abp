@@ -25,22 +25,12 @@ public abstract class BasicAggregateRoot : Entity,
 
     public virtual void ClearLocalEvents()
     {
-        if (_localEvents == null)
-        {
-            return;
-        }
-
-        _localEvents.Clear();
+        _localEvents?.Clear();
     }
 
     public virtual void ClearDistributedEvents()
     {
-        if (_distributedEvents == null)
-        {
-            return;
-        }
-
-        _distributedEvents.Clear();
+        _distributedEvents?.Clear();
     }
 
     protected virtual void AddLocalEvent(object eventData)
@@ -87,22 +77,12 @@ public abstract class BasicAggregateRoot<TKey> : Entity<TKey>,
 
     public virtual void ClearLocalEvents()
     {
-        if (_localEvents == null)
-        {
-            return;
-        }
-
-        _localEvents.Clear();
+        _localEvents?.Clear();
     }
 
     public virtual void ClearDistributedEvents()
     {
-        if (_distributedEvents == null)
-        {
-            return;
-        }
-
-        _distributedEvents.Clear();
+        _distributedEvents?.Clear();
     }
 
     protected virtual void AddLocalEvent(object eventData)

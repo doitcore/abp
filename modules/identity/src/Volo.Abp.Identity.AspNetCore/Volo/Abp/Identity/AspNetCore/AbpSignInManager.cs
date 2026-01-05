@@ -46,6 +46,7 @@ public class AbpSignInManager : SignInManager<IdentityUser>
         bool isPersistent,
         bool lockoutOnFailure)
     {
+        IdentityUser user;
         foreach (var externalLoginProviderInfo in AbpOptions.ExternalLoginProviders.Values)
         {
             var externalLoginProvider = (IExternalLoginProvider)Context.RequestServices
@@ -53,7 +54,7 @@ public class AbpSignInManager : SignInManager<IdentityUser>
 
             if (await externalLoginProvider.TryAuthenticateAsync(userName, password))
             {
-                var user = await UserManager.FindByNameAsync(userName);
+                user = await FindByNameAsync(userName);
                 if (user == null)
                 {
                     if (externalLoginProvider is IExternalLoginProviderWithPassword externalLoginProviderWithPassword)
@@ -81,7 +82,23 @@ public class AbpSignInManager : SignInManager<IdentityUser>
             }
         }
 
-        return await base.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure);
+        user = await FindByNameAsync(userName);
+        if (user == null)
+        {
+            return SignInResult.Failed;
+        }
+
+        return await PasswordSignInAsync(user, password, isPersistent, lockoutOnFailure);
+    }
+
+    public virtual async Task<IdentityUser> FindByEmaiAsync(string email)
+    {
+        return await _identityUserManager.FindByEmailInHostAsync(email);
+    }
+
+    public virtual async Task<IdentityUser> FindByNameAsync(string userName)
+    {
+        return await _identityUserManager.FindByNameInHostAsync(userName);
     }
 
     /// <summary>

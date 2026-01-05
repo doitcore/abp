@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Caching;
+using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Identity.Settings;
+using Volo.Abp.MultiTenancy;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.Settings;
 using Volo.Abp.Threading;
@@ -31,6 +33,9 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
     protected IIdentityLinkUserRepository IdentityLinkUserRepository { get; }
     protected IDistributedCache<AbpDynamicClaimCacheItem> DynamicClaimCache { get; }
     protected override CancellationToken CancellationToken => CancellationTokenProvider.Token;
+    protected IOptions<AbpMultiTenancyOptions> MultiTenancyOptions { get; }
+    protected ICurrentTenant CurrentTenant { get; }
+    protected IDataFilter DataFilter { get; }
 
     public IdentityUserManager(
         IdentityUserStore store,
@@ -49,7 +54,10 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         ISettingProvider settingProvider,
         IDistributedEventBus distributedEventBus,
         IIdentityLinkUserRepository identityLinkUserRepository,
-        IDistributedCache<AbpDynamicClaimCacheItem> dynamicClaimCache)
+        IDistributedCache<AbpDynamicClaimCacheItem> dynamicClaimCache,
+        IOptions<AbpMultiTenancyOptions> multiTenancyOptions,
+        ICurrentTenant currentTenant,
+        IDataFilter dataFilter)
         : base(
             store,
             optionsAccessor,
@@ -68,6 +76,9 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         UserRepository = userRepository;
         IdentityLinkUserRepository = identityLinkUserRepository;
         DynamicClaimCache = dynamicClaimCache;
+        MultiTenancyOptions = multiTenancyOptions;
+        CurrentTenant = currentTenant;
+        DataFilter = dataFilter;
         CancellationTokenProvider = cancellationTokenProvider;
     }
 
@@ -583,5 +594,67 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
 
         Logger.LogError($"Could not get a valid user name for the given email address: {email}, allowed characters: {Options.User.AllowedUserNameCharacters}, tried {maxTryCount} times.");
         throw new AbpIdentityResultException(IdentityResult.Failed(new IdentityErrorDescriber().InvalidUserName(userName)));
+    }
+
+    public virtual async Task<IdentityUser> FindByEmailInHostAsync(string email)
+    {
+        if (MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated)
+        {
+            return await base.FindByEmailAsync(email);
+        }
+
+        using (CurrentTenant.Change(null))
+        {
+            using (DataFilter.Disable<IMultiTenant>())
+            {
+                var normalizedEmail = NormalizeEmail(email);
+                var hostusers = await UserRepository.GetUsersByNormalizedEmailAsync(normalizedEmail, cancellationToken: CancellationToken);
+                //host user first
+                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault();
+                if (hostUser == null)
+                {
+                    return null;
+                }
+
+                using (DataFilter.Enable<IMultiTenant>())
+                {
+                    using (CurrentTenant.Change(hostUser.TenantId))
+                    {
+                        return await base.FindByEmailAsync(email);
+                    }
+                }
+            }
+        }
+    }
+
+    public virtual async Task<IdentityUser> FindByNameInHostAsync(string userName)
+    {
+        if (MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated)
+        {
+            return await base.FindByNameAsync(userName);
+        }
+
+        using (CurrentTenant.Change(null))
+        {
+            using (DataFilter.Disable<IMultiTenant>())
+            {
+                var normalizeduserName = NormalizeName(userName);
+                var hostusers = await UserRepository.GetUsersByNormalizedUserNameAsync(normalizeduserName, cancellationToken: CancellationToken);
+                //host user first
+                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault();
+                if (hostUser == null)
+                {
+                    return null;
+                }
+
+                using (DataFilter.Enable<IMultiTenant>())
+                {
+                    using (CurrentTenant.Change(hostUser.TenantId))
+                    {
+                        return await base.FindByNameAsync(userName);
+                    }
+                }
+            }
+        }
     }
 }

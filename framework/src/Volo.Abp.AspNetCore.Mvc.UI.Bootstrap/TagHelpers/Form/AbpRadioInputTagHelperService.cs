@@ -74,7 +74,7 @@ public class AbpRadioInputTagHelperService : AbpTagHelperService<AbpRadioInputTa
             var label = new TagBuilder("label");
             label.AddCssClass("form-check-label");
             label.Attributes.Add("for", id);
-            label.InnerHtml.AppendHtml(selectItem.Text);
+            label.InnerHtml.Append(selectItem.Text);
 
             var wrapper = new TagBuilder("div");
             wrapper.AddCssClass("form-check" + inlineClass);

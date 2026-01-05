@@ -708,6 +708,42 @@
       "contentType": "eventHandler",
       "name": "FeatureValueCacheItemInvalidator",
       "summary": null
+    },
+    {
+      "eventHandlerType": "Local",
+      "namespace": "Volo.Abp.FeatureManagement",
+      "subscribedEvents": [
+        {
+          "underlyingType": null,
+          "name": "StaticFeatureDefinitionChangedEvent",
+          "namespace": "Volo.Abp.Features",
+          "declaringAssemblyName": "Volo.Abp.Features",
+          "fullName": "Volo.Abp.Features.StaticFeatureDefinitionChangedEvent"
+        }
+      ],
+      "implementingInterfaces": [
+        {
+          "name": "ILocalEventHandler<StaticFeatureDefinitionChangedEvent>",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.ILocalEventHandler<StaticFeatureDefinitionChangedEvent>"
+        },
+        {
+          "name": "IEventHandler",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.IEventHandler"
+        },
+        {
+          "name": "ITransientDependency",
+          "namespace": "Volo.Abp.DependencyInjection",
+          "declaringAssemblyName": "Volo.Abp.Core",
+          "fullName": "Volo.Abp.DependencyInjection.ITransientDependency"
+        }
+      ],
+      "contentType": "eventHandler",
+      "name": "StaticFeatureDefinitionChangedEventHandler",
+      "summary": null
     }
   ]
 }

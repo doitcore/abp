@@ -77,7 +77,7 @@ public abstract class AbpButtonTagHelperServiceBase<TTagHelper> : AbpTagHelperSe
         }
 
         var span = new TagBuilder("span");
-        span.InnerHtml.AppendHtml(Encoder.Encode(TagHelper.Text!));
+        span.InnerHtml.Append(TagHelper.Text!);
         output.Content.AppendHtml(span);
     }
 

@@ -109,7 +109,11 @@ namespace Volo.Abp.Identity
             {
                 using (TenantFilter.Disable())
                 {
-                    var owner = await manager.FindByIdAsync(user.Id.ToString());
+                    IdentityUser owner;
+                    using (CurrentTenant.Change(user.TenantId))
+                    {
+                        owner = await manager.FindByIdAsync(user.Id.ToString());
+                    }
                     var normalizedUserName = manager.NormalizeName(user.UserName);
                     var normalizedEmail = manager.NormalizeEmail(user.Email);
                     var users = await UserRepository.GetUsersByNormalizedUserNamesAsync([normalizedUserName!, normalizedEmail], true);

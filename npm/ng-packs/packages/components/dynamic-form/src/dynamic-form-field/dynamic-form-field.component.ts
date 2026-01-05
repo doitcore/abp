@@ -131,7 +131,6 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
         const validator = this.field().validators.find(
           v => v.type.toLowerCase() === key.toLowerCase(),
         );
-        console.log(this.field().validators, key);
         if (validator && validator.message) {
           return validator.message;
         }

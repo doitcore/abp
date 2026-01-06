@@ -646,6 +646,42 @@
       "contentType": "eventHandler",
       "name": "PermissionGrantCacheItemInvalidator",
       "summary": null
+    },
+    {
+      "eventHandlerType": "Local",
+      "namespace": "Volo.Abp.PermissionManagement",
+      "subscribedEvents": [
+        {
+          "underlyingType": null,
+          "name": "StaticPermissionDefinitionChangedEvent",
+          "namespace": "Volo.Abp.Authorization.Permissions",
+          "declaringAssemblyName": "Volo.Abp.Authorization",
+          "fullName": "Volo.Abp.Authorization.Permissions.StaticPermissionDefinitionChangedEvent"
+        }
+      ],
+      "implementingInterfaces": [
+        {
+          "name": "ILocalEventHandler<StaticPermissionDefinitionChangedEvent>",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.ILocalEventHandler<StaticPermissionDefinitionChangedEvent>"
+        },
+        {
+          "name": "IEventHandler",
+          "namespace": "Volo.Abp.EventBus",
+          "declaringAssemblyName": "Volo.Abp.EventBus.Abstractions",
+          "fullName": "Volo.Abp.EventBus.IEventHandler"
+        },
+        {
+          "name": "ITransientDependency",
+          "namespace": "Volo.Abp.DependencyInjection",
+          "declaringAssemblyName": "Volo.Abp.Core",
+          "fullName": "Volo.Abp.DependencyInjection.ITransientDependency"
+        }
+      ],
+      "contentType": "eventHandler",
+      "name": "StaticPermissionDefinitionChangedEventHandler",
+      "summary": null
     }
   ]
 }

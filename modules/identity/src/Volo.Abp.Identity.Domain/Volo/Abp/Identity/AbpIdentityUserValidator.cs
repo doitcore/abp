@@ -170,10 +170,15 @@ namespace Volo.Abp.Identity
             }
             else
             {
-                var owner = await manager.FindByNameAsync(userName);
+                IdentityUser owner;
+                using (CurrentTenant.Change(user.TenantId))
+                {
+                    owner = await manager.FindByNameAsync(userName);
+                }
                 if (owner != null &&
                     !string.Equals(await manager.GetUserIdAsync(owner), await manager.GetUserIdAsync(user)) &&
-                    owner.TenantId == user.TenantId)
+                    owner.TenantId == user.TenantId &&
+                    owner.NormalizedUserName != manager.NormalizeName(userName))
                 {
                     errors.Add(ErrorDescriber.DuplicateUserName(userName));
                 }
@@ -197,10 +202,15 @@ namespace Volo.Abp.Identity
                 errors.Add(ErrorDescriber.InvalidEmail(email));
                 return errors;
             }
-            var owner = await manager.FindByEmailAsync(email);
+            IdentityUser owner;
+            using (CurrentTenant.Change(user.TenantId))
+            {
+                owner = await manager.FindByEmailAsync(email);
+            }
             if (owner != null &&
                 !string.Equals(await manager.GetUserIdAsync(owner), await manager.GetUserIdAsync(user)) &&
-                owner.TenantId == user.TenantId)
+                owner.TenantId == user.TenantId &&
+                owner.NormalizedEmail != manager.NormalizeEmail(email))
             {
                 errors.Add(ErrorDescriber.DuplicateEmail(email));
             }

@@ -493,6 +493,15 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
 
+    public virtual async Task<List<IdentityUser>> GetUsersByLoginAsync(string loginProvider, string providerKey, bool includeDetails = false, CancellationToken cancellationToken = default)
+    {
+        return await (await GetDbSetAsync())
+            .IncludeDetails(includeDetails)
+            .OrderBy(x => x.Id)
+            .Where(u => u.Logins.Any(login => login.LoginProvider == loginProvider && login.ProviderKey == providerKey))
+            .ToListAsync(GetCancellationToken(cancellationToken));
+    }
+
     public virtual async Task<IdentityUser> FindByNormalizedUserNameAsync(Guid? tenantId, string normalizedUserName, bool includeDetails = true, CancellationToken cancellationToken = default)
     {
         return await (await GetDbSetAsync())

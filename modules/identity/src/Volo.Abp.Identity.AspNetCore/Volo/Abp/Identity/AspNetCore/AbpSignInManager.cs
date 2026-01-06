@@ -91,6 +91,22 @@ public class AbpSignInManager : SignInManager<IdentityUser>
         return await PasswordSignInAsync(user, password, isPersistent, lockoutOnFailure);
     }
 
+    public override async Task<SignInResult> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent, bool bypassTwoFactor)
+    {
+        var user = await FindByLoginAsync(loginProvider, providerKey);
+        if (user == null)
+        {
+            return SignInResult.Failed;
+        }
+
+        var error = await PreSignInCheck(user);
+        if (error != null)
+        {
+            return error;
+        }
+        return await SignInOrTwoFactorAsync(user, isPersistent, loginProvider, bypassTwoFactor);
+    }
+
     public virtual async Task<IdentityUser> FindByEmaiAsync(string email)
     {
         return await _identityUserManager.FindByEmailInHostAsync(email);
@@ -99,6 +115,11 @@ public class AbpSignInManager : SignInManager<IdentityUser>
     public virtual async Task<IdentityUser> FindByNameAsync(string userName)
     {
         return await _identityUserManager.FindByNameInHostAsync(userName);
+    }
+
+    public virtual async Task<IdentityUser> FindByLoginAsync(string loginProvider, string providerKey)
+    {
+        return await _identityUserManager.FindByLoginInHostAsync(loginProvider, providerKey);
     }
 
     /// <summary>

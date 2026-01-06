@@ -190,6 +190,13 @@ public interface IIdentityUserRepository : IBasicRepository<IdentityUser, Guid>
         CancellationToken cancellationToken = default
     );
 
+    Task<List<IdentityUser>> GetUsersByLoginAsync(
+        [NotNull] string loginProvider,
+        [NotNull] string providerKey,
+        bool includeDetails = false,
+        CancellationToken cancellationToken = default
+    );
+
     Task<IdentityUser> FindByNormalizedUserNameAsync(
         Guid? tenantId,
         [NotNull] string normalizedUserName,

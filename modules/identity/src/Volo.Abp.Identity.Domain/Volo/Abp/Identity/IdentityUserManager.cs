@@ -657,4 +657,34 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
             }
         }
     }
+
+    public virtual async Task<IdentityUser> FindByLoginInHostAsync(string loginProvider, string providerKey)
+    {
+        if (MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated)
+        {
+            return await base.FindByLoginAsync(loginProvider, providerKey);
+        }
+
+        using (CurrentTenant.Change(null))
+        {
+            using (DataFilter.Disable<IMultiTenant>())
+            {
+                var hostusers = await UserRepository.GetUsersByLoginAsync(loginProvider, providerKey, cancellationToken: CancellationToken);
+                //host user first
+                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault();
+                if (hostUser == null)
+                {
+                    return null;
+                }
+
+                using (DataFilter.Enable<IMultiTenant>())
+                {
+                    using (CurrentTenant.Change(hostUser.TenantId))
+                    {
+                        return await base.FindByLoginAsync(loginProvider, providerKey);
+                    }
+                }
+            }
+        }
+    }
 }

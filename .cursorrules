@@ -1,7 +1,7 @@
 # ABP Framework – Cursor Rules
-# Scope: ABP Framework repository (abpframework/abp). Apply to framework + module development.
-# Goal: Enforce ABP module architecture best practices (DDD, layering, DB/ORM independence)
-# and align contributions with the ABP contribution guide.
+# Scope: ABP Framework repository (abpframework/abp) — for developing ABP itself, not ABP-based applications.
+# Goal: Enforce ABP module architecture best practices (DDD, layering, DB/ORM independence),
+# maintain backward compatibility, ensure extensibility, and align with ABP contribution guidelines.
 
 ## Global Defaults
 - Follow existing patterns in this repository first. Before generating new code, search for similar implementations and mirror their structure, naming, and conventions.
@@ -50,10 +50,10 @@
 ## Repositories
 - Define repository interfaces in the domain layer.
 - Create one dedicated repository interface per aggregate root (e.g., `IProductRepository`).
-- Application code MUST NOT use generic repositories (e.g., `IRepository<TEntity, TKey>`).
-- Repository interfaces MUST NOT expose `IQueryable` to application/domain layers:
-  - Prefer inheriting from `IBasicRepository<TEntity, TKey>` (or `IReadOnlyRepository<...>` when suitable).
-  - Do NOT inherit from `IRepository<TEntity, TKey>`.
+- Public repository interfaces exposed by modules:
+  - SHOULD inherit from `IBasicRepository<TEntity, TKey>` (or `IReadOnlyRepository<...>` when suitable).
+  - SHOULD NOT expose `IQueryable` in the public contract.
+  - Internal implementations MAY use `IRepository<TEntity, TKey>` and `IQueryable` as needed.
 - Do NOT define repositories for non-aggregate-root entities.
 - Repository method conventions:
   - All methods async.
@@ -68,7 +68,8 @@
 - Default: do NOT create interfaces for domain services unless necessary (mocking/multiple implementations).
 - Naming: use `*Manager` suffix.
 - Domain service methods:
-  - Do NOT define read-only “GET” methods. Querying belongs to repositories and application services.
+  - Focus on operations that enforce domain invariants and business rules.
+  - Query methods are acceptable when they encapsulate domain-specific lookup logic (e.g., normalized lookups, caching, complex resolution). Simple queries belong in repositories.
   - Define methods that mutate state and enforce domain rules.
   - Use specific, intention-revealing names (avoid generic `UpdateXAsync`).
   - Accept valid domain objects as parameters; do NOT accept/return DTOs.
@@ -135,7 +136,7 @@
   - Use data annotations.
   - Reuse constants from Domain.Shared wherever possible.
 - Avoid logic in DTOs; only implement `IValidatableObject` when necessary.
-- Mark DTOs `[Serializable]`.
+- Do NOT use `[Serializable]` attribute (BinaryFormatter is obsolete); ABP uses JSON serialization.
 - Output DTO strategy:
   - Prefer a Basic DTO and a Detailed DTO; avoid many variants.
   - Detailed DTOs: include reference details as nested basic DTOs; avoid duplicating raw FK ids unnecessarily.
@@ -185,6 +186,69 @@
   - Pass cancellation tokens using `GetCancellationToken(cancellationToken)`.
   - Ignore `includeDetails` for MongoDB in most cases (documents load sub-collections).
   - Prefer `GetQueryableAsync()` to ensure ABP data filters are applied.
+
+## ABP Module Classes
+- Every package must have exactly one `AbpModule` class.
+- Naming: `Abp[ModuleName][Layer]Module` (e.g., `AbpIdentityDomainModule`, `AbpIdentityApplicationModule`).
+- Use `[DependsOn(typeof(...))]` to declare module dependencies explicitly.
+- Override `ConfigureServices` for DI registration and configuration.
+- Override `OnApplicationInitialization` sparingly; prefer `ConfigureServices` when possible.
+- Each module must be usable standalone; avoid hidden cross-module coupling.
+
+## Framework Extensibility
+- All public and protected members should be `virtual` for inheritance-based extensibility.
+- Prefer `protected virtual` over `private` for helper methods to allow overriding.
+- Use `[Dependency(ReplaceServices = true)]` patterns for services intended to be replaceable.
+- Provide extension points via interfaces and virtual methods.
+- Document extension points with XML comments explaining intended usage.
+- Consider providing `*Options` classes for configuration-based extensibility.
+
+## Backward Compatibility
+- Do NOT remove or rename public API members without a deprecation cycle.
+- Use `[Obsolete("Message. Use X instead.")]` with clear migration guidance before removal.
+- Maintain binary and source compatibility within major versions.
+- Add new optional parameters with defaults; do not change existing method signatures.
+- When adding new abstract members to base classes, provide default implementations if possible.
+- Prefer adding new interfaces over modifying existing ones.
+
+## Localization Resources
+- Define localization resources in Domain.Shared.
+- Resource class naming: `[ModuleName]Resource` (e.g., `IdentityResource`, `PermissionManagementResource`).
+- JSON files under `/Localization/[ModuleName]/` directory.
+- Use `LocalizableString.Create<TResource>("Key")` for localizable exceptions and messages.
+- All user-facing strings must be localized; no hardcoded English text in code.
+- Error codes should be namespaced: `ModuleName:ErrorCode` (e.g., `Identity:UserNameAlreadyExists`).
+
+## Settings & Features
+- Define settings in `*SettingDefinitionProvider` in Domain.Shared or Domain.
+- Setting names must follow `Abp.[ModuleName].[SettingName]` convention.
+- Define features in `*FeatureDefinitionProvider` in Domain.Shared.
+- Feature names must follow `[ModuleName].[FeatureName]` convention.
+- Use constants for setting/feature names; never hardcode strings.
+
+## Permissions
+- Define permissions in `*PermissionDefinitionProvider` in Application.Contracts.
+- Permission names must follow `[ModuleName].[Permission]` convention.
+- Use constants for permission names (e.g., `IdentityPermissions.Users.Create`).
+- Group related permissions logically.
+
+## Event Bus & Distributed Events
+- Use `ILocalEventBus` for intra-module communication within the same process.
+- Use `IDistributedEventBus` for cross-module or cross-service communication.
+- Define Event Transfer Objects (ETOs) in Domain.Shared for distributed events.
+- ETO naming: `[EntityName][Action]Eto` (e.g., `UserCreatedEto`, `OrderCompletedEto`).
+- Event handlers belong in the Application layer.
+- ETOs should be simple, serializable, and contain only primitive types or nested ETOs.
+
+## Testing
+- Unit tests: `*.Tests` projects for isolated logic testing with mocked dependencies.
+- Integration tests: `*.EntityFrameworkCore.Tests` / `*.MongoDB.Tests` for repository and DB tests.
+- Use `AbpIntegratedTest<TModule>` or `AbpApplicationTestBase<TModule>` base classes.
+- Test modules should use `[DependsOn]` on the module under test.
+- Use `Shouldly` assertions (ABP convention).
+- Test both EF Core and MongoDB implementations when the module supports both.
+- Include tests for permission checks, validation, and edge cases.
+- Name test methods: `MethodName_Scenario_ExpectedResult` or `Should_ExpectedBehavior_When_Condition`.
 
 ## Contribution Discipline (PR / Issues / Tests)
 - Before significant changes, align via GitHub issue/discussion.

@@ -596,7 +596,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         throw new AbpIdentityResultException(IdentityResult.Failed(new IdentityErrorDescriber().InvalidUserName(userName)));
     }
 
-    public virtual async Task<IdentityUser> FindByEmailInHostAsync(string email)
+    public virtual async Task<IdentityUser> FindSharedUserByEmailAsync(string email)
     {
         if (MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated)
         {
@@ -627,7 +627,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         }
     }
 
-    public virtual async Task<IdentityUser> FindByNameInHostAsync(string userName)
+    public virtual async Task<IdentityUser> FindSharedUserByNameAsync(string userName)
     {
         if (MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated)
         {
@@ -658,7 +658,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         }
     }
 
-    public virtual async Task<IdentityUser> FindByLoginInHostAsync(string loginProvider, string providerKey)
+    public virtual async Task<IdentityUser> FindSharedUserByLoginAsync(string loginProvider, string providerKey)
     {
         if (MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated)
         {
@@ -688,7 +688,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
         }
     }
 
-    public virtual async Task<IdentityUser> FindByPasskeyIdInHostAsync(byte[] credentialId)
+    public virtual async Task<IdentityUser> FindSharedUserByPasskeyIdAsync(byte[] credentialId)
     {
         if (MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated)
         {

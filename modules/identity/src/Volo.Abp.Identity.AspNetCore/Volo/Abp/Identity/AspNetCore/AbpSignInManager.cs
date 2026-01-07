@@ -109,17 +109,17 @@ public class AbpSignInManager : SignInManager<IdentityUser>
 
     public virtual async Task<IdentityUser> FindByEmaiAsync(string email)
     {
-        return await _identityUserManager.FindByEmailInHostAsync(email);
+        return await _identityUserManager.FindSharedUserByEmailAsync(email);
     }
 
     public virtual async Task<IdentityUser> FindByNameAsync(string userName)
     {
-        return await _identityUserManager.FindByNameInHostAsync(userName);
+        return await _identityUserManager.FindSharedUserByNameAsync(userName);
     }
 
     public virtual async Task<IdentityUser> FindByLoginAsync(string loginProvider, string providerKey)
     {
-        return await _identityUserManager.FindByLoginInHostAsync(loginProvider, providerKey);
+        return await _identityUserManager.FindSharedUserByLoginAsync(loginProvider, providerKey);
     }
 
     /// <summary>

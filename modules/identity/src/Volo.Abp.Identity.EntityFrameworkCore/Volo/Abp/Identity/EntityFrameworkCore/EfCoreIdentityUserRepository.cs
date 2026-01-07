@@ -502,6 +502,15 @@ public class EfCoreIdentityUserRepository : EfCoreRepository<IIdentityDbContext,
             .ToListAsync(GetCancellationToken(cancellationToken));
     }
 
+    public virtual async Task<List<IdentityUser>> GetUsersByPasskeyIdAsync(byte[] credentialId, bool includeDetails = false, CancellationToken cancellationToken = default)
+    {
+        return await (await GetDbSetAsync())
+            .IncludeDetails(includeDetails)
+            .Where(u => u.Passkeys.Any(x => x.CredentialId.SequenceEqual(credentialId)))
+            .OrderBy(x => x.Id)
+            .ToListAsync(GetCancellationToken(cancellationToken));
+    }
+
     public virtual async Task<IdentityUser> FindByNormalizedUserNameAsync(Guid? tenantId, string normalizedUserName, bool includeDetails = true, CancellationToken cancellationToken = default)
     {
         return await (await GetDbSetAsync())

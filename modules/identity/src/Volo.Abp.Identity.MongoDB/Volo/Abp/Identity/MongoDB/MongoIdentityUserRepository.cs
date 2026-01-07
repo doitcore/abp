@@ -493,6 +493,14 @@ public class MongoIdentityUserRepository : MongoDbRepository<IAbpIdentityMongoDb
             .ToListAsync(cancellationToken: cancellationToken);
     }
 
+    public virtual async Task<List<IdentityUser>> GetUsersByPasskeyIdAsync(byte[] credentialId, bool includeDetails = false, CancellationToken cancellationToken = default)
+    {
+        return await (await GetQueryableAsync(cancellationToken))
+            .OrderBy(x => x.Id)
+            .Where(u => u.Passkeys.Any(x => x.CredentialId == credentialId))
+            .ToListAsync(cancellationToken: cancellationToken);
+    }
+
     public virtual async Task<IdentityUser> FindByNormalizedUserNameAsync(Guid? tenantId, string normalizedUserName, bool includeDetails = true, CancellationToken cancellationToken = default)
     {
         return await (await GetQueryableAsync(cancellationToken))

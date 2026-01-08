@@ -1,4 +1,3 @@
-import { NgClass }ngular/common';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { combineLatest, Subscription, timer } from 'rxjs';
 import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng.core';
@@ -6,8 +5,7 @@ import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng
 @Component({
   selector: 'abp-loader-bar',
   template: `
-    <di
-    <div id="abp-loader-bar" [ngClass]="containerClass" [class.is-loading]="isLoading">
+    <div id="abp-loader-bar" [class]="containerClass" [class.is-loading]="isLoading">
       <div
         class="abp-progress"
         [class.progressing]="progressLevel"
@@ -18,9 +16,12 @@ import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng
         }"
       ></div>
     </div>
-  Urls: ['./loader-bar.component.scss'],
+  `,
+  styleUrls: ['./loader-bar.component.scss'],
   providers: [SubscriptionService],
-  imports: [NgClass],[NgClass]LoaderBarComponent implements OnDestroy, OnInit {
+  imports: [],
+})
+export class LoaderBarComponent implements OnDestroy, OnInit {
   private cdRef = inject(ChangeDetectorRef);
   private subscription = inject(SubscriptionService);
   private httpWaitService = inject(HttpWaitService);

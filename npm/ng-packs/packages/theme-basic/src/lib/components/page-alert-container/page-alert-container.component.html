@@ -1,7 +1,7 @@
 @for (alert of service.alerts$ | async; track i; let i = $index) {
   <div
     class="alert alert-{{ alert.type }} fade show"
-    [ngClass]="{ 'alert-dismissible fade show': alert.dismissible }"
+    [class.alert-dismissible]="alert.dismissible" [class.fade]="alert.dismissible" [class.show]="alert.dismissible"
     role="alert"
   >
     @if (alert.title) {

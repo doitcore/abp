@@ -4,7 +4,7 @@ import { transition, trigger, useAnimation } from '@angular/animations';
 import { Component, inject, OnInit } from '@angular/core';
 import { eAccountComponents } from '../../enums/components';
 import { ManageProfileStateService } from '../../services/manage-profile.state.service';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LocalizationPipe, ReplaceableTemplateDirective } from '@abp/ng.core';
 import { PersonalSettingsComponent } from '../personal-settings/personal-settings.component';
@@ -23,15 +23,14 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
     `,
   ],
   imports: [
-    NgClass,
     AsyncPipe,
     ReactiveFormsModule,
     PersonalSettingsComponent,
     ChangePasswordComponent,
     LocalizationPipe,
     ReplaceableTemplateDirective,
-    LoadingDirective,
-  ],
+    LoadingDirective
+],
 })
 export class ManageProfileComponent implements OnInit {
   protected profileService = inject(ProfileService);

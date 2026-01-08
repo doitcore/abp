@@ -1,6 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgClass, NgStyle } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
 
 @Component({
@@ -18,7 +18,7 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
         [placeholder]="inputPlaceholder"
         [readonly]="inputReadonly"
         [ngClass]="inputClass"
-        [ngStyle]="inputStyle"
+        [style]="inputStyle"
         (blur)="formBlur.next()"
         (focus)="formFocus.next()"
         [(ngModel)]="value"
@@ -32,7 +32,7 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
       multi: true,
     },
   ],
-  imports: [NgClass, NgStyle, LocalizationPipe, FormsModule],
+  imports: [NgClass, LocalizationPipe, FormsModule],
 })
 export class FormInputComponent extends AbstractNgModelComponent {
   @Input() inputId!: string;

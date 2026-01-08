@@ -90,7 +90,7 @@
                 </div>
                 <hr class="my-2" />
                 @for (permission of selectedGroupPermissions; track $index; let i = $index) {
-                  <div [ngStyle]="permission.style" class="form-check mb-2">
+                  <div [style]="permission.style" class="form-check mb-2">
                     <input
                       #permissionCheckbox
                       type="checkbox"

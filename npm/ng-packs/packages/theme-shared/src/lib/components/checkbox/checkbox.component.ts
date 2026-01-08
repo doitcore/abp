@@ -1,6 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { NgClass, NgStyle } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
 
 @Component({
@@ -13,7 +13,7 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
         [id]="checkboxId"
         [readonly]="checkboxReadonly"
         [ngClass]="checkboxClass"
-        [ngStyle]="checkboxStyle"
+        [style]="checkboxStyle"
         (blur)="checkboxBlur.next()"
         (focus)="checkboxFocus.next()"
       />
@@ -31,7 +31,7 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
       multi: true,
     },
   ],
-  imports: [NgClass, NgStyle, FormsModule, LocalizationPipe],
+  imports: [NgClass, FormsModule, LocalizationPipe],
 })
 export class FormCheckboxComponent extends AbstractNgModelComponent {
   @Input() label?: string;

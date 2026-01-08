@@ -31,7 +31,7 @@ import {
 import { concat, of } from 'rxjs';
 import { finalize, switchMap, take, tap } from 'rxjs/operators';
 import { PermissionManagement } from '../models';
-import { NgStyle } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 type PermissionWithStyle = PermissionGrantInfoDto & {
@@ -95,12 +95,11 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
   ],
   imports: [
     FormsModule,
-    NgStyle,
     ModalComponent,
     LocalizationPipe,
     ButtonComponent,
-    ModalCloseDirective,
-  ],
+    ModalCloseDirective
+],
 })
 export class PermissionManagementComponent
   implements

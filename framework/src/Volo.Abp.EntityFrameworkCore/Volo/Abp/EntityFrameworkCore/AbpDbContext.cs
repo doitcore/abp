@@ -117,6 +117,17 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
     {
         optionsBuilder.ConfigureWarnings(c => c.Ignore(RelationalEventId.PendingModelChangesWarning));
         base.OnConfiguring(optionsBuilder);
+
+        if (LazyServiceProvider == null || Options == null)
+        {
+            return;
+        }
+
+        Options.Value.DefaultOnConfiguringAction?.Invoke(this, optionsBuilder);
+        foreach (var onConfiguringAction in Options.Value.OnConfiguringActions.GetOrDefault(typeof(TDbContext)) ?? [])
+        {
+            onConfiguringAction.As<Action<DbContext, DbContextOptionsBuilder>>().Invoke(this, optionsBuilder);
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -193,6 +204,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             case "Npgsql.EntityFrameworkCore.PostgreSQL":
                 return EfCoreDatabaseProvider.PostgreSql;
             case "Pomelo.EntityFrameworkCore.MySql":
+            case "MySql.Data.MySqlClient":
                 return EfCoreDatabaseProvider.MySql;
             case "Oracle.EntityFrameworkCore":
             case "Devart.Data.Oracle.Entity.EFCore":
@@ -674,6 +686,12 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             return;
         }
 
+        string? concurrencyStamp = null;
+        if (entry.Entity is IHasConcurrencyStamp hasConcurrencyStamp)
+        {
+            concurrencyStamp = hasConcurrencyStamp.ConcurrencyStamp;
+        }
+
         ExtraPropertyDictionary? originalExtraProperties = null;
         if (entry.Entity is IHasExtraProperties)
         {
@@ -681,6 +699,11 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
         }
 
         entry.Reload();
+
+        if (concurrencyStamp != null && entry.Entity is IHasConcurrencyStamp)
+        {
+            ObjectHelper.TrySetProperty(entry.Entity.As<IHasConcurrencyStamp>(), x => x.ConcurrencyStamp, () => concurrencyStamp);
+        }
 
         if (entry.Entity is IHasExtraProperties)
         {
@@ -804,7 +827,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
             modelBuilder,
             mutableEntityType
         );
-        
+
         entityTypeBuilder.ConfigureByConvention();
 
         ConfigureGlobalFilters<TEntity>(modelBuilder, mutableEntityType, entityTypeBuilder);
@@ -821,7 +844,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
 
     protected virtual void ConfigureGlobalFilters<TEntity>(
         ModelBuilder modelBuilder,
-        IMutableEntityType mutableEntityType, 
+        IMutableEntityType mutableEntityType,
         EntityTypeBuilder<TEntity> entityTypeBuilder)
         where TEntity : class
     {
@@ -852,7 +875,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
         {
             return;
         }
-        
+
 
         foreach (var property in mutableEntityType.GetProperties().
                      Where(property => property.PropertyInfo != null &&
@@ -864,7 +887,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
                 modelBuilder,
                 mutableEntityType
             );
-            
+
             entityTypeBuilder
                 .Property(property.Name)
                 .HasConversion(property.ClrType == typeof(DateTime)
@@ -874,7 +897,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
     }
 
     protected virtual void ConfigureValueGenerated<TEntity>(
-        ModelBuilder modelBuilder, 
+        ModelBuilder modelBuilder,
         IMutableEntityType mutableEntityType)
         where TEntity : class
     {

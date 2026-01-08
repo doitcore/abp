@@ -10,7 +10,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ABP, StopPropagationDirective } from '@abp/ng.core';
 
 @Component({
@@ -30,7 +30,7 @@ import { ABP, StopPropagationDirective } from '@abp/ng.core';
       <i [ngClass]="icon" class="me-1" aria-hidden="true"></i><ng-content></ng-content>
     </button>
   `,
-  imports: [CommonModule, StopPropagationDirective],
+  imports: [StopPropagationDirective, NgClass],
 })
 export class ButtonComponent implements OnInit {
   private renderer = inject(Renderer2);

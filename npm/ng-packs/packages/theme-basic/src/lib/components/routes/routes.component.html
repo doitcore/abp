@@ -10,7 +10,7 @@
         @if (route.iconClass) {
         <i [ngClass]="route.iconClass"></i>
         }
-        {{ route.name | abpAsyncLocalization }}
+        {{ route.name | abpAsyncLocalization | async}}
       </a>
     </li>
   </ng-template>
@@ -27,7 +27,7 @@
         @if (route.iconClass) {
         <i [ngClass]="route.iconClass"></i>
         }
-        {{ route.name | abpAsyncLocalization }}
+        {{ route.name | abpAsyncLocalization | async }}
       </a>
       <div #routeContainer class="dropdown-menu border-0 shadow-sm"
         (click)="$event.preventDefault(); $event.stopPropagation()"

@@ -66,7 +66,7 @@ public class MyPermissionDefinitionProvider : PermissionDefinitionProvider
 }
 ```
 
-**2. Use `IResourcePermissionChecker.IsGrantedAsync` on your code and make the resource permission check**:
+**2. Use `IResourcePermissionChecker.IsGrantedAsync` in your code to perform the resource permission check**:
 
 ```csharp
 protected IResourcePermissionChecker ResourcePermissionChecker { get; }
@@ -85,9 +85,9 @@ public async Task MyService()
 }
 ```
 
-**3. Use the relevant `ResourcePermissionManagementModel` on your UI:**
+**3. Use the relevant `ResourcePermissionManagementModel` in your UI:**
 
-> The following code block, demonstrates it's usage in the Blazor UI but the same component also implemented with for MVC & Angular UIs.
+> The following code block demonstrates its usage in the Blazor UI, but the same component is also implemented for MVC & Angular UIs (however, component name might be different, please refer to the documentation before using the component).
 
 ```xml
 <ResourcePermissionManagementModal @ref="PermissionManagementModal" />
@@ -112,7 +112,7 @@ This feature integrates perfectly with ABP's existing authorization infrastructu
 
 ABP v10.1 now includes **[TickerQ](https://tickerq.net/)** as a new background job and background worker provider option. TickerQ is a fast, reflection-free background task scheduler for .NET — built with source generators, EF Core integration, cron + time-based execution, and a real-time dashboard. It offers reliable job execution with built-in retry mechanisms, persistent job storage, and efficient resource usage.
 
-If you want to use TickerQ in your ABP-based solution, you can check the following documentation:
+To use TickerQ in your ABP-based solution, refer to the following documentation:
 
 - [TickerQ Background Job Integration](https://abp.io/docs/10.1/framework/infrastructure/background-jobs/tickerq)
 - [TickerQ Background Worker Integration](https://abp.io/docs/10.1/framework/infrastructure/background-workers/tickerq)
@@ -123,7 +123,7 @@ ABP v10.1 brings significant improvements to **Angular authentication token hand
 
 #### What's Improved?
 
-Prior to this version, the access token issued by auth-server were stored in the localStorage, which was making it vulnerable to XSS attacks. Therefore, we made the following enhancements to improve safety and reduce security risks:
+Prior to this version, access tokens issued by the auth-server were stored in localStorage, making them vulnerable to XSS attacks. We've made the following enhancements to improve safety and reduce security risks:
 
 - Store sensitive tokens in memory
 - Use web-workers for state sharing between tabs
@@ -134,7 +134,7 @@ These enhancements are automatically available in new Angular projects and can b
 
 ### Angular Version Upgrade to v21
 
-ABP v10.1 **upgrades Angular to version 21**, bringing the latest improvements and features from the Angular ecosystem to your ABP applications. We have upgraded the relevant core Angular packages, 3rd party packages such as **angular-oauth2-oidc** and **ng-bootstrap** and also we will update the ABP Studio templates along with the stable v10.1 release.
+ABP v10.1 **upgrades Angular to version 21**, bringing the latest improvements and features from the Angular ecosystem to your ABP applications. We've upgraded the relevant core Angular packages and 3rd party packages such as **angular-oauth2-oidc** and **ng-bootstrap**. We will also update the ABP Studio templates along with the stable v10.1 release.
 
 > See [#24384](https://github.com/abpframework/abp/issues/24384) for the complete change list.
 
@@ -167,13 +167,13 @@ This feature is available for all supported UI types (MVC, Angular, Blazor) and 
 
 ### Payment Module: Public Page Implementation for Blazor & Angular UIs
 
-The **Payment Module** now includes **public page implementations for Angular and Blazor UIs**, completing the UI coverage across all ABP-supported UI frameworks. Previously, public payment pages (payment gateway selection, pre-payment, and post-payment pages) were only available for MVC/Razor Pages UI and with this version, now both admin and public websites are available for MVC, Angular and Blazor UIs.
+The **Payment Module** now includes **public page implementations for Angular and Blazor UIs**, completing UI coverage across all ABP-supported frameworks. Previously, public payment pages (payment gateway selection, pre-payment, and post-payment pages) were only available for MVC/Razor Pages UI. With this version, both admin and public pages are now available for MVC, Angular, and Blazor UIs.
 
-The public payment pages seamlessly integrate with ABP's [Payment Module](https://abp.io/docs/latest/modules/payment) and support all configured payment gateways. Documentation will be updated soon with detailed integration guides and examples, which you will be able to check at [abp.io/docs/latest/modules/payment](https://abp.io/docs/latest/modules/payment).
+The public payment pages seamlessly integrate with ABP's [Payment Module](https://abp.io/docs/latest/modules/payment) and support all configured payment gateways. The documentation will be updated soon with detailed integration guides and examples at [abp.io/docs/latest/modules/payment](https://abp.io/docs/latest/modules/payment).
 
 ### AI Management Module: Blazor & Angular UIs
 
-With this version, Angular and Blazor UIs for the [AI Management module](https://abp.io/docs/latest/modules/ai-management) has been implemented, completing the cross-platform support for this powerful AI integration module. This module makes it incredibly easy to manage AI capabilities in your applications without writing complex integration code.
+With this version, Angular and Blazor UIs for the [AI Management module](https://abp.io/docs/latest/modules/ai-management) have been implemented, completing the cross-platform support for this powerful AI integration module.
 
 ![AI Management Workspaces](ai-management-workspaces.png)
 
@@ -189,13 +189,13 @@ Learn more about the AI Management Module in the [announcement post](https://abp
 
 ### Identity PRO Module: Password History Support
 
-The [**Identity PRO Module**](https://abp.io/docs/latest/modules/identity-pro) now includes **Password History** support, preventing users from reusing their previous passwords. This new security feature helps enforce stronger password policies and meets compliance requirements for your organization.
+The [**Identity PRO Module**](https://abp.io/docs/latest/modules/identity-pro) now includes **Password History** support, preventing users from reusing previous passwords. This security feature helps enforce stronger password policies and meet compliance requirements for your organization.
 
-Administrators can enable password reuse prevention by simply toggling the related setting on the _Administration -> Settings -> Identity Management_ page:
+Administrators can enable password reuse prevention by toggling the related setting on the _Administration -> Settings -> Identity Management_ page:
 
 ![Password History Settings](password-history-settings.png)
 
-Then, when a password change for a user, it will check the specified count of previous passwords and give the error message if it matches with the previous x count of passwords (When a user attempts to set a password that was previously used, they receive a clear error message):
+When changing a password, the system checks the specified number of previous passwords and displays an error message if the new password matches any of them:
 
 ![](set-password-error-modal.png)
 
@@ -216,7 +216,7 @@ Passkeys are a modern, phishing-resistant authentication method that replaces tr
 
 **How It Works:**
 
-**1. You can enable/disable the WebAuthn passkes feature in the _Settings -> Account -> Passkeys_ page:**
+**1. Enable or disable the WebAuthn passkeys feature in the _Settings -> Account -> Passkeys_ page:**
 
 ![Passkey Setting](passkey-setting.png)
 
@@ -226,11 +226,11 @@ Passkeys are a modern, phishing-resistant authentication method that replaces tr
 
 ![Passkey registration](passkey-registration.png)
 
-**3. The next time, you login to the application, you can use the _Passkey login_ option for passwordless login:**
+**3. Use the _Passkey login_ option for passwordless authentication the next time you log in:**
 
 ![Passkey Login](passkey-login.png)
 
-> For more information, you can refer to the [Web Authentication API (WebAuthn) passkeys](https://abp.io/docs/10.1/modules/account/passkey) documentation.
+> For more information, refer to the [Web Authentication API (WebAuthn) passkeys](https://abp.io/docs/10.1/modules/account/passkey) documentation.
 
 ## Community News
 

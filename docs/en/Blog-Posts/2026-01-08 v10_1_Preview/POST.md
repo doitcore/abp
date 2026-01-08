@@ -21,7 +21,216 @@ There are a few breaking changes in this version that may affect your applicatio
 In this section, I will introduce some major features released in this version.
 Here is a brief list of titles explained in the next sections:
 
-//TODO: list and create sections!!!
+- Resource-Based Authorization
+- Introducing the TickerQ Background Worker Provider
+- Angular UI: Improving Authentication Token Handling
+- Angular Version Upgrade to v21
+- File Management Module: Public File Sharing Support
+- Payment Module: Public Page Implementation for Blazor & Angular UIs
+- AI Management Module: Blazor & Angular UIs
+- Identity PRO Module: Password History Support
+- Account PRO Module: Introducing WebAuthn Passkeys
+
+### Resource-Based Authorization
+
+ABP v10.1 introduces **Resource-Based Authorization**, a powerful feature that enables fine-grained access control based on specific resource instances. This enhancement addresses a long-requested feature ([#236](https://github.com/abpframework/abp/issues/236)) that allows you to implement authorization logic that depends on the resource being accessed, not just static roles or permissions.
+
+**What is Resource-Based Authorization?**
+
+Unlike traditional permission-based authorization where you check if a user has a general permission (like "CanEditDocuments"), resource-based authorization allows you to make authorization decisions based on the specific resource instance. For example:
+
+- Allow users to edit only their own blog posts
+- Grant access to documents based on ownership or sharing settings
+- Implement complex authorization rules that depend on resource properties
+
+![](ai-management-demo.gif)
+
+#### How It Works?
+
+**1. Define resource permissions (`AddResourcePermission`)**:
+
+```csharp
+public class MyPermissionDefinitionProvider : PermissionDefinitionProvider
+{
+    public override void Define(IPermissionDefinitionContext context)
+    {
+        //other permissions...
+
+        context.AddResourcePermission(
+            name: BookManagementPermissions.Manage.Resources.Consume,
+            resourceName: BookManagementPermissions.Manage.Resources.Name,
+            managementPermissionName: BookManagementPermissions.Manage.ManagePermissions,
+            L("LocalizedPermissionDisplayName")
+        );
+    }
+}
+```
+
+**2. Use `IResourcePermissionChecker.IsGrantedAsync` on your code and make the resource permission check**:
+
+```csharp
+protected IResourcePermissionChecker ResourcePermissionChecker { get; }
+
+public async Task MyService()
+{
+    if(await ResourcePermissionChecker.IsGrantedAsync(
+        BookManagementPermissions.Manage.Resources.Consume, 
+        BookManagementPermissions.Manage.Resources.Name,
+        workspaceConfiguration.WorkspaceId!.Value.ToString()))
+        {
+            return;
+        }
+
+        //...
+}
+```
+
+**3. Use the relevant `ResourcePermissionManagementModel` on your UI:**
+
+> The following code block, demonstrates it's usage in the Blazor UI but the same component also implemented with for MVC & Angular UIs.
+
+```xml
+<ResourcePermissionManagementModal @ref="PermissionManagementModal" />
+
+@code {
+    ResourcePermissionManagementModal PermissionManagementModal { get; set; } = null!;
+
+    private Task OpenResourcePermissionModel()
+    {
+        await PermissionManagementModal.OpenAsync(
+            resourceName: BookManagementPermissions.Manage.Resources.Name, 
+            resourceKey: entity.Id.ToString(), 
+            resourceDisplayName: entity.Name
+        );
+    }
+}
+```
+
+This feature integrates perfectly with ABP's existing authorization infrastructure and provides a standard way to implement complex, context-aware authorization scenarios in your applications.
+
+### Introducing the TickerQ Background Worker Provider
+
+ABP v10.1 now includes **[TickerQ](https://tickerq.net/)** as a new background job and background worker provider option. TickerQ is a fast, reflection-free background task scheduler for .NET — built with source generators, EF Core integration, cron + time-based execution, and a real-time dashboard. It offers reliable job execution with built-in retry mechanisms, persistent job storage, and efficient resource usage.
+
+If you want to use TickerQ in your ABP-based solution, you can check the following documentation:
+
+- [TickerQ Background Job Integration](https://abp.io/docs/10.1/framework/infrastructure/background-jobs/tickerq)
+- [TickerQ Background Worker Integration](https://abp.io/docs/10.1/framework/infrastructure/background-workers/tickerq)
+
+### Angular UI: Improving Authentication Token Handling
+
+ABP v10.1 brings significant improvements to **Angular authentication token handling**, making token refresh more reliable and providing better error handling for expired or invalid tokens.
+
+#### What's Improved?
+
+Prior to this version, the access token issued by auth-server were stored in the localStorage, which was making it vulnerable to XSS attacks. Therefore, we made the following enhancements to improve safety and reduce security risks:
+
+- Store sensitive tokens in memory
+- Use web-workers for state sharing between tabs
+
+These enhancements are automatically available in new Angular projects and can be applied to existing projects by updating ABP packages.
+
+> See [#23930](https://github.com/abpframework/abp/issues/23930) for more details.
+
+### Angular Version Upgrade to v21
+
+ABP v10.1 **upgrades Angular to version 21**, bringing the latest improvements and features from the Angular ecosystem to your ABP applications. We have upgraded the relevant core Angular packages, 3rd party packages such as **angular-oauth2-oidc** and **ng-bootstrap** and also we will update the ABP Studio templates along with the stable v10.1 release.
+
+> See [#24384](https://github.com/abpframework/abp/issues/24384) for the complete change list.
+
+### File Management Module: Public File Sharing Support
+
+_This is a **PRO** feature available for ABP Commercial customers._
+
+The **File Management Module** now supports **public file sharing** via shareable links, similar to popular cloud storage services like Google Drive or Dropbox. This feature enables you to generate public URLs for files that can be accessed without authentication.
+
+![](file-sharing.gif)
+
+**Example Share URL:**
+
+```text
+https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8AK%2BOEpCD...
+```
+
+**Configuration:**
+
+You can configure the public share domain through options:
+
+```csharp
+Configure<FileManagementWebOptions>(options =>
+{
+    options.FileDownloadRootUrl = "https://files.yourdomain.com";
+});
+```
+
+This feature is available for all supported UI types (MVC, Angular, Blazor) and integrates seamlessly with the existing [File Management Module](https://abp.io/docs/latest/modules/file-management).
+
+### Payment Module: Public Page Implementation for Blazor & Angular UIs
+
+The **Payment Module** now includes **public page implementations for Angular and Blazor UIs**, completing the UI coverage across all ABP-supported UI frameworks. Previously, public payment pages (payment gateway selection, pre-payment, and post-payment pages) were only available for MVC/Razor Pages UI and with this version, now both admin and public websites are available for MVC, Angular and Blazor UIs.
+
+The public payment pages seamlessly integrate with ABP's [Payment Module](https://abp.io/docs/latest/modules/payment) and support all configured payment gateways. Documentation will be updated soon with detailed integration guides and examples, which you will be able to check at [abp.io/docs/latest/modules/payment](https://abp.io/docs/latest/modules/payment).
+
+### AI Management Module: Blazor & Angular UIs
+
+With this version, Angular and Blazor UIs for the [AI Management module](https://abp.io/docs/latest/modules/ai-management) has been implemented, completing the cross-platform support for this powerful AI integration module. This module makes it incredibly easy to manage AI capabilities in your applications without writing complex integration code.
+
+![AI Management Workspaces](ai-management-workspaces.png)
+
+The AI Management Module builds on top of [ABP's AI Infrastructure](https://abp.io/docs/latest/framework/infrastructure/artificial-intelligence) and provides:
+
+- **Multi-Provider Support**: Integrate with OpenAI, Google Gemini, Anthropic Claude, and more from a unified API
+- **Workspace-Based Organization**: Organize AI capabilities into separate workspaces for different use cases
+- **Built-In Chat Interface**: Ready-to-use chat UI for conversational AI
+- **Chat Widget**: Drop-in chat widget component for customer support or AI assistance
+- **Resource-Based Permissions**: Control access to specific AI workspaces for users, roles, or clients
+
+Learn more about the AI Management Module in the [announcement post](https://abp.io/community/announcements/introducing-the-ai-management-module-nz9404a9) and [official documentation](https://abp.io/docs/latest/modules/ai-management).
+
+### Identity PRO Module: Password History Support
+
+The [**Identity PRO Module**](https://abp.io/docs/latest/modules/identity-pro) now includes **Password History** support, preventing users from reusing their previous passwords. This new security feature helps enforce stronger password policies and meets compliance requirements for your organization.
+
+Administrators can enable password reuse prevention by simply toggling the related setting on the _Administration -> Settings -> Identity Management_ page:
+
+![Password History Settings](password-history-settings.png)
+
+Then, when a password change for a user, it will check the specified count of previous passwords and give the error message if it matches with the previous x count of passwords (When a user attempts to set a password that was previously used, they receive a clear error message):
+
+![](set-password-error-modal.png)
+
+![](reset-password-error-modal.png)
+
+### Account PRO Module: Introducing WebAuthn Passkeys
+
+ABP v10.1 introduces **Passkey authentication**, enabling passwordless sign-in using modern biometric authentication methods. Built on the **WebAuthn standard (FIDO2)**, this feature allows users to authenticate using Face ID, Touch ID, Windows Hello, Android biometrics, security keys, or other platform authenticators.
+
+**What are Passkeys?**
+
+Passkeys are a modern, phishing-resistant authentication method that replaces traditional passwords:
+
+- **Passwordless**: No passwords to remember, type, or manage
+- **Secure**: Uses public/private key cryptography stored on the user's device
+- **Convenient**: Sign in with a fingerprint, face scan, or device PIN
+- **Cross-Platform**: Can sync across devices depending on platform support (Apple, Google, Microsoft)
+
+**How It Works:**
+
+**1. You can enable/disable the WebAuthn passkes feature in the _Settings -> Account -> Passkeys_ page:**
+
+![Passkey Setting](passkey-setting.png)
+
+**2. Add your passkeys in the _Account/Manage_ page:**
+
+![My Passkeys](my-passkey.png)
+
+![Passkey registration](passkey-registration.png)
+
+**3. The next time, you login to the application, you can use the _Passkey login_ option for passwordless login:**
+
+![Passkey Login](passkey-login.png)
+
+> For more information, you can refer to the [Web Authentication API (WebAuthn) passkeys](https://abp.io/docs/10.1/modules/account/passkey) documentation.
 
 ## Community News
 

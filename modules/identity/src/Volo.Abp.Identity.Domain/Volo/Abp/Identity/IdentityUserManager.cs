@@ -610,7 +610,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
                 var normalizedEmail = NormalizeEmail(email);
                 var hostusers = await UserRepository.GetUsersByNormalizedEmailAsync(normalizedEmail, cancellationToken: CancellationToken);
                 //host user first
-                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault();
+                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault(x => x.TenantId != Guid.Empty) ?? hostusers.FirstOrDefault();
                 if (hostUser == null)
                 {
                     return null;
@@ -641,7 +641,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
                 var normalizeduserName = NormalizeName(userName);
                 var hostusers = await UserRepository.GetUsersByNormalizedUserNameAsync(normalizeduserName, cancellationToken: CancellationToken);
                 //host user first
-                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault();
+                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault(x => x.TenantId != Guid.Empty) ?? hostusers.FirstOrDefault();
                 if (hostUser == null)
                 {
                     return null;
@@ -671,7 +671,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
             {
                 var hostusers = await UserRepository.GetUsersByLoginAsync(loginProvider, providerKey, cancellationToken: CancellationToken);
                 //host user first
-                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault();
+                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault(x => x.TenantId != Guid.Empty) ?? hostusers.FirstOrDefault();
                 if (hostUser == null)
                 {
                     return null;
@@ -701,7 +701,7 @@ public class IdentityUserManager : UserManager<IdentityUser>, IDomainService
             {
                 var hostusers = await UserRepository.GetUsersByPasskeyIdAsync(credentialId, cancellationToken: CancellationToken);
                 //host user first
-                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault();
+                var hostUser = hostusers.FirstOrDefault(x => x.TenantId == null) ?? hostusers.FirstOrDefault(x => x.TenantId != Guid.Empty) ?? hostusers.FirstOrDefault();
                 if (hostUser == null)
                 {
                     return null;

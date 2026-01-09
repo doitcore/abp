@@ -69,7 +69,7 @@ The Welcome Screen is the initial user interface users encounter upon starting A
 
 ## Sidebar
 
-Located on the left side of the interface, the Left Area is a panel that provides quick access to various functionalities like [Solution Explorer](./solution-explorer.md), [Solution Runner](./running-applications.md), Kubernetes Integration, and [AI Assistant](#ai-assistant). Now let's examine each item.
+Located on the left side of the interface, the Left Area is a panel that provides quick access to various functionalities like [Solution Explorer](./solution-explorer.md), [Solution Runner](./running-applications.md), Kubernetes Integration, and AI Assistant. Now let's examine each item.
 
 ### Solution Explorer
 

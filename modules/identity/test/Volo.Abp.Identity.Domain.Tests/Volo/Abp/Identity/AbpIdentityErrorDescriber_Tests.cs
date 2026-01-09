@@ -446,7 +446,7 @@ public class AbpIdentityErrorDescriber_Tests : AbpIdentityDomainTestBase
                 mismatchResult.Errors.ShouldContain(e => e.Description == "密码错误。");
 
                 var recoveryUser = new IdentityUser(Guid.NewGuid(), "recovery_user_zh", "recovery_user_zh@abp.io");
-                ObjectHelper.TrySetProperty(recoveryUser, x => x.TwoFactorEnabled , () => true);
+                ObjectHelper.TrySetProperty(recoveryUser, x => x.TwoFactorEnabled, () => true);
 
                 (await userManager.CreateAsync(recoveryUser, "Abp123!")).Succeeded.ShouldBeTrue();
                 var recoveryResult = await userManager.RedeemTwoFactorRecoveryCodeAsync(recoveryUser, "invalid-code");

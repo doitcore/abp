@@ -101,7 +101,7 @@ This pane is dedicated to managing Kubernetes services. It simplifies the proces
 
 ### AI Assistant
 
-The AI Assistant is an integrated chat interface within ABP Studio that provides intelligent assistance for ABP-related questions and development tasks. You can access it from the left sidebar by clicking the AI icon.
+The AI Assistant is an integrated chat interface within ABP Studio that provides intelligent assistance for ABP-related questions. You can access it from the left sidebar by clicking the AI icon.
 
 ![ai-assistant](./images/overview/ai-assistant.png)
 

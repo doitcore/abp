@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -93,10 +92,13 @@ namespace Volo.Abp.Identity
         {
             var errors = new List<IdentityError>();
 
-            var defaultValidationResult = await BuiltInValidateAsync(manager, user);
-            if (!defaultValidationResult.Succeeded)
+            using (CurrentTenant.Change(user.TenantId))
             {
-                return defaultValidationResult;
+                var defaultValidationResult = await DefaultUserValidator.ValidateAsync(manager, user);
+                if (!defaultValidationResult.Succeeded)
+                {
+                    return defaultValidationResult;
+                }
             }
 
             await using var handle = await DistributedLock.TryAcquireAsync(nameof(AbpIdentityUserValidator), TimeSpan.FromMinutes(1));
@@ -114,107 +116,55 @@ namespace Volo.Abp.Identity
                     {
                         owner = await manager.FindByIdAsync(user.Id.ToString());
                     }
+
                     var normalizedUserName = manager.NormalizeName(user.UserName);
                     var normalizedEmail = manager.NormalizeEmail(user.Email);
-                    var users = await UserRepository.GetUsersByNormalizedUserNamesAsync([normalizedUserName!, normalizedEmail], true);
-                    users.RemoveAll(x => x.Id == user.Id);
+
+                    var users = (await UserRepository.GetUsersByNormalizedUserNamesAsync([normalizedUserName!, normalizedEmail!], true)).Where(x => x.Id != user.Id).ToList();
+                    var usersByUserName = users.Where(x => x.NormalizedUserName == normalizedUserName).ToList();
                     if (owner != null)
                     {
-                        users.RemoveAll(x => x.NormalizedUserName == user.NormalizedUserName || x.NormalizedEmail == user.NormalizedEmail);
+                        usersByUserName.RemoveAll(x => x.NormalizedUserName == user.NormalizedUserName);
                     }
-                    if (users.Any())
+                    if (usersByUserName.Any())
                     {
-                        var userNames = users.Select(u => u.UserName).ToList();
-                        errors.Add(userNames.Contains(user.UserName) ? ErrorDescriber.InvalidUserName(user.UserName!) : ErrorDescriber.InvalidEmail(user.Email!));
+                        errors.Add(ErrorDescriber.DuplicateUserName(user.UserName!));
                     }
 
-                    users = await UserRepository.GetUsersByNormalizedEmailsAsync([normalizedUserName!, normalizedEmail], true);
-                    users.RemoveAll(x => x.Id == user.Id);
+                    var usersByEmail = users.Where(x => x.NormalizedUserName == normalizedEmail).ToList();
                     if (owner != null)
                     {
-                        users.RemoveAll(x => x.NormalizedUserName == user.NormalizedUserName || x.NormalizedEmail == user.NormalizedEmail);
+                        usersByEmail.RemoveAll(x => x.NormalizedEmail == user.NormalizedEmail);
                     }
-                    if (users.Any())
+                    if (usersByEmail.Any())
                     {
-                        var emails = users.Select(u => u.Email).ToList();
-                        errors.Add(emails.Contains(user.Email) ? ErrorDescriber.InvalidEmail(user.Email!) : ErrorDescriber.InvalidUserName(user.UserName!));
+                        errors.Add(ErrorDescriber.InvalidEmail(user.Email!));
+                    }
+
+                    users = await UserRepository.GetUsersByNormalizedEmailsAsync([normalizedEmail!, normalizedUserName!], true);
+                    usersByEmail = users.Where(x => x.NormalizedEmail == normalizedEmail).ToList();
+                    if (owner != null)
+                    {
+                        usersByEmail.RemoveAll(x => x.NormalizedEmail == user.NormalizedEmail);
+                    }
+                    if (usersByEmail.Any())
+                    {
+                        errors.Add(ErrorDescriber.DuplicateEmail(user.Email!));
+                    }
+
+                    usersByUserName = users.Where(x => x.NormalizedEmail == normalizedUserName).ToList();
+                    if (owner != null)
+                    {
+                        usersByUserName.RemoveAll(x => x.NormalizedUserName == user.NormalizedUserName);
+                    }
+                    if (usersByUserName.Any())
+                    {
+                        errors.Add(ErrorDescriber.InvalidUserName(user.UserName!));
                     }
                 }
             }
 
             return errors.Count > 0 ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
-        }
-
-        public virtual async Task<IdentityResult> BuiltInValidateAsync(UserManager<IdentityUser> manager, IdentityUser user)
-        {
-            var errors = await ValidateUserName(manager, user);
-            if (manager.Options.User.RequireUniqueEmail)
-            {
-                errors.AddRange(await ValidateEmail(manager, user));
-            }
-            return errors?.Count > 0 ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
-        }
-
-        private async Task<List<IdentityError>> ValidateUserName(UserManager<IdentityUser> manager, IdentityUser user)
-        {
-            var errors = new List<IdentityError>();
-            var userName = await manager.GetUserNameAsync(user);
-            if (string.IsNullOrWhiteSpace(userName))
-            {
-                errors.Add(ErrorDescriber.InvalidUserName(userName));
-            }
-            else if (!string.IsNullOrEmpty(manager.Options.User.AllowedUserNameCharacters) &&
-                userName.Any(c => !manager.Options.User.AllowedUserNameCharacters.Contains(c)))
-            {
-                errors.Add(ErrorDescriber.InvalidUserName(userName));
-            }
-            else
-            {
-                IdentityUser owner;
-                using (CurrentTenant.Change(user.TenantId))
-                {
-                    owner = await manager.FindByNameAsync(userName);
-                }
-                if (owner != null &&
-                    !string.Equals(await manager.GetUserIdAsync(owner), await manager.GetUserIdAsync(user)) &&
-                    owner.TenantId == user.TenantId &&
-                    owner.NormalizedUserName != manager.NormalizeName(userName))
-                {
-                    errors.Add(ErrorDescriber.DuplicateUserName(userName));
-                }
-            }
-
-            return errors;
-        }
-
-        // make sure email is not empty, valid, and unique
-        private async Task<List<IdentityError>> ValidateEmail(UserManager<IdentityUser> manager, IdentityUser user)
-        {
-            var errors = new List<IdentityError>();
-            var email = await manager.GetEmailAsync(user);
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                errors.Add(ErrorDescriber.InvalidEmail(email));
-                return errors;
-            }
-            if (!new EmailAddressAttribute().IsValid(email))
-            {
-                errors.Add(ErrorDescriber.InvalidEmail(email));
-                return errors;
-            }
-            IdentityUser owner;
-            using (CurrentTenant.Change(user.TenantId))
-            {
-                owner = await manager.FindByEmailAsync(email);
-            }
-            if (owner != null &&
-                !string.Equals(await manager.GetUserIdAsync(owner), await manager.GetUserIdAsync(user)) &&
-                owner.TenantId == user.TenantId &&
-                owner.NormalizedEmail != manager.NormalizeEmail(email))
-            {
-                errors.Add(ErrorDescriber.DuplicateEmail(email));
-            }
-            return errors;
         }
     }
 }

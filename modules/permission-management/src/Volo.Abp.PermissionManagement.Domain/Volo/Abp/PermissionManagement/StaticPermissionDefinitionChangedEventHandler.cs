@@ -10,13 +10,13 @@ namespace Volo.Abp.PermissionManagement;
 
 public class StaticPermissionDefinitionChangedEventHandler : ILocalEventHandler<StaticPermissionDefinitionChangedEvent>, ITransientDependency
 {
-    protected IStaticDefinitionCache<PermissionGroupDefinition, Dictionary<string, PermissionGroupDefinition>> GroupCache { get; }
+    protected IStaticDefinitionCache<PermissionGroupDefinition, (Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)> GroupCache { get; }
     protected IStaticDefinitionCache<PermissionDefinition, Dictionary<string, PermissionDefinition>> DefinitionCache { get; }
     protected PermissionDynamicInitializer PermissionDynamicInitializer { get; }
     protected ICancellationTokenProvider CancellationTokenProvider { get; }
 
     public StaticPermissionDefinitionChangedEventHandler(
-        IStaticDefinitionCache<PermissionGroupDefinition, Dictionary<string, PermissionGroupDefinition>> groupCache,
+        IStaticDefinitionCache<PermissionGroupDefinition, (Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)> groupCache,
         IStaticDefinitionCache<PermissionDefinition, Dictionary<string, PermissionDefinition>> definitionCache,
         PermissionDynamicInitializer permissionDynamicInitializer,
         ICancellationTokenProvider cancellationTokenProvider)

@@ -326,7 +326,7 @@ public class AbpIdentityErrorDescriber_Tests : AbpIdentityDomainTestBase
                 mismatchResult.Errors.ShouldContain(e => e.Description == "Hatalı şifre.");
 
                 var recoveryUser = new IdentityUser(Guid.NewGuid(), "recovery_user_tr", "recovery_user_tr@abp.io");
-                ObjectHelper.TrySetProperty(recoveryUser, x => x.TwoFactorEnabled , () => true);
+                ObjectHelper.TrySetProperty(recoveryUser, x => x.TwoFactorEnabled, () => true);
 
                 (await userManager.CreateAsync(recoveryUser, "Abp123!")).Succeeded.ShouldBeTrue();
                 var recoveryResult = await userManager.RedeemTwoFactorRecoveryCodeAsync(recoveryUser, "invalid-code");

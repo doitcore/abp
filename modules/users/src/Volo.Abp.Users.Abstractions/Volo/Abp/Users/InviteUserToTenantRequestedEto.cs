@@ -11,4 +11,6 @@ public class InviteUserToTenantRequestedEto : IMultiTenant
     public Guid? TenantId { get; set; }
 
     public string Email { get; set; }
+
+    public bool DirectlyAddToTenant { get; set; }
 }

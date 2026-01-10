@@ -92,7 +92,7 @@ Example of resolving a typed chat client accessor:
 public class MyService
 {
     private readonly IChatClientAccessor<CommentSummarization> _chatClientAccessor;
-}
+
     public async Task<string> GetResponseAsync(string prompt)
     {
         var chatClient = _chatClientAccessor.ChatClient;

@@ -161,3 +161,9 @@ Before implementing the pattern, carefully analyze your system requirements:
 - **How should the system behave in case of duplicate processing?**
 
 The answers to these questions will help you determine whether the Async Chain of Persistence Pattern is suitable for your system.
+
+## Sample Project
+
+To see an example project where this pattern is implemented, you can check out the repository:
+
+🔗 **[GitHub Repository](https://github.com/fahrigedik/SoftwareArchitecturePatterns)**

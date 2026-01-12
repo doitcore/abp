@@ -1,6 +1,13 @@
 ```json
 //[doc-seo]
 {
+    "Description": "Explore how to integrate AI services using Microsoft.Extensions.AI with ABP Framework. Learn to leverage IChatClient for seamless AI interactions."
+}
+```
+
+```json
+//[doc-seo]
+{
     "Description": "Description": "Explore how to integrate AI services into your ABP Framework applications using the Microsoft.Extensions.AI library for seamless functionality."
 }
 ```

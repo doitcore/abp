@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  ContentChild,
   EventEmitter,
   inject,
   Injector,
@@ -17,13 +18,14 @@ import {
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
+  ViewChild,
 } from '@angular/core';
 import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
 import { Observable, filter, map, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
+import { NgxDatatableModule, SelectionType, DatatableComponent } from '@swimlane/ngx-datatable';
 
 import {
   ABP,
@@ -53,6 +55,7 @@ import {
   ROW_RECORD,
 } from '../../tokens/extensions.token';
 import { GridActionsComponent } from '../grid-actions/grid-actions.component';
+import { ExtensibleTableRowDetailComponent } from './extensible-table-row-detail';
 
 const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
 
@@ -75,6 +78,12 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
   ],
   templateUrl: './extensible-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [`
+    :host ::ng-deep .ngx-datatable.material .datatable-body .datatable-row-detail {
+      background: none;
+      padding: 0;
+    }
+  `],
 })
 export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit, OnDestroy {
   readonly #injector = inject(Injector);
@@ -126,6 +135,26 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Input() scrollThreshold = 10;
   @Output() loadMore = new EventEmitter<void>();
   @Input() tableHeight: number;
+
+  // Row detail configuration (supports both direct template and child component)
+  @Input() rowDetailTemplate?: TemplateRef<{ row: R; expanded: boolean }>;
+  @Input() rowDetailHeight: string | number = '100%';
+  @Output() rowDetailToggle = new EventEmitter<R>();
+
+  @ContentChild(ExtensibleTableRowDetailComponent)
+  rowDetailComponent?: ExtensibleTableRowDetailComponent<R>;
+
+  @ViewChild('table') table!: DatatableComponent;
+
+  /** Gets the effective row detail template (from component or direct input) */
+  get effectiveRowDetailTemplate(): TemplateRef<any> | undefined {
+    return this.rowDetailComponent?.template() ?? this.rowDetailTemplate;
+  }
+
+  /** Gets the effective row detail height */
+  get effectiveRowDetailHeight(): string | number {
+    return this.rowDetailComponent?.rowHeight() ?? this.rowDetailHeight;
+  }
 
   hasAtLeastOnePermittedAction: boolean;
 
@@ -288,6 +317,11 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     if (!this.infiniteScroll) return 'auto';
 
     return this.tableHeight ? `${this.tableHeight}px` : 'auto';
+  }
+
+  toggleExpandRow(row: R): void {
+    this.table?.rowDetail?.toggleExpandRow(row);
+    this.rowDetailToggle.emit(row);
   }
 
   ngAfterViewInit(): void {

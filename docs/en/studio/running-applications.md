@@ -246,7 +246,7 @@ The *Open with* submenu provides options to open the application project in exte
 
 ### Miscellaneous
 
-- We can copy the selected application *Browse* URL with *Copy URL*. It copies the *Browse* URL instead *Launch URL* since we could connected to *Kubernetes* service. 
+- We can copy the selected application *Browse* URL with *Copy URL*. It copies the *Browse* URL instead of *Launch URL* since we could be connected to a *Kubernetes* service. 
 - You can change the target framework by right-click the selected application and change the *Target Framework* option. This option visible if the project has multiple target framework such as MAUI applications.
 - To remove an application from the tree, open the context menu by right-clicking the application and selecting *Remove*.
 

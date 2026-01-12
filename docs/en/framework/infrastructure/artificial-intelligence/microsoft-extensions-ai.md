@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Explore the Microsoft.Extensions.AI library documentation to seamlessly integrate AI services with the ABP Framework in your applications."
+    "Description": "Description": "Explore how to integrate AI services into your ABP Framework applications using the Microsoft.Extensions.AI library for seamless functionality."
 }
 ```
 

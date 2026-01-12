@@ -31,7 +31,7 @@ public static class TimeZoneHelper
             var name = $"{timeZone.Name} ({GetTimezoneOffset(timeZoneInfo)})";
             return new NameValue(name, timeZone.Name);
         }
-        catch (TimeZoneNotFoundException)
+        catch (Exception)
         {
             // Invalid or unknown timezone IDs are expected here (e.g. from user input or
             // external sources). We intentionally swallow this exception and return null

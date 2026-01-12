@@ -28,7 +28,7 @@ public static class TimeZoneHelper
         {
             var timeZoneInfo = TZConvert.GetTimeZoneInfo(timeZone.Name);
             var name = $"{timeZone.Name} ({GetTimezoneOffset(timeZoneInfo)})";
-            return new NameValue(name, timeZoneInfo.StandardName);
+            return new NameValue(name, timeZone.Name);
         }
         catch (TimeZoneNotFoundException)
         {

@@ -20,7 +20,8 @@ public static class TimeZoneHelper
     }
 
     /// <summary>
-    /// Builds a <see cref="NameValue"/> that includes the UTC offset in the name; returns null if the id is not found.
+    /// Builds a <see cref="NameValue"/> with the original timezone ID in <c>Value</c> and a display name that includes
+    /// the UTC offset in the <c>Name</c> property; returns null if the id is not found.
     /// </summary>
     public static NameValue? TryCreateNameValueWithOffset(NameValue timeZone)
     {

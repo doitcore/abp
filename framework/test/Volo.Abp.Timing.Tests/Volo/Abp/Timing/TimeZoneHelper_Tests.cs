@@ -9,7 +9,7 @@ namespace Volo.Abp.Timing;
 public class TimeZoneHelper_Tests : AbpIntegratedTest<AbpTimingTestModule>
 {
     [Fact]
-    public void GetTimezones_Test()
+    public void GetTimezones_Should_Filter_Invalid_Timezones()
     {
         var validTimeZoneId = "UTC";
         var invalidTimeZoneId = "Invalid/Zone";

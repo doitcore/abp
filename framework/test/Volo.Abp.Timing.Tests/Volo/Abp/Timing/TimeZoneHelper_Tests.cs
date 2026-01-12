@@ -28,7 +28,7 @@ public class TimeZoneHelper_Tests : AbpIntegratedTest<AbpTimingTestModule>
         var expectedName = $"{validTimeZoneId} ({TimeZoneHelper.GetTimezoneOffset(expectedTimeZoneInfo)})";
 
         result[0].Name.ShouldBe(expectedName);
-        result[0].Value.ShouldBe(expectedTimeZoneInfo.StandardName);
+        result[0].Value.ShouldBe(validTimeZoneId);
     }
 
     [Fact]

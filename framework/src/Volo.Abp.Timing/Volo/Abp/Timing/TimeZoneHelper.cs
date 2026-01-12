@@ -15,8 +15,7 @@ public static class TimeZoneHelper
         return timezones
             .OrderBy(x => x.Name)
             .Select(TryCreateNameValueWithOffset)
-            .Where(x => x != null)
-            .Select(x => x!)
+            .OfType<NameValue>()
             .ToList();
     }
 

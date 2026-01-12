@@ -86,7 +86,7 @@ ABP provides a pre-architected and production-ready microservice solution templa
 
 See the [Microservice Solution Template](../../../solution-templates/microservice/index.md) documentation for details.
 
-## Tutorial
+## Tutorials
 
 For a hands-on experience, follow the [Microservice Development Tutorial](../../../tutorials/microservice/index.md) that guides you through:
 

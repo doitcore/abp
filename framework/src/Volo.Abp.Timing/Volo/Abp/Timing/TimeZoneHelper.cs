@@ -32,7 +32,9 @@ public static class TimeZoneHelper
         }
         catch (TimeZoneNotFoundException)
         {
-            // ignore
+            // Invalid or unknown timezone IDs are expected here (e.g. from user input or
+            // external sources). We intentionally swallow this exception and return null
+            // so callers (like GetTimezones) can filter out invalid entries.
         }
 
         return null;

@@ -148,6 +148,7 @@ Because a synchronous send makes a blocking call until a confirmation is receive
 
 #### 4. Overall Scalability
 This is because, upon receipt, the message broker has to spend more time persisting messages to disk, thus negatively affecting scalability. Persistent messages always give lower total throughput, which can limit scalability under high usage loads and high message volumes.
+
 ---
 
 ## Conclusion

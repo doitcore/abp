@@ -351,7 +351,7 @@ Create a page to handle this callback and perform any application-specific actio
 
 ### Angular UI
 
-For Angular applications, you need to read and apply the steps explained in the following sections
+For Angular applications, you need to read and apply the steps explained in the following sections:
 
 #### Configurations
 

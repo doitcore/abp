@@ -56,6 +56,7 @@ import {
 } from '../../tokens/extensions.token';
 import { GridActionsComponent } from '../grid-actions/grid-actions.component';
 import { ExtensibleTableRowDetailComponent } from './extensible-table-row-detail';
+import { RowDetailContext } from '../../models/row-detail';
 
 const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
 
@@ -136,8 +137,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Output() loadMore = new EventEmitter<void>();
   @Input() tableHeight: number;
 
-  // Row detail configuration (supports both direct template and child component)
-  @Input() rowDetailTemplate?: TemplateRef<{ row: R; expanded: boolean }>;
+  @Input() rowDetailTemplate?: TemplateRef<RowDetailContext<R>>;
   @Input() rowDetailHeight: string | number = '100%';
   @Output() rowDetailToggle = new EventEmitter<R>();
 
@@ -146,13 +146,11 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
   @ViewChild('table', { static: false }) table!: DatatableComponent;
 
-  /** Gets the effective row detail template (from component or direct input) */
-  get effectiveRowDetailTemplate(): TemplateRef<any> | undefined {
+  protected get effectiveRowDetailTemplate(): TemplateRef<RowDetailContext<R>> | undefined {
     return this.rowDetailComponent?.template() ?? this.rowDetailTemplate;
   }
 
-  /** Gets the effective row detail height */
-  get effectiveRowDetailHeight(): string | number {
+  protected get effectiveRowDetailHeight(): string | number {
     return this.rowDetailComponent?.rowHeight() ?? this.rowDetailHeight;
   }
 

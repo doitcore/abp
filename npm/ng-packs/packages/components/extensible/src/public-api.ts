@@ -69,4 +69,5 @@ export * from './lib/utils/form-props.util';
 export * from './lib/utils/props.util';
 export * from './lib/utils/state.util';
 export * from './lib/utils/model.utils';
+export * from './lib/models/row-detail';
 export * from './lib/extensible.module';

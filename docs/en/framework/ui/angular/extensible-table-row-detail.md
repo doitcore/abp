@@ -61,7 +61,7 @@ An expand/collapse chevron icon will automatically appear in the first column of
 
 | Input | Type | Default | Description |
 |-------|------|---------|-------------|
-| `rowHeight` | `string \| number` | `'100%'` | Height of the expanded row detail area |
+| `rowHeight` | `string &#124; number` | `'100%'` | Height of the expanded row detail area |
 
 ### Template Context Variables
 

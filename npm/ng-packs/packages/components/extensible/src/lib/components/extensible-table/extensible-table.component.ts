@@ -144,7 +144,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @ContentChild(ExtensibleTableRowDetailComponent)
   rowDetailComponent?: ExtensibleTableRowDetailComponent<R>;
 
-  @ViewChild('table') table!: DatatableComponent;
+  @ViewChild('table', { static: false }) table!: DatatableComponent;
 
   /** Gets the effective row detail template (from component or direct input) */
   get effectiveRowDetailTemplate(): TemplateRef<any> | undefined {

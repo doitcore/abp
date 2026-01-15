@@ -320,7 +320,9 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   }
 
   toggleExpandRow(row: R): void {
-    this.table?.rowDetail?.toggleExpandRow(row);
+    if (this.table && this.table.rowDetail) {
+      this.table.rowDetail.toggleExpandRow(row);
+    }
     this.rowDetailToggle.emit(row);
   }
 

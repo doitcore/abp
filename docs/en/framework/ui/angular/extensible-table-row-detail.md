@@ -11,7 +11,7 @@
 
 The `<abp-extensible-table-row-detail>` component allows you to add expandable row details to any `<abp-extensible-table>`. When users click the expand icon, additional content is revealed below the row.
 
-<img alt="Extensible Table Row Detail Example" src="./images/extensible-table-row-detail-example.png" width="800px" style="max-width:100%">
+<img alt="Extensible Table Row Detail Example" src="./images/row-detail-image.png" width="800px" style="max-width:100%">
 
 ## Quick Start
 

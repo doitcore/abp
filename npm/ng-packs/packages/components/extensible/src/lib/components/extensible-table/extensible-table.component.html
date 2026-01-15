@@ -6,8 +6,8 @@
   [footerHeight]="infiniteScroll ? false : 50">
   @if (effectiveRowDetailTemplate) {
   <ngx-datatable-row-detail [rowHeight]="effectiveRowDetailHeight">
-    <ng-template let-row="row" let-expanded="expanded" class="bg-transparent" ngx-datatable-row-detail-template>
-      <ng-container class="bg-transparent"
+    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+      <ng-container
         *ngTemplateOutlet="effectiveRowDetailTemplate; context: { row: row, expanded: expanded }" />
     </ng-template>
   </ngx-datatable-row-detail>

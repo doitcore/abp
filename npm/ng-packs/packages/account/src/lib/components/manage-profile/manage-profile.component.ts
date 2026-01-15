@@ -1,6 +1,5 @@
 import { ProfileService } from '@abp/ng.account.core/proxy';
-import { fadeIn, LoadingDirective } from '@abp/ng.theme.shared';
-import { transition, trigger, useAnimation } from '@angular/animations';
+import { LoadingDirective } from '@abp/ng.theme.shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { eAccountComponents } from '../../enums/components';
 import { ManageProfileStateService } from '../../services/manage-profile.state.service';
@@ -13,12 +12,23 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
 @Component({
   selector: 'abp-manage-profile',
   templateUrl: './manage-profile.component.html',
-  animations: [trigger('fadeIn', [transition(':enter', useAnimation(fadeIn))])],
   styles: [
-    //TODO: move static styles
     `
       .min-h-400 {
         min-height: 400px;
+      }
+
+      .fade-in {
+        animation: fadeIn 350ms ease both;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
     `,
   ],
@@ -30,7 +40,7 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
     LocalizationPipe,
     ReplaceableTemplateDirective,
     LoadingDirective
-],
+  ],
 })
 export class ManageProfileComponent implements OnInit {
   protected profileService = inject(ProfileService);

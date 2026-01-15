@@ -30,7 +30,7 @@
     <PackageVersion Include="Dapr.AspNetCore" Version="1.16.0" />
     <PackageVersion Include="Dapr.Client" Version="1.16.0" />
     <PackageVersion Include="MyCSharp.HttpUserAgentParser" Version="3.0.28" />
-    <PackageVersion Include="Devart.Data.Oracle.EFCore" Version="10.4.290.9" />
+    <PackageVersion Include="Devart.Data.Oracle.EFCore" Version="11.0.0.9" />
     <PackageVersion Include="DistributedLock.Core" Version="1.0.8" />
     <PackageVersion Include="DistributedLock.Redis" Version="1.1.0" />
     <PackageVersion Include="DeepL.net" Version="1.15.0" />

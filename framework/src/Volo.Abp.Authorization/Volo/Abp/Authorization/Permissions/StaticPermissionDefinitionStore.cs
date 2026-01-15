@@ -14,13 +14,13 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
 {
     protected IServiceProvider ServiceProvider { get; }
     protected AbpPermissionOptions Options { get; }
-    protected IStaticDefinitionCache<PermissionGroupDefinition, Dictionary<string, PermissionGroupDefinition>> GroupCache { get; }
+    protected IStaticDefinitionCache<PermissionGroupDefinition, (Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)> GroupCache { get; }
     protected IStaticDefinitionCache<PermissionDefinition, Dictionary<string, PermissionDefinition>> DefinitionCache { get; }
 
     public StaticPermissionDefinitionStore(
         IServiceProvider serviceProvider,
         IOptions<AbpPermissionOptions> options,
-        IStaticDefinitionCache<PermissionGroupDefinition, Dictionary<string, PermissionGroupDefinition>> groupCache,
+        IStaticDefinitionCache<PermissionGroupDefinition, (Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)> groupCache,
         IStaticDefinitionCache<PermissionDefinition, Dictionary<string, PermissionDefinition>> definitionCache)
     {
         ServiceProvider = serviceProvider;
@@ -41,10 +41,27 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
         return defs.Values.ToImmutableList();
     }
 
+    public virtual async Task<PermissionDefinition?> GetResourcePermissionOrNullAsync(string resourceName, string name)
+    {
+        var (_, resourcePermissions) = await GetPermissionGroupDefinitionsAsync();
+        return resourcePermissions.FirstOrDefault(p => p.ResourceName == resourceName && p.Name == name);
+    }
+
+    public virtual async Task<IReadOnlyList<PermissionDefinition>> GetResourcePermissionsAsync()
+    {
+        var (_, resourcePermissions) = await GetPermissionGroupDefinitionsAsync();
+        return resourcePermissions.ToImmutableList();
+    }
+
     public async Task<IReadOnlyList<PermissionGroupDefinition>> GetGroupsAsync()
     {
-        var groups = await GetPermissionGroupDefinitionsAsync();
+        var (groups, _) = await GetPermissionGroupDefinitionsAsync();
         return groups.Values.ToImmutableList();
+    }
+
+    protected virtual async Task<(Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)> GetPermissionGroupDefinitionsAsync()
+    {
+        return await GroupCache.GetOrCreateAsync(CreatePermissionGroupDefinitionsAsync);
     }
 
     protected virtual async Task<Dictionary<string, PermissionDefinition>> GetPermissionDefinitionsAsync()
@@ -52,45 +69,7 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
         return await DefinitionCache.GetOrCreateAsync(CreatePermissionDefinitionsAsync);
     }
 
-    protected virtual async Task<Dictionary<string, PermissionDefinition>> CreatePermissionDefinitionsAsync()
-    {
-        var permissions = new Dictionary<string, PermissionDefinition>();
-
-        var groups = await GetPermissionGroupDefinitionsAsync();
-        foreach (var groupDefinition in groups.Values)
-        {
-            foreach (var permission in groupDefinition.Permissions)
-            {
-                AddPermissionToDictionaryRecursively(permissions, permission);
-            }
-        }
-
-        return permissions;
-    }
-
-    protected virtual void AddPermissionToDictionaryRecursively(
-        Dictionary<string, PermissionDefinition> permissions,
-        PermissionDefinition permission)
-    {
-        if (permissions.ContainsKey(permission.Name))
-        {
-            throw new AbpException("Duplicate permission name: " + permission.Name);
-        }
-
-        permissions[permission.Name] = permission;
-
-        foreach (var child in permission.Children)
-        {
-            AddPermissionToDictionaryRecursively(permissions, child);
-        }
-    }
-
-    protected virtual async Task<Dictionary<string, PermissionGroupDefinition>> GetPermissionGroupDefinitionsAsync()
-    {
-        return await GroupCache.GetOrCreateAsync(CreatePermissionGroupDefinitionsAsync);
-    }
-
-    protected virtual Task<Dictionary<string, PermissionGroupDefinition>> CreatePermissionGroupDefinitionsAsync()
+    protected virtual Task<(Dictionary<string, PermissionGroupDefinition>, List<PermissionDefinition>)> CreatePermissionGroupDefinitionsAsync()
     {
         using (var scope = ServiceProvider.CreateScope())
         {
@@ -121,7 +100,40 @@ public class StaticPermissionDefinitionStore : IStaticPermissionDefinitionStore,
 
             context.CurrentProvider = null;
 
-            return Task.FromResult(context.Groups);
+            return Task.FromResult((context.Groups, context.ResourcePermissions));
+        }
+    }
+
+    protected virtual async Task<Dictionary<string, PermissionDefinition>> CreatePermissionDefinitionsAsync()
+    {
+        var permissions = new Dictionary<string, PermissionDefinition>();
+
+        var (groups, _) = await GetPermissionGroupDefinitionsAsync();
+        foreach (var groupDefinition in groups.Values)
+        {
+            foreach (var permission in groupDefinition.Permissions)
+            {
+                AddPermissionToDictionaryRecursively(permissions, permission);
+            }
+        }
+
+        return permissions;
+    }
+
+    protected virtual void AddPermissionToDictionaryRecursively(
+        Dictionary<string, PermissionDefinition> permissions,
+        PermissionDefinition permission)
+    {
+        if (permissions.ContainsKey(permission.Name))
+        {
+            throw new AbpException("Duplicate permission name: " + permission.Name);
+        }
+
+        permissions[permission.Name] = permission;
+
+        foreach (var child in permission.Children)
+        {
+            AddPermissionToDictionaryRecursively(permissions, child);
         }
     }
 }

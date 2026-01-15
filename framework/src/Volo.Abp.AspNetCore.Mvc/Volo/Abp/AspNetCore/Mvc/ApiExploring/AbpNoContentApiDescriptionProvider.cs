@@ -11,7 +11,7 @@ namespace Volo.Abp.AspNetCore.Mvc.ApiExploring;
 
 public class AbpNoContentApiDescriptionProvider : IApiDescriptionProvider, ITransientDependency
 {
-    public void OnProvidersExecuted(ApiDescriptionProviderContext context)
+    public virtual void OnProvidersExecuted(ApiDescriptionProviderContext context)
     {
     }
 
@@ -21,7 +21,7 @@ public class AbpNoContentApiDescriptionProvider : IApiDescriptionProvider, ITran
     /// </summary>
     public int Order => -999;
 
-    public void OnProvidersExecuting(ApiDescriptionProviderContext context)
+    public virtual void OnProvidersExecuting(ApiDescriptionProviderContext context)
     {
         foreach (var result in context.Results.Where(x => x.IsRemoteService()))
         {

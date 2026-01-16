@@ -44,9 +44,9 @@ Place `<abp-extensible-table-row-detail>` inside `<abp-extensible-table>` with a
   <abp-extensible-table-row-detail>
     <ng-template let-row="row" let-expanded="expanded">
       <div class="p-3">
-        <h5>{{ row.name }}</h5>
-        <p>ID: {{ row.id }}</p>
-        <p>Status: {{ row.isActive ? 'Active' : 'Inactive' }}</p>
+        <h5>{%{{{ row.name }}}%}</h5>
+        <p>ID: {%{{{ row.id }}}%}</p>
+        <p>Status: {%{{{ row.isActive ? 'Active' : 'Inactive' }}}%}</p>
       </div>
     </ng-template>
   </abp-extensible-table-row-detail>
@@ -61,7 +61,7 @@ An expand/collapse chevron icon will automatically appear in the first column of
 
 | Input | Type | Default | Description |
 |-------|------|---------|-------------|
-| `rowHeight` | `string &#124; number` | `'100%'` | Height of the expanded row detail area |
+| `rowHeight` | `string` &#124; `number` | `'100%'` | Height of the expanded row detail area |
 
 ### Template Context Variables
 
@@ -81,8 +81,8 @@ Display additional information when a row is expanded:
   <abp-extensible-table-row-detail>
     <ng-template let-row="row">
       <div class="p-3 border rounded m-2">
-        <strong>Details for: {{ row.name }}</strong>
-        <pre>{{ row | json }}</pre>
+        <strong>Details for: {%{{{ row.name }}}%}</strong>
+        <pre>{%{{{ row | json }}}%}</pre>
       </div>
     </ng-template>
   </abp-extensible-table-row-detail>
@@ -109,7 +109,7 @@ Apply conditional styling based on expansion state:
 <abp-extensible-table-row-detail>
   <ng-template let-row="row" let-expanded="expanded">
     <div class="p-3" [class.fade-in]="expanded">
-      <p>This row is {{ expanded ? 'expanded' : 'collapsed' }}</p>
+      <p>This row is {%{{{ expanded ? 'expanded' : 'collapsed' }}}%}</p>
     </div>
   </ng-template>
 </abp-extensible-table-row-detail>
@@ -123,16 +123,16 @@ Apply conditional styling based on expansion state:
     <div class="p-3 bg-light border rounded m-2">
       <div class="row">
         <div class="col-md-6">
-          <p class="mb-1"><strong>{{ 'MyModule::Name' | abpLocalization }}:</strong></p>
-          <p class="text-muted">{{ row.name }}</p>
+          <p class="mb-1"><strong>{%{{{ 'MyModule::Name' | abpLocalization }}}%}</strong></p>
+          <p class="text-muted">{%{{{ row.name }}}%}</p>
         </div>
         <div class="col-md-6">
-          <p class="mb-1"><strong>{{ 'MyModule::Status' | abpLocalization }}:</strong></p>
+          <p class="mb-1"><strong>{%{{{ 'MyModule::Status' | abpLocalization }}}%}</strong></p>
           <p>
             @if (row.isActive) {
-              <span class="badge bg-success">{{ 'AbpUi::Yes' | abpLocalization }}</span>
+              <span class="badge bg-success">{%{{{ 'AbpUi::Yes' | abpLocalization }}}%}</span>
             } @else {
-              <span class="badge bg-secondary">{{ 'AbpUi::No' | abpLocalization }}</span>
+              <span class="badge bg-secondary">{%{{{ 'AbpUi::No' | abpLocalization }}}%}</span>
             }
           </p>
         </div>
@@ -154,7 +154,7 @@ For simpler use cases, you can use the `rowDetailTemplate` input on `<abp-extens
 />
 
 <ng-template #detailTemplate let-row="row">
-  <div class="p-3">{{ row.name }}</div>
+  <div class="p-3">{%{{{ row.name }}}%}</div>
 </ng-template>
 ```
 

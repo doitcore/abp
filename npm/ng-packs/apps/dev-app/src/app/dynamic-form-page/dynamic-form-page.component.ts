@@ -5,7 +5,6 @@ import { FormConfigService } from './form-config.service';
 @Component({
     selector: 'app-dynamic-form-page',
     templateUrl: './dynamic-form-page.component.html',
-    standalone: true,
     imports: [DynamicFormComponent],
 })
 export class DynamicFormPageComponent implements OnInit {

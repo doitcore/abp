@@ -2,7 +2,6 @@ import {Injectable, inject} from '@angular/core';
 import {FormControl, FormGroup, ValidatorFn, Validators, FormBuilder} from '@angular/forms';
 import {FormFieldConfig, ValidatorConfig} from './dynamic-form.models';
 import { RestService } from '@abp/ng.core';
-import type { ProfileDto } from '@abp/ng.account.core/proxy';
 
 @Injectable({
   providedIn: 'root'

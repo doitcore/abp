@@ -7,7 +7,6 @@ import {
   OnInit,
   DestroyRef,
   ChangeDetectorRef,
-  effect
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -54,7 +53,6 @@ export class DynamicFormComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.dynamicForm.valid, this.dynamicForm.value);
     if (this.dynamicForm.valid) {
       this.onSubmit.emit(this.dynamicForm.getRawValue());
     } else {

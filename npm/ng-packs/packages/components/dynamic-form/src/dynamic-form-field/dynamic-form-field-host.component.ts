@@ -5,12 +5,10 @@ import {
   ChangeDetectionStrategy,
   forwardRef,
   Type,
-  Injector,
   effect,
   DestroyRef,
   inject,
   input,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {
   ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule

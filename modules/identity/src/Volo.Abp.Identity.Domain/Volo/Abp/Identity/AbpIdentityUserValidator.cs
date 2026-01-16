@@ -12,29 +12,24 @@ namespace Volo.Abp.Identity
 {
     public class AbpIdentityUserValidator : IUserValidator<IdentityUser>
     {
-        protected IdentityErrorDescriber ErrorDescriber { get; }
         protected IOptions<AbpMultiTenancyOptions> MultiTenancyOptions { get; }
         protected IAbpDistributedLock DistributedLock { get; }
         protected ICurrentTenant CurrentTenant { get; }
         protected IDataFilter<IMultiTenant> TenantFilter { get; }
         protected IIdentityUserRepository UserRepository { get; }
-        protected IUserValidator<IdentityUser> DefaultUserValidator { get; }
 
         public AbpIdentityUserValidator(
-            IdentityErrorDescriber errorDescriber,
             IOptions<AbpMultiTenancyOptions> multiTenancyOptions,
             IAbpDistributedLock distributedLock,
             ICurrentTenant currentTenant,
             IDataFilter<IMultiTenant> tenantFilter,
             IIdentityUserRepository userRepository)
         {
-            ErrorDescriber = errorDescriber;
             MultiTenancyOptions = multiTenancyOptions;
             DistributedLock = distributedLock;
             CurrentTenant = currentTenant;
             TenantFilter = tenantFilter;
             UserRepository = userRepository;
-            DefaultUserValidator = new UserValidator<IdentityUser>(ErrorDescriber);
         }
 
         public virtual async Task<IdentityResult> ValidateAsync(UserManager<IdentityUser> manager, IdentityUser user)
@@ -42,16 +37,17 @@ namespace Volo.Abp.Identity
             Check.NotNull(manager, nameof(manager));
             Check.NotNull(user, nameof(user));
 
+            var defaultUserValidator = new UserValidator<IdentityUser>(manager.ErrorDescriber);
             return MultiTenancyOptions.Value.UserSharingStrategy == TenantUserSharingStrategy.Isolated
-                ? await ValidateIsolatedUserAsync(manager, user)
-                : await ValidateSharedUserAsync(manager, user);
+                ? await ValidateIsolatedUserAsync(manager, user, defaultUserValidator)
+                : await ValidateSharedUserAsync(manager, user, defaultUserValidator);
         }
 
-        protected virtual async Task<IdentityResult> ValidateIsolatedUserAsync(UserManager<IdentityUser> manager, IdentityUser user)
+        protected virtual async Task<IdentityResult> ValidateIsolatedUserAsync(UserManager<IdentityUser> manager, IdentityUser user, UserValidator<IdentityUser> defaultValidator)
         {
             var errors = new List<IdentityError>();
 
-            var defaultValidationResult = await DefaultUserValidator.ValidateAsync(manager, user);
+            var defaultValidationResult = await defaultValidator.ValidateAsync(manager, user);
             if (!defaultValidationResult.Succeeded)
             {
                 return defaultValidationResult;
@@ -60,41 +56,41 @@ namespace Volo.Abp.Identity
             var userName = await manager.GetUserNameAsync(user);
             if (userName == null)
             {
-                errors.Add(ErrorDescriber.InvalidUserName(null));
+                errors.Add(manager.ErrorDescriber.InvalidUserName(null));
             }
             else
             {
                 var owner = await manager.FindByEmailAsync(userName);
                 if (owner != null && !string.Equals(await manager.GetUserIdAsync(owner), await manager.GetUserIdAsync(user)))
                 {
-                    errors.Add(ErrorDescriber.InvalidUserName(userName));
+                    errors.Add(manager.ErrorDescriber.InvalidUserName(userName));
                 }
             }
 
             var email = await manager.GetEmailAsync(user);
             if (email == null)
             {
-                errors.Add(ErrorDescriber.InvalidEmail(null));
+                errors.Add(manager.ErrorDescriber.InvalidEmail(null));
             }
             else
             {
                 var owner = await manager.FindByNameAsync(email);
                 if (owner != null && !string.Equals(await manager.GetUserIdAsync(owner), await manager.GetUserIdAsync(user)))
                 {
-                    errors.Add(ErrorDescriber.InvalidEmail(email));
+                    errors.Add(manager.ErrorDescriber.InvalidEmail(email));
                 }
             }
 
             return errors.Count > 0 ? IdentityResult.Failed(errors.ToArray()) : IdentityResult.Success;
         }
 
-        protected virtual async Task<IdentityResult> ValidateSharedUserAsync(UserManager<IdentityUser> manager, IdentityUser user)
+        protected virtual async Task<IdentityResult> ValidateSharedUserAsync(UserManager<IdentityUser> manager, IdentityUser user, UserValidator<IdentityUser> defaultValidator)
         {
             var errors = new List<IdentityError>();
 
             using (CurrentTenant.Change(user.TenantId))
             {
-                var defaultValidationResult = await DefaultUserValidator.ValidateAsync(manager, user);
+                var defaultValidationResult = await defaultValidator.ValidateAsync(manager, user);
                 if (!defaultValidationResult.Succeeded)
                 {
                     return defaultValidationResult;
@@ -128,7 +124,7 @@ namespace Volo.Abp.Identity
                     }
                     if (usersByUserName.Any())
                     {
-                        errors.Add(ErrorDescriber.DuplicateUserName(user.UserName!));
+                        errors.Add(manager.ErrorDescriber.DuplicateUserName(user.UserName!));
                     }
 
                     var usersByEmail = users.Where(x => x.NormalizedUserName == normalizedEmail).ToList();
@@ -138,7 +134,7 @@ namespace Volo.Abp.Identity
                     }
                     if (usersByEmail.Any())
                     {
-                        errors.Add(ErrorDescriber.InvalidEmail(user.Email!));
+                        errors.Add(manager.ErrorDescriber.InvalidEmail(user.Email!));
                     }
 
                     users = await UserRepository.GetUsersByNormalizedEmailsAsync([normalizedEmail!, normalizedUserName!], true);
@@ -149,7 +145,7 @@ namespace Volo.Abp.Identity
                     }
                     if (usersByEmail.Any())
                     {
-                        errors.Add(ErrorDescriber.DuplicateEmail(user.Email!));
+                        errors.Add(manager.ErrorDescriber.DuplicateEmail(user.Email!));
                     }
 
                     usersByUserName = users.Where(x => x.NormalizedEmail == normalizedUserName).ToList();
@@ -159,7 +155,7 @@ namespace Volo.Abp.Identity
                     }
                     if (usersByUserName.Any())
                     {
-                        errors.Add(ErrorDescriber.InvalidUserName(user.UserName!));
+                        errors.Add(manager.ErrorDescriber.InvalidUserName(user.UserName!));
                     }
                 }
             }

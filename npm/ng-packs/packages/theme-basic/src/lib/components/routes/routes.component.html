@@ -10,7 +10,7 @@
         @if (route.iconClass) {
         <i [class]="route.iconClass"></i>
         }
-        {{ route.name | abpLazyLocalization | async }}
+        {{ route.name | abpAsyncLocalization | async }}
       </a>
     </li>
   </ng-template>
@@ -20,14 +20,13 @@
     <li class="nav-item dropdown" display="static" *abpPermission="route.requiredPolicy" (click)="
           rootDropdownExpand[route.name]
             ? (rootDropdownExpand[route.name] = false)
-            : (rootDropdownExpand[route.name] = true)
-        ">
+            : (rootDropdownExpand[route.name] = true)">
       <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
         href="javascript:void(0)">
         @if (route.iconClass) {
         <i [class]="route.iconClass"></i>
         }
-        {{ route.name | abpLazyLocalization | async }}
+        {{ route.name | abpAsyncLocalization | async }}
       </a>
       <div #routeContainer class="dropdown-menu border-0 shadow-sm"
         (click)="$event.preventDefault(); $event.stopPropagation()"

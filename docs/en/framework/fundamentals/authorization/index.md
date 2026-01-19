@@ -321,8 +321,8 @@ public async Task CreateAsync(CreateAuthorDto input)
 See the following documents to learn how to re-use the authorization system on the client side:
 
 * [ASP.NET Core MVC / Razor Pages UI: Authorization](../ui/mvc-razor-pages/javascript-api/auth.md)
-* [Angular UI Authorization](../ui/angular/authorization.md)
-* [Blazor UI Authorization](../ui/blazor/authorization.md)
+* [Angular UI Authorization](../ui/angular/authorization/index.md)
+* [Blazor UI Authorization](../ui/blazor/authorization/index.md)
 
 ## Permission Management
 

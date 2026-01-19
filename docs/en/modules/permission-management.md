@@ -9,7 +9,7 @@
 
 This module implements the `IPermissionStore` to store and manage permissions values in a database.
 
-> This document covers only the permission management module which persists permission values to a database. See the [Authorization document](../framework/fundamentals/authorization.md) to understand the authorization and permission systems.
+> This document covers only the permission management module which persists permission values to a database. See the [Authorization document](../framework/fundamentals/authorization/index.md) to understand the authorization and permission systems.
 
 ## How to Install
 
@@ -37,7 +37,7 @@ In this dialog, you can grant permissions for the selected role. The tabs in the
 
 `IPermissionManager` is the main service provided by this module. It is used to read and change the permission values. `IPermissionManager` is typically used by the *Permission Management Dialog*. However, you can inject it if you need to set a permission value.
 
-> If you just want to read/check permission values for the current user, use the `IAuthorizationService` or the `[Authorize]` attribute as explained in the [Authorization document](../framework/fundamentals/authorization.md).
+> If you just want to read/check permission values for the current user, use the `IAuthorizationService` or the `[Authorize]` attribute as explained in the [Authorization document](../framework/fundamentals/authorization/index.md).
 
 **Example: Grant permissions to roles and users using the `IPermissionManager` service**
 
@@ -69,7 +69,7 @@ public class MyService : ITransientDependency
 
 ## Permission Management Providers
 
-Permission Management Module is extensible, just like the [permission system](../framework/fundamentals/authorization.md).  You can extend it by defining permission management providers.
+Permission Management Module is extensible, just like the [permission system](../framework/fundamentals/authorization/index.md).  You can extend it by defining permission management providers.
 
 [Identity Module](identity.md) defines the following permission management providers:
 
@@ -113,4 +113,4 @@ The order of the providers are important. Providers are executed in the reverse 
 
 ## See Also
 
-* [Authorization](../framework/fundamentals/authorization.md)
+* [Authorization](../framework/fundamentals/authorization/index.md)

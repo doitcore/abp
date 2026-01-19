@@ -53,7 +53,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-Note: If you employ [Resource Owner Password Flow](../../framework/ui/angular/authorization.md#resource-owner-password-flow) for authorization, you should provide the following provider as well:
+Note: If you employ [Resource Owner Password Flow](../../framework/ui/angular/authorization/index.md#resource-owner-password-flow) for authorization, you should provide the following provider as well:
 
 ```js
 import { provideAccountLayout } from "@abp/ng.theme.lepton-x/account";

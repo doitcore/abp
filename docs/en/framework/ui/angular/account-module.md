@@ -150,4 +150,4 @@ export const environment = {
 } as Config.Environment;
 ```
 
-See the [Authorization in Angular UI](./authorization.md) document for more details.
+See the [Authorization in Angular UI](./authorization/index.md) document for more details.

@@ -468,8 +468,17 @@ public static class CurrentUserExtensions
 
 > If you use OpenIddict please see [Updating Claims in Access Token and ID Token](../../modules/openiddict#updating-claims-in-access_token-and-id_token).
 
+## Resource-Based Authorization
+
+ABP also supports **resource-based authorization** for fine-grained access control on specific resources. While the standard permission system grants permissions at a general level (e.g., "can edit documents"), resource-based authorization allows you to grant permissions for a specific document, project, or any other entity rather than granting a permission for all of them. 
+
+For example, you can grant a user permission to edit only a particular document, or allow a project manager to manage only their assigned projects.
+
+> See the [Resource-Based Authorization](./resource-based-authorization.md) document for details.
+
 ## See Also
 
+* [Resource-Based Authorization](./resource-based-authorization.md)
 * [Permission Management Module](../../modules/permission-management.md)
 * [ASP.NET Core MVC / Razor Pages JavaScript Auth API](../ui/mvc-razor-pages/javascript-api/auth.md)
 * [Permission Management in Angular UI](../ui/angular/Permission-Management.md)

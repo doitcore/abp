@@ -6,5 +6,5 @@ public class AbpHangfirePeriodicBackgroundWorkerAdapterOptions
 {
     public TimeZoneInfo TimeZone { get; set; } = TimeZoneInfo.Utc;
 
-    public string Queue { get; set; } = null!;
+    public string Queue { get; set; } = default!;
 }

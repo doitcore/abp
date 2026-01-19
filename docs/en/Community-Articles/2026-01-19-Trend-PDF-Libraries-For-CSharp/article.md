@@ -1,8 +1,8 @@
-# Which Open-Source PDF Libraries Are Recently Popular ? A Data-Driven Look At PDF  Converters for .NET
+# Which Open-Source PDF Libraries Are Recently Popular ? A Data-Driven Look At PDF Topic
 
-For .NET developers, library selection shouldn't rely on lifetime popularity alone. Two signals better indicate health and future viability: **recent download momentum** (via NuGet usage) and **ongoing GitHub activity** (commits, stars). Libraries with high daily downloads and frequent commits are more likely to stay maintained, secure, and compatible with newer .NET versions.
+So you're looking for a PDF library in .NET, right? Here's the thing - just because something has a million downloads doesn't mean it's what you should use *today*. I'm looking at **recent download momentum** (how many people are actually using it NOW via NuGet) and **GitHub activity** (are they still maintaining this thing or did they abandon it?).
 
-This article compares some key PDF generation and automation libraries using these metrics from the last ~90 days that I wrote this article.
+I pulled data from the last ~90 days for the main players in the .NET PDF space. Here's what's actually happening:
 
 ## Popularity Comparison of  .NET PDF Libraries (*ordered by score*)
 
@@ -14,26 +14,24 @@ This article compares some key PDF generation and automation libraries using the
 | **[iText](https://github.com/itext/itext-dotnet)** | [1.9k](https://github.com/itext/itext-dotnet) | [17.2k](https://www.nuget.org/packages/itext) | 16M | **44/100** |
 | **[PuppeteerSharp](https://github.com/hardkoded/puppeteer-sharp)** | [3.8k](https://github.com/hardkoded/puppeteer-sharp) | [8.7k](https://www.nuget.org/packages/PuppeteerSharp) | 26M | **40/100** |
 
-*Score Calculation: Weighted composite score based on GitHub Stars (30%), Avg Daily NuGet Downloads (40%), and Total NuGet Downloads (30%). All values normalized to 0-100 scale before weighting. Higher score indicates stronger overall momentum.*
+**How I calculated the score:** I weighted GitHub Stars (30%), Daily Downloads (40% - because that's what matters NOW), and Total Downloads (30% - for historical context). Everything normalized to 0-100 before weighting. Higher = better momentum overall.
 
-## Library-by-Library Analysis
+## The Breakdown - What You Actually Need to Know
 
 ### [PDFsharp](https://docs.pdfsharp.net/)
 
 ![pdfsharp](pdfsharp.png)
 
-**NuGet Package:** [PdfSharp](https://www.nuget.org/packages/PdfSharp) | **GitHub Repository:** [empira/PDFsharp](https://github.com/empira/PDFsharp)
+**NuGet:** [PdfSharp](https://www.nuget.org/packages/PdfSharp) | **GitHub:** [empira/PDFsharp](https://github.com/empira/PDFsharp)
 
-**Primary use case:** Code-first PDF generation and manipulation (drawing graphics, text, images, merging, splitting). Not designed for HTML/browser rendering.
+**What it does:** Code-first PDF stuff - drawing, manipulating, merging, that kind of thing. Not for HTML/browser rendering though, so don't try to convert your React app to PDF with this.
 
-**Momentum signal:** **Stable**. High total downloads (47M) with steady daily adoption (~9k/day). Recent commit on January 6, 2026 (2 weeks ago) shows active maintenance. Version 6.2.3 supports .NET 8–10. [GitHub activity](https://github.com/empira/PDFsharp) is consistent, though the repository has a modest star count (862 stars) compared to newer alternatives.
+**What's the vibe?** **Stable, but kinda old school.** It's got the biggest total download count (47M!) but only pulling ~9k/day now. They updated it 2 weeks ago (Jan 6) so it's alive, and it supports .NET 8-10 which is nice. The GitHub stars (862) are pretty low compared to the shiny new kids, but honestly? It's been around forever and people still use it. It's the reliable old workhorse.
 
-**When to choose it:**
-
-- When you need full control over PDF content via C# APIs
-- For document generation without HTML/CSS dependencies
-- In environments where browser engines are undesirable
-- When working with graphics, vector content, or PDF manipulation workflows
+**Pick this if:**
+- You need to build PDFs from scratch with code (not HTML)
+- You want to draw graphics, manipulate existing PDFs, merge files
+- You don't want browser engines anywhere near your project
 
 ---
 
@@ -41,18 +39,17 @@ This article compares some key PDF generation and automation libraries using the
 
 ![iText Logo](itext.jpg)
 
-**NuGet Package:** [itext](https://www.nuget.org/packages/itext/) | **GitHub Repository:** [itext/itext-dotnet](https://github.com/itext/itext-dotnet)
+**NuGet:** [itext](https://www.nuget.org/packages/itext/) | **GitHub:** [itext/itext-dotnet](https://github.com/itext/itext-dotnet)
 
-**Primary use case:** Enterprise-grade PDF toolkit supporting generation, manipulation, digital signatures, forms, PDF/A/UA compliance, and HTML-to-PDF via add-ons.
+**What it does:** The enterprise beast. Digital signatures, PDF compliance (PDF/A, PDF/UA), forms, all that fancy stuff. Can do HTML-to-PDF too if you need it.
 
-**Momentum signal:** **Growing**. Solid download base (16M total) with healthy daily adoption (~17.2k/day, highest among code-first libraries). Very recent commit on January 18, 2026 (yesterday) shows active maintenance. Strong GitHub community (1.9k stars). The library continues to evolve with new features and .NET compatibility updates. [Repository activity](https://github.com/itext/itext-dotnet) remains strong.
+**What's the vibe?** **Actually doing pretty well!** ~17.2k downloads/day (highest for code-first libs), updated literally yesterday (Jan 18). They're moving fast. 1.9k stars isn't huge but the community seems active. The catch? This is the enterprise option - check the licensing before you commit if you're doing commercial work.
 
-**When to choose it:**
-
-- For advanced PDF features: compliance (PDF/A, PDF/UA), digital signatures, form handling
-- When enterprise licensing and vendor support are acceptable
-- For complex PDF manipulation workflows beyond basic generation
-- When HTML-to-PDF conversion is needed alongside code-based generation
+**Pick this if:**
+- You need digital signatures, PDF compliance, or advanced form stuff
+- Your company is cool with licensing fees (or you're doing open source)
+- You need serious PDF manipulation features
+- You want HTML-to-PDF AND code-based generation in one package
 
 ---
 
@@ -60,18 +57,17 @@ This article compares some key PDF generation and automation libraries using the
 
 ![Playwright Logo](playwright.png)
 
-**NuGet Package:** [Microsoft.Playwright](https://www.nuget.org/packages/Microsoft.Playwright) | **GitHub Repository:** [microsoft/playwright-dotnet](https://github.com/microsoft/playwright-dotnet)
+**NuGet:** [Microsoft.Playwright](https://www.nuget.org/packages/Microsoft.Playwright) | **GitHub:** [microsoft/playwright-dotnet](https://github.com/microsoft/playwright-dotnet)
 
-**Primary use case:** Browser automation and rendering. Converts HTML/CSS/JavaScript content to PDF via headless Chromium, WebKit, or Firefox engines.
+**What it does:** Browser automation that can turn HTML/CSS/JS into PDFs. Uses real browser engines (Chromium, WebKit, Firefox) so your PDFs look exactly like they would in a browser.
 
-**Momentum signal:** **Growing**. High download volume (39M total) with strong daily adoption (~23k/day, highest in the comparison). Repository shows active development with last commit on December 3, 2025. Strong Microsoft backing ensures long-term support and compatibility with latest .NET versions. [GitHub repository](https://github.com/microsoft/playwright-dotnet) has solid community engagement (2.9k stars). Growing adoption for web automation and PDF generation from HTML content.
+**What's the vibe?** **Killing it.** ~23k downloads/day (highest in this whole list!). It's Microsoft-backed so you know they're not gonna abandon it anytime soon. Last commit was December 3rd but honestly that's fine, they're actively maintaining. 2.9k stars and climbing. If you need to turn web pages into PDFs, this is probably your best bet right now.
 
-**When to choose it:**
-
-- When rendering HTML/CSS/JavaScript content with browser fidelity is required
-- For dynamic content, SPAs, or web-based templates
-- When PDF generation is part of a broader browser automation workflow
-- When layout accuracy matching real browsers is critical
+**Pick this if:**
+- You need to convert HTML/CSS/JS to PDF and want it to look EXACTLY like the browser
+- You're working with SPAs, dynamic content, or web templates
+- You also need browser automation/testing (bonus!)
+- Layout accuracy is critical (forms, dashboards, etc.)
 
 ---
 
@@ -79,17 +75,16 @@ This article compares some key PDF generation and automation libraries using the
 
 ![PuppeteerSharp Logo](PuppeteerSharp.png)
 
-**NuGet Package:** [PuppeteerSharp](https://www.nuget.org/packages/PuppeteerSharp) | **GitHub Repository:** [hardkoded/puppeteer-sharp](https://github.com/hardkoded/puppeteer-sharp)
+**NuGet:** [PuppeteerSharp](https://www.nuget.org/packages/PuppeteerSharp) | **GitHub:** [hardkoded/puppeteer-sharp](https://github.com/hardkoded/puppeteer-sharp)
 
-**Primary use case:** Similar to Playwright—browser-based rendering via headless Chromium for HTML-to-PDF conversion, screenshots, and automation.
+**What it does:** Basically Playwright's older sibling. Uses headless Chromium to turn HTML into PDFs. Same idea, different API.
 
-**Momentum signal:** **Stable**. Recent commit on January 12, 2026 (last week) indicates active maintenance. Daily downloads (~8.7k/day) show steady usage, though lower than Playwright's ~23k/day. Total downloads (26M) demonstrate established adoption. [GitHub repository](https://github.com/hardkoded/puppeteer-sharp) has good community interest (3.8k stars), but growth appears slower than Playwright, which has Microsoft backing and broader browser support.
+**What's the vibe?** **Stable but losing ground.** Got updated last week (Jan 12) so it's maintained, but ~8.7k/day is way less than Playwright's ~23k. 3.8k stars is decent though. It works fine, but Playwright is eating its lunch. Still, if you know Puppeteer already or only need Chromium, this might be fine.
 
-**When to choose it:**
-- When you prefer Puppeteer's API model or have existing Puppeteer (JavaScript) workflows
-- If Playwright's multi-browser approach is unnecessary
-- For Chromium-specific rendering requirements
-- When migrating from Node.js Puppeteer implementations
+**Pick this if:**
+- You already know Puppeteer from Node.js and want the same vibe in .NET
+- You only need Chromium (don't care about Firefox/WebKit)
+- You have existing Puppeteer code you're porting
 
 ---
 
@@ -99,73 +94,60 @@ This article compares some key PDF generation and automation libraries using the
 
 ![QuestPDF Logo](QuestPDF.png)
 
-**NuGet Package:** [QuestPDF](https://www.nuget.org/packages/QuestPDF) | **GitHub Repository:** [QuestPDF/QuestPDF](https://github.com/QuestPDF/QuestPDF)
+**NuGet:** [QuestPDF](https://www.nuget.org/packages/QuestPDF) | **GitHub:** [QuestPDF/QuestPDF](https://github.com/QuestPDF/QuestPDF)
 
-**Primary use case:** Code-first PDF generation with a fluent, component-based C# API. Designed for reports, invoices, and structured documents without HTML rendering.
+**What it does:** Build PDFs with fluent C# APIs. Think of it like building a UI layout, but for PDFs. No HTML needed - it's all code, all .NET.
 
-**Momentum signal:** **Growing**. Strong download momentum (15M total, ~8.2k/day average) combined with very recent commits (January 18, 2026, yesterday) and highest [GitHub star count](https://github.com/QuestPDF/QuestPDF) (13.7k stars) among all libraries indicates rising adoption. Active development, modern API design, and .NET-native approach contribute to its growth and strong community engagement.
+**What's the vibe?** **The community favorite.** 13.7k stars (most by far!), updated yesterday (Jan 18). ~8.2k downloads/day isn't the highest but the community is clearly excited about it. Modern API, active dev, people seem to actually enjoy using it. If you're building reports/invoices from code and want something that feels modern, this is it.
 
-**When to choose it:**
-- When you want expressive, code-driven layout control in C#
-- For reports, invoices, and structured documents defined programmatically
-- When avoiding browser dependencies is important
-- For high-performance document generation in server environments
-- When type safety and maintainable layout code are priorities
-
-
-
-## Which Libraries Are Trending Up Right Now?
-
-Based on the composite Popularity Score calculated from GitHub Stars, daily downloads, and total downloads:
-
-### Code-First PDF Libraries
-
-**[QuestPDF](https://github.com/QuestPDF/QuestPDF)** shows the strongest upward momentum in code-first libraries (Score: 54/100):
-
-- Solid daily downloads (~8.2k/day) with 15M total downloads - [View on NuGet](https://www.nuget.org/packages/QuestPDF)
-- Very recent commits (January 18, 2026, yesterday) - [View on GitHub](https://github.com/QuestPDF/QuestPDF)
-- Highest community engagement (13.7k stars) among all libraries
-- Modern API design attracting new projects
-
-**[iText](https://github.com/itext/itext-dotnet)** shows strong momentum (Score: 44/100):
-
-- Highest daily downloads among code-first libraries (~17.2k/day) - [View on NuGet](https://www.nuget.org/packages/itext)
-- Very recent commits (January 18, 2026, yesterday) - [View on GitHub](https://github.com/itext/itext-dotnet)
-- Strong community (1.9k stars) with 16M total downloads
-- Enterprise-grade features continue to attract adoption
-
-**[PDFsharp](https://github.com/empira/PDFsharp)** remains stable (Score: 48/100):
-
-- Largest total download base (47M) with steady usage (~9k/day) - [View on NuGet](https://www.nuget.org/packages/PdfSharp)
-- Recent maintenance (January 6, 2026, 2 weeks ago) - [View on GitHub](https://github.com/empira/PDFsharp)
-- Mature and reliable, though community engagement (862 stars) is lower than newer alternatives
-
-### HTML / Browser-Based PDF Libraries
-
-**[Microsoft.Playwright (.NET)](https://github.com/microsoft/playwright-dotnet)** is trending strongest:
-
-- Highest daily downloads overall (~23k/day) with 39M total - [View on NuGet](https://www.nuget.org/packages/Microsoft.Playwright)
-- Active repository with recent commits (December 3, 2025) - [View on GitHub](https://github.com/microsoft/playwright-dotnet)
-- Microsoft backing ensures long-term support
-- Strong community (2.9k stars) and growing adoption for HTML-based PDF generation
-
-**[PuppeteerSharp](https://github.com/hardkoded/puppeteer-sharp)** is stable but slower-growing:
-- Solid daily downloads (~8.7k/day) with 26M total - [View on NuGet](https://www.nuget.org/packages/PuppeteerSharp)
-- Active maintenance continues (January 12, 2026, last week) - [View on GitHub](https://github.com/hardkoded/puppeteer-sharp)
-- Good community (3.8k stars), though download velocity is lower than Playwright
-- Still viable for Chromium-focused workflows
+**Pick this if:**
+- You want to build PDFs with code (not HTML) and you like fluent APIs
+- You're generating reports, invoices, structured documents
+- You want zero browser dependencies
+- You care about type safety and maintainable code
+- You want something that feels modern and well-designed
 
 
 
-## Summary & Recommendations
+## Who's Winning Right Now?
 
-**For new code-first PDF projects:** **[QuestPDF](https://github.com/QuestPDF/QuestPDF)** offers the strongest community engagement (13.7k stars) and very recent commits, making it an excellent choice for modern projects. [Get it on NuGet](https://www.nuget.org/packages/QuestPDF) | **[iText](https://github.com/itext/itext-dotnet)** has the highest daily download rate (~17.2k/day) among code-first libraries and strong recent activity. [Get it on NuGet](https://www.nuget.org/packages/itext) | **[PDFsharp](https://github.com/empira/PDFsharp)** remains a solid, mature alternative with the largest total download base (47M) if you need lower-level control. [Get it on NuGet](https://www.nuget.org/packages/PdfSharp)
+Here's what the numbers are telling us:
 
-**For HTML-based PDF generation:** **[Microsoft.Playwright](https://github.com/microsoft/playwright-dotnet)** is the clear leader with the highest daily downloads (~23k/day) overall, active development, and broad browser engine support. [Get it on NuGet](https://www.nuget.org/packages/Microsoft.Playwright) | **[PuppeteerSharp](https://github.com/hardkoded/puppeteer-sharp)** remains viable with steady usage (~8.7k/day) but shows less growth compared to Playwright. [Get it on NuGet](https://www.nuget.org/packages/PuppeteerSharp)
+### Code-First Libraries (Building PDFs with Code)
 
-**For enterprise/advanced features:** **[iText](https://github.com/itext/itext-dotnet)** provides the most comprehensive feature set with strong recent activity and highest code-first download velocity. Licensing should be carefully evaluated for commercial use. [Get it on NuGet](https://www.nuget.org/packages/itext)
+**[QuestPDF](https://github.com/QuestPDF/QuestPDF)** - Score: 54/100
+The people's choice. Most GitHub stars (13.7k), updated yesterday, community loves it. Downloads aren't the highest but the engagement is real. This is what people are excited about.
+
+**[iText](https://github.com/itext/itext-dotnet)** - Score: 44/100  
+Actually pulling the most daily downloads (~17.2k/day) for code-first libs, also updated yesterday. The enterprise crowd is still using this heavily. Just watch that licensing.
+
+**[PDFsharp](https://github.com/empira/PDFsharp)** - Score: 48/100
+The old reliable. 47M total downloads but only ~9k/day now. It works, it's stable, but it's not where the momentum is. Still a solid choice if you need something battle-tested.
+
+### HTML/Browser-Based Libraries (Turning Web Pages into PDFs)
+
+**[Microsoft.Playwright](https://github.com/microsoft/playwright-dotnet)** - Score: 71/100
+Winner winner. ~23k downloads/day (highest overall), Microsoft backing, actively maintained. If you need HTML-to-PDF, this is probably the move.
+
+**[PuppeteerSharp](https://github.com/hardkoded/puppeteer-sharp)** - Score: 40/100
+Still kicking around at ~8.7k/day but Playwright is clearly the future. Updated last week so it's not dead, just... less popular.
+
+
+
+## TL;DR - What Should You Actually Use?
+
+**Building PDFs from code (not HTML):**
+- **QuestPDF** - If you want something modern and the community is raving about it (13.7k stars!)
+- **iText** - If you need enterprise features and can handle the licensing
+- **PDFsharp** - If you want the battle-tested option that's been around forever
+
+**Converting HTML/web pages to PDF:**
+- **Playwright** - Just use this. It's winning right now (~23k/day), Microsoft-backed, actively maintained. Game over.
+- **PuppeteerSharp** - Only if you really need Chromium-only or you're migrating from Node.js Puppeteer
+
+**Bottom line:** For HTML-to-PDF, Playwright is dominating. For code-first, QuestPDF has the hype but iText has the downloads. Choose your fighter.
 
 ---
 
-*Data compiled from GitHub repositories and NuGet.org statistics as of January 19, 2026. Daily download averages reflect recent 90-day periods where available.*
+*Numbers from GitHub and NuGet as of January 19, 2026. Daily downloads are from the last 90 days.*
 

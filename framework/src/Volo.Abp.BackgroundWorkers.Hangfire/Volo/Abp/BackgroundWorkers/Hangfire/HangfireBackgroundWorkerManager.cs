@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Common;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.DynamicProxy;
@@ -30,7 +31,7 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
         BackgroundJobServer = ServiceProvider.GetRequiredService<AbpHangfireBackgroundJobServer>();
     }
 
-    public async override Task AddAsync(IBackgroundWorker worker, CancellationToken cancellationToken = default)
+    public override async Task AddAsync(IBackgroundWorker worker, CancellationToken cancellationToken = default)
     {
         var abpHangfireOptions = ServiceProvider.GetRequiredService<IOptions<AbpHangfireOptions>>().Value;
         var defaultQueuePrefix = abpHangfireOptions.DefaultQueuePrefix;
@@ -57,27 +58,31 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
             case AsyncPeriodicBackgroundWorkerBase or PeriodicBackgroundWorkerBase:
             {
                 int? period = null;
-                string? CronExpression = null;
+                string? cronExpression = null;
 
-                if (worker is AsyncPeriodicBackgroundWorkerBase asyncPeriodicBackgroundWorkerBase)
+                switch (worker)
                 {
-                    period = asyncPeriodicBackgroundWorkerBase.Period;
-                    CronExpression = asyncPeriodicBackgroundWorkerBase.CronExpression;
-                }
-                else if (worker is PeriodicBackgroundWorkerBase periodicBackgroundWorkerBase)
-                {
-                    period = periodicBackgroundWorkerBase.Period;
-                    CronExpression = periodicBackgroundWorkerBase.CronExpression;
+                    case AsyncPeriodicBackgroundWorkerBase asyncPeriodicBackgroundWorkerBase:
+                        period = asyncPeriodicBackgroundWorkerBase.Period;
+                        cronExpression = asyncPeriodicBackgroundWorkerBase.CronExpression;
+                        break;
+                    case PeriodicBackgroundWorkerBase periodicBackgroundWorkerBase:
+                        period = periodicBackgroundWorkerBase.Period;
+                        cronExpression = periodicBackgroundWorkerBase.CronExpression;
+                        break;
                 }
 
-                if (period == null && CronExpression.IsNullOrWhiteSpace())
+                if (period == null && cronExpression.IsNullOrWhiteSpace())
                 {
+                    var logger = ServiceProvider.GetRequiredService<ILogger<HangfireBackgroundWorkerManager>>();
+                    logger.LogError(
+                        $"Cannot add periodic background worker {worker.GetType().FullName} to Hangfire scheduler, because both Period and CronExpression are not set. " +
+                        "You can either set Period or CronExpression property of the worker."
+                    );
                     return;
                 }
 
-                var adapterType = typeof(HangfirePeriodicBackgroundWorkerAdapter<>).MakeGenericType(ProxyHelper.GetUnProxiedType(worker));
-                var workerAdapter = (Activator.CreateInstance(adapterType) as IHangfireBackgroundWorker)!;
-
+                var workerAdapter = (ServiceProvider.GetRequiredService(typeof(HangfirePeriodicBackgroundWorkerAdapter<>).MakeGenericType(ProxyHelper.GetUnProxiedType(worker))) as IHangfireBackgroundWorker)!;
                 Expression<Func<Task>> methodCall = () => workerAdapter.DoWorkAsync(cancellationToken);
                 var recurringJobId = !workerAdapter.RecurringJobId.IsNullOrWhiteSpace() ? workerAdapter.RecurringJobId : GetRecurringJobId(worker, methodCall);
 
@@ -85,7 +90,7 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
                     recurringJobId,
                     workerAdapter.Queue.IsNullOrWhiteSpace() ? defaultQueue : defaultQueuePrefix + workerAdapter.Queue,
                     methodCall,
-                    CronExpression ?? GetCron(period!.Value),
+                    cronExpression ?? GetCron(period!.Value),
                     new RecurringJobOptions
                     {
                         TimeZone = workerAdapter.TimeZone
@@ -98,7 +103,7 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
         }
     }
 
-    private readonly static MethodInfo? GetRecurringJobIdMethodInfo = typeof(RecurringJob).GetMethod("GetRecurringJobId", BindingFlags.NonPublic | BindingFlags.Static);
+    private static readonly MethodInfo? GetRecurringJobIdMethodInfo = typeof(RecurringJob).GetMethod("GetRecurringJobId", BindingFlags.NonPublic | BindingFlags.Static);
     protected virtual string? GetRecurringJobId(IBackgroundWorker worker, Expression<Func<Task>> methodCall)
     {
         string? recurringJobId = null;

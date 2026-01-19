@@ -9,13 +9,15 @@
 
 Authorization is used to check if a user is allowed to perform some specific operations in the application.
 
-ABP extends [ASP.NET Core Authorization](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/introduction) by adding **permissions** as auto [policies](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies) and allowing authorization system to be usable in the **[application services](../architecture/domain-driven-design/application-services.md)** too.
+ABP extends [ASP.NET Core Authorization](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/introduction) by adding **permissions** as auto [policies](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/policies) and allowing authorization system to be usable in the **[application services](../../architecture/domain-driven-design/application-services.md)** too.
 
 So, all the ASP.NET Core authorization features and the documentation are valid in an ABP based application. This document focuses on the features that are added on top of ASP.NET Core authorization features.
 
+ABP supports two types of permissions: **Standard permissions** apply globally (e.g., "can create documents"), while **resource-based permissions** target specific instances (e.g., "can edit Document #123"). This document covers standard permissions; see [Resource-Based Authorization](./resource-based-authorization.md) for fine-grained, per-resource access control.
+
 ## Authorize Attribute
 
-ASP.NET Core defines the [**Authorize**](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/simple) attribute that can be used for an action, a controller or a page. ABP allows you to use the same attribute for an [application service](../architecture/domain-driven-design/application-services.md) too.
+ASP.NET Core defines the [**Authorize**](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/simple) attribute that can be used for an action, a controller or a page. ABP allows you to use the same attribute for an [application service](../../architecture/domain-driven-design/application-services.md) too.
 
 Example:
 
@@ -87,9 +89,11 @@ namespace Acme.BookStore.Permissions
 
 > ABP automatically discovers this class. No additional configuration required!
 
-> You typically define this class inside the `Application.Contracts` project of your [application](../../solution-templates/layered-web-application). The startup template already comes with an empty class named *YourProjectNamePermissionDefinitionProvider* that you can start with.
+> You typically define this class inside the `Application.Contracts` project of your [application](../../../solution-templates/layered-web-application/index.md). The startup template already comes with an empty class named *YourProjectNamePermissionDefinitionProvider* that you can start with.
 
-In the `Define` method, you first need to add a **permission group** or get an existing group then add **permissions** to this group.
+In the `Define` method, you first need to add a **permission group** (or get an existing group), then add **permissions** to this group using the `AddPermission` method.
+
+> For resource-specific fine-grained permissions, use the `AddResourcePermission` method instead. See [Resource-Based Authorization](./resource-based-authorization.md) for details.
 
 When you define a permission, it becomes usable in the ASP.NET Core authorization system as a **policy** name. It also becomes visible in the UI. See permissions dialog for a role:
 
@@ -99,6 +103,8 @@ When you define a permission, it becomes usable in the ASP.NET Core authorizatio
 - "BookStore_Author_Create" on the right side is the permission name. You can grant or prohibit it for the role.
 
 When you save the dialog, it is saved to the database and used in the authorization system.
+
+> **Note:** Only standard (global) permissions are shown in this dialog. Resource-based permissions are managed through the [Resource Permission Management Dialog](../../../modules/permission-management.md#resource-permission-management-dialog) on individual resource instances.
 
 > The screen above is available when you have installed the identity module, which is basically used for user and role management. Startup templates come with the identity module pre-installed.
 
@@ -125,15 +131,15 @@ Then you can define texts for "BookStore" and "Permission:BookStore_Author_Creat
 "Permission:BookStore_Author_Create": "Creating a new author"
 ```
 
-> For more information, see the [localization document](./localization.md) on the localization system.
+> For more information, see the [localization document](../localization.md) on the localization system.
 
 The localized UI will be as seen below:
 
-![authorization-new-permission-ui-localized](../../images/authorization-new-permission-ui-localized.png)
+![authorization-new-permission-ui-localized](../../../images/authorization-new-permission-ui-localized.png)
 
 #### Multi-Tenancy
 
-ABP supports [multi-tenancy](../architecture/multi-tenancy) as a first class citizen. You can define multi-tenancy side option while defining a new permission. It gets one of the three values defined below:
+ABP supports [multi-tenancy](../../architecture/multi-tenancy/index.md) as a first class citizen. You can define multi-tenancy side option while defining a new permission. It gets one of the three values defined below:
 
 - **Host**: The permission is available only for the host side.
 - **Tenant**: The permission is available only for the tenant side.
@@ -180,7 +186,7 @@ authorManagement.AddChild("Author_Management_Delete_Books");
 
 The result on the UI is shown below (you probably want to localize permissions for your application):
 
-![authorization-new-permission-ui-hierarcy](../../images/authorization-new-permission-ui-hierarcy.png)
+![authorization-new-permission-ui-hierarcy](../../../images/authorization-new-permission-ui-hierarcy.png)
 
 For the example code, it is assumed that a role/user with "Author_Management" permission granted may have additional permissions. Then a typical application service that checks permissions can be defined as shown below:
 
@@ -229,7 +235,7 @@ See [policy based authorization](https://docs.microsoft.com/en-us/aspnet/core/se
 
 ### Changing Permission Definitions of a Depended Module
 
-A class deriving from the `PermissionDefinitionProvider` (just like the example above) can also get existing permission definitions (defined by the depended [modules](../architecture/modularity/basics.md)) and change their definitions.
+A class deriving from the `PermissionDefinitionProvider` (just like the example above) can also get existing permission definitions (defined by the depended [modules](../../architecture/modularity/basics.md)) and change their definitions.
 
 Example:
 
@@ -247,12 +253,12 @@ When you write this code inside your permission definition provider, it finds th
 
 You may want to disable a permission based on a condition. Disabled permissions are not visible on the UI and always returns `prohibited` when you check them. There are two built-in conditional dependencies for a permission definition;
 
-* A permission can be automatically disabled if a [Feature](../infrastructure/features.md) was disabled.
-* A permission can be automatically disabled if a [Global Feature](../infrastructure/global-features.md) was disabled.
+* A permission can be automatically disabled if a [Feature](../../infrastructure/features.md) was disabled.
+* A permission can be automatically disabled if a [Global Feature](../../infrastructure/global-features.md) was disabled.
 
 In addition, you can create your custom extensions.
 
-#### Depending on a Features
+#### Depending on Features
 
 Use the `RequireFeatures` extension method on your permission definition to make the permission available only if a given feature is enabled:
 
@@ -261,7 +267,7 @@ myGroup.AddPermission("Book_Creation")
     .RequireFeatures("BookManagement");
 ````
 
-#### Depending on a Global Feature
+#### Depending on Global Features
 
 Use the `RequireGlobalFeatures` extension method on your permission definition to make the permission available only if a given feature is enabled:
 
@@ -272,13 +278,13 @@ myGroup.AddPermission("Book_Creation")
 
 #### Creating a Custom Permission Dependency
 
-`PermissionDefinition` supports state check, Please refer to [Simple State Checker's documentation](../infrastructure/simple-state-checker.md) 
+`PermissionDefinition` supports state check, please refer to [Simple State Checker's documentation](../../infrastructure/simple-state-checker.md) 
 
 ## IAuthorizationService
 
-ASP.NET Core provides the `IAuthorizationService` that can be used to check for authorization. Once you inject, you can use it in your code to conditionally control the authorization.
+ASP.NET Core provides the `IAuthorizationService` that can be used to check for authorization. Once you inject it, you can use it in your code to conditionally control the authorization.
 
-Example:
+**Example:**
 
 ```csharp
 public async Task CreateAsync(CreateAuthorDto input)
@@ -295,7 +301,7 @@ public async Task CreateAsync(CreateAuthorDto input)
 }
 ```
 
-> `AuthorizationService` is available as a property when you derive from ABP's `ApplicationService` base class. Since it is widely used in application services, `ApplicationService` pre-injects it for you. Otherwise, you can directly [inject](./dependency-injection.md) it into your class.
+> `AuthorizationService` is available as a property when you derive from ABP's `ApplicationService` base class. Since it is widely used in application services, `ApplicationService` pre-injects it for you. Otherwise, you can directly [inject](../dependency-injection.md) it into your class.
 
 Since this is a typical code block, ABP provides extension methods to simplify it.
 
@@ -320,15 +326,15 @@ public async Task CreateAsync(CreateAuthorDto input)
 
 See the following documents to learn how to re-use the authorization system on the client side:
 
-* [ASP.NET Core MVC / Razor Pages UI: Authorization](../ui/mvc-razor-pages/javascript-api/auth.md)
-* [Angular UI Authorization](../ui/angular/authorization/index.md)
-* [Blazor UI Authorization](../ui/blazor/authorization/index.md)
+* [ASP.NET Core MVC / Razor Pages UI: Authorization](../../ui/mvc-razor-pages/javascript-api/auth.md)
+* [Angular UI Authorization](../../ui/angular/authorization/index.md)
+* [Blazor UI Authorization](../../ui/blazor/authorization/index.md)
 
 ## Permission Management
 
 Permission management is normally done by an admin user using the permission management modal:
 
-![authorization-new-permission-ui-localized](../../images/authorization-new-permission-ui-localized.png)
+![authorization-new-permission-ui-localized](../../../images/authorization-new-permission-ui-localized.png)
 
 If you need to manage permissions by code, inject the `IPermissionManager` and use as shown below:
 
@@ -356,13 +362,13 @@ public class MyService : ITransientDependency
 
 `SetForUserAsync` sets the value (true/false) for a permission of a user. There are more extension methods like `SetForRoleAsync` and `SetForClientAsync`.
 
-`IPermissionManager` is defined by the permission management module. See the [permission management module documentation](../../modules/permission-management.md) for more information.
+`IPermissionManager` is defined by the Permission Management module. For resource-based permissions, use `IResourcePermissionManager` instead. See the [Permission Management Module documentation](../../../modules/permission-management.md) for more information.
 
 ## Advanced Topics
 
 ### Permission Value Providers
 
-Permission checking system is extensible. Any class derived from `PermissionValueProvider` (or implements `IPermissionValueProvider`) can contribute to the permission check. There are three pre-defined value providers:
+The permission checking system is extensible. Any class derived from `PermissionValueProvider` (or implements `IPermissionValueProvider`) can contribute to the permission check. There are three pre-defined value providers:
 
 - `UserPermissionValueProvider` checks if the current user is granted for the given permission. It gets user id from the current claims. User claim name is defined with the `AbpClaimTypes.UserId` static property.
 - `RolePermissionValueProvider` checks if any of the roles of the current user is granted for the given permission. It gets role names from the current claims. Role claims name is defined with the `AbpClaimTypes.Role` static property.
@@ -412,15 +418,35 @@ Configure<AbpPermissionOptions>(options =>
 });
 ```
 
+### Resource Permission Value Providers
+
+Similar to standard permission value providers, you can extend the resource permission checking system by creating custom **resource permission value providers**. ABP provides two built-in resource permission value providers:
+
+* `UserResourcePermissionValueProvider`: Checks permissions granted directly to users for a specific resource.
+* `RoleResourcePermissionValueProvider`: Checks permissions granted to roles for a specific resource.
+
+You can create custom providers by implementing `IResourcePermissionValueProvider` or inheriting from `ResourcePermissionValueProvider`. Register them using:
+
+```csharp
+Configure<AbpPermissionOptions>(options =>
+{
+    options.ResourceValueProviders.Add<YourCustomResourcePermissionValueProvider>();
+});
+```
+
+> See the [Permission Management Module](../../../modules/permission-management.md#resource-permission-value-providers) documentation for detailed examples.
+
 ### Permission Store
 
-`IPermissionStore` is the only interface that needs to be implemented to read the value of permissions from a persistence source, generally a database system. The Permission Management module implements it  and pre-installed in the application startup template. See the [permission management module documentation](../../modules/permission-management.md) for more information
+`IPermissionStore` is the interface that needs to be implemented to read the value of permissions from a persistence source, generally a database system. The Permission Management module implements it and is pre-installed in the application startup template. See the [Permission Management Module documentation](../../../modules/permission-management.md) for more information.
+
+For resource-based permissions, `IResourcePermissionStore` serves the same purpose, storing and retrieving permissions for specific resource instances.
 
 ### AlwaysAllowAuthorizationService
 
 `AlwaysAllowAuthorizationService` is a class that is used to bypass the authorization service. It is generally used in integration tests where you may want to disable the authorization system.
 
-Use `IServiceCollection.AddAlwaysAllowAuthorization()` extension method to register the `AlwaysAllowAuthorizationService` to the [dependency injection](./dependency-injection.md) system:
+Use `IServiceCollection.AddAlwaysAllowAuthorization()` extension method to register the `AlwaysAllowAuthorizationService` to the [dependency injection](../../dependency-injection.md) system:
 
 ```csharp
 public override void ConfigureServices(ServiceConfigurationContext context)
@@ -466,20 +492,24 @@ public static class CurrentUserExtensions
 }
 ```
 
-> If you use OpenIddict please see [Updating Claims in Access Token and ID Token](../../modules/openiddict#updating-claims-in-access_token-and-id_token).
+> If you use OpenIddict please see [Updating Claims in Access Token and ID Token](../../../modules/openiddict#updating-claims-in-access_token-and-id_token).
 
 ## Resource-Based Authorization
 
-ABP also supports **resource-based authorization** for fine-grained access control on specific resources. While the standard permission system grants permissions at a general level (e.g., "can edit documents"), resource-based authorization allows you to grant permissions for a specific document, project, or any other entity rather than granting a permission for all of them. 
+While this document covers standard (global) permissions, ABP also supports **resource-based authorization** for fine-grained access control on specific resource instances. Resource-based authorization allows you to grant permissions for a specific document, project, or any other entity rather than granting a permission for all resources of that type.
 
-For example, you can grant a user permission to edit only a particular document, or allow a project manager to manage only their assigned projects.
+**Example scenarios:**
 
-> See the [Resource-Based Authorization](./resource-based-authorization.md) document for details.
+* Allow users to edit **only their own** blog posts or documents
+* Grant access to **specific projects** based on team membership
+* Implement document sharing where **different users have different access levels** to the same document
+
+> See the [Resource-Based Authorization](./resource-based-authorization.md) document for implementation details.
 
 ## See Also
 
 * [Resource-Based Authorization](./resource-based-authorization.md)
-* [Permission Management Module](../../modules/permission-management.md)
-* [ASP.NET Core MVC / Razor Pages JavaScript Auth API](../ui/mvc-razor-pages/javascript-api/auth.md)
-* [Permission Management in Angular UI](../ui/angular/Permission-Management.md)
+* [Permission Management Module](../../../modules/permission-management.md)
+* [ASP.NET Core MVC / Razor Pages JavaScript Auth API](../../ui/mvc-razor-pages/javascript-api/auth.md)
+* [Permission Management in Angular UI](../../ui/angular/Permission-Management.md)
 * [Video tutorial](https://abp.io/video-courses/essentials/authorization)

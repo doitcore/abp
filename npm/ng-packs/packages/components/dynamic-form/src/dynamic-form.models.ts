@@ -4,7 +4,7 @@ import { ControlValueAccessor } from '@angular/forms';
 export interface FormFieldConfig<T = any> {
   key: string;
   value?: any;
-  type: 'text' | 'email' | 'number' | 'select' | 'checkbox' | 'date' | 'textarea' | 'datetime-local' | 'time' | 'password' | 'tel' | 'url' | 'radio' | 'file' | 'range' | 'color';
+  type: 'text' | 'email' | 'number' | 'select' | 'checkbox' | 'date' | 'textarea' | 'datetime-local' | 'time' | 'password' | 'tel' | 'url' | 'radio' | 'file' | 'range' | 'color' | 'group' | 'array';
   label: string;
   placeholder?: string;
   required?: boolean;
@@ -24,6 +24,10 @@ export interface FormFieldConfig<T = any> {
   pattern?: string; // For tel, text
   accept?: string; // For file input (e.g., "image/*")
   multiple?: boolean; // For file input
+  // Nested form support (for group and array types)
+  children?: FormFieldConfig[]; // Child fields for nested forms
+  minItems?: number; // For array type: minimum number of items
+  maxItems?: number; // For array type: maximum number of items
 }
 
 export interface ValidatorConfig {

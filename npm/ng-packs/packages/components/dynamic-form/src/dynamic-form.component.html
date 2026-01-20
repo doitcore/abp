@@ -8,19 +8,43 @@
   <div class="row" role="group">
     @for (field of sortedFields; track field.key) {
         <div [ngClass]="'col-md-' + (field.gridSize || 12)">
+          
+          <!-- Custom Component -->
           @if (field.component) {
             <abp-dynamic-form-field-host
               [component]="field.component"
               [inputs]="{ field: field, visible: isFieldVisible(field) }"
               formControlName="{{ field.key }}">
             </abp-dynamic-form-field-host>
-          } @else {
-          <abp-dynamic-form-field
-            [field]="field"
-            [formControlName]="field.key"
-            [visible]="isFieldVisible(field)">
-          </abp-dynamic-form-field>
           }
+          
+          <!-- Nested Group -->
+          @else if (field.type === 'group') {
+            <abp-dynamic-form-group
+              [groupConfig]="field"
+              [formGroup]="getChildFormGroup(field.key)"
+              [visible]="isFieldVisible(field)">
+            </abp-dynamic-form-group>
+          }
+          
+          <!-- Nested Array -->
+          @else if (field.type === 'array') {
+            <abp-dynamic-form-array
+              [arrayConfig]="field"
+              [formGroup]="dynamicForm"
+              [visible]="isFieldVisible(field)">
+            </abp-dynamic-form-array>
+          }
+          
+          <!-- Regular Field -->
+          @else {
+            <abp-dynamic-form-field
+              [field]="field"
+              [formControlName]="field.key"
+              [visible]="isFieldVisible(field)">
+            </abp-dynamic-form-field>
+          }
+          
         </div>
     }
   </div>

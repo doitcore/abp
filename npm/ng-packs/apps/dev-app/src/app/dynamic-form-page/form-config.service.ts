@@ -237,6 +237,143 @@ export class FormConfigService {
                 order: 19,
                 validators: [{ type: 'requiredTrue', message: 'You must agree to the terms' }],
             },
+
+            // Section 10: NESTED FORM - Phone Numbers (Array)
+            {
+                key: 'phoneNumbers',
+                type: 'array',
+                label: 'Phone Numbers',
+                gridSize: 12,
+                order: 20,
+                minItems: 1,
+                maxItems: 5,
+                children: [
+                    {
+                        key: 'type',
+                        type: 'select',
+                        label: 'Type',
+                        gridSize: 4,
+                        required: true,
+                        options: {
+                            defaultValues: [
+                                { key: 'mobile', value: 'Mobile' },
+                                { key: 'home', value: 'Home' },
+                                { key: 'work', value: 'Work' },
+                                { key: 'other', value: 'Other' }
+                            ]
+                        },
+                        validators: [{ type: 'required', message: 'Phone type is required' }],
+                    },
+                    {
+                        key: 'number',
+                        type: 'tel',
+                        label: 'Number',
+                        gridSize: 8,
+                        required: true,
+                        placeholder: '555-123-4567',
+                        validators: [{ type: 'required', message: 'Phone number is required' }],
+                    },
+                ]
+            },
+
+            // Section 11: NESTED FORM - Work Experience (Array with nested group)
+            {
+                key: 'workExperience',
+                type: 'array',
+                label: 'Work Experience',
+                gridSize: 12,
+                order: 21,
+                minItems: 0,
+                maxItems: 10,
+                children: [
+                    {
+                        key: 'company',
+                        type: 'text',
+                        label: 'Company Name',
+                        gridSize: 6,
+                        required: true,
+                        validators: [{ type: 'required', message: 'Company name is required' }],
+                    },
+                    {
+                        key: 'position',
+                        type: 'text',
+                        label: 'Position',
+                        gridSize: 6,
+                        required: true,
+                        validators: [{ type: 'required', message: 'Position is required' }],
+                    },
+                    {
+                        key: 'startDate',
+                        type: 'date',
+                        label: 'Start Date',
+                        gridSize: 6,
+                        required: true,
+                        validators: [{ type: 'required', message: 'Start date is required' }],
+                    },
+                    {
+                        key: 'endDate',
+                        type: 'date',
+                        label: 'End Date',
+                        gridSize: 6,
+                    },
+                    {
+                        key: 'currentJob',
+                        type: 'checkbox',
+                        label: 'Currently working here',
+                        gridSize: 12,
+                    },
+                    {
+                        key: 'description',
+                        type: 'textarea',
+                        label: 'Job Description',
+                        placeholder: 'Describe your responsibilities...',
+                        gridSize: 12,
+                        maxLength: 500,
+                    },
+                ]
+            },
+
+            // Section 12: NESTED FORM - Address Group (Group type)
+            {
+                key: 'address',
+                type: 'group',
+                label: 'Address Information',
+                gridSize: 12,
+                order: 22,
+                children: [
+                    {
+                        key: 'street',
+                        type: 'text',
+                        label: 'Street Address',
+                        gridSize: 8,
+                        placeholder: '123 Main St',
+                    },
+                    {
+                        key: 'apartment',
+                        type: 'text',
+                        label: 'Apt/Suite',
+                        gridSize: 4,
+                        placeholder: 'Apt 4B',
+                    },
+                    {
+                        key: 'city',
+                        type: 'text',
+                        label: 'City',
+                        gridSize: 6,
+                        required: true,
+                        validators: [{ type: 'required', message: 'City is required' }],
+                    },
+                    {
+                        key: 'zipCode',
+                        type: 'text',
+                        label: 'ZIP Code',
+                        gridSize: 6,
+                        required: true,
+                        pattern: '[0-9]{5}',
+                        validators: [{ type: 'required', message: 'ZIP code is required' }],
+                    },
+                ]
+            },
         ];
 
         return of(formConfig);

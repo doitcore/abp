@@ -14,6 +14,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DynamicFormService } from './dynamic-form.service';
 import { ConditionalAction, FormFieldConfig } from './dynamic-form.models';
 import { DynamicFormFieldComponent, DynamicFieldHostComponent } from './dynamic-form-field';
+import { DynamicFormGroupComponent } from './dynamic-form-group';
+import { DynamicFormArrayComponent } from './dynamic-form-array';
 
 @Component({
   selector: 'abp-dynamic-form',
@@ -25,6 +27,8 @@ import { DynamicFormFieldComponent, DynamicFieldHostComponent } from './dynamic-
   imports: [
     CommonModule,
     DynamicFormFieldComponent,
+    DynamicFormGroupComponent,
+    DynamicFormArrayComponent,
     ReactiveFormsModule,
     DynamicFieldHostComponent,
   ],
@@ -71,6 +75,10 @@ export class DynamicFormComponent implements OnInit {
 
   isFieldVisible(field: FormFieldConfig): boolean {
     return this.fieldVisibility[field.key] !== false;
+  }
+
+  getChildFormGroup(key: string): FormGroup {
+    return this.dynamicForm.get(key) as FormGroup;
   }
 
   resetForm() {

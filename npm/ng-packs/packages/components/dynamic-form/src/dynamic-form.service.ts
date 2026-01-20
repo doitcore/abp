@@ -1,5 +1,5 @@
 import {Injectable, inject} from '@angular/core';
-import {FormControl, FormGroup, ValidatorFn, Validators, FormBuilder} from '@angular/forms';
+import {FormControl, FormGroup, FormArray, ValidatorFn, Validators, FormBuilder} from '@angular/forms';
 import {FormFieldConfig, ValidatorConfig} from './dynamic-form.models';
 import { RestService } from '@abp/ng.core';
 
@@ -17,22 +17,51 @@ export class DynamicFormService {
     const group: any = {};
 
     fields.forEach(field => {
-      const validators = this.buildValidators(field.validators || []);
-      const initialValue = this.getInitialValue(field);
+      // Nested Group
+      if (field.type === 'group') {
+        group[field.key] = this.createFormGroup(field.children || []);
+      }
+      // Nested Array
+      else if (field.type === 'array') {
+        group[field.key] = this.createFormArray(field);
+      }
+      // Regular Field
+      else {
+        const validators = this.buildValidators(field.validators || []);
+        const initialValue = this.getInitialValue(field);
 
-      group[field.key] = new FormControl({
-        value: initialValue,
-        disabled: field.disabled || false
-      }, validators);
+        group[field.key] = new FormControl({
+          value: initialValue,
+          disabled: field.disabled || false
+        }, validators);
+      }
     });
 
     return this.formBuilder.group(group);
   }
 
+  createFormArray(arrayConfig: FormFieldConfig): FormArray {
+    const items: FormGroup[] = [];
+    const minItems = arrayConfig.minItems || 0;
+
+    // Create minimum required items
+    for (let i = 0; i < minItems; i++) {
+      items.push(this.createFormGroup(arrayConfig.children || []));
+    }
+
+    return this.formBuilder.array(items);
+  }
+
   getInitialValues(fields: FormFieldConfig[]): any {
     const initialValues: any = {};
     fields.forEach(field => {
-      initialValues[field.key] = this.getInitialValue(field);
+      if (field.type === 'group') {
+        initialValues[field.key] = this.getInitialValues(field.children || []);
+      } else if (field.type === 'array') {
+        initialValues[field.key] = [];
+      } else {
+        initialValues[field.key] = this.getInitialValue(field);
+      }
     });
     return initialValues;
   }
@@ -71,7 +100,7 @@ export class DynamicFormService {
   }
 
   private getInitialValue(field: FormFieldConfig): any {
-    if (field.value) {
+    if (field.value !== undefined) {
       return field.value;
     }
     switch (field.type) {
@@ -79,6 +108,10 @@ export class DynamicFormService {
         return false;
       case 'number':
         return 0;
+      case 'group':
+        return this.getInitialValues(field.children || []);
+      case 'array':
+        return [];
       default:
         return '';
     }

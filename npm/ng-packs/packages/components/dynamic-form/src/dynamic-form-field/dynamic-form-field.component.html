@@ -1,5 +1,9 @@
 @if (visible()) {
 <div [formGroup]="fieldFormGroup" role="group" [attr.aria-labelledby]="fieldId + '-label'">
+  
+  <!-- NOTE: Group and Array types are NOT rendered here, they should be rendered at parent level -->
+  <!-- This component only handles leaf/primitive field types -->
+  
   @if (field().type === 'text') {
   <!-- Text Input -->
   <div class="form-group mb-3">

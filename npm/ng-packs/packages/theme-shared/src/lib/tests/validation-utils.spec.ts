@@ -2,7 +2,7 @@ import { AbpApplicationConfigurationService, ConfigStateService } from '@abp/ng.
 import { CoreTestingModule } from '@abp/ng.core/testing';
 import { HttpClient } from '@angular/common/http';
 import { Component, Injector } from '@angular/core';
-import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
+import { createComponentFactory, Spectator } from '@ngneat/spectator/vitest';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { of } from 'rxjs';
 import { getPasswordValidators, validatePassword } from '../utils';

@@ -34,6 +34,8 @@ import { PermissionManagement } from '../models';
 import { NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { Tabs, TabList, Tab, TabPanel, TabContent } from '@angular/aria/tabs';
+
 type PermissionWithStyle = PermissionGrantInfoDto & {
   style: string;
 };
@@ -56,7 +58,7 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
         max-height: calc(100vh - 23.1rem);
       }
 
-      .lpx-scroll-pills-container ul {
+      .lpx-scroll-pills-container .nav-pills {
         display: block;
         overflow-y: auto;
       }
@@ -66,7 +68,7 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
         .scroll-in-modal {
           max-height: calc(100vh - 15rem);
         }
-        .lpx-scroll-pills-container ul {
+        .lpx-scroll-pills-container .nav-pills {
           max-height: 500px;
         }
       }
@@ -81,12 +83,12 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
         padding-bottom: 0 !important;
       }
 
-      .lpx-scroll-pills-container ul li {
+      .lpx-scroll-pills-container .nav-item {
         margin-bottom: 10px;
         border-radius: 10px;
       }
 
-      .lpx-scroll-pills-container ul li a.active {
+      .lpx-scroll-pills-container .nav-item .nav-link.active {
         color: #fff !important;
         border-color: #6c5dd3 !important;
         background-color: #6c5dd3 !important;
@@ -100,6 +102,11 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
     LocalizationPipe,
     ButtonComponent,
     ModalCloseDirective,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanel,
+    TabContent,
   ],
 })
 export class PermissionManagementComponent
@@ -416,6 +423,13 @@ export class PermissionManagementComponent
       }
     }
     this.onChangeGroup(this.selectedGroup);
+  }
+
+  onTabChange(groupName: string) {
+    const group = this.permissionGroups().find(g => g.name === groupName);
+    if (group) {
+      this.onChangeGroup(group);
+    }
   }
 
   onChangeGroup(group: PermissionGroupDto) {

@@ -54,8 +54,7 @@ public class RecreateInitialMigrationCommand : IConsoleCommand, ITransientDepend
                 separateDbContext = true;
             }
 
-            var exitCode = 0;
-            CmdHelper.RunCmd("dotnet build", workingDirectory: projectDir, exitCode: out exitCode);
+            CmdHelper.RunCmd("dotnet build", workingDirectory: projectDir, exitCode: out var exitCode);
             if (exitCode != 0)
             {
                 Logger.LogError("Build failed for project {Project}. Skipping migration recreation.", csprojFile);

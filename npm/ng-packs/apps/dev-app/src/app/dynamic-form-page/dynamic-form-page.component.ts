@@ -19,8 +19,20 @@ export class DynamicFormPageComponent implements OnInit {
         });
     }
 
-    submit(val) {
-        console.log('submit', val);
+    submit(formData: any) {
+        console.log('✅ Form Submitted Successfully!', formData);
+        console.table(formData);
+        
+        // Show success message
+        alert('✅ Form submitted successfully! Check the console for details.');
+        
+        // Reset form after submission
+        this.dynamicFormComponent.resetForm();
+    }
+
+    cancel() {
+        console.log('❌ Form Cancelled');
+        alert('Form cancelled');
         this.dynamicFormComponent.resetForm();
     }
 }

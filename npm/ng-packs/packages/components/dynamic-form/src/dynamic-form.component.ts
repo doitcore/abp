@@ -57,6 +57,7 @@ export class DynamicFormComponent implements OnInit {
       this.onSubmit.emit(this.dynamicForm.getRawValue());
     } else {
       this.markAllFieldsAsTouched();
+      this.focusFirstInvalidField();
     }
   }
 
@@ -172,5 +173,23 @@ export class DynamicFormComponent implements OnInit {
     Object.keys(this.dynamicForm.controls).forEach(key => {
       this.dynamicForm.get(key)?.markAsTouched();
     });
+  }
+
+  private focusFirstInvalidField() {
+    // Accessibility: Focus first invalid field for screen readers
+    const firstInvalidField = this.sortedFields.find(field => {
+      const control = this.dynamicForm.get(field.key);
+      return control && control.invalid && control.touched;
+    });
+
+    if (firstInvalidField) {
+      setTimeout(() => {
+        const element = document.getElementById(`field-${firstInvalidField.key}`);
+        if (element) {
+          element.focus();
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
   }
 }

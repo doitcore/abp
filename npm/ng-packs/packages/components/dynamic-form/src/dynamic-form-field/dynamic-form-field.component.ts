@@ -61,6 +61,19 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   private dynamicFormService = inject(DynamicFormService);
 
   options$: Observable<{ key: string; value: any }[]> = of([]);
+  
+  // Accessibility: Generate unique IDs for ARIA
+  get fieldId(): string {
+    return `field-${this.field().key}`;
+  }
+  
+  get errorId(): string {
+    return `${this.fieldId}-error`;
+  }
+  
+  get helpTextId(): string {
+    return `${this.fieldId}-help`;
+  }
 
   constructor() {
     this.fieldFormGroup = this.formBuilder.group({
@@ -127,8 +140,9 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   get errors(): string[] {
     if (this.control && this.control.errors) {
       const errorKeys = Object.keys(this.control.errors);
+      const validators = this.field().validators || [];
       return errorKeys.map(key => {
-        const validator = this.field().validators.find(
+        const validator = validators.find(
           v => v.type.toLowerCase() === key.toLowerCase(),
         );
         if (validator && validator.message) {
@@ -144,10 +158,22 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
         return `${this.field().label} is invalid due to ${key} validation.`;
       });
     }
+    return [];
   }
   get value() {
     return this.fieldFormGroup.get('value');
   }
+
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const files = Array.from(input.files);
+      const value = this.field().multiple ? files : files[0];
+      this.value.setValue(value);
+      this.onChange(value);
+    }
+  }
+
   private onChange: (value: any) => void = () => { };
   private onTouched: () => void = () => { };
 }

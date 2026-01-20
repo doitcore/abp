@@ -4,7 +4,7 @@ import { ControlValueAccessor } from '@angular/forms';
 export interface FormFieldConfig<T = any> {
   key: string;
   value?: any;
-  type: 'text' | 'email' | 'number' | 'select' | 'checkbox' | 'date' | 'textarea';
+  type: 'text' | 'email' | 'number' | 'select' | 'checkbox' | 'date' | 'textarea' | 'datetime-local' | 'time' | 'password' | 'tel' | 'url' | 'radio' | 'file' | 'range' | 'color';
   label: string;
   placeholder?: string;
   required?: boolean;
@@ -15,6 +15,15 @@ export interface FormFieldConfig<T = any> {
   order?: number;
   gridSize?: number;
   component?: Type<ControlValueAccessor>;
+  // Additional field attributes
+  min?: number | string; // For number, date, time, range
+  max?: number | string; // For number, date, time, range
+  step?: number | string; // For number, time, range
+  minLength?: number; // For text, password
+  maxLength?: number; // For text, password
+  pattern?: string; // For tel, text
+  accept?: string; // For file input (e.g., "image/*")
+  multiple?: boolean; // For file input
 }
 
 export interface ValidatorConfig {

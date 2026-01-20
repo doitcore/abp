@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +16,11 @@ public class McpServerService : ITransientDependency
 {
     private const string LogSource = nameof(McpServerService);
     private const int MaxLogResponseLength = 500;
+    
+    private static readonly JsonSerializerOptions JsonCamelCaseOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
     
     private static class ToolErrorMessages
     {
@@ -74,32 +78,8 @@ public class McpServerService : ITransientDependency
 
     private void RegisterToolFromDefinition(McpServerOptions options, McpToolDefinition toolDef)
     {
-        // Build input schema with lowercase keys as required by MCP JSON Schema format
-        var inputSchemaObject = new Dictionary<string, object>
-        {
-            ["type"] = "object",
-            ["properties"] = ConvertProperties(toolDef.InputSchema?.Properties),
-            ["required"] = toolDef.InputSchema?.Required ?? new List<string>()
-        };
-
-        RegisterTool(options, toolDef.Name, toolDef.Description, inputSchemaObject, toolDef.OutputSchema);
-    }
-
-    private static Dictionary<string, object> ConvertProperties(Dictionary<string, McpToolProperty> properties)
-    {
-        if (properties == null)
-        {
-            return new Dictionary<string, object>();
-        }
-
-        return properties.ToDictionary(
-            kvp => kvp.Key,
-            kvp => (object)new Dictionary<string, object>
-            {
-                ["type"] = kvp.Value.Type,
-                ["description"] = kvp.Value.Description
-            }
-        );
+        var inputSchema = toolDef.InputSchema ?? new McpToolInputSchema();
+        RegisterTool(options, toolDef.Name, toolDef.Description, inputSchema, toolDef.OutputSchema);
     }
 
     private static CallToolResult CreateErrorResult(string errorMessage)
@@ -132,7 +112,7 @@ public class McpServerService : ITransientDependency
         var tool = new AbpMcpServerTool(
             name,
             description,
-            JsonSerializer.SerializeToElement(inputSchema),
+            JsonSerializer.SerializeToElement(inputSchema, JsonCamelCaseOptions),
             outputSchema,
             (context, cancellationToken) => HandleToolInvocationAsync(name, context, cancellationToken)
         );

@@ -13,6 +13,7 @@ public class McpToolDefinition
 
 public class McpToolInputSchema
 {
+    public string Type { get; set; } = "object";
     public Dictionary<string, McpToolProperty> Properties { get; set; }
     public List<string> Required { get; set; }
 }

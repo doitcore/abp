@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
 import { createRoutingFactory, SpectatorRouting } from '@ngneat/spectator/vitest';
 import { of } from 'rxjs';
 import { BreadcrumbComponent, BreadcrumbItemsComponent } from '../components';
-import { setupComponentResources } from './test-utils';
+import { setupComponentResources } from './utils';
 
 const mockRoutes: ABP.Route[] = [
   { name: '_::Identity', path: '/identity' },

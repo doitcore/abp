@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
  * @example
  * ```typescript
  * 
- * import { setupComponentResources } from './test-utils';
+ * import { setupComponentResources } from './utils';
  *
  * beforeAll(() => setupComponentResources('../components/loader-bar', import.meta.url));
  * ```

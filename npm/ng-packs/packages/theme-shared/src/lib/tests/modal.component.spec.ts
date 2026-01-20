@@ -5,7 +5,7 @@ import { createComponentFactory, Spectator } from '@ngneat/spectator/vitest';
 import { Confirmation } from '@abp/ng.theme.shared';
 import { firstValueFrom, Subject, timer } from 'rxjs';
 import { ModalComponent } from '../components/modal/modal.component';
-import { setupComponentResources } from './test-utils';
+import { setupComponentResources } from './utils';
 
 @Component({
   template: `

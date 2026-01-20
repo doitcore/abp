@@ -4,7 +4,7 @@ import { NavigationStart, Router } from '@angular/router';
 import { createComponentFactory, Spectator } from '@ngneat/spectator/vitest';
 import { combineLatest, firstValueFrom, Subject, timer } from 'rxjs';
 import { LoaderBarComponent } from '../components/loader-bar/loader-bar.component';
-import { setupComponentResources } from './test-utils';
+import { setupComponentResources } from './utils';
 
 describe('LoaderBarComponent', () => {
   let spectator: Spectator<LoaderBarComponent>;

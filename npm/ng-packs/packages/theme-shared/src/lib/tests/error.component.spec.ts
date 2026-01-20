@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { vi } from 'vitest';
 
 import { HttpErrorWrapperComponent } from '../components/http-error-wrapper/http-error-wrapper.component';
-import { setupComponentResources } from './test-utils';
+import { setupComponentResources } from './utils';
 
 /**
  * Mock pipe to avoid ABP DI chain

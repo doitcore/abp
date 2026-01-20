@@ -5,7 +5,7 @@ import { ConfirmationComponent } from '../components';
 import { Confirmation } from '../models';
 import { ConfirmationService } from '../services';
 import { CONFIRMATION_ICONS, DEFAULT_CONFIRMATION_ICONS } from '../tokens/confirmation-icons.token';
-import { setupComponentResources } from './test-utils';
+import { setupComponentResources } from './utils';
 
 describe('ConfirmationService', () => {
   let spectator: SpectatorService<ConfirmationService>;

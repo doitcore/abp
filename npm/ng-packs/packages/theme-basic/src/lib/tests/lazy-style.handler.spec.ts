@@ -7,7 +7,7 @@ import { LazyLoadService, LoadingStrategy, LocalizationService } from '@abp/ng.c
 import { DocumentDirHandlerService } from '@abp/ng.theme.shared';
 import { BOOTSTRAP, createLazyStyleHref, LazyStyleHandler } from '../handlers';
 import { LAZY_STYLES } from '../tokens/lazy-styles.token';
-import { setupComponentResources } from './test-utils';
+import { setupComponentResources } from './utils';
 
 describe('LazyStyleHandler', () => {
   let spectator: SpectatorService<LazyStyleHandler>;

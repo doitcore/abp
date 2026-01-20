@@ -53,6 +53,9 @@ public class RecreateInitialMigrationCommand : IConsoleCommand, ITransientDepend
                 Directory.Delete(Path.Combine(projectDir, "TenantMigrations"), true);
                 separateDbContext = true;
             }
+
+            CmdHelper.RunCmd("dotnet build", workingDirectory: projectDir);
+
             if (!separateDbContext)
             {
                 CmdHelper.RunCmd($"dotnet ef migrations add Initial", workingDirectory: projectDir);

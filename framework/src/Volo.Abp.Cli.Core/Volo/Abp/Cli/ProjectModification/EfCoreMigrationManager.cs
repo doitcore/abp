@@ -44,13 +44,15 @@ public class EfCoreMigrationManager : ITransientDependency
         string dbContext,
         string outputDirectory)
     {
+        CmdHelper.RunCmd($"dotnet build", workingDirectory: dbMigrationsProjectFolder);
+
         var dbContextOption = string.IsNullOrWhiteSpace(dbContext)
             ? string.Empty
             : $"--context {dbContext}";
 
         CmdHelper.RunCmd($"dotnet ef migrations add {migrationName}" +
                          $" --output-dir {outputDirectory}" +
-                         $" {dbContextOption}", 
+                         $" {dbContextOption}",
             workingDirectory: dbMigrationsProjectFolder);
     }
 

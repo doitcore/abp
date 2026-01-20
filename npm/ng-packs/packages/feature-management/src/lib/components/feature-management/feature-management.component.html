@@ -12,18 +12,26 @@
     <ng-template #abpBody>
       <div class="row">
         @if (groups.length) {
-          <div class="col-md-4">
-            <ul
-              ngbNav
-              #nav="ngbNav"
-              [(activeId)]="selectedGroupDisplayName"
-              class="nav-pills"
-              orientation="vertical"
-            >
+          <div ngTabs orientation="vertical" class="row">
+            <div class="col-md-4">
+              <div ngTabList orientation="vertical" selectionMode="follow" [(selectedTab)]="selectedGroupDisplayName" class="nav nav-pills flex-column">
+                @for (group of groups; track group.name) {
+                  <button ngTab #tab="ngTab" [value]="group.displayName" class="nav-link text-start" [class.active]="tab.selected()">
+                    {{ group.displayName }}
+                  </button>
+                }
+              </div>
+            </div>
+            <ng-template #descTmp let-description>
+              @if (description) {
+                <small class="d-block form-text text-muted">{{ description }}</small>
+              }
+            </ng-template>
+
+            <div class="col-md-8">
               @for (group of groups; track group.name) {
-                <li [ngbNavItem]="group.displayName">
-                  <a ngbNavLink>{{ group.displayName }}</a>
-                  <ng-template ngbNavContent>
+                <div ngTabPanel [value]="group.displayName">
+                  <ng-template ngTabContent>
                     <h4>{{ selectedGroupDisplayName }}</h4>
                     <hr class="mt-2 mb-3" />
 
@@ -128,18 +136,10 @@
                       </div>
                     }
                   </ng-template>
-                </li>
+                </div>
               }
-            </ul>
+            </div>
           </div>
-
-          <ng-template #descTmp let-description>
-            @if (description) {
-              <small class="d-block form-text text-muted">{{ description }}</small>
-            }
-          </ng-template>
-
-          <div class="col-md-8"><div class="py-0" [ngbNavOutlet]="nav"></div></div>
         }
 
         @if (!groups.length) {

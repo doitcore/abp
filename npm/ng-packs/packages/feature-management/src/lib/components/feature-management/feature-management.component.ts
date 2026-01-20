@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, inject, DOCUMENT } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfigStateService, LocalizationPipe, TrackByService } from '@abp/ng.core';
 import {
@@ -17,7 +17,7 @@ import {
   ModalComponent,
   ToasterService,
 } from '@abp/ng.theme.shared';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { Tabs, TabList, Tab, TabPanel, TabContent } from '@angular/aria/tabs';
 import { finalize } from 'rxjs/operators';
 import { FreeTextInputDirective } from '../../directives';
 import { FeatureManagement } from '../../models';
@@ -36,11 +36,16 @@ const DEFAULT_PROVIDER_NAME = 'D';
   exportAs: 'abpFeatureManagement',
   imports: [
     NgTemplateOutlet,
+    NgStyle,
     ButtonComponent,
     ModalComponent,
     LocalizationPipe,
     FormsModule,
-    NgbNavModule,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanel,
+    TabContent,
     FreeTextInputDirective,
     ModalCloseDirective,
   ],

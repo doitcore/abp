@@ -17,12 +17,6 @@ public class CommandSelector : ICommandSelector, ITransientDependency
 
     public Type Select(CommandLineArgs commandLineArgs)
     {
-        // Don't fall back to HelpCommand for MCP command to avoid corrupting stdout JSON-RPC stream
-        if (commandLineArgs.IsMcpCommand())
-        {
-            return Options.Commands.GetOrDefault("mcp") ?? typeof(HelpCommand);
-        }
-
         if (commandLineArgs.Command.IsNullOrWhiteSpace())
         {
             return typeof(HelpCommand);

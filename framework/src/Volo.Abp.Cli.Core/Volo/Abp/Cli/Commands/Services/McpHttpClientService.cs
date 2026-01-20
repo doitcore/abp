@@ -19,13 +19,6 @@ public class McpHttpClientService : ISingletonDependency
 {
     private static readonly JsonSerializerOptions JsonSerializerOptionsWeb = new(JsonSerializerDefaults.Web);
     
-    private static class ErrorMessages
-    {
-        public const string NetworkConnectivity = "The tool execution failed due to a network connectivity issue. Please check your internet connection and try again.";
-        public const string Timeout = "The tool execution timed out. The operation took too long to complete. Please try again.";
-        public const string Unexpected = "The tool execution failed due to an unexpected error. Please try again later.";
-    }
-    
     private const string LogSource = nameof(McpHttpClientService);
     
     private readonly CliHttpClientFactory _httpClientFactory;
@@ -44,40 +37,6 @@ public class McpHttpClientService : ISingletonDependency
         _logger = logger;
         _mcpLogger = mcpLogger;
         _cachedServerUrlLazy = new Lazy<Task<string>>(GetMcpServerUrlInternalAsync);
-    }
-
-    private async Task<string> GetMcpServerUrlAsync()
-    {
-        return await _cachedServerUrlLazy.Value;
-    }
-
-    private async Task<string> GetMcpServerUrlInternalAsync()
-    {
-        // Check config file
-        if (File.Exists(CliPaths.McpConfig))
-        {
-            try
-            {
-                var json = await FileHelper.ReadAllTextAsync(CliPaths.McpConfig);
-                var config = JsonSerializer.Deserialize<McpConfig>(json, JsonSerializerOptionsWeb);
-                if (!string.IsNullOrWhiteSpace(config?.ServerUrl))
-                {
-                    return config.ServerUrl.TrimEnd('/');
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Failed to read MCP config file");
-            }
-        }
-
-        // Return default
-        return CliConsts.DefaultMcpServerUrl;
-    }
-
-    private class McpConfig
-    {
-        public string ServerUrl { get; set; }
     }
 
     public void InitializeToolNames(List<McpToolDefinition> tools)
@@ -150,37 +109,6 @@ public class McpHttpClientService : ISingletonDependency
             // Return generic sanitized error to client
             return CreateErrorResponse(ErrorMessages.Unexpected);
         }
-    }
-
-    private string CreateErrorResponse(string errorMessage)
-    {
-        return JsonSerializer.Serialize(new
-        {
-            content = new[]
-            {
-                new
-                {
-                    type = "text",
-                    text = errorMessage
-                }
-            },
-            isError = true
-        }, JsonSerializerOptionsWeb);
-    }
-
-    private string GetSanitizedHttpErrorMessage(HttpStatusCode statusCode)
-    {
-        return statusCode switch
-        {
-            HttpStatusCode.Unauthorized => "Authentication failed. Please ensure you are logged in with a valid account.",
-            HttpStatusCode.Forbidden => "Access denied. You do not have permission to use this tool.",
-            HttpStatusCode.NotFound => "The requested tool could not be found. It may have been removed or is temporarily unavailable.",
-            HttpStatusCode.BadRequest => "The tool request was invalid. Please check your input parameters and try again.",
-            (HttpStatusCode)429 => "Rate limit exceeded. Please wait a moment before trying again.", // TooManyRequests not available in .NET Standard 2.0
-            HttpStatusCode.ServiceUnavailable => "The service is temporarily unavailable. Please try again later.",
-            HttpStatusCode.InternalServerError => "The tool execution encountered an internal error. Please try again later.",
-            _ => "The tool execution failed. Please try again later."
-        };
     }
 
     public async Task<bool> CheckServerHealthAsync()
@@ -258,6 +186,66 @@ public class McpHttpClientService : ISingletonDependency
         }
     }
 
+    private async Task<string> GetMcpServerUrlAsync()
+    {
+        return await _cachedServerUrlLazy.Value;
+    }
+
+    private async Task<string> GetMcpServerUrlInternalAsync()
+    {
+        // Check config file
+        if (File.Exists(CliPaths.McpConfig))
+        {
+            try
+            {
+                var json = await FileHelper.ReadAllTextAsync(CliPaths.McpConfig);
+                var config = JsonSerializer.Deserialize<McpConfig>(json, JsonSerializerOptionsWeb);
+                if (!string.IsNullOrWhiteSpace(config?.ServerUrl))
+                {
+                    return config.ServerUrl.TrimEnd('/');
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to read MCP config file");
+            }
+        }
+
+        // Return default
+        return CliConsts.DefaultMcpServerUrl;
+    }
+
+    private string CreateErrorResponse(string errorMessage)
+    {
+        return JsonSerializer.Serialize(new
+        {
+            content = new[]
+            {
+                new
+                {
+                    type = "text",
+                    text = errorMessage
+                }
+            },
+            isError = true
+        }, JsonSerializerOptionsWeb);
+    }
+
+    private string GetSanitizedHttpErrorMessage(HttpStatusCode statusCode)
+    {
+        return statusCode switch
+        {
+            HttpStatusCode.Unauthorized => "Authentication failed. Please ensure you are logged in with a valid account.",
+            HttpStatusCode.Forbidden => "Access denied. You do not have permission to use this tool.",
+            HttpStatusCode.NotFound => "The requested tool could not be found. It may have been removed or is temporarily unavailable.",
+            HttpStatusCode.BadRequest => "The tool request was invalid. Please check your input parameters and try again.",
+            (HttpStatusCode)429 => "Rate limit exceeded. Please wait a moment before trying again.", // TooManyRequests not available in .NET Standard 2.0
+            HttpStatusCode.ServiceUnavailable => "The service is temporarily unavailable. Please try again later.",
+            HttpStatusCode.InternalServerError => "The tool execution encountered an internal error. Please try again later.",
+            _ => "The tool execution failed. Please try again later."
+        };
+    }
+
     private CliUsageException CreateHttpExceptionWithInner(Exception ex, string context)
     {
         _mcpLogger.Error(LogSource, context, ex);
@@ -273,9 +261,20 @@ public class McpHttpClientService : ISingletonDependency
         return new CliUsageException($"Failed to fetch tool definitions: {userMessage}", ex);
     }
 
+    private static class ErrorMessages
+    {
+        public const string NetworkConnectivity = "The tool execution failed due to a network connectivity issue. Please check your internet connection and try again.";
+        public const string Timeout = "The tool execution timed out. The operation took too long to complete. Please try again.";
+        public const string Unexpected = "The tool execution failed due to an unexpected error. Please try again later.";
+    }
+    
+    private class McpConfig
+    {
+        public string ServerUrl { get; set; }
+    }
+
     private class McpToolsResponse
     {
         public List<McpToolDefinition> Tools { get; set; }
     }
 }
-

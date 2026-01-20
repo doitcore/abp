@@ -74,7 +74,7 @@ public class McpServerService : ITransientDependency
 
     private void RegisterToolFromDefinition(McpServerOptions options, McpToolDefinition toolDef)
     {
-        // Convert McpToolDefinition to the input schema format expected by MCP
+        // Build input schema with lowercase keys as required by MCP JSON Schema format
         var inputSchemaObject = new Dictionary<string, object>
         {
             ["type"] = "object",
@@ -85,7 +85,7 @@ public class McpServerService : ITransientDependency
         RegisterTool(options, toolDef.Name, toolDef.Description, inputSchemaObject, toolDef.OutputSchema);
     }
 
-    private Dictionary<string, object> ConvertProperties(Dictionary<string, McpToolProperty> properties)
+    private static Dictionary<string, object> ConvertProperties(Dictionary<string, McpToolProperty> properties)
     {
         if (properties == null)
         {

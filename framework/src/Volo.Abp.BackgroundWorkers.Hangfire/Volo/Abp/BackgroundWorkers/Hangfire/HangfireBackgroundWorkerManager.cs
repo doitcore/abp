@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Common;
+using Hangfire.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -33,6 +34,7 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
 
     public override async Task AddAsync(IBackgroundWorker worker, CancellationToken cancellationToken = default)
     {
+        var logger = ServiceProvider.GetRequiredService<ILogger<HangfireBackgroundWorkerManager>>();
         var abpHangfireOptions = ServiceProvider.GetRequiredService<IOptions<AbpHangfireOptions>>().Value;
         var defaultQueuePrefix = abpHangfireOptions.DefaultQueuePrefix;
         var defaultQueue = abpHangfireOptions.DefaultQueue;
@@ -43,15 +45,31 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
             {
                 var unProxyWorker = ProxyHelper.UnProxy(hangfireBackgroundWorker);
 
-                RecurringJob.AddOrUpdate(
-                    hangfireBackgroundWorker.RecurringJobId,
-                    hangfireBackgroundWorker.Queue.IsNullOrWhiteSpace() ? defaultQueue : defaultQueuePrefix + hangfireBackgroundWorker.Queue,
-                    () => ((IHangfireBackgroundWorker)unProxyWorker).DoWorkAsync(cancellationToken),
-                    hangfireBackgroundWorker.CronExpression,
-                    new RecurringJobOptions
-                    {
-                        TimeZone = hangfireBackgroundWorker.TimeZone
-                    });
+                var queueName = hangfireBackgroundWorker.Queue.IsNullOrWhiteSpace() ? defaultQueue : defaultQueuePrefix + hangfireBackgroundWorker.Queue;
+                if (!JobStorage.Current.HasFeature(JobStorageFeatures.JobQueueProperty))
+                {
+                    logger.LogError($"Current storage doesn't support specifying queues({queueName}) directly for a specific job. Please use the QueueAttribute instead.");
+                    RecurringJob.AddOrUpdate(
+                        hangfireBackgroundWorker.RecurringJobId,
+                        () => ((IHangfireBackgroundWorker)unProxyWorker).DoWorkAsync(cancellationToken),
+                        hangfireBackgroundWorker.CronExpression,
+                        new RecurringJobOptions
+                        {
+                            TimeZone = hangfireBackgroundWorker.TimeZone
+                        });
+                }
+                else
+                {
+                    RecurringJob.AddOrUpdate(
+                        hangfireBackgroundWorker.RecurringJobId,
+                        queueName,
+                        () => ((IHangfireBackgroundWorker)unProxyWorker).DoWorkAsync(cancellationToken),
+                        hangfireBackgroundWorker.CronExpression,
+                        new RecurringJobOptions
+                        {
+                            TimeZone = hangfireBackgroundWorker.TimeZone
+                        });
+                }
 
                 break;
             }
@@ -63,18 +81,17 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
                 switch (worker)
                 {
                     case AsyncPeriodicBackgroundWorkerBase asyncPeriodicBackgroundWorkerBase:
-                        period = asyncPeriodicBackgroundWorkerBase.Period;
-                        cronExpression = asyncPeriodicBackgroundWorkerBase.CronExpression;
+                    period = asyncPeriodicBackgroundWorkerBase.Period;
+                    cronExpression = asyncPeriodicBackgroundWorkerBase.CronExpression;
                         break;
                     case PeriodicBackgroundWorkerBase periodicBackgroundWorkerBase:
-                        period = periodicBackgroundWorkerBase.Period;
-                        cronExpression = periodicBackgroundWorkerBase.CronExpression;
+                    period = periodicBackgroundWorkerBase.Period;
+                    cronExpression = periodicBackgroundWorkerBase.CronExpression;
                         break;
                 }
 
                 if (period == null && cronExpression.IsNullOrWhiteSpace())
                 {
-                    var logger = ServiceProvider.GetRequiredService<ILogger<HangfireBackgroundWorkerManager>>();
                     logger.LogError(
                         $"Cannot add periodic background worker {worker.GetType().FullName} to Hangfire scheduler, because both Period and CronExpression are not set. " +
                         "You can either set Period or CronExpression property of the worker."
@@ -86,15 +103,32 @@ public class HangfireBackgroundWorkerManager : BackgroundWorkerManager, ISinglet
                 Expression<Func<Task>> methodCall = () => workerAdapter.DoWorkAsync(cancellationToken);
                 var recurringJobId = !workerAdapter.RecurringJobId.IsNullOrWhiteSpace() ? workerAdapter.RecurringJobId : GetRecurringJobId(worker, methodCall);
 
-                RecurringJob.AddOrUpdate(
-                    recurringJobId,
-                    workerAdapter.Queue.IsNullOrWhiteSpace() ? defaultQueue : defaultQueuePrefix + workerAdapter.Queue,
-                    methodCall,
-                    cronExpression ?? GetCron(period!.Value),
-                    new RecurringJobOptions
-                    {
-                        TimeZone = workerAdapter.TimeZone
-                    });
+                var queueName = workerAdapter.Queue.IsNullOrWhiteSpace() ? defaultQueue : defaultQueuePrefix + workerAdapter.Queue;
+                if (!JobStorage.Current.HasFeature(JobStorageFeatures.JobQueueProperty))
+                {
+                    logger.LogError($"Current storage doesn't support specifying queues({queueName}) directly for a specific job. Please use the QueueAttribute instead.");
+                    RecurringJob.AddOrUpdate(
+                        recurringJobId,
+                        methodCall,
+                        cronExpression ?? GetCron(period!.Value),
+                        new RecurringJobOptions
+                        {
+                            TimeZone = workerAdapter.TimeZone
+                        });
+                }
+                else
+                {
+                    RecurringJob.AddOrUpdate(
+                        recurringJobId,
+                        queueName,
+                        methodCall,
+                        cronExpression ?? GetCron(period!.Value),
+                        new RecurringJobOptions
+                        {
+                            TimeZone = workerAdapter.TimeZone
+                        });
+                }
+
                 break;
             }
             default:

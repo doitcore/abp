@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, NgModule, inject as inject_1 } from '@angular/core';
+import { Component, inject as inject_1 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { createRoutingFactory, SpectatorRouting } from '@ngneat/spectator/vitest';
 import { DynamicLayoutComponent, RouterOutletComponent } from '../components';
@@ -68,7 +68,14 @@ describe('DynamicLayoutComponent', () => {
   const createComponent = createRoutingFactory({
     component: RouterOutletComponent,
     stubsEnabled: false,
-    imports: [DummyComponent, RouterModule, DummyApplicationLayoutComponent, DummyAccountLayoutComponent, DummyEmptyLayoutComponent, DynamicLayoutComponent],
+    imports: [
+      DummyComponent,
+      RouterModule,
+      DummyApplicationLayoutComponent,
+      DummyAccountLayoutComponent,
+      DummyEmptyLayoutComponent,
+      DynamicLayoutComponent,
+    ],
     mocks: [AbpApplicationConfigurationService, HttpClient],
     providers: [
       {

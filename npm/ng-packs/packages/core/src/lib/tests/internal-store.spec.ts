@@ -1,6 +1,5 @@
 import clone from 'just-clone';
 import { take } from 'rxjs/operators';
-import { firstValueFrom } from 'rxjs';
 import { DeepPartial } from '../models/utility';
 import { InternalStore } from '../utils/internal-store-utils';
 

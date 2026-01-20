@@ -1,6 +1,6 @@
+import { timer , firstValueFrom } from 'rxjs';
 import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/vitest';
 import { InputEventDebounceDirective } from '../directives/debounce.directive';
-import { timer , firstValueFrom } from 'rxjs';
 
 describe('InputEventDebounceDirective', () => {
   let spectator: SpectatorDirective<InputEventDebounceDirective>;
@@ -29,12 +29,10 @@ describe('InputEventDebounceDirective', () => {
     expect(directive.debounce).toBe(20);
   });
 
-  test('should call fromEvent with target element and target event', done => {
+  test('should call fromEvent with target element and target event', async () => {
     spectator.dispatchFakeEvent('input', 'input', true);
     timer(0).subscribe(() => expect(inputEventFn).not.toHaveBeenCalled());
-    timer(21).subscribe(() => {
-      expect(inputEventFn).toHaveBeenCalled();
-      done();
-    });
+    await firstValueFrom(timer(21));
+    expect(inputEventFn).toHaveBeenCalled();
   });
 });

@@ -132,7 +132,7 @@ describe('ConfigStateService', () => {
       },
       {
         provide: AbpApplicationLocalizationService,
-        useValue: { get: () => APPLICATION_LOCALIZATION_DATA },
+        useValue: { get: () => of(APPLICATION_LOCALIZATION_DATA) },
       },
       IncludeLocalizationResourcesProvider,
     ],

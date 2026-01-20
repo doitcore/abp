@@ -28,12 +28,11 @@ describe('StopPropagationDirective', () => {
     expect(directive).toBeTruthy();
   });
 
-  test('should not call click event of parent when child element is clicked', done => {
+  test('should not call click event of parent when child element is clicked', () => {
     spectator.setHostInput({ parentClickEventFn, childClickEventFn });
     spectator.click('a');
     spectator.detectChanges();
     expect(childClickEventFn).toHaveBeenCalled();
     expect(parentClickEventFn).not.toHaveBeenCalled();
-    done();
   });
 });

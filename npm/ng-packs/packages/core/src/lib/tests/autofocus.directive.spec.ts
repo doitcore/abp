@@ -1,6 +1,6 @@
 import { createDirectiveFactory, SpectatorDirective } from '@ngneat/spectator/vitest';
 import { AutofocusDirective } from '../directives/autofocus.directive';
-import { timer , firstValueFrom } from 'rxjs';
+import { timer } from 'rxjs';
 
 describe('AutofocusDirective', () => {
   let spectator: SpectatorDirective<AutofocusDirective>;
@@ -26,11 +26,11 @@ describe('AutofocusDirective', () => {
     expect(directive.delay).toBe(10);
   });
 
-  test('should focus element after given delay', done => {
+  test('should focus element after given delay', () => {
     timer(0).subscribe(() => expect('input').not.toBeFocused());
     timer(11).subscribe(() => {
       expect('input').toBeFocused();
-      done();
+      expect.hasAssertions();
     });
   });
 });

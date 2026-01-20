@@ -2,7 +2,6 @@ import { createHttpFactory, HttpMethod, SpectatorHttp, SpyObject } from '@ngneat
 import { OAuthService } from 'angular-oauth2-oidc';
 import { of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { firstValueFrom } from 'rxjs';
 import { Rest } from '../models/rest';
 import { EnvironmentService } from '../services/environment.service';
 import { HttpErrorReporterService } from '../services/http-error-reporter.service';
@@ -75,13 +74,21 @@ describe('HttpClient testing', () => {
     spectator.expectOne('bar' + '/test', HttpMethod.GET);
   });
 
-  test('should complete upon successful request', done => {
-    const complete = vi.fn(done);
+  test('should complete upon successful request', async () => {
+    const request$ = spectator.service.request({ method: HttpMethod.GET, url: '/test' });
 
-    spectator.service.request({ method: HttpMethod.GET, url: '/test' }).subscribe({ complete });
+    // Create a promise that resolves when the observable completes
+    const completionPromise = new Promise<void>((resolve, reject) => {
+      request$.subscribe({
+        complete: () => resolve(),
+        error: err => reject(err),
+      });
+    });
 
     const req = spectator.expectOne(api + '/test', HttpMethod.GET);
     spectator.flushAll([req], [{}]);
+
+    await completionPromise;
   });
 
   test('should handle the error', () => {

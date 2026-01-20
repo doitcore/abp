@@ -1,9 +1,9 @@
 import { createComponentFactory, Spectator } from '@ngneat/spectator/vitest';
-import { AbpApplicationConfigurationService, SessionStateService } from '@abp/ng.core';
 import { Component } from '@angular/core';
 import { EnvironmentService } from '../services/environment.service';
-import { AuthService } from '../abstracts/auth.service';
+import {SessionStateService} from '../services/session-state.service';
 import { ConfigStateService } from '../services/config-state.service';
+import { AuthService } from '../abstracts/auth.service';
 import { CORE_OPTIONS } from '../tokens/options.token';
 import { getInitialData, localeInitializer } from '../utils/initial-utils';
 import { RestService } from '../services/rest.service';
@@ -24,7 +24,6 @@ describe('InitialUtils', () => {
     mocks: [
       EnvironmentService,
       ConfigStateService,
-      AbpApplicationConfigurationService,
       AuthService,
       SessionStateService,
       RestService,

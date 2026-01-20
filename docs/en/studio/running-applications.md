@@ -49,7 +49,7 @@ When you click *Add New Profile*, it opens the *Create New Profile* window. You 
 The **Applications tab** allows you to manage and run your applications. The solution runner contains 4 different types to define tree structure:
 
 - **Profile**: We can create different profiles to manage the tree as our needs. For example we can create 2 different profile for `team-1` and `team-2`. `team-1` want to see the only *Administration* and *Identity* service, `team-2` see the *Saas* and *AuditLogging* services. With that way each team see the only services they need to run. In this example `Default` profile *Acme.BookStore (Default)* comes out of the box when we create the project.
-- **Folder**: We can organize the applications with *Folder* type. In this example, we keep services in `services` folder for our microservice projects. We can also use nested folder if we want `apps`, `gateways` and `services` is the folders in current(`Default`) profile. 
+- **Folder**: We can organize the applications with *Folder* type. In this example, we keep services in `services` folder for our microservice projects. We can also use nested folder if we want `apps`, `gateways` and `services` are the folders in current(`Default`) profile. 
 - **C# Application**: We can add any C# application from our [Solution Explorer](./solution-explorer.md). If the application is not in our solution, we can add it externally by providing the *.csproj* file path. The .NET icon indicates that the application is a C# project. For example, `Acme.BookStore.AuthServer`, `Acme.BookStore.Web`, `Acme.BookStore.WebGateway`, etc., are C# applications.
 - **CLI Application**: We can add [powershell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core) commands to prepare some environments or run other application types than C# such as angular.
 - **Docker Container**: We can add Docker container files to control them on UI, start/stop containers individually.
@@ -363,17 +363,17 @@ When you create a new solution using ABP Studio templates, the following tasks a
 
 #### Initialize Solution
 
-The *Initialize Solution* task performs the initial setup required after creating a new solution or cloning an existing one from source control. This task is marked to run automatically when the solution is opened in ABP Studio.
+The *Initialize Solution* task performs the initial setup required after creating a new solution or cloning an existing one from source control. This task is configured with the *Run on solution initialization (1 time per computer)* behaviour, meaning it runs automatically only once per computer when the solution is initialized.
 
 ![task-behavior](images/solution-runner/initial-task-properties-behavior.png)
 
 The initialization typically includes:
 
 - Installing NPM packages (`abp install-libs`)
-- Running database migrations
 - Creating development certificates (for OpenIddict)
+- and more... (depends on solution type)
 
-> This task is designed to be idempotent, meaning it can be run multiple times without causing issues. If the solution is already initialized, running this task again will simply verify that everything is in place.
+> This task is designed to be idempotent, meaning it can be run multiple times without causing issues.
 
 #### Migrate Database
 
@@ -436,17 +436,33 @@ Select *Remove* to delete the task from the profile. This action only removes th
 
 ### Run On Solution Open
 
-Tasks marked with *Run On Solution Open* are automatically executed when you open the solution in ABP Studio. This is particularly useful for:
+Tasks configured with *Run on solution open* behaviour are automatically executed every time you open the solution in ABP Studio. This is useful for:
 
-- **Initial setup**: Running the *Initialize Solution* task ensures that new team members or fresh clones have everything configured correctly.
-- **Environment preparation**: Setting up required services or configurations before starting development.
+- **Environment checks**: Verifying that required services or dependencies are available.
+- **Recurring setup**: Tasks that need to run on each session, such as starting background services or refreshing configurations.
 
 When the solution is opened:
+
 1. ABP Studio loads the solution and profiles
-2. Tasks marked with *Run On Solution Open* are queued for execution
+2. Tasks marked with *Run on solution open* are queued for execution
 3. Tasks execute in the background, and you can monitor their progress in the [Background Tasks](./overview.md#background-tasks) panel
 
-> Tasks are designed to be idempotent when used with *Run On Solution Open*. This means running them multiple times should not cause errors or duplicate operations. For example, the *Initialize Solution* task checks if NPM packages are already installed before running `abp install-libs`.
+> Tasks configured with this behaviour should be idempotent, meaning running them multiple times should not cause errors or duplicate operations.
+
+### Run On Solution Initialization (1 Per Computer)
+
+Tasks configured with *Run on solution initialization (1 per computer)* behaviour are executed only once per computer when the solution is first opened. After the initial execution, the task will not run automatically on subsequent solution opens. This is ideal for:
+
+- **One-time setup**: Tasks like *Initialize Solution* that install dependencies, run database migrations, or create development certificates.
+- **First-time configuration**: Setting up environment-specific configurations that only need to happen once.
+
+This behaviour is particularly useful for:
+
+1. **New team members**: When a developer clones the repository and opens the solution for the first time, all initialization tasks run automatically.
+2. **Fresh clones**: Ensures the solution is properly configured without requiring manual intervention.
+3. **Avoiding redundant operations**: Prevents running time-consuming setup tasks on every solution open.
+
+> The *Initialize Solution* task that comes with ABP Studio templates uses this behaviour by default. It checks if NPM packages are already installed before running `abp install-libs` and performs other initialization steps only when necessary.
 
 ### Task Configuration in Profiles
 

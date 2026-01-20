@@ -28,7 +28,7 @@ public class Program
 #endif
             .Enrich.FromLogContext();
 
-        if (args.Length > 0 && args[0] == "mcp")
+        if (args.Length > 0 && args[0].Equals("mcp", StringComparison.OrdinalIgnoreCase))
         {
             Log.Logger = config
                 .WriteTo.File(Path.Combine(CliPaths.Log, "abp-cli-mcp-logs.txt"), outputTemplate: loggerOutputTemplate)

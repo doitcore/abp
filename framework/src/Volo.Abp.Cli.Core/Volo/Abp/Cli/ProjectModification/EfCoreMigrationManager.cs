@@ -44,8 +44,13 @@ public class EfCoreMigrationManager : ITransientDependency
         string dbContext,
         string outputDirectory)
     {
-        CmdHelper.RunCmd($"dotnet build", workingDirectory: dbMigrationsProjectFolder);
+        CmdHelper.RunCmd($"dotnet build", workingDirectory: dbMigrationsProjectFolder, exitCode: out var buildExitCode);
 
+        if (buildExitCode != 0)
+        {
+            Logger.LogWarning("Dotnet build failed for project folder {ProjectFolder}. Skipping EF Core migration command.", dbMigrationsProjectFolder);
+            return;
+        }
         var dbContextOption = string.IsNullOrWhiteSpace(dbContext)
             ? string.Empty
             : $"--context {dbContext}";

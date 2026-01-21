@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-  inject,
   forwardRef,
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';

@@ -18,16 +18,17 @@ public class SolutionFileModifier : ITransientDependency
     {
         _cmdHelper = cmdHelper;
     }
-    
+
     public async Task RemoveProjectFromSolutionFileAsync(string solutionFile, string projectName)
     {
-        var list = _cmdHelper.RunCmdAndGetOutput($"dotnet sln \"{solutionFile}\" list");
+        var workingDirectory = Path.GetDirectoryName(solutionFile);
+        var list = _cmdHelper.RunCmdAndGetOutput($"dotnet sln \"{solutionFile}\" list", workingDirectory: workingDirectory);
 
         foreach (var line in list.Split(new[] { Environment.NewLine, "\n" }, StringSplitOptions.None))
         {
             if (Path.GetFileNameWithoutExtension(line.Trim()).Equals(projectName, StringComparison.InvariantCultureIgnoreCase))
             {
-                _cmdHelper.RunCmd($"dotnet sln \"{solutionFile}\" remove \"{line.Trim()}\"");
+                _cmdHelper.RunCmd($"dotnet sln \"{solutionFile}\" remove \"{line.Trim()}\"", workingDirectory: workingDirectory);
                 break;
             }
         }
@@ -54,7 +55,7 @@ public class SolutionFileModifier : ITransientDependency
             Path.Combine(Path.GetDirectoryName(solutionFile), "modules", module.Name),
             "*.csproj",
             SearchOption.AllDirectories);
-        
+
         var projectsUnderTest = new List<string>();
         if (Directory.Exists(Path.Combine(Path.GetDirectoryName(solutionFile), "modules", module.Name, "test")))
         {
@@ -70,10 +71,10 @@ public class SolutionFileModifier : ITransientDependency
 
             var projectId = Path.GetFileName(projectPath).Replace(".csproj", "");
             var package = @$"modules\{module.Name}\{folder}\{projectId}\{projectId}.csproj";
-            
+
             _cmdHelper.RunCmd($"dotnet sln \"{solutionFile}\" add \"{package}\" --solution-folder {folder}");
         }
-        
+
         if (module.MasterModuleInfos != null)
         {
             foreach (var masterModule in module.MasterModuleInfos)

@@ -61,16 +61,16 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   private dynamicFormService = inject(DynamicFormService);
 
   options$: Observable<{ key: string; value: any }[]> = of([]);
-  
+
   // Accessibility: Generate unique IDs for ARIA
   get fieldId(): string {
     return `field-${this.field().key}`;
   }
-  
+
   get errorId(): string {
     return `${this.fieldId}-error`;
   }
-  
+
   get helpTextId(): string {
     return `${this.fieldId}-help`;
   }
@@ -138,6 +138,7 @@ export class DynamicFormFieldComponent implements OnInit, ControlValueAccessor {
   }
 
   get errors(): string[] {
+    if (!this.control?.errors) return [];
     if (this.control && this.control.errors) {
       const errorKeys = Object.keys(this.control.errors);
       const validators = this.field().validators || [];

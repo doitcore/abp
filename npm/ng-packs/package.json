@@ -10,6 +10,8 @@
     "build:all": "nx run-many --target=build --all --exclude=dev-app,schematics --prod &&  npm run build:schematics",
     "test": "ng test --detect-open-handles=true --run-in-band=true --watch-all=true",
     "test:all": "nx run-many --target=test --all",
+    "test:vitest": "vitest",
+    "test:vitest:project": "sh -c 'vitest --project \"${1:-core}\"' _",
     "lint-staged": "lint-staged",
     "lint": "nx workspace-lint && ng lint",
     "lint:all": "nx run-many --target=lint --all",

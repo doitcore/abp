@@ -336,8 +336,3 @@ See `apps/dev-app/src/app/dynamic-form-page` for complete examples:
 - ✅ **Lazy rendering** for conditional fields
 - ✅ **Minimal re-renders** on add/remove
 
----
-
-**Version:** 1.0.0  
-**Added:** 2026-01-20  
-**Status:** Production Ready ✅

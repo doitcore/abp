@@ -72,7 +72,7 @@ public class SolutionFileModifier : ITransientDependency
             var projectId = Path.GetFileName(projectPath).Replace(".csproj", "");
             var package = @$"modules\{module.Name}\{folder}\{projectId}\{projectId}.csproj";
 
-            _cmdHelper.RunCmd($"dotnet sln \"{solutionFile}\" add \"{package}\" --solution-folder {folder}");
+            _cmdHelper.RunCmd($"dotnet sln \"{solutionFile}\" add \"{package}\" --solution-folder {folder}", workingDirectory: Path.GetDirectoryName(solutionFile));
         }
 
         if (module.MasterModuleInfos != null)

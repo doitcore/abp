@@ -106,7 +106,7 @@ export class UsersComponent implements OnInit {
 
   selected?: IdentityUserDto;
 
-  selectedTab = '0';
+  selectedTab = 'user-info';
 
   selectedUserRoles?: IdentityRoleDto[];
 
@@ -166,7 +166,7 @@ export class UsersComponent implements OnInit {
   }
 
   openModal() {
-    this.selectedTab = '0';
+    this.selectedTab = 'user-info';
     this.buildForm();
     this.isModalVisible = true;
   }

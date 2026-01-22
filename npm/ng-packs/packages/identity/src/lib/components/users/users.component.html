@@ -30,22 +30,22 @@
         <form [formGroup]="form" (ngSubmit)="save()">
           <div ngTabs selectionMode="follow">
             <div ngTabList [(selectedTab)]="selectedTab" class="nav nav-tabs">
-              <button ngTab #tabInfo="ngTab" [value]="'0'" class="nav-link" [class.active]="tabInfo.selected()" type="button">
+              <button ngTab #tabInfo="ngTab" [value]="'user-info'" class="nav-link" [class.active]="tabInfo.selected()" type="button">
                 {{ 'AbpIdentity::UserInformations' | abpLocalization }}
               </button>
-              <button ngTab #tabRoles="ngTab" [value]="'1'" class="nav-link" [class.active]="tabRoles.selected()" type="button">
+              <button ngTab #tabRoles="ngTab" [value]="'roles'" class="nav-link" [class.active]="tabRoles.selected()" type="button">
                 {{ 'AbpIdentity::Roles' | abpLocalization }}
               </button>
             </div>
 
             <div class="mt-2 fade-in-top">
-              <div ngTabPanel [value]="'0'">
+              <div ngTabPanel [value]="'user-info'">
                 <ng-template ngTabContent>
                   <abp-extensible-form [selectedRecord]="selected"></abp-extensible-form>
                 </ng-template>
               </div>
 
-              <div ngTabPanel [value]="'1'">
+              <div ngTabPanel [value]="'roles'">
                 <ng-template ngTabContent>
                   @for (roleGroup of roleGroups; track $index; let i = $index) {
                     <div class="form-check mb-2">

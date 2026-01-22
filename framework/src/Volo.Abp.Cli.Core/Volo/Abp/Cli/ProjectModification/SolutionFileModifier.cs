@@ -68,10 +68,8 @@ public class SolutionFileModifier : ITransientDependency
 
         foreach (var projectPath in projectsUnderModule)
         {
-            var folder = projectsUnderTest.Contains(projectPath) ? "test" : "src";
-            var projectId = Path.GetFileName(projectPath).Replace(".csproj", "");
-            var package = Path.Combine(slnDir, "modules", module.Name, folder, projectId, $"{projectId}.csproj");
-            _cmdHelper.RunCmd($"dotnet sln \"{solutionFile}\" add \"{package}\" --solution-folder {folder}", workingDirectory: slnDir);
+            var solutionFolder = projectsUnderTest.Contains(projectPath) ? Path.Combine("test", module.Name) : Path.Combine("modules", module.Name);
+            _cmdHelper.RunCmd($"dotnet sln \"{solutionFile}\" add \"{projectPath}\" --solution-folder \"{solutionFolder}\"", workingDirectory: slnDir);
         }
 
         if (module.MasterModuleInfos != null)

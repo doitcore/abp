@@ -30,6 +30,7 @@
     <PackageVersion Include="Dapper" Version="2.1.66" />
     <PackageVersion Include="Dapr.AspNetCore" Version="1.16.0" />
     <PackageVersion Include="Dapr.Client" Version="1.16.0" />
+    <PackageVersion Include="ModelContextProtocol" Version="0.5.0-preview.1" />
     <PackageVersion Include="MyCSharp.HttpUserAgentParser" Version="3.0.28" />
     <PackageVersion Include="Devart.Data.Oracle.EFCore" Version="11.0.0.9" />
     <PackageVersion Include="DistributedLock.Core" Version="1.0.8" />
@@ -140,7 +141,7 @@
     <PackageVersion Include="Polly" Version="8.6.3" />
     <PackageVersion Include="Polly.Extensions.Http" Version="3.0.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
-    <PackageVersion Include="MySql.EntityFrameworkCore" Version="10.0.0-rc" />
+    <PackageVersion Include="MySql.EntityFrameworkCore" Version="10.0.1" />
     <PackageVersion Include="Quartz" Version="3.15.0" />
     <PackageVersion Include="Quartz.Extensions.DependencyInjection" Version="3.15.0" />
     <PackageVersion Include="Quartz.Plugins.TimeZoneConverter" Version="3.15.0" />

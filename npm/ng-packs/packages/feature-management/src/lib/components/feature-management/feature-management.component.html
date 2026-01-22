@@ -16,7 +16,7 @@
             <div class="col-md-4">
               <div ngTabList orientation="vertical" selectionMode="follow" [(selectedTab)]="selectedGroupDisplayName" class="nav nav-pills flex-column">
                 @for (group of groups; track group.name) {
-                  <button ngTab #tab="ngTab" [value]="group.displayName" class="nav-link text-start" [class.active]="tab.selected()">
+                  <button ngTab #tab="ngTab" type="button" [value]="group.displayName" class="nav-link text-start" [class.active]="tab.selected()">
                     {{ group.displayName }}
                   </button>
                 }

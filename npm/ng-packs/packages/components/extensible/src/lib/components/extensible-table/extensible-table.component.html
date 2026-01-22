@@ -1,9 +1,27 @@
 @if (isBrowser) {
-<ngx-datatable default [rows]="data" [count]="recordsTotal" [list]="list"
+<ngx-datatable #table default [rows]="data" [count]="recordsTotal" [list]="list"
   [selectionType]="selectable ? _selectionType : undefined" (activate)="tableActivate.emit($event)"
   (select)="onSelect($event)" [selected]="selected" (scroll)="onScroll($event)" [scrollbarV]="infiniteScroll"
   [style.height]="getTableHeight()" [loadingIndicator]="infiniteScroll && isLoading"
   [footerHeight]="infiniteScroll ? false : 50">
+  @if (effectiveRowDetailTemplate) {
+  <ngx-datatable-row-detail [rowHeight]="effectiveRowDetailHeight">
+    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+      <ng-container
+        *ngTemplateOutlet="effectiveRowDetailTemplate; context: { row: row, expanded: expanded }" />
+    </ng-template>
+  </ngx-datatable-row-detail>
+
+  <ngx-datatable-column [width]="50" [resizeable]="false" [sortable]="false" [draggable]="false"
+    [canAutoResize]="false">
+    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+      <button type="button" class="btn btn-link text-decoration-none text-muted p-0"
+        [attr.aria-label]="expanded ? 'Collapse' : 'Expand'" (click)="toggleExpandRow(row)">
+        <i class="fa" [class.fa-chevron-down]="!expanded" [class.fa-chevron-up]="expanded"></i>
+      </button>
+    </ng-template>
+  </ngx-datatable-column>
+  }
   @if(selectable) {
   <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false"
     [resizeable]="false">

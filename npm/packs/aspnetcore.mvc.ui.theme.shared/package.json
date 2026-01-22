@@ -16,7 +16,6 @@
     "@abp/bootstrap-daterangepicker": "~10.1.0-rc.1",
     "@abp/datatables.net-bs5": "~10.1.0-rc.1",
     "@abp/font-awesome": "~10.1.0-rc.1",
-    "@abp/jquery-form": "~10.1.0-rc.1",
     "@abp/jquery-validation-unobtrusive": "~10.1.0-rc.1",
     "@abp/lodash": "~10.1.0-rc.1",
     "@abp/luxon": "~10.1.0-rc.1",

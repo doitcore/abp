@@ -60,6 +60,8 @@ export class LocalizationService {
   private initLocalizationValues() {
     localizations$.subscribe(val => this.addLocalization(val));
 
+    // Backend-based localization loading (always enabled)
+    // UI localizations are merged via addLocalization() (UI > Backend priority)
     const legacyResources$ = this.configState.getDeep$('localization.values') as Observable<
       Record<string, Record<string, string>>
     >;

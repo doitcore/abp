@@ -18,7 +18,6 @@ describe("HomeComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [
         CoreTestingModule.withConfig(),
         ThemeSharedTestingModule.withConfig(),

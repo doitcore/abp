@@ -1,22 +1,28 @@
 import { CoreTestingModule } from '@abp/ng.core/testing';
 import { ThemeSharedTestingModule } from '@abp/ng.theme.shared/testing';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { HomeComponent } from './home.component';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { AuthService } from '@abp/ng.core';
+import { vi } from 'vitest';
 
 describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
-  const mockOAuthService = jasmine.createSpyObj('OAuthService', ['hasValidAccessToken']);
-  const mockAuthService = jasmine.createSpyObj('AuthService', ['navigateToLogin']);
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [HomeComponent],
+  const mockOAuthService = {
+    hasValidAccessToken: vi.fn(),
+  };
+  const mockAuthService = {
+    navigateToLogin: vi.fn(),
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         CoreTestingModule.withConfig(),
         ThemeSharedTestingModule.withConfig(),
         NgxValidateCoreModule,
+        HomeComponent,
       ],
       providers: [
         /* mock providers here */
@@ -30,7 +36,7 @@ describe('HomeComponent', () => {
         },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
@@ -43,11 +49,11 @@ describe('HomeComponent', () => {
 
   describe('when login state is true', () => {
     beforeAll(() => {
-      mockOAuthService.hasValidAccessToken.and.returnValue(true);
+      mockOAuthService.hasValidAccessToken.mockReturnValue(true);
     });
 
     it('hasLoggedIn should be true', () => {
-      expect(fixture.componentInstance.hasLoggedIn).toBeTrue();
+      expect(fixture.componentInstance.hasLoggedIn).toBe(true);
       expect(mockOAuthService.hasValidAccessToken).toHaveBeenCalled();
     });
 

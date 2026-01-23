@@ -347,6 +347,10 @@
                 {
                   "text": "Working with ABP Suite",
                   "path": "studio/working-with-suite.md"
+                },
+                {
+                  "text": "Custom Commands",
+                  "path": "studio/custom-commands.md"
                 }
               ]
             },

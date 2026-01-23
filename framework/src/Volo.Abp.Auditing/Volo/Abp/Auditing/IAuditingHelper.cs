@@ -26,4 +26,8 @@ public interface IAuditingHelper
         MethodInfo method,
         IDictionary<string, object?> arguments
     );
+
+    IDisposable DisableAuditing();
+
+    bool IsAuditingEnabled();
 }

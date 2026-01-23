@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+    "Description": "Learn how to set up an Android emulator without Android Studio using command line tools on Windows, macOS, and Linux."
+}
+```
+
 # Setting Up Android Emulator Without Android Studio (Windows, macOS, Linux)
 
 This guide walks you through installing and running an Android emulator **without Android Studio**, using only the **Android Command Line Tools**.
@@ -276,13 +283,31 @@ adb install myApp.apk
 
 Replace `myApp.apk` with the path to your APK file.
 
-### Delete an AVD:
+## How to Enable Fast Refresh in React Native
 
-Remove a virtual device you no longer need:
+React Native uses a hot reload system called **Fast Refresh**.  
+It is enabled by default in development mode, but you can manually enable or disable it via the Developer Menu.
+
+### To open the Developer Menu on Android emulator:
 
 ```bash
-avdmanager delete avd -n myEmu
+adb shell input keyevent 82
 ```
+
+This command simulates the hardware menu button and opens the Developer Menu inside the emulator.
+
+### From the Developer Menu:
+
+- Look for the option: **Enable Fast Refresh**
+- If it's unchecked, tap to enable it
+- If it's already checked, Fast Refresh is already active
+
+### Alternative (if adb doesn't work):
+
+Focus the emulator window and press:
+
+- **Ctrl + M** (Windows/Linux)
+- **Cmd + M** (Mac)
 
 ---
 

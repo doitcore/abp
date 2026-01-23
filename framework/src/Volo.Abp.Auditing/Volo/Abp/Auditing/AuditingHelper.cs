@@ -27,7 +27,7 @@ public class AuditingHelper : IAuditingHelper, ITransientDependency
     protected IAuditSerializer AuditSerializer;
     protected IServiceProvider ServiceProvider;
     protected ICorrelationIdProvider CorrelationIdProvider { get; }
-    protected IAmbientScopeProvider<AuditingDisabledState> AuditingInterceptorState { get; }
+    protected IAmbientScopeProvider<AuditingDisabledState> AuditingDisabledState { get; }
 
     public AuditingHelper(
         IAuditSerializer auditSerializer,
@@ -40,7 +40,7 @@ public class AuditingHelper : IAuditingHelper, ITransientDependency
         ILogger<AuditingHelper> logger,
         IServiceProvider serviceProvider,
         ICorrelationIdProvider correlationIdProvider,
-        IAmbientScopeProvider<AuditingDisabledState> auditingInterceptorState)
+        IAmbientScopeProvider<AuditingDisabledState> auditingDisabledState)
     {
         Options = options.Value;
         AuditSerializer = auditSerializer;
@@ -53,7 +53,7 @@ public class AuditingHelper : IAuditingHelper, ITransientDependency
         Logger = logger;
         ServiceProvider = serviceProvider;
         CorrelationIdProvider = correlationIdProvider;
-        AuditingInterceptorState = auditingInterceptorState;
+        AuditingDisabledState = auditingDisabledState;
     }
 
     public virtual bool ShouldSaveAudit(MethodInfo? methodInfo, bool defaultValue = false, bool ignoreIntegrationServiceAttribute = false)
@@ -191,12 +191,12 @@ public class AuditingHelper : IAuditingHelper, ITransientDependency
 
     public virtual IDisposable DisableAuditing()
     {
-        return AuditingInterceptorState.BeginScope(AuditingDisabledScopeKey, new AuditingDisabledState(true));
+        return AuditingDisabledState.BeginScope(AuditingDisabledScopeKey, new AuditingDisabledState(true));
     }
 
     public virtual bool IsAuditingEnabled()
     {
-        var state = AuditingInterceptorState.GetValue(AuditingDisabledScopeKey);
+        var state = AuditingDisabledState.GetValue(AuditingDisabledScopeKey);
         return state == null || !state.IsDisabled;
     }
 

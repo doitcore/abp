@@ -45,10 +45,10 @@ public class ChatClientAccessor_Tests : AbpIntegratedTest<AbpAITestModule>
     public void Should_Resolve_Default_ChatClient_For_NonConfigured_Workspace()
     {
         // Arrange & Act
-        var chatClientAccessor = GetRequiredService<IChatClient<NonConfiguredWorkspace>>();
+        var chatClient = GetRequiredService<IChatClient<NonConfiguredWorkspace>>();
 
         // Assert
-        chatClientAccessor.ShouldNotBeNull();
+        chatClient.ShouldNotBeNull();
     }
 
     public class NonConfiguredWorkspace

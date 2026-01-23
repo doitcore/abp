@@ -115,11 +115,11 @@ Here's an example command that builds a Docker image for Helm charts:
 **Command Properties:**
 - **Command Name:** `buildDockerImage`
 - **Display Name:** `Build Docker Image`
-- **Terminal Command:** `./build-image.ps1 -ProjectPath {{metadata.projectPath}} -ImageName {{metadata.imageName}}`
+- **Terminal Command:** `./build-image.ps1 -ProjectPath {%{{{metadata.projectPath}}}%} -ImageName {%{{{metadata.imageName}}}%}`
 - **Working Directory:** `etc/helm`
 - **Trigger Targets:** Helm Charts Root, Helm Main Chart, Helm Sub Chart
 - **Execution Targets:** Helm Main Chart, Helm Sub Chart
-- **Condition:** `{{metadata.projectPath}}`
+- **Condition:** `{%{{{metadata.projectPath}}}%}`
 
 This command:
 1. Appears in the context menu of Helm charts root and all chart nodes

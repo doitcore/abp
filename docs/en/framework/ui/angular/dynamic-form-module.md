@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Learn how to use the ABP Dynamic Form Module to create dynamic, configurable forms with validation, conditional logic, and custom components in Angular applications."
+    "Description": "Learn how to use the ABP Dynamic Form Module to create dynamic, configurable forms with validation, conditional logic, nested groups and arrays, many input types, and custom components in Angular applications."
 }
 ```
 
@@ -126,12 +126,27 @@ interface FormFieldConfig {
   placeholder?: string;           // Placeholder text
   required?: boolean;             // Whether the field is required
   disabled?: boolean;             // Whether the field is disabled
-  options?: OptionProps;          // Options for select fields
+  options?: OptionProps;          // Options for select/radio (static or API)
   validators?: ValidatorConfig[]; // Array of validator configurations
   conditionalLogic?: ConditionalRule[]; // Array of conditional rules
   order?: number;                 // Display order (ascending)
   gridSize?: number;              // Bootstrap grid size (1-12)
   component?: Type<ControlValueAccessor>; // Custom component
+
+  // Type-specific attributes
+  min?: number | string;          // number, date, time, range
+  max?: number | string;          // number, date, time, range
+  step?: number | string;         // number, time, range
+  minLength?: number;             // text, password
+  maxLength?: number;             // text, password
+  pattern?: string;               // tel, text (regex)
+  accept?: string;                // file (e.g. "image/*")
+  multiple?: boolean;             // file
+
+  // Nested forms (group / array)
+  children?: FormFieldConfig[];   // Child fields for group/array
+  minItems?: number;              // array: minimum items (default 0)
+  maxItems?: number;              // array: maximum items
 }
 ```
 
@@ -139,13 +154,31 @@ interface FormFieldConfig {
 
 The following field types are supported:
 
-- `text` - Text input
-- `email` - Email input
-- `number` - Number input
-- `select` - Dropdown select
-- `checkbox` - Checkbox
-- `date` - Date picker
-- `textarea` - Textarea
+| Type | Description |
+|------|-------------|
+| `text` | Text input |
+| `email` | Email input |
+| `number` | Number input (supports `min`, `max`, `step`) |
+| `select` | Dropdown select (static or API-driven options) |
+| `checkbox` | Checkbox |
+| `date` | Date picker (supports `min`, `max`) |
+| `datetime-local` | Date and time picker |
+| `time` | Time picker (supports `min`, `max`, `step`) |
+| `textarea` | Multi-line text |
+| `password` | Password input (`minLength`, `maxLength`) |
+| `tel` | Telephone input (`pattern`) |
+| `url` | URL input |
+| `radio` | Radio group (uses `options`) |
+| `file` | File upload (`accept`, `multiple`) |
+| `range` | Range slider (`min`, `max`, `step`) |
+| `color` | Color picker |
+| `group` | Nested group of fields (uses `children`) |
+| `array` | Dynamic list with add/remove (uses `children`, `minItems`, `maxItems`) |
+
+**Notes:**  
+- `file`: form value is `File` or `File[]` when `multiple` is true. Use `accept` (e.g. `"image/*"`) to limit types.  
+- `range`: defaults `min` 0, `max` 100, `step` 1 if omitted.  
+- `radio`: requires `options` (static `defaultValues` or `url`).
 
 ## Validators
 
@@ -207,9 +240,9 @@ const formFields: FormFieldConfig[] = [
 | `pattern` | Regular expression pattern | Yes |
 | `requiredTrue` | Must be true (for checkboxes) | No |
 
-## Select Fields with Options
+## Select and Radio Fields with Options
 
-You can create dropdown select fields with static or dynamic options:
+You can create `select` dropdowns or `radio` groups with static or dynamic options. Both use the `options` property (`OptionProps`).
 
 ### Static Options
 
@@ -252,16 +285,20 @@ const formFields: FormFieldConfig[] = [
 
 ### OptionProps Interface
 
+Used for `select` and `radio` fields. Provide either static `defaultValues` or `url` for API-driven options:
+
 ```ts
 interface OptionProps<T = any> {
   defaultValues?: T[];           // Static array of options
-  url?: string;                  // API endpoint URL
+  url?: string;                  // API endpoint URL (fetched via RestService)
   disabled?: (option: T) => boolean; // Function to disable specific options
-  labelProp?: string;            // Property name for label
-  valueProp?: string;            // Property name for value
-  apiName?: string;              // API name for RestService
+  labelProp?: string;            // Property name for label (default 'value')
+  valueProp?: string;            // Property name for value (default 'key')
+  apiName?: string;              // API name for RestService when using url
 }
 ```
+
+When using `url`, the response array is mapped with `valueProp` / `labelProp` to build options. Localization is applied to labels via `abpLocalization` where applicable.
 
 ## Conditional Logic
 
@@ -370,6 +407,69 @@ const formFields: FormFieldConfig[] = [
 ```
 
 The `gridSize` property uses Bootstrap's 12-column grid system. If not specified, it defaults to 12 (full width).
+
+## Nested Forms
+
+The Dynamic Form supports **nested structures** via two field types:
+
+### Group Type
+
+Use `type: 'group'` to group related fields (e.g. address, contact info). Define child fields in `children`:
+
+```ts
+{
+  key: 'address',
+  type: 'group',
+  label: 'Address Information',
+  gridSize: 12,
+  children: [
+    { key: 'street', type: 'text', label: 'Street', gridSize: 8 },
+    { key: 'city', type: 'text', label: 'City', gridSize: 4 },
+    { key: 'zipCode', type: 'text', label: 'ZIP Code', gridSize: 6 },
+  ],
+}
+```
+
+**Output:** `{ "address": { "street": "...", "city": "...", "zipCode": "..." } }`
+
+Groups use `<fieldset>` / `<legend>` for semantics and accessibility. Nesting is recursive (groups inside groups).
+
+### Array Type
+
+Use `type: 'array'` for dynamic lists with add/remove (e.g. phone numbers, work experience). Set `children` for each item schema, and optionally `minItems` / `maxItems`:
+
+```ts
+{
+  key: 'phoneNumbers',
+  type: 'array',
+  label: 'Phone Numbers',
+  minItems: 1,
+  maxItems: 5,
+  gridSize: 12,
+  children: [
+    {
+      key: 'type',
+      type: 'select',
+      label: 'Type',
+      gridSize: 4,
+      options: {
+        defaultValues: [
+          { key: 'mobile', value: 'Mobile' },
+          { key: 'home', value: 'Home' },
+          { key: 'work', value: 'Work' },
+        ],
+      },
+    },
+    { key: 'number', type: 'tel', label: 'Number', gridSize: 8 },
+  ],
+}
+```
+
+**Output:** `{ "phoneNumbers": [ { "type": "mobile", "number": "..." }, ... ] }`
+
+Arrays render add/remove buttons, item labels (e.g. "Phone Number #1"), and respect `minItems` / `maxItems`. You can nest groups inside arrays and arrays inside groups.
+
+See `NESTED-FORMS.md` in the package and `apps/dev-app/src/app/dynamic-form-page` for more examples.
 
 ## Custom Components
 
@@ -574,6 +674,18 @@ export class MyComponent {
   }
 }
 ```
+
+## Accessibility
+
+The Dynamic Form includes built-in accessibility support:
+
+- **ARIA attributes**: `aria-label`, `aria-required`, `aria-invalid`, `aria-describedby`, `aria-busy` on inputs and actions; `role="form"`, `role="group"`, `role="radiogroup"`, `role="alert"` where appropriate.
+- **Semantic HTML**: `<fieldset>` / `<legend>` for groups; proper `<label>` / `for` associations.
+- **Error handling**: Validation errors are exposed via `aria-describedby` and `aria-live="polite"` so screen readers announce them.
+- **Focus management**: On submit when the form is invalid, focus moves to the first invalid field and it scrolls into view.
+- **Keyboard navigation**: All controls are keyboard-accessible; range and color inputs use appropriate ARIA value attributes.
+
+When using custom components or projected actions, keep labels, error associations, and focus behavior consistent for a good experience.
 
 ## Complete Example
 
@@ -799,15 +911,17 @@ export class EmployeeFormComponent {
 
 ### DynamicFormService
 
-The `DynamicFormService` provides utility methods for form management:
+The `DynamicFormService` provides utility methods for form management. It is `providedIn: 'root'`.
 
 #### Methods
 
 | Method | Parameters | Returns | Description |
 |--------|-----------|---------|-------------|
-| `createFormGroup(fields)` | `FormFieldConfig[]` | `FormGroup` | Creates a FormGroup from field configurations |
+| `createFormGroup(fields)` | `FormFieldConfig[]` | `FormGroup` | Creates a FormGroup from field configurations (handles `group` / `array` recursively) |
 | `getInitialValues(fields)` | `FormFieldConfig[]` | `any` | Extracts initial values from field configurations |
-| `getOptions(url, apiName?)` | `string, string?` | `Observable<any[]>` | Fetches options from an API endpoint |
+| `getOptions(url, apiName?)` | `string, string?` | `Observable<any[]>` | Fetches options from an API via `RestService`; used for `select` / `radio` when `options.url` is set |
+
+Nested forms use `DynamicFormGroupComponent` and `DynamicFormArrayComponent` internally. You configure them via `type: 'group'` / `type: 'array'` and `children`; you do not need to use these components directly.
 
 ## See Also
 

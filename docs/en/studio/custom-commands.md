@@ -70,7 +70,7 @@ Execution targets define where the command actually runs. This enables cascading
 
 ## Template Variables
 
-Commands support [Scriban](https://github.com/scriban/scriban/blob/master/doc/language.md) template syntax for dynamic values. Use `{{variable}}` to insert context-specific data.
+Commands support [Scriban](https://github.com/scriban/scriban/blob/master/doc/language.md) template syntax for dynamic values. Use `{%{{{variable}}}%}` to insert context-specific data.
 
 ### Available Variables by Context
 

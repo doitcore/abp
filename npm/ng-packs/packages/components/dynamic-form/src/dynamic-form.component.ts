@@ -7,7 +7,6 @@ import {
   OnInit,
   DestroyRef,
   ChangeDetectorRef,
-  effect
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -15,6 +14,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DynamicFormService } from './dynamic-form.service';
 import { ConditionalAction, FormFieldConfig } from './dynamic-form.models';
 import { DynamicFormFieldComponent, DynamicFieldHostComponent } from './dynamic-form-field';
+import { DynamicFormGroupComponent } from './dynamic-form-group';
+import { DynamicFormArrayComponent } from './dynamic-form-array';
 
 @Component({
   selector: 'abp-dynamic-form',
@@ -26,6 +27,8 @@ import { DynamicFormFieldComponent, DynamicFieldHostComponent } from './dynamic-
   imports: [
     CommonModule,
     DynamicFormFieldComponent,
+    DynamicFormGroupComponent,
+    DynamicFormArrayComponent,
     ReactiveFormsModule,
     DynamicFieldHostComponent,
   ],
@@ -54,11 +57,11 @@ export class DynamicFormComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.dynamicForm.valid, this.dynamicForm.value);
     if (this.dynamicForm.valid) {
       this.onSubmit.emit(this.dynamicForm.getRawValue());
     } else {
       this.markAllFieldsAsTouched();
+      this.focusFirstInvalidField();
     }
   }
 
@@ -72,6 +75,10 @@ export class DynamicFormComponent implements OnInit {
 
   isFieldVisible(field: FormFieldConfig): boolean {
     return this.fieldVisibility[field.key] !== false;
+  }
+
+  getChildFormGroup(key: string): FormGroup {
+    return this.dynamicForm.get(key) as FormGroup;
   }
 
   resetForm() {
@@ -174,5 +181,23 @@ export class DynamicFormComponent implements OnInit {
     Object.keys(this.dynamicForm.controls).forEach(key => {
       this.dynamicForm.get(key)?.markAsTouched();
     });
+  }
+
+  private focusFirstInvalidField() {
+    // Accessibility: Focus first invalid field for screen readers
+    const firstInvalidField = this.sortedFields.find(field => {
+      const control = this.dynamicForm.get(field.key);
+      return control && control.invalid && control.touched;
+    });
+
+    if (firstInvalidField) {
+      setTimeout(() => {
+        const element = document.getElementById(`field-${firstInvalidField.key}`);
+        if (element) {
+          element.focus();
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
   }
 }

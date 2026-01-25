@@ -26,7 +26,6 @@ jobs:
           branch: auto-merge/rel-10-0/${{github.run_number}}
           title: Merge branch rel-10.1 with rel-10.0
           body: This PR generated automatically to merge rel-10.1 with rel-10.0. Please review the changed files before merging to prevent any errors that may occur.
-          reviewers: maliming
           draft: true
           token: ${{ github.token }}
       - name: Merge Pull Request

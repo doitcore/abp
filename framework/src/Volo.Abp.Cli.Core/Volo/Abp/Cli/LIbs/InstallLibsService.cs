@@ -93,25 +93,19 @@ public class InstallLibsService : IInstallLibsService, ITransientDependency
             if (projectPath.EndsWith("package.json"))
             {
                 var frameworkType = DetectFrameworkTypeFromPackageJson(projectPath);
-                
-                if (frameworkType == JavaScriptFrameworkType.ReactNative)
+
+                if (frameworkType != JavaScriptFrameworkType.None)
                 {
-                    Logger.LogInformation($"Installing dependencies for React Native project: {projectDirectory}");
-                    NpmHelper.RunYarn(projectDirectory);
-                }
-                else if (frameworkType == JavaScriptFrameworkType.React)
-                {
-                    Logger.LogInformation($"Installing dependencies for React project: {projectDirectory}");
-                    NpmHelper.RunYarn(projectDirectory);
-                }
-                else if (frameworkType == JavaScriptFrameworkType.Vue)
-                {
-                    Logger.LogInformation($"Installing dependencies for Vue.js project: {projectDirectory}");
-                    NpmHelper.RunYarn(projectDirectory);
-                }
-                else if (frameworkType == JavaScriptFrameworkType.NextJs)
-                {
-                    Logger.LogInformation($"Installing dependencies for Next.js project: {projectDirectory}");
+                    var frameworkName = frameworkType switch
+                    {
+                        JavaScriptFrameworkType.ReactNative => "React Native",
+                        JavaScriptFrameworkType.React => "React",
+                        JavaScriptFrameworkType.Vue => "Vue.js",
+                        JavaScriptFrameworkType.NextJs => "Next.js",
+                        _ => "JavaScript"
+                    };
+
+                    Logger.LogInformation($"Installing dependencies for {frameworkName} project: {projectDirectory}");
                     NpmHelper.RunYarn(projectDirectory);
                 }
             }

@@ -462,12 +462,16 @@
               "items": [
                 {
                   "text": "Overview",
-                  "path": "framework/fundamentals/authorization.md",
+                  "path": "framework/fundamentals/authorization/index.md",
                   "isIndex": true
                 },
                 {
                   "text": "Dynamic Claims",
                   "path": "framework/fundamentals/dynamic-claims.md"
+                },
+                {
+                  "text": "Resource Based Authorization",
+                  "path": "framework/fundamentals/authorization/resource-based-authorization.md"
                 }
               ]
             },

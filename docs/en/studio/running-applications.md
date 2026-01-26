@@ -250,7 +250,11 @@ The *Open with* submenu provides options to open the application project in exte
 - **Terminal**: Opens a terminal window in the project directory.
 - **Explorer / Finder**: Opens the project folder in the system file explorer.
 
-#### Miscellaneous
+### Custom Commands
+
+You can add custom commands that appear in the context menu of Solution Runner items (root, folders, and applications). These commands allow you to automate custom workflows and scripts. For details on creating and managing custom commands, see the [Custom Commands](custom-commands.md) documentation.
+
+### Miscellaneous
 
 - We can copy the selected application *Browse* URL with *Copy URL*. It copies the *Browse* URL instead of *Launch URL* since we could be connected to a *Kubernetes* service. 
 - You can change the target framework by right-click the selected application and change the *Target Framework* option. This option visible if the project has multiple target framework such as MAUI applications.

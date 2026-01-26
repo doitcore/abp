@@ -42,6 +42,29 @@ Implementing resource-based authorization involves three main steps:
 Define resource permissions in your `PermissionDefinitionProvider` class using the `AddResourcePermission` method:
 
 ```csharp
+namespace Acme.BookStore.Permissions;
+
+public static class BookStorePermissions
+{
+    public const string GroupName = "BookStore";
+
+    public static class Books
+    {
+        public const string Default = GroupName + ".Books";
+        public const string ManagePermissions = Default + ".ManagePermissions";
+        
+        public static class Resources
+        {
+            public const string Name = "Acme.BookStore.Books.Book";
+            public const string View = Name + ".View";
+            public const string Edit = Name + ".Edit";
+            public const string Delete = Name + ".Delete";
+        }
+    }
+}
+```
+
+```csharp
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Localization;
 
@@ -54,34 +77,39 @@ namespace Acme.BookStore.Permissions
             var myGroup = context.AddGroup("BookStore");
 
             // Standard permissions
-            myGroup.AddPermission("BookStore_Document_Create");
+            myGroup.AddPermission(BookStorePermissions.Books.Default, L("Permission:Books"));
             
             // Permission to manage resource permissions (required)
-            myGroup.AddPermission("BookStore_Document_ManagePermissions");
+            myGroup.AddPermission(BookStorePermissions.Books.ManagePermissions, L("Permission:Books:ManagePermissions"));
 
             // Resource-based permissions
             context.AddResourcePermission(
-                name: "BookStore_Document_View",
-                resourceName: "BookStore.Document",
-                managementPermissionName: "BookStore_Document_ManagePermissions",
-                displayName: LocalizableString.Create<BookStoreResource>("Permission:Document:View"),
-                multiTenancySide: MultiTenancySides.Tenant
+                name: BookStorePermissions.Books.Resources.View,
+                resourceName: BookStorePermissions.Books.Resources.Name,
+                managementPermissionName: BookStorePermissions.Books.ManagePermissions,
+                displayName: L("Permission:Books:View")
             );
 
             context.AddResourcePermission(
-                name: "BookStore_Document_Edit",
-                resourceName: "BookStore.Document",
-                managementPermissionName: "BookStore_Document_ManagePermissions",
-                displayName: LocalizableString.Create<BookStoreResource>("Permission:Document:Edit")
+                name: BookStorePermissions.Books.Resources.Edit,
+                resourceName: BookStorePermissions.Books.Resources.Name,
+                managementPermissionName: BookStorePermissions.Books.ManagePermissions,
+                displayName: L("Permission:Books:Edit")
             );
 
             context.AddResourcePermission(
-                name: "BookStore_Document_Delete",
-                resourceName: "BookStore.Document",
-                managementPermissionName: "BookStore_Document_ManagePermissions",
-                displayName: LocalizableString.Create<BookStoreResource>("Permission:Document:Delete")
+                name: BookStorePermissions.Books.Resources.Delete,
+                resourceName: BookStorePermissions.Books.Resources.Name,
+                managementPermissionName: BookStorePermissions.Books.ManagePermissions,
+                displayName: L("Permission:Books:Delete"),
+                multiTenancySide: MultiTenancySides.Host
             );
         }
+    }
+
+    private static LocalizableString L(string name)
+    {
+        return LocalizableString.Create<BookStoreResource>(name);
     }
 }
 ```
@@ -89,14 +117,14 @@ namespace Acme.BookStore.Permissions
 The `AddResourcePermission` method requires the following parameters:
 
 * `name`: A unique name for the resource permission.
-* `resourceName`: An identifier for the resource type. This is typically the full name of the entity class (e.g., `BookStore.Document`).
+* `resourceName`: An identifier for the resource type. This is typically the full name of the entity class (e.g., `Acme.BookStore.Books.Book`).
 * `managementPermissionName`: A standard permission that controls who can manage resource permissions. Users with this permission can grant/revoke resource permissions for specific resources.
 * `displayName`: (Optional) A localized display name shown in the UI.
 * `multiTenancySide`: (Optional) Specifies on which side of a multi-tenant application this permission can be used. Accepts `MultiTenancySides.Host` (only for the host side), `MultiTenancySides.Tenant` (only for tenants), or `MultiTenancySides.Both` (default, available on both sides). 
 
 ### Checking Resource Permissions
 
-Use the `IResourcePermissionChecker` service to check if a user/role/client has a specific permission for a resource:
+Use the `IAuthorizationService` service to check if a user/role/client has a specific permission for a resource:
 
 ```csharp
 using System;
@@ -104,101 +132,96 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Authorization.Permissions.Resources;
 
-namespace Acme.BookStore.Documents
+namespace Acme.BookStore.Books
 {
-    public class DocumentAppService : ApplicationService, IDocumentAppService
+    public class BookAppService : ApplicationService, IBookAppService
     {
-        private readonly IResourcePermissionChecker _resourcePermissionChecker;
-        private readonly IDocumentRepository _documentRepository;
+        private readonly IBookRepository _bookRepository;
 
-        public DocumentAppService(
-            IResourcePermissionChecker resourcePermissionChecker,
-            IDocumentRepository documentRepository)
+        public BookAppService(IBookRepository bookRepository)
         {
-            _resourcePermissionChecker = resourcePermissionChecker;
-            _documentRepository = documentRepository;
+            _bookRepository = bookRepository;
         }
 
-        public async Task<DocumentDto> GetAsync(Guid id)
+        public virtual async Task<BookDto> GetAsync(Guid id)
         {
-            // Check if the current user can view this specific document
-            if (!await _resourcePermissionChecker.IsGrantedAsync(
-                "BookStore_Document_View",
-                "BookStore.Document",
-                id.ToString()))
+            var book = await _bookRepository.GetAsync(id);
+
+            // Check if the current user can view this specific book
+            var isGranted = await AuthorizationService.IsGrantedAsync(book, BookStorePermissions.Books.Resources.View); // AuthorizationService is a property of the ApplicationService class and will be automatically injected.
+            if (!isGranted)
             {
-                throw new AbpAuthorizationException(
-                    "You don't have permission to view this document.");
+                throw new AbpAuthorizationException("You don't have permission to view this book.");
             }
 
-            var document = await _documentRepository.GetAsync(id);
-            return ObjectMapper.Map<Document, DocumentDto>(document);
+            return ObjectMapper.Map<Book, BookDto>(book);
         }
 
-        public async Task UpdateAsync(Guid id, UpdateDocumentDto input)
+        public virtual async Task UpdateAsync(Guid id, UpdateBookDto input)
         {
-            // Check if the current user can edit this specific document
-            if (!await _resourcePermissionChecker.IsGrantedAsync(
-                "BookStore_Document_Edit",
-                "BookStore.Document",
-                id.ToString()))
+            var book = await _bookRepository.GetAsync(id);
+
+            // Check if the current user can edit this specific book
+            var isGranted = await AuthorizationService.IsGrantedAsync(book, BookStorePermissions.Books.Resources.Edit); // AuthorizationService is a property of the ApplicationService class and will be automatically injected.
+            if (!isGranted)
             {
-                throw new AbpAuthorizationException(
-                    "You don't have permission to edit this document.");
+                throw new AbpAuthorizationException("You don't have permission to edit this book.");
             }
 
-            var document = await _documentRepository.GetAsync(id);
-            document.Title = input.Title;
-            document.Content = input.Content;
-            await _documentRepository.UpdateAsync(document);
+            book.Title = input.Title;
+            book.Content = input.Content;
+            await _bookRepository.UpdateAsync(book);
         }
     }
 }
 ```
 
-In this example, the `DocumentAppService` injects `IResourcePermissionChecker` and uses its `IsGrantedAsync` method to verify if the current user has the required permission for a specific document before performing the operation. The method takes the permission name, resource name, and the resource key (document ID) as parameters.
+In this example, the `BookAppService` uses `IAuthorizationService` to check if the current user has the required permission for a specific book before performing the operation. The method takes the `Book` entity object and resource permission name as parameters.
 
-#### Using with Entities (IKeyedObject)
+#### IKeyedObject
 
-ABP entities implement the `IKeyedObject` interface, which provides a `GetObjectKey()` method. For entities with a primary key, `GetObjectKey()` returns the key as a string. This enables convenient extension methods on `IResourcePermissionChecker`:
-
-```csharp
-// Instead of this:
-await _resourcePermissionChecker.IsGrantedAsync(
-    "BookStore_Document_View",
-    "BookStore.Document",
-    document.Id.ToString());
-
-// You can write:
-await _resourcePermissionChecker.IsGrantedAsync(
-    "BookStore_Document_View",
-    document);
-```
+The `IAuthorizationService` internally uses `IResourcePermissionChecker` to check resource permissions, and gets the resource key by calling the `GetObjectKey()` method of the `IKeyedObject` interface. All ABP entities implement the `IKeyedObject` interface, so you can directly pass entity objects to the `IsGrantedAsync` method.
 
 > See the [Entities documentation](../../architecture/domain-driven-design/entities.md) for more information about the `IKeyedObject` interface.
 
-#### Checking Multiple Permissions
+#### IResourcePermissionChecker
 
-You can check multiple permissions at once using the overload that accepts an array of permission names:
+You can also directly use the `IResourcePermissionChecker` service to check resource permissions which provides more advanced features, such as checking multiple permissions at once:
+
+> You have to pass the resource key (obtained via `GetObjectKey()`) explicitly when using `IResourcePermissionChecker`.
 
 ```csharp
-public async Task<DocumentPermissionsDto> GetPermissionsAsync(Guid id)
+public class BookAppService : ApplicationService, IBookAppService
 {
-    var result = await _resourcePermissionChecker.IsGrantedAsync(
-        new[] { 
-            "BookStore_Document_View", 
-            "BookStore_Document_Edit", 
-            "BookStore_Document_Delete" 
-        },
-        "BookStore.Document",
-        id.ToString());
+    private readonly IBookRepository _bookRepository;
+    private readonly IResourcePermissionChecker _resourcePermissionChecker;
 
-    return new DocumentPermissionsDto
+    public BookAppService(IBookRepository bookRepository, IResourcePermissionChecker resourcePermissionChecker)
     {
-        CanView = result.Result["BookStore_Document_View"] == PermissionGrantResult.Granted,
-        CanEdit = result.Result["BookStore_Document_Edit"] == PermissionGrantResult.Granted,
-        CanDelete = result.Result["BookStore_Document_Delete"] == PermissionGrantResult.Granted
-    };
+        _bookRepository = bookRepository;
+        _resourcePermissionChecker = resourcePermissionChecker;
+    }
+
+    public async Task<BookPermissionsDto> GetPermissionsAsync(Guid id)
+    {
+        var book = await _bookRepository.GetAsync(id);
+
+        var result = await _resourcePermissionChecker.IsGrantedAsync(new[]
+            {
+                BookStorePermissions.Books.Resources.View,
+                BookStorePermissions.Books.Resources.Edit,
+                BookStorePermissions.Books.Resources.Delete
+            },
+            BookStorePermissions.Books.Resources.Name,
+            book.GetObjectKey()!);
+
+        return new BookPermissionsDto
+        {
+            CanView = result.Result[BookStorePermissions.Books.Resources.View] == PermissionGrantResult.Granted,
+            CanEdit = result.Result[BookStorePermissions.Books.Resources.Edit] == PermissionGrantResult.Granted,
+            CanDelete = result.Result[BookStorePermissions.Books.Resources.Delete] == PermissionGrantResult.Granted
+        };
+    }
 }
 ```
 

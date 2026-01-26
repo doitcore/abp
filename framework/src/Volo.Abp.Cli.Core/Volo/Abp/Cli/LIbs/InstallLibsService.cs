@@ -170,7 +170,7 @@ public class InstallLibsService : IInstallLibsService, ITransientDependency
         }
         catch (Exception ex)
         {
-            Logger.LogWarning($"Failed to parse package.json at {packageJsonFilePath}: {ex.Message}");
+            Logger.LogWarning(ex, "Failed to parse package.json at {PackageJsonFilePath}", packageJsonFilePath);
             return JavaScriptFrameworkType.None;
         }
     }

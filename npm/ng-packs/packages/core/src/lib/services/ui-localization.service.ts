@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, distinctUntilChanged, switchMap, of } from 'rxjs';
-import { map, catchError, shareReplay, tap } from 'rxjs/operators';
-import { loadTranslations } from '@angular/localize';
+import { catchError, shareReplay, tap } from 'rxjs/operators';
 import { ABP } from '../models/common';
 import { LocalizationService } from './localization.service';
 import { SessionStateService } from './session-state.service';
@@ -13,7 +12,7 @@ export interface LocalizationResource {
 }
 
 /**
- * Service for managing UI localizations via @angular/localize
+ * Service for managing UI localizations in ABP Angular applications.
  * Automatically loads localization files based on selected language
  * Merges with backend localizations (UI > Backend priority)
  */
@@ -54,7 +53,7 @@ export class UILocalizationService {
 
     return this.http.get<LocalizationResource>(url).pipe(
       catchError(() => {
-        // Dosya yoksa sessizce devam et (backend'den gelecek)
+        // If file not found or error occurs, return null
         return of(null);
       }),
       tap(data => {
@@ -66,15 +65,6 @@ export class UILocalizationService {
   }
 
   private processLocalizationData(culture: string, data: LocalizationResource) {
-    // 1. @angular/localize'a ekle
-    const loadTranslationsMap: Record<string, string> = {};
-    Object.entries(data).forEach(([resourceName, texts]) => {
-      Object.entries(texts).forEach(([key, value]) => {
-        loadTranslationsMap[`${resourceName}::${key}`] = value;
-      });
-    });
-    loadTranslations(loadTranslationsMap);
-
     const abpFormat: ABP.Localization[] = [
       {
         culture,
@@ -96,14 +86,6 @@ export class UILocalizationService {
     resourceName: string,
     translations: Record<string, string>,
   ): void {
-    // @angular/localize'a ekle
-    const loadTranslationsMap: Record<string, string> = {};
-    Object.entries(translations).forEach(([key, value]) => {
-      loadTranslationsMap[`${resourceName}::${key}`] = value;
-    });
-    loadTranslations(loadTranslationsMap);
-
-    // ABP LocalizationService'e ekle
     const abpFormat: ABP.Localization[] = [
       {
         culture,
@@ -117,7 +99,6 @@ export class UILocalizationService {
     ];
     this.localizationService.addLocalization(abpFormat);
 
-    // Cache'e ekle
     const current = this.loadedLocalizations$.value;
     if (!current[culture]) {
       current[culture] = {};

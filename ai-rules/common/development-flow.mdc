@@ -1,6 +1,14 @@
 ---
 description: "ABP development workflow - adding features, entities, and migrations"
-globs: "**/*AppService*.cs,**/*Application*/**/*.cs,**/*Application.Contracts*/**/*.cs,**/*Dto*.cs,**/*DbContext*.cs,**/*.EntityFrameworkCore/**/*.cs,**/*.MongoDB/**/*.cs,**/*Permission*.cs"
+globs:
+  - "**/*AppService*.cs"
+  - "**/*Application*/**/*.cs"
+  - "**/*Application.Contracts*/**/*.cs"
+  - "**/*Dto*.cs"
+  - "**/*DbContext*.cs"
+  - "**/*.EntityFrameworkCore/**/*.cs"
+  - "**/*.MongoDB/**/*.cs"
+  - "**/*Permission*.cs"
 alwaysApply: false
 ---
 

@@ -1,6 +1,9 @@
 ---
 description: "ABP Multi-Tenancy patterns - tenant-aware entities, data isolation, and tenant switching"
-globs: "**/*Tenant*.cs,**/*MultiTenant*.cs,**/Entities/**/*.cs"
+globs:
+  - "**/*Tenant*.cs"
+  - "**/*MultiTenant*.cs"
+  - "**/Entities/**/*.cs"
 alwaysApply: false
 ---
 

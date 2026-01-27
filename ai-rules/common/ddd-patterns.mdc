@@ -1,6 +1,9 @@
 ---
 description: "ABP DDD patterns - Entities, Aggregate Roots, Repositories, Domain Services"
-globs: "**/*.Domain/**/*.cs,**/Domain/**/*.cs,**/Entities/**/*.cs"
+globs:
+  - "**/*.Domain/**/*.cs"
+  - "**/Domain/**/*.cs"
+  - "**/Entities/**/*.cs"
 alwaysApply: false
 ---
 

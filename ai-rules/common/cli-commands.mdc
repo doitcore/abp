@@ -1,6 +1,8 @@
 ---
 description: "ABP CLI commands: generate-proxy, install-libs, add-package-ref, new-module, install-module, update, clean, suite generate (CRUD pages)"
-globs: "**/*.csproj,**/appsettings*.json"
+globs:
+  - "**/*.csproj"
+  - "**/appsettings*.json"
 alwaysApply: false
 ---
 

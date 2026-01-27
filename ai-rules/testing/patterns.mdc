@@ -1,6 +1,10 @@
 ---
 description: "ABP testing patterns - unit tests and integration tests"
-globs: "test/**/*.cs,tests/**/*.cs,**/*Tests*/**/*.cs,**/*Test*.cs"
+globs:
+  - "test/**/*.cs"
+  - "tests/**/*.cs"
+  - "**/*Tests*/**/*.cs"
+  - "**/*Test*.cs"
 alwaysApply: false
 ---
 

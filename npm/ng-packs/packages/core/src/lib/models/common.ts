@@ -21,7 +21,7 @@ export namespace ABP {
 
   export interface UILocalizationOptions {
     /**
-     * Enable UI localization support via @angular/localize
+     * Enable UI localization feature
      * When enabled, localization files are automatically loaded based on selected language
      * Files should be located at: {basePath}/{culture}.json
      * Example: /assets/localization/en.json

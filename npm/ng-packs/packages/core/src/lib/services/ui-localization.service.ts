@@ -24,23 +24,17 @@ export class UILocalizationService {
   private sessionState = inject(SessionStateService);
   private options = inject(CORE_OPTIONS);
 
-  // Yüklenen localization'lar (culture -> resourceName -> texts)
   private loadedLocalizations$ = new BehaviorSubject<Record<string, LocalizationResource>>({});
 
-  // Current language
   private currentLanguage$ = this.sessionState.getLanguage$();
 
   constructor() {
     const uiLocalization = this.options.uiLocalization;
     if (uiLocalization?.enabled) {
-      // Dil değiştiğinde otomatik yükle
       this.subscribeToLanguageChanges();
     }
   }
 
-  /**
-   * Dil değişikliğini dinle ve localization dosyasını yükle
-   */
   private subscribeToLanguageChanges() {
     this.currentLanguage$
       .pipe(
@@ -51,11 +45,6 @@ export class UILocalizationService {
       .subscribe();
   }
 
-  /**
-   * Seçilen dil için localization dosyasını yükle
-   * Format: /assets/localization/{culture}.json
-   * JSON format: { "ResourceName": { "Key": "Value" } }
-   */
   private loadLocalizationFile(culture: string) {
     const config = this.options.uiLocalization;
     if (!config?.enabled) return of(null);
@@ -76,11 +65,6 @@ export class UILocalizationService {
     );
   }
 
-  /**
-   * Localization verisini işle:
-   * 1. @angular/localize'a ekle (loadTranslations)
-   * 2. ABP LocalizationService'e ekle (addLocalization)
-   */
   private processLocalizationData(culture: string, data: LocalizationResource) {
     // 1. @angular/localize'a ekle
     const loadTranslationsMap: Record<string, string> = {};
@@ -91,7 +75,6 @@ export class UILocalizationService {
     });
     loadTranslations(loadTranslationsMap);
 
-    // 2. ABP LocalizationService'e ekle
     const abpFormat: ABP.Localization[] = [
       {
         culture,
@@ -103,15 +86,11 @@ export class UILocalizationService {
     ];
     this.localizationService.addLocalization(abpFormat);
 
-    // 3. Cache'e ekle
     const current = this.loadedLocalizations$.value;
     current[culture] = data;
     this.loadedLocalizations$.next(current);
   }
 
-  /**
-   * Manuel olarak localization ekle (runtime'da)
-   */
   addAngularLocalizeLocalization(
     culture: string,
     resourceName: string,
@@ -153,9 +132,6 @@ export class UILocalizationService {
     this.loadedLocalizations$.next(current);
   }
 
-  /**
-   * Yüklenen localization'ları al
-   */
   getLoadedLocalizations(culture?: string): LocalizationResource {
     const lang = culture || this.sessionState.getLanguage();
     return this.loadedLocalizations$.value[lang] || {};

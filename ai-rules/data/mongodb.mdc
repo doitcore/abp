@@ -1,6 +1,9 @@
 ---
 description: "ABP MongoDB patterns - MongoDbContext and repositories"
-globs: "**/*.MongoDB/**/*.cs,**/MongoDB/**/*.cs,**/*MongoDb*.cs"
+globs:
+  - "**/*.MongoDB/**/*.cs"
+  - "**/MongoDB/**/*.cs"
+  - "**/*MongoDb*.cs"
 alwaysApply: false
 ---
 

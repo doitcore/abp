@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject, DOCUMENT } from '@angular/core';
+import { Component, Input, inject, DOCUMENT, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfigStateService, LocalizationPipe, TrackByService } from '@abp/ng.core';
@@ -103,7 +103,7 @@ export class FeatureManagementComponent
     }
   }
 
-  @Output() readonly visibleChange = new EventEmitter<boolean>();
+  readonly visibleChange = output<boolean>();
 
   modalBusy = false;
 

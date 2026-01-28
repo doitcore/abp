@@ -19,14 +19,13 @@ import {
   computed,
   DOCUMENT,
   ElementRef,
-  EventEmitter,
   inject,
   Input,
-  Output,
   QueryList,
   signal,
   TrackByFunction,
   ViewChildren,
+  output
 } from '@angular/core';
 import { concat, of } from 'rxjs';
 import { finalize, switchMap, take, tap } from 'rxjs/operators';
@@ -160,7 +159,7 @@ export class PermissionManagementComponent
     }
   }
 
-  @Output() readonly visibleChange = new EventEmitter<boolean>();
+  readonly visibleChange = output<boolean>();
 
   @ViewChildren('selectAllInThisTabsRef')
   selectAllInThisTabsRef!: QueryList<ElementRef<HTMLInputElement>>;

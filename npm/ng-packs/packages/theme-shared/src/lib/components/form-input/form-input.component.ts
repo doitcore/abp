@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, forwardRef, Input, output } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
 
@@ -18,8 +18,8 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
         [readonly]="inputReadonly"
         [class]="inputClass"
         [style]="inputStyle"
-        (blur)="formBlur.next()"
-        (focus)="formFocus.next()"
+        (blur)="formBlur.emit()"
+        (focus)="formFocus.emit()"
         [(ngModel)]="value"
       />
     </div>
@@ -46,6 +46,6 @@ export class FormInputComponent extends AbstractNgModelComponent {
     | null
     | undefined;
   @Input() inputClass = 'form-control';
-  @Output() formBlur = new EventEmitter<void>();
-  @Output() formFocus = new EventEmitter<void>();
+  readonly formBlur = output<void>();
+  readonly formFocus = output<void>();
 }

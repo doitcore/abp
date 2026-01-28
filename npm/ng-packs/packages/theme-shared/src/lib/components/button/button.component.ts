@@ -2,13 +2,12 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnInit,
-  Output,
   Renderer2,
   ViewChild,
   inject,
+  output
 } from '@angular/core';
 import { ABP, StopPropagationDirective } from '@abp/ng.core';
 
@@ -22,9 +21,9 @@ import { ABP, StopPropagationDirective } from '@abp/ng.core';
       [attr.form]="formName"
       [class]="buttonClass"
       [disabled]="loading || disabled"
-      (click.stop)="click.next($event); abpClick.next($event)"
-      (focus)="focus.next($event); abpFocus.next($event)"
-      (blur)="blur.next($event); abpBlur.next($event)"
+      (click.stop)="click.emit($event); abpClick.emit($event)"
+      (focus)="focus.emit($event); abpFocus.emit($event)"
+      (blur)="blur.emit($event); abpBlur.emit($event)"
     >
       <i [class]="icon" class="me-1" aria-hidden="true"></i><ng-content></ng-content>
     </button>
@@ -58,17 +57,17 @@ export class ButtonComponent implements OnInit {
   @Input()
   attributes?: ABP.Dictionary<string>;
 
-  @Output() readonly click = new EventEmitter<MouseEvent>();
+  readonly click = output<MouseEvent>();
 
-  @Output() readonly focus = new EventEmitter<FocusEvent>();
+  readonly focus = output<FocusEvent>();
 
-  @Output() readonly blur = new EventEmitter<FocusEvent>();
+  readonly blur = output<FocusEvent>();
 
-  @Output() readonly abpClick = new EventEmitter<MouseEvent>();
+  readonly abpClick = output<MouseEvent>();
 
-  @Output() readonly abpFocus = new EventEmitter<FocusEvent>();
+  readonly abpFocus = output<FocusEvent>();
 
-  @Output() readonly abpBlur = new EventEmitter<FocusEvent>();
+  readonly abpBlur = output<FocusEvent>();
 
   @ViewChild('button', { static: true })
   buttonRef!: ElementRef<HTMLButtonElement>;

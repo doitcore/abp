@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, forwardRef, Input, output } from '@angular/core';
 import { NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
 
@@ -13,8 +13,8 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
         [readonly]="checkboxReadonly"
         [class]="checkboxClass"
         [style]="checkboxStyle"
-        (blur)="checkboxBlur.next()"
-        (focus)="checkboxFocus.next()"
+        (blur)="checkboxBlur.emit()"
+        (focus)="checkboxFocus.emit()"
       />
       @if (label) {
         <label [class]="labelClass" [for]="checkboxId">
@@ -44,6 +44,6 @@ export class FormCheckboxComponent extends AbstractNgModelComponent {
     | undefined;
   @Input() checkboxClass = 'form-check-input';
   @Input() checkboxReadonly = false;
-  @Output() checkboxBlur = new EventEmitter<void>();
-  @Output() checkboxFocus = new EventEmitter<void>();
+  readonly checkboxBlur = output<void>();
+  readonly checkboxFocus = output<void>();
 }

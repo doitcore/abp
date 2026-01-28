@@ -92,7 +92,7 @@ export class LocalizationService {
               const resourceName = entry[0];
               const remoteTexts = entry[1];
               let resource = local?.get(resourceName) || {};
-              // UI > Backend priority: UI localization'lar backend'i override eder
+              // UI > Backend priority: UI localizations override the backend localizations
               resource = { ...remoteTexts, ...resource };
 
               local?.set(resourceName, resource);

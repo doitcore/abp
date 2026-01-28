@@ -31,7 +31,7 @@ import {
 import { concat, of } from 'rxjs';
 import { finalize, switchMap, take, tap } from 'rxjs/operators';
 import { PermissionManagement } from '../models';
-import { NgStyle } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 import { Tabs, TabList, Tab, TabPanel, TabContent } from '@angular/aria/tabs';
@@ -97,7 +97,6 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
   ],
   imports: [
     FormsModule,
-    NgStyle,
     ModalComponent,
     LocalizationPipe,
     ButtonComponent,

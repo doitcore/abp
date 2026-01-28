@@ -94,7 +94,7 @@
                     : ('::' + (row['_' + prop.name]?.value | async | abpUtcToLocal:prop.type) | abpLocalization)
                 " (click)="
                   prop.action && prop.action({ getInjected: getInjected, record: row, index: i })
-                " [ngClass]="entityPropTypeClasses[prop.type]" [class.pointer]="prop.action"></div>
+                " [class]="entityPropTypeClasses[prop.type]" [class.pointer]="prop.action"></div>
           } @else {
           <div [innerHTML]="
                   !prop.isExtra
@@ -102,7 +102,7 @@
                     : ('::' + (row['_' + prop.name]?.value | async) | abpLocalization)
                 " (click)="
                   prop.action && prop.action({ getInjected: getInjected, record: row, index: i })
-                " [ngClass]="entityPropTypeClasses[prop.type]" [class.pointer]="prop.action"></div>
+                " [class]="entityPropTypeClasses[prop.type]" [class.pointer]="prop.action"></div>
           }
           } @else {
           <ng-container *ngComponentOutlet="

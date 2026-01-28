@@ -19,9 +19,9 @@ import {
   Optional,
   SimpleChanges,
   SkipSelf,
-  ViewChild,
   signal,
   effect,
+  viewChild
 } from '@angular/core';
 import {
   ControlContainer,
@@ -98,7 +98,7 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   @Input() prop!: FormProp;
   @Input() first?: boolean;
   @Input() isFirstGroup?: boolean;
-  @ViewChild('field') private fieldRef!: ElementRef<HTMLElement>;
+  private readonly fieldRef = viewChild.required<ElementRef<HTMLElement>>('field');
 
   injectorForCustomComponent?: Injector;
   asterisk = '';
@@ -158,9 +158,9 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.isFirstGroup && this.first && this.fieldRef) {
+    if (this.isFirstGroup && this.first && this.fieldRef()) {
       requestAnimationFrame(() => {
-        this.fieldRef.nativeElement.focus();
+        this.fieldRef().nativeElement.focus();
       });
     }
   }

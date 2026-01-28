@@ -11,10 +11,9 @@ import {
   ElementRef,
   inject,
   Input,
-  QueryList,
   Renderer2,
   TrackByFunction,
-  ViewChildren,
+  viewChildren
 } from '@angular/core';
 import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -41,7 +40,7 @@ export class RoutesComponent {
 
   @Input() smallScreen?: boolean;
 
-  @ViewChildren('childrenContainer') childrenContainers!: QueryList<ElementRef<HTMLDivElement>>;
+  readonly childrenContainers = viewChildren<ElementRef<HTMLDivElement>>('childrenContainer');
 
   rootDropdownExpand = {} as { [key: string]: boolean };
 
@@ -52,7 +51,7 @@ export class RoutesComponent {
   }
 
   closeDropdown() {
-    this.childrenContainers.forEach(({ nativeElement }) => {
+    this.childrenContainers().forEach(({ nativeElement }) => {
       this.renderer.addClass(nativeElement, 'd-none');
       setTimeout(() => this.renderer.removeClass(nativeElement, 'd-none'), 0);
     });

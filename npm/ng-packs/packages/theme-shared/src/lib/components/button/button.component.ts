@@ -7,8 +7,8 @@ import {
   OnInit,
   Output,
   Renderer2,
-  ViewChild,
   inject,
+  viewChild
 } from '@angular/core';
 import { ABP, StopPropagationDirective } from '@abp/ng.core';
 
@@ -70,8 +70,7 @@ export class ButtonComponent implements OnInit {
 
   @Output() readonly abpBlur = new EventEmitter<FocusEvent>();
 
-  @ViewChild('button', { static: true })
-  buttonRef!: ElementRef<HTMLButtonElement>;
+  readonly buttonRef = viewChild.required<ElementRef<HTMLButtonElement>>('button');
 
   get icon(): string {
     return `${this.loading ? 'fa fa-spinner fa-spin' : this.iconClass || 'd-none'}`;
@@ -81,7 +80,7 @@ export class ButtonComponent implements OnInit {
     if (this.attributes) {
       Object.keys(this.attributes).forEach(key => {
         if (this.attributes?.[key]) {
-          this.renderer.setAttribute(this.buttonRef.nativeElement, key, this.attributes[key]);
+          this.renderer.setAttribute(this.buttonRef().nativeElement, key, this.attributes[key]);
         }
       });
     }

@@ -6,9 +6,8 @@ import {
   inject,
   Input,
   Optional,
-  QueryList,
   SkipSelf,
-  ViewChildren,
+  viewChildren
 } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { EXTRA_PROPERTIES_KEY } from '../../constants/extra-properties';
@@ -41,8 +40,7 @@ export class ExtensibleFormComponent<R = any> {
   private readonly extensions = inject(ExtensionsService);
   private readonly identifier = inject(EXTENSIONS_IDENTIFIER);
 
-  @ViewChildren(ExtensibleFormPropComponent)
-  formProps!: QueryList<ExtensibleFormPropComponent>;
+  readonly formProps = viewChildren(ExtensibleFormPropComponent);
 
   @Input()
   set selectedRecord(record: R) {

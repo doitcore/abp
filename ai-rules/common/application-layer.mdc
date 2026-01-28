@@ -1,6 +1,10 @@
 ---
 description: "ABP Application Services, DTOs, validation, and error handling patterns"
-globs: "**/*.Application/**/*.cs,**/Application/**/*.cs,**/*AppService*.cs,**/*Dto*.cs"
+globs:
+  - "**/*.Application/**/*.cs"
+  - "**/Application/**/*.cs"
+  - "**/*AppService*.cs"
+  - "**/*Dto*.cs"
 alwaysApply: false
 ---
 

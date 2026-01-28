@@ -1,6 +1,9 @@
 ---
 description: "ABP Blazor UI patterns and components"
-globs: "**/*.razor,**/Blazor/**/*.cs,**/*.Blazor*/**/*.cs"
+globs:
+  - "**/*.razor"
+  - "**/Blazor/**/*.cs"
+  - "**/*.Blazor*/**/*.cs"
 alwaysApply: false
 ---
 

@@ -1,6 +1,10 @@
 ---
 description: "ABP Single-Layer (No-Layers) application template specific patterns"
-globs: "**/src/*/*Module.cs,**/src/*/Entities/**/*.cs,**/src/*/Services/**/*.cs,**/src/*/Data/**/*.cs"
+globs:
+  - "**/src/*/*Module.cs"
+  - "**/src/*/Entities/**/*.cs"
+  - "**/src/*/Services/**/*.cs"
+  - "**/src/*/Data/**/*.cs"
 alwaysApply: false
 ---
 

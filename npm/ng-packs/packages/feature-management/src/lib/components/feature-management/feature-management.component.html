@@ -9,17 +9,31 @@
     </h3>
   </ng-template>
 
-  <ng-template #abpBody>
-    <div class="row">
-      @if (groups.length) {
-      <div class="col-md-4">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="selectedGroupDisplayName" class="nav-pills" orientation="vertical">
-          @for (group of groups; track group.name) {
-          <li [ngbNavItem]="group.displayName">
-            <a ngbNavLink>{{ group.displayName }}</a>
-            <ng-template ngbNavContent>
-              <h4>{{ selectedGroupDisplayName }}</h4>
-              <hr class="mt-2 mb-3" />
+    <ng-template #abpBody>
+      <div class="row">
+        @if (groups.length) {
+          <div ngTabs orientation="vertical" class="row">
+            <div class="col-md-4">
+              <div ngTabList orientation="vertical" selectionMode="follow" [(selectedTab)]="selectedGroupDisplayName" class="nav nav-pills flex-column">
+                @for (group of groups; track group.name) {
+                  <button ngTab #tab="ngTab" type="button" [value]="group.displayName" class="nav-link text-start" [class.active]="tab.selected()">
+                    {{ group.displayName }}
+                  </button>
+                }
+              </div>
+            </div>
+            <ng-template #descTmp let-description>
+              @if (description) {
+                <small class="d-block form-text text-muted">{{ description }}</small>
+              }
+            </ng-template>
+
+            <div class="col-md-8">
+              @for (group of groups; track group.name) {
+                <div ngTabPanel [value]="group.displayName">
+                  <ng-template ngTabContent>
+                    <h4>{{ selectedGroupDisplayName }}</h4>
+                    <hr class="mt-2 mb-3" />
 
               @for (feature of features[group.name]; track feature.id || i; let i = $index) {
               @let provider = feature.provider.name;
@@ -89,20 +103,29 @@
                   <ng-container *ngTemplateOutlet="
                                     descTmp;
                                     context: { $implicit: feature.description }
-                                  "></ng-container>
+                                  "
+                                ></ng-container>
+                              </div>
+                            }
+                          }
+                          @default {
+                            {{ feature.displayName }}
+                          }
+                        }
+                      </div>
+                    }
+                  </ng-template>
                 </div>
-                }
-                }
-                @default {
-                {{ feature.displayName }}
-                }
-                }
-              </div>
               }
-            </ng-template>
-          </li>
-          }
-        </ul>
+            </div>
+          </div>
+        }
+
+        @if (!groups.length) {
+          <div class="col">
+            {{ 'AbpFeatureManagement::NoFeatureFoundMessage' | abpLocalization }}
+          </div>
+        }
       </div>
 
       <ng-template #descTmp let-description>

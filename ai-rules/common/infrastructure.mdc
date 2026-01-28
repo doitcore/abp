@@ -1,6 +1,11 @@
 ---
 description: "ABP infrastructure services - Settings, Features, Caching, Events, Background Jobs"
-globs: "**/*Setting*.cs,**/*Feature*.cs,**/*Cache*.cs,**/*Event*.cs,**/*Job*.cs"
+globs:
+  - "**/*Setting*.cs"
+  - "**/*Feature*.cs"
+  - "**/*Cache*.cs"
+  - "**/*Event*.cs"
+  - "**/*Job*.cs"
 alwaysApply: false
 ---
 

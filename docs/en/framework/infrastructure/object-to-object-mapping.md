@@ -337,7 +337,7 @@ Example:
 public class PersonDto
 {
     public Country? Country { get; set; } // Nullable (can be null)
-    public City City { get; set; } // Non-nullable (cannot be null)
+    public City City { get; set; } = default!; // Non-nullable (cannot be null)
 }
 ````
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, inject, DOCUMENT } from '@angular/core';
-import { NgTemplateOutlet, NgStyle } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfigStateService, LocalizationPipe, TrackByService } from '@abp/ng.core';
 import {
@@ -36,7 +36,6 @@ const DEFAULT_PROVIDER_NAME = 'D';
   exportAs: 'abpFeatureManagement',
   imports: [
     NgTemplateOutlet,
-    NgStyle,
     ButtonComponent,
     ModalComponent,
     LocalizationPipe,

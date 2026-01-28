@@ -127,25 +127,7 @@
           </div>
         }
       </div>
-
-      <ng-template #descTmp let-description>
-        @if (description) {
-        <small class="d-block form-text text-muted">{{ description }}</small>
-        }
-      </ng-template>
-
-      <div class="col-md-8">
-        <div class="py-0" [ngbNavOutlet]="nav"></div>
-      </div>
-      }
-
-      @if (!groups.length) {
-      <div class="col">
-        {{ 'AbpFeatureManagement::NoFeatureFoundMessage' | abpLocalization }}
-      </div>
-      }
-    </div>
-  </ng-template>
+    </ng-template>
 
   <ng-template #abpFooter>
     <button abpClose type="button" class="btn btn-link">

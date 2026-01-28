@@ -32,6 +32,8 @@ public class Person : FullAuditedAggregateRoot<Guid>, IMultiTenant, IHasEntityVe
 
     public virtual DateTime HasDefaultValue { get; set; }
 
+    public virtual PersonContactInformation? ContactInformation { get; set; }
+
     public int EntityVersion { get; set; }
 
     [DisableAuditing(UpdateModificationProps = false)]
@@ -83,4 +85,18 @@ public class Person : FullAuditedAggregateRoot<Guid>, IMultiTenant, IHasEntityVe
             }
         );
     }
+}
+
+public class PersonContactInformation
+{
+    public string Street { get; set; } = string.Empty;
+
+    [DisableAuditing(UpdateModificationProps = false)]
+    public string? DisableAuditingUpdateModificationPropsProperty { get; set; }
+
+    [DisableAuditing(PublishEntityEvent = false)]
+    public string? DisableAuditingPublishEntityEventProperty { get; set; }
+
+    [DisableAuditing]
+    public string? DisableAuditingProperty { get; set; }
 }

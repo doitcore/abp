@@ -78,6 +78,10 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
             b.Property(x => x.HasDefaultValue).HasDefaultValue(DateTime.Now);
             b.Property(x => x.TenantId).HasColumnName("Tenant_Id");
             b.Property(x => x.IsDeleted).HasColumnName("Is_Deleted");
+            b.ComplexProperty(x => x.ContactInformation, cb =>
+            {
+                cb.Property(x => x.Street).IsRequired();
+            });
         });
 
         modelBuilder.Entity<City>(b =>

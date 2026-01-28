@@ -207,6 +207,23 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
             }
         }
 
+        foreach (var complexPropertyEntry in entityEntry.ComplexProperties)
+        {
+            foreach (var propertyEntry in complexPropertyEntry.Properties)
+            {
+                if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted) && !IsSoftDeleted(entityEntry))
+                {
+                    propertyChanges.Add(new EntityPropertyChangeInfo
+                    {
+                        NewValue = isDeleted ? null : JsonSerializer.Serialize(propertyEntry.CurrentValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
+                        OriginalValue = isCreated ? null : JsonSerializer.Serialize(propertyEntry.OriginalValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
+                        PropertyName = $"{complexPropertyEntry.Metadata.Name}.{propertyEntry.Metadata.Name}",
+                        PropertyTypeFullName = propertyEntry.Metadata.ClrType.GetFirstGenericArgumentIfNullable().FullName!
+                    });
+                }
+            }
+        }
+
         if (AbpEfCoreNavigationHelper == null)
         {
             return propertyChanges;
@@ -262,7 +279,7 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
     /// <see cref="PropertyEntry.OriginalValue"/>. If both values are <c>null</c>, the declared CLR type
     /// (which may remain <see cref="object"/>) is returned.
     /// </returns>
-    protected virtual Type DeterminePropertyTypeFromEntry(IProperty property, PropertyEntry propertyEntry)
+    protected virtual Type DeterminePropertyTypeFromEntry(IReadOnlyPropertyBase property, PropertyEntry propertyEntry)
     {
         var propertyType = property.ClrType.GetFirstGenericArgumentIfNullable();
 

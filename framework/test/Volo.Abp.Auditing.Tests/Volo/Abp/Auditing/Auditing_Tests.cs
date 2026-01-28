@@ -820,6 +820,77 @@ public class Auditing_Tests : AbpAuditingTestBase
         AuditingStore.ClearReceivedCalls();
 #pragma warning restore 4014
     }
+
+    [Fact]
+    public async Task Should_Write_AuditLog_For_Complex_Property_Changes()
+    {
+        var entityId = Guid.NewGuid();
+        var repository = ServiceProvider.GetRequiredService<IBasicRepository<AppEntityWithComplexProperty, Guid>>();
+
+        using (var scope = _auditingManager.BeginScope())
+        {
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var entity = new AppEntityWithComplexProperty(entityId, "Test Entity")
+                {
+                    ContactInformation = new AppEntityContactInformation
+                    {
+                        Street = "First Street"
+                    }
+                };
+
+                await repository.InsertAsync(entity);
+
+                await uow.CompleteAsync();
+                await scope.SaveAsync();
+            }
+        }
+
+#pragma warning disable 4014
+        AuditingStore.Received().SaveAsync(Arg.Is<AuditLogInfo>(x => x.EntityChanges.Count == 1 &&
+                                                                     x.EntityChanges[0].ChangeType == EntityChangeType.Created &&
+                                                                     x.EntityChanges[0].EntityTypeFullName == typeof(AppEntityWithComplexProperty).FullName &&
+                                                                     x.EntityChanges[0].PropertyChanges.Count == 2 &&
+                                                                     x.EntityChanges[0].PropertyChanges.Any(pc =>
+                                                                         pc.PropertyName == nameof(AppEntityWithComplexProperty.Name) &&
+                                                                         pc.OriginalValue == null &&
+                                                                         pc.NewValue == "\"Test Entity\"" &&
+                                                                         pc.PropertyTypeFullName == typeof(string).FullName) &&
+                                                                     x.EntityChanges[0].PropertyChanges.Any(pc =>
+                                                                         pc.PropertyName == "ContactInformation.Street" &&
+                                                                         pc.OriginalValue == null &&
+                                                                         pc.NewValue == "\"First Street\"" &&
+                                                                         pc.PropertyTypeFullName == typeof(string).FullName)));
+        AuditingStore.ClearReceivedCalls();
+#pragma warning restore 4014
+
+        using (var scope = _auditingManager.BeginScope())
+        {
+            using (var uow = _unitOfWorkManager.Begin())
+            {
+                var entity = await repository.GetAsync(entityId);
+
+                entity.ContactInformation.Street = "Updated Street";
+
+                await repository.UpdateAsync(entity);
+
+                await uow.CompleteAsync();
+                await scope.SaveAsync();
+            }
+        }
+
+#pragma warning disable 4014
+        AuditingStore.Received().SaveAsync(Arg.Is<AuditLogInfo>(x => x.EntityChanges.Count == 1 &&
+                                                                     x.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
+                                                                     x.EntityChanges[0].EntityTypeFullName == typeof(AppEntityWithComplexProperty).FullName &&
+                                                                     x.EntityChanges[0].PropertyChanges.Count == 1 &&
+                                                                     x.EntityChanges[0].PropertyChanges[0].PropertyName == "ContactInformation.Street" &&
+                                                                     x.EntityChanges[0].PropertyChanges[0].OriginalValue == "\"First Street\"" &&
+                                                                     x.EntityChanges[0].PropertyChanges[0].NewValue == "\"Updated Street\"" &&
+                                                                     x.EntityChanges[0].PropertyChanges[0].PropertyTypeFullName == typeof(string).FullName));
+        AuditingStore.ClearReceivedCalls();
+#pragma warning restore 4014
+    }
 }
 
 public class Auditing_DisableLogActionInfo_Tests : Auditing_Tests

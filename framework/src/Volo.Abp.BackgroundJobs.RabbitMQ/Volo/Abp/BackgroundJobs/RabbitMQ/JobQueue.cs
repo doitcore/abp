@@ -172,7 +172,8 @@ public class JobQueue<TArgs> : IJobQueue<TArgs>
         var routingKey = QueueConfiguration.QueueName;
         var basicProperties = new BasicProperties
         {
-            Persistent = true
+            Persistent = true,
+            CorrelationId = CorrelationIdProvider.Get()
         };
 
         if (delay.HasValue)

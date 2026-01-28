@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,38 +15,22 @@ namespace Volo.Abp.SettingManagement;
 
 public class SettingDynamicInitializer : ITransientDependency
 {
-    private Task _initializeDynamicSettingsTask;
-
     public ILogger<SettingDynamicInitializer> Logger { get; set; }
 
     protected IServiceProvider ServiceProvider { get; }
-    protected IOptions<SettingManagementOptions> Options { get; }
-    [CanBeNull]
-    protected IHostApplicationLifetime ApplicationLifetime { get; }
-    protected ICancellationTokenProvider CancellationTokenProvider { get; }
-    protected IDynamicSettingDefinitionStore DynamicSettingDefinitionStore { get; }
-    protected IStaticSettingSaver StaticSettingSaver { get; }
 
-    public SettingDynamicInitializer(
-        IServiceProvider serviceProvider,
-        IOptions<SettingManagementOptions> options,
-        ICancellationTokenProvider cancellationTokenProvider,
-        IDynamicSettingDefinitionStore dynamicSettingDefinitionStore,
-        IStaticSettingSaver staticSettingSaver)
+    public SettingDynamicInitializer(IServiceProvider serviceProvider)
     {
         Logger = NullLogger<SettingDynamicInitializer>.Instance;
 
         ServiceProvider = serviceProvider;
-        Options = options;
-        ApplicationLifetime = ServiceProvider.GetService<IHostApplicationLifetime>();
-        CancellationTokenProvider = cancellationTokenProvider;
-        DynamicSettingDefinitionStore = dynamicSettingDefinitionStore;
-        StaticSettingSaver = staticSettingSaver;
     }
 
     public virtual Task InitializeAsync(bool runInBackground, CancellationToken cancellationToken = default)
     {
-        var options = Options.Value;
+        var options = ServiceProvider
+            .GetRequiredService<IOptions<SettingManagementOptions>>()
+            .Value;
 
         if (!options.SaveStaticSettingsToDatabase && !options.IsDynamicSettingStoreEnabled)
         {
@@ -56,11 +39,12 @@ public class SettingDynamicInitializer : ITransientDependency
 
         if (runInBackground)
         {
-            _initializeDynamicSettingsTask = Task.Run(async () =>
+            var applicationLifetime = ServiceProvider.GetService<IHostApplicationLifetime>();
+            Task.Run(async () =>
             {
-                if (cancellationToken == default && ApplicationLifetime?.ApplicationStopping != null)
+                if (cancellationToken == default && applicationLifetime?.ApplicationStopping != null)
                 {
-                    cancellationToken = ApplicationLifetime.ApplicationStopping;
+                    cancellationToken = applicationLifetime.ApplicationStopping;
                 }
                 await ExecuteInitializationAsync(options, cancellationToken);
             }, cancellationToken);
@@ -68,29 +52,26 @@ public class SettingDynamicInitializer : ITransientDependency
             return Task.CompletedTask;
         }
 
-        _initializeDynamicSettingsTask = ExecuteInitializationAsync(options, cancellationToken);
-        return _initializeDynamicSettingsTask;
+        return ExecuteInitializationAsync(options, cancellationToken);
     }
 
-    public virtual Task GetInitializationTask()
-    {
-        return _initializeDynamicSettingsTask ?? Task.CompletedTask;
-    }
-
-    protected virtual async Task ExecuteInitializationAsync(SettingManagementOptions options, CancellationToken cancellationToken)
+    protected virtual async Task ExecuteInitializationAsync(
+        SettingManagementOptions options,
+        CancellationToken cancellationToken)
     {
         try
         {
-            using (CancellationTokenProvider.Use(cancellationToken))
+            var cancellationTokenProvider = ServiceProvider.GetRequiredService<ICancellationTokenProvider>();
+            using (cancellationTokenProvider.Use(cancellationToken))
             {
-                if (CancellationTokenProvider.Token.IsCancellationRequested)
+                if (cancellationTokenProvider.Token.IsCancellationRequested)
                 {
                     return;
                 }
 
                 await SaveStaticSettingsToDatabaseAsync(options, cancellationToken);
 
-                if (CancellationTokenProvider.Token.IsCancellationRequested)
+                if (cancellationTokenProvider.Token.IsCancellationRequested)
                 {
                     return;
                 }
@@ -113,6 +94,8 @@ public class SettingDynamicInitializer : ITransientDependency
             return;
         }
 
+        var staticSettingSaver = ServiceProvider.GetRequiredService<IStaticSettingSaver>();
+
         await Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(
@@ -127,7 +110,7 @@ public class SettingDynamicInitializer : ITransientDependency
             {
                 try
                 {
-                    await StaticSettingSaver.SaveAsync();
+                    await staticSettingSaver.SaveAsync();
                 }
                 catch (Exception ex)
                 {
@@ -137,17 +120,20 @@ public class SettingDynamicInitializer : ITransientDependency
             }, cancellationToken);
     }
 
-    protected virtual async Task PreCacheDynamicSettingsAsync(SettingManagementOptions options)
+    protected virtual async Task PreCacheDynamicSettingsAsync(
+        SettingManagementOptions options)
     {
         if (!options.IsDynamicSettingStoreEnabled)
         {
             return;
         }
 
+        var dynamicSettingDefinitionStore = ServiceProvider.GetRequiredService<IDynamicSettingDefinitionStore>();
+
         try
         {
             // Pre-cache settings, so first request doesn't wait
-            await DynamicSettingDefinitionStore.GetAllAsync();
+            await dynamicSettingDefinitionStore.GetAllAsync();
         }
         catch (Exception ex)
         {

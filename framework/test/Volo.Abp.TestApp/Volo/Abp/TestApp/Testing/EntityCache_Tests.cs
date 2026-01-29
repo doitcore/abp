@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shouldly;
 using Volo.Abp.Caching;
 using Volo.Abp.Domain.Entities;
@@ -115,6 +119,51 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
         productCacheItem.Id.ShouldBe(TestDataBuilder.ProductId);
         productCacheItem.Name.ShouldBe("Product2");
         productCacheItem.Price.ShouldBe(decimal.Zero);
+    }
+
+    [Fact]
+    public void EntityCache_DefaultOptions_Should_Be_Applied()
+    {
+        var productCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<Product>, Guid>>();
+        var productCacheItemCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<ProductCacheItem>, Guid>>();
+
+        var productOptions = GetDefaultCachingOptions(productCache);
+        productOptions.AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(7));
+        productOptions.SlidingExpiration.ShouldBeNull();
+
+        var productCacheItemOptions = GetDefaultCachingOptions(productCacheItemCache);
+        productCacheItemOptions.AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(9));
+        productCacheItemOptions.SlidingExpiration.ShouldBeNull();
+    }
+
+    [Fact]
+    public void EntityCache_Configured_Options_Should_Be_Applied()
+    {
+        // This test verifies that the cache options configured during AddEntityCache are properly applied
+        // The options are configured in TestAppModule.ConfigureServices
+        var productCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<Product>, Guid>>();
+        var productCacheItemCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<ProductCacheItem>, Guid>>();
+
+        GetDefaultCachingOptions(productCache).AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(7));
+        GetDefaultCachingOptions(productCacheItemCache).AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(9));
+    }
+
+    private static DistributedCacheEntryOptions GetDefaultCachingOptions(object instance)
+    {
+        var internalCacheProperty = instance
+            .GetType()
+            .GetProperty("InternalCache", BindingFlags.Instance | BindingFlags.Public);
+
+        if (internalCacheProperty != null)
+        {
+            instance = internalCacheProperty.GetValue(instance);
+        }
+
+        var defaultOptionsField = instance
+            .GetType()
+            .GetField("DefaultCacheOptions", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        return (DistributedCacheEntryOptions)defaultOptionsField.GetValue(instance);
     }
 }
 

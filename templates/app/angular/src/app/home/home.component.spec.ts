@@ -3,20 +3,19 @@ import { ThemeSharedTestingModule } from "@abp/ng.theme.shared/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgxValidateCoreModule } from "@ngx-validate/core";
 import { HomeComponent } from "./home.component";
-import { OAuthService } from 'angular-oauth2-oidc';
 import { AuthService } from '@abp/ng.core';
 import { vi } from 'vitest';
 
 describe("HomeComponent", () => {
   let fixture: ComponentFixture<HomeComponent>;
-  const mockOAuthService = {
-    hasValidAccessToken: vi.fn()
-  };
-  const mockAuthService = {
-    navigateToLogin: vi.fn()
-  };
+  let mockAuthService: { isAuthenticated: boolean; navigateToLogin: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
+    mockAuthService = {
+      isAuthenticated: false,
+      navigateToLogin: vi.fn()
+    };
+
     await TestBed.configureTestingModule({
       imports: [
         CoreTestingModule.withConfig(),
@@ -25,11 +24,6 @@ describe("HomeComponent", () => {
         HomeComponent
       ],
       providers: [
-        /* mock providers here */
-        {
-          provide: OAuthService,
-          useValue: mockOAuthService
-        },
         {
           provide: AuthService,
           useValue: mockAuthService
@@ -38,23 +32,21 @@ describe("HomeComponent", () => {
     }).compileComponents();
   });
 
-  beforeEach(() => {
+  it("should be initiated", () => {
     fixture = TestBed.createComponent(HomeComponent);
     fixture.detectChanges();
-  });
-
-  it("should be initiated", () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
   describe('when login state is true', () => {
-    beforeAll(() => {
-      mockOAuthService.hasValidAccessToken.mockReturnValue(true);
+    beforeEach(() => {
+      mockAuthService.isAuthenticated = true;
+      fixture = TestBed.createComponent(HomeComponent);
+      fixture.detectChanges();
     });
 
     it("hasLoggedIn should be true", () => {
       expect(fixture.componentInstance.hasLoggedIn).toBe(true);
-      expect(mockOAuthService.hasValidAccessToken).toHaveBeenCalled();
     });
 
     it("button should not be exists", () => {
@@ -65,13 +57,14 @@ describe("HomeComponent", () => {
   });
 
   describe('when login state is false', () => {
-    beforeAll(() => {
-      mockOAuthService.hasValidAccessToken.mockReturnValue(false);
+    beforeEach(() => {
+      mockAuthService.isAuthenticated = false;
+      fixture = TestBed.createComponent(HomeComponent);
+      fixture.detectChanges();
     });
 
     it("hasLoggedIn should be false", () => {
       expect(fixture.componentInstance.hasLoggedIn).toBe(false);
-      expect(mockOAuthService.hasValidAccessToken).toHaveBeenCalled();
     });
 
     it("button should be exists", () => {

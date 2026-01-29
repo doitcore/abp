@@ -55,6 +55,6 @@
     "ng-packagr": "~21.0.0",
     "symlink": "^2.0.0",
     "typescript": "~5.9.0",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.0"
   }
 }

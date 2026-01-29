@@ -184,6 +184,7 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
         var properties = entityEntry.Metadata.GetProperties();
         var isCreated = IsCreated(entityEntry);
         var isDeleted = IsDeleted(entityEntry);
+        var isSoftDeleted = IsSoftDeleted(entityEntry);
 
         foreach (var property in properties)
         {
@@ -193,7 +194,7 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
             }
 
             var propertyEntry = entityEntry.Property(property.Name);
-            if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted) && !IsSoftDeleted(entityEntry))
+            if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted) && !isSoftDeleted)
             {
                 var propertyType = DeterminePropertyTypeFromEntry(property, propertyEntry);
 
@@ -209,19 +210,13 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
 
         foreach (var complexPropertyEntry in entityEntry.ComplexProperties)
         {
-            foreach (var propertyEntry in complexPropertyEntry.Properties)
-            {
-                if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted) && !IsSoftDeleted(entityEntry))
-                {
-                    propertyChanges.Add(new EntityPropertyChangeInfo
-                    {
-                        NewValue = isDeleted ? null : JsonSerializer.Serialize(propertyEntry.CurrentValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
-                        OriginalValue = isCreated ? null : JsonSerializer.Serialize(propertyEntry.OriginalValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
-                        PropertyName = $"{complexPropertyEntry.Metadata.Name}.{propertyEntry.Metadata.Name}",
-                        PropertyTypeFullName = propertyEntry.Metadata.ClrType.GetFirstGenericArgumentIfNullable().FullName!
-                    });
-                }
-            }
+            AddComplexPropertyChanges(
+                complexPropertyEntry,
+                propertyChanges,
+                isCreated,
+                isDeleted,
+                isSoftDeleted,
+                parentPath: null);
         }
 
         if (AbpEfCoreNavigationHelper == null)
@@ -265,6 +260,52 @@ public class EntityHistoryHelper : IEntityHistoryHelper, ITransientDependency
         }
 
         return propertyChanges;
+    }
+
+    protected virtual void AddComplexPropertyChanges(
+        ComplexPropertyEntry complexPropertyEntry,
+        List<EntityPropertyChangeInfo> propertyChanges,
+        bool isCreated,
+        bool isDeleted,
+        bool isSoftDeleted,
+        string? parentPath)
+    {
+        var complexPropertyInfo = complexPropertyEntry.Metadata.PropertyInfo;
+        if (complexPropertyInfo != null && complexPropertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
+        {
+            return;
+        }
+
+        var complexPropertyPath = parentPath == null
+            ? complexPropertyEntry.Metadata.Name
+            : $"{parentPath}.{complexPropertyEntry.Metadata.Name}";
+
+        foreach (var propertyEntry in complexPropertyEntry.Properties)
+        {
+            if (ShouldSavePropertyHistory(propertyEntry, isCreated || isDeleted) && !isSoftDeleted)
+            {
+                var propertyType = DeterminePropertyTypeFromEntry(propertyEntry.Metadata, propertyEntry);
+
+                propertyChanges.Add(new EntityPropertyChangeInfo
+                {
+                    NewValue = isDeleted ? null : JsonSerializer.Serialize(propertyEntry.CurrentValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
+                    OriginalValue = isCreated ? null : JsonSerializer.Serialize(propertyEntry.OriginalValue!).TruncateWithPostfix(EntityPropertyChangeInfo.MaxValueLength),
+                    PropertyName = $"{complexPropertyPath}.{propertyEntry.Metadata.Name}",
+                    PropertyTypeFullName = propertyType.FullName!
+                });
+            }
+        }
+
+        foreach (var nestedComplexPropertyEntry in complexPropertyEntry.ComplexProperties)
+        {
+            AddComplexPropertyChanges(
+                nestedComplexPropertyEntry,
+                propertyChanges,
+                isCreated,
+                isDeleted,
+                isSoftDeleted,
+                complexPropertyPath);
+        }
     }
 
     /// <summary>

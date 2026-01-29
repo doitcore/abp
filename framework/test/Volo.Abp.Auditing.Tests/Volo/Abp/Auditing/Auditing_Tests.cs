@@ -835,7 +835,19 @@ public class Auditing_Tests : AbpAuditingTestBase
                 {
                     ContactInformation = new AppEntityContactInformation
                     {
-                        Street = "First Street"
+                        Street = "First Street",
+                        Location = new AppEntityContactLocation
+                        {
+                            City = "First City"
+                        }
+                    },
+                    DisabledContactInformation = new AppEntityContactInformation
+                    {
+                        Street = "Disabled Street",
+                        Location = new AppEntityContactLocation
+                        {
+                            City = "Disabled City"
+                        }
                     }
                 };
 
@@ -850,7 +862,7 @@ public class Auditing_Tests : AbpAuditingTestBase
         AuditingStore.Received().SaveAsync(Arg.Is<AuditLogInfo>(x => x.EntityChanges.Count == 1 &&
                                                                      x.EntityChanges[0].ChangeType == EntityChangeType.Created &&
                                                                      x.EntityChanges[0].EntityTypeFullName == typeof(AppEntityWithComplexProperty).FullName &&
-                                                                     x.EntityChanges[0].PropertyChanges.Count == 2 &&
+                                                                     x.EntityChanges[0].PropertyChanges.Count == 3 &&
                                                                      x.EntityChanges[0].PropertyChanges.Any(pc =>
                                                                          pc.PropertyName == nameof(AppEntityWithComplexProperty.Name) &&
                                                                          pc.OriginalValue == null &&
@@ -860,7 +872,14 @@ public class Auditing_Tests : AbpAuditingTestBase
                                                                          pc.PropertyName == "ContactInformation.Street" &&
                                                                          pc.OriginalValue == null &&
                                                                          pc.NewValue == "\"First Street\"" &&
-                                                                         pc.PropertyTypeFullName == typeof(string).FullName)));
+                                                                         pc.PropertyTypeFullName == typeof(string).FullName) &&
+                                                                     x.EntityChanges[0].PropertyChanges.Any(pc =>
+                                                                         pc.PropertyName == "ContactInformation.Location.City" &&
+                                                                         pc.OriginalValue == null &&
+                                                                         pc.NewValue == "\"First City\"" &&
+                                                                         pc.PropertyTypeFullName == typeof(string).FullName) &&
+                                                                     x.EntityChanges[0].PropertyChanges.All(pc =>
+                                                                         !pc.PropertyName.StartsWith(nameof(AppEntityWithComplexProperty.DisabledContactInformation)))));
         AuditingStore.ClearReceivedCalls();
 #pragma warning restore 4014
 
@@ -870,7 +889,8 @@ public class Auditing_Tests : AbpAuditingTestBase
             {
                 var entity = await repository.GetAsync(entityId);
 
-                entity.ContactInformation.Street = "Updated Street";
+                entity.ContactInformation.Location.City = "Updated City";
+                entity.DisabledContactInformation.Street = "Updated Disabled Street";
 
                 await repository.UpdateAsync(entity);
 
@@ -884,9 +904,9 @@ public class Auditing_Tests : AbpAuditingTestBase
                                                                      x.EntityChanges[0].ChangeType == EntityChangeType.Updated &&
                                                                      x.EntityChanges[0].EntityTypeFullName == typeof(AppEntityWithComplexProperty).FullName &&
                                                                      x.EntityChanges[0].PropertyChanges.Count == 1 &&
-                                                                     x.EntityChanges[0].PropertyChanges[0].PropertyName == "ContactInformation.Street" &&
-                                                                     x.EntityChanges[0].PropertyChanges[0].OriginalValue == "\"First Street\"" &&
-                                                                     x.EntityChanges[0].PropertyChanges[0].NewValue == "\"Updated Street\"" &&
+                                                                     x.EntityChanges[0].PropertyChanges[0].PropertyName == "ContactInformation.Location.City" &&
+                                                                     x.EntityChanges[0].PropertyChanges[0].OriginalValue == "\"First City\"" &&
+                                                                     x.EntityChanges[0].PropertyChanges[0].NewValue == "\"Updated City\"" &&
                                                                      x.EntityChanges[0].PropertyChanges[0].PropertyTypeFullName == typeof(string).FullName));
         AuditingStore.ClearReceivedCalls();
 #pragma warning restore 4014

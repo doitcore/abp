@@ -85,6 +85,19 @@ public class AbpAuditingTestDbContext : AbpDbContext<AbpAuditingTestDbContext>
             b.ComplexProperty(x => x.ContactInformation, cb =>
             {
                 cb.Property(x => x.Street).IsRequired();
+                cb.ComplexProperty(x => x.Location, lb =>
+                {
+                    lb.Property(x => x.City).IsRequired();
+                });
+            });
+
+            b.ComplexProperty(x => x.DisabledContactInformation, cb =>
+            {
+                cb.Property(x => x.Street).IsRequired();
+                cb.ComplexProperty(x => x.Location, lb =>
+                {
+                    lb.Property(x => x.City).IsRequired();
+                });
             });
         });
     }

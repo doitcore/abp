@@ -510,6 +510,12 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
     {
         foreach (var complexPropertyEntry in complexPropertyEntries)
         {
+            var complexPropertyInfo = complexPropertyEntry.Metadata.PropertyInfo;
+            if (complexPropertyInfo != null && complexPropertyInfo.IsDefined(typeof(DisableAuditingAttribute), true))
+            {
+                continue;
+            }
+
             foreach (var propertyEntry in complexPropertyEntry.Properties)
             {
                 yield return propertyEntry;

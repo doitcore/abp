@@ -7,7 +7,7 @@ import { LocalizationService } from './localization.service';
 import { SessionStateService } from './session-state.service';
 import { CORE_OPTIONS } from '../tokens/options.token';
 
-export interface LocalizationResource {
+export interface UILocalizationResource {
   [resourceName: string]: Record<string, string>;
 }
 
@@ -23,7 +23,7 @@ export class UILocalizationService {
   private sessionState = inject(SessionStateService);
   private options = inject(CORE_OPTIONS);
 
-  private loadedLocalizations$ = new BehaviorSubject<Record<string, LocalizationResource>>({});
+  private loadedLocalizations$ = new BehaviorSubject<Record<string, UILocalizationResource>>({});
 
   private currentLanguage$ = this.sessionState.getLanguage$();
 
@@ -38,8 +38,7 @@ export class UILocalizationService {
     this.currentLanguage$
       .pipe(
         distinctUntilChanged(),
-        switchMap(culture => this.loadLocalizationFile(culture)),
-        shareReplay(1),
+        switchMap(culture => this.loadLocalizationFile(culture))
       )
       .subscribe();
   }
@@ -51,7 +50,7 @@ export class UILocalizationService {
     const basePath = config.basePath || '/assets/localization';
     const url = `${basePath}/${culture}.json`;
 
-    return this.http.get<LocalizationResource>(url).pipe(
+    return this.http.get<UILocalizationResource>(url).pipe(
       catchError(() => {
         // If file not found or error occurs, return null
         return of(null);
@@ -64,7 +63,7 @@ export class UILocalizationService {
     );
   }
 
-  private processLocalizationData(culture: string, data: LocalizationResource) {
+  private processLocalizationData(culture: string, data: UILocalizationResource) {
     const abpFormat: ABP.Localization[] = [
       {
         culture,
@@ -113,7 +112,7 @@ export class UILocalizationService {
     this.loadedLocalizations$.next(current);
   }
 
-  getLoadedLocalizations(culture?: string): LocalizationResource {
+  getLoadedLocalizations(culture?: string): UILocalizationResource {
     const lang = culture || this.sessionState.getLanguage();
     return this.loadedLocalizations$.value[lang] || {};
   }

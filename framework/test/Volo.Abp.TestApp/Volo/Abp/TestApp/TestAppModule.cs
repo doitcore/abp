@@ -38,6 +38,7 @@ public class TestAppModule : AbpModule
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(9)
         });
+        context.Services.AddEntityCache<Product, ProductCacheItem2, Guid>();
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

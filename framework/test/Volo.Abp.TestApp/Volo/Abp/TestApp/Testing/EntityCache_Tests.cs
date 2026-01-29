@@ -2,8 +2,6 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Shouldly;
 using Volo.Abp.Caching;
 using Volo.Abp.Domain.Entities;
@@ -122,7 +120,17 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
     }
 
     [Fact]
-    public void EntityCache_DefaultOptions_Should_Be_Applied()
+    public void EntityCache_Default_Options_Should_Be_2_Minutes()
+    {
+        var productCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<ProductCacheItem2>, Guid>>();
+
+        var productOptions = GetDefaultCachingOptions(productCache);
+        productOptions.AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(2));
+        productOptions.SlidingExpiration.ShouldBeNull();
+    }
+
+    [Fact]
+    public void EntityCache_Configured_Options_Should_Be_Applied()
     {
         var productCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<Product>, Guid>>();
         var productCacheItemCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<ProductCacheItem>, Guid>>();
@@ -134,18 +142,6 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
         var productCacheItemOptions = GetDefaultCachingOptions(productCacheItemCache);
         productCacheItemOptions.AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(9));
         productCacheItemOptions.SlidingExpiration.ShouldBeNull();
-    }
-
-    [Fact]
-    public void EntityCache_Configured_Options_Should_Be_Applied()
-    {
-        // This test verifies that the cache options configured during AddEntityCache are properly applied
-        // The options are configured in TestAppModule.ConfigureServices
-        var productCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<Product>, Guid>>();
-        var productCacheItemCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<ProductCacheItem>, Guid>>();
-
-        GetDefaultCachingOptions(productCache).AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(7));
-        GetDefaultCachingOptions(productCacheItemCache).AbsoluteExpirationRelativeToNow.ShouldBe(TimeSpan.FromMinutes(9));
     }
 
     private static DistributedCacheEntryOptions GetDefaultCachingOptions(object instance)
@@ -190,6 +186,17 @@ public class Product : FullAuditedAggregateRoot<Guid>
 [Serializable]
 [CacheName("ProductCacheItem")]
 public class ProductCacheItem
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; }
+
+    public decimal Price { get; set; }
+}
+
+[Serializable]
+[CacheName("ProductCacheItem2")]
+public class ProductCacheItem2
 {
     public Guid Id { get; set; }
 

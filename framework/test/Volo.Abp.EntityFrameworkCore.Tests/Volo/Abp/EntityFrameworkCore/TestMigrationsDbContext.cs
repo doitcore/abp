@@ -81,6 +81,10 @@ public class TestMigrationsDbContext : AbpDbContext<TestMigrationsDbContext>
             b.ComplexProperty(x => x.ContactInformation, cb =>
             {
                 cb.Property(x => x.Street).IsRequired();
+                cb.ComplexProperty(x => x.Location, locationBuilder =>
+                {
+                    locationBuilder.Property(x => x.City).IsRequired();
+                });
             });
         });
 

@@ -503,7 +503,23 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
 
     protected virtual IEnumerable<PropertyEntry> GetAllPropertyEntries(EntityEntry entry)
     {
-        return entry.Properties.Concat(entry.ComplexProperties.SelectMany(x => x.Properties));
+        return entry.Properties.Concat(GetAllComplexPropertyEntries(entry.ComplexProperties));
+    }
+
+    protected virtual IEnumerable<PropertyEntry> GetAllComplexPropertyEntries(IEnumerable<ComplexPropertyEntry> complexPropertyEntries)
+    {
+        foreach (var complexPropertyEntry in complexPropertyEntries)
+        {
+            foreach (var propertyEntry in complexPropertyEntry.Properties)
+            {
+                yield return propertyEntry;
+            }
+
+            foreach (var nestedPropertyEntry in GetAllComplexPropertyEntries(complexPropertyEntry.ComplexProperties))
+            {
+                yield return nestedPropertyEntry;
+            }
+        }
     }
 
     protected virtual bool IsOnlyForeignKeysModified(EntityEntry entry)

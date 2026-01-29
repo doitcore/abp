@@ -89,13 +89,13 @@ public class Auditing_Tests : Auditing_Tests<AbpEntityFrameworkCoreTestModule>
     [Fact]
     public async Task Should_Set_Modification_If_Complex_Properties_Changed()
     {
-        var street = Guid.NewGuid().ToString();
+        var city = Guid.NewGuid().ToString();
 
         await WithUnitOfWorkAsync((async () =>
         {
             var douglas = await PersonRepository.GetAsync(TestDataBuilder.UserDouglasId);
             douglas.ContactInformation ??= new PersonContactInformation();
-            douglas.ContactInformation.Street = street;
+            douglas.ContactInformation.Location.City = city;
         }));
 
         await WithUnitOfWorkAsync((async () =>
@@ -104,7 +104,7 @@ public class Auditing_Tests : Auditing_Tests<AbpEntityFrameworkCoreTestModule>
 
             douglas.ShouldNotBeNull();
             douglas.ContactInformation.ShouldNotBeNull();
-            douglas.ContactInformation!.Street.ShouldBe(street);
+            douglas.ContactInformation!.Location.City.ShouldBe(city);
             douglas.LastModificationTime.ShouldNotBeNull();
             douglas.LastModificationTime.Value.ShouldBeLessThanOrEqualTo(Clock.Now);
             douglas.LastModifierId.ShouldBe(CurrentUserId);
@@ -142,6 +142,28 @@ public class Auditing_Tests : Auditing_Tests<AbpEntityFrameworkCoreTestModule>
             var douglas = await PersonRepository.GetAsync(TestDataBuilder.UserDouglasId);
             douglas.ContactInformation ??= new PersonContactInformation();
             douglas.ContactInformation.DisableAuditingUpdateModificationPropsProperty = Guid.NewGuid().ToString();
+        }));
+
+        await WithUnitOfWorkAsync((async () =>
+        {
+            var douglas = await PersonRepository.FindAsync(TestDataBuilder.UserDouglasId);
+
+            douglas.ShouldNotBeNull();
+            douglas.LastModificationTime.ShouldBeNull();
+            douglas.LastModifierId.ShouldBeNull();
+        }));
+
+        EntityChangeEventHelper.Received().PublishEntityUpdatedEvent(Arg.Any<object>());
+    }
+
+    [Fact]
+    public async Task Should_Not_Set_Modification_If_Nested_ComplexProperties_HasDisableAuditing_UpdateModificationProps()
+    {
+        await WithUnitOfWorkAsync((async () =>
+        {
+            var douglas = await PersonRepository.GetAsync(TestDataBuilder.UserDouglasId);
+            douglas.ContactInformation ??= new PersonContactInformation();
+            douglas.ContactInformation.Location.DisableAuditingUpdateModificationPropsProperty = Guid.NewGuid().ToString();
         }));
 
         await WithUnitOfWorkAsync((async () =>
@@ -197,6 +219,27 @@ public class Auditing_Tests : Auditing_Tests<AbpEntityFrameworkCoreTestModule>
         EntityChangeEventHelper.DidNotReceive().PublishEntityUpdatedEvent(Arg.Any<object>());
     }
 
+    [Fact]
+    public async Task Should_Not_PublishEntityEvent_If_Nested_ComplexProperties_HasDisableAuditing_PublishEntityEventProperty()
+    {
+        await WithUnitOfWorkAsync((async () =>
+        {
+            var douglas = await PersonRepository.GetAsync(TestDataBuilder.UserDouglasId);
+            douglas.ContactInformation ??= new PersonContactInformation();
+            douglas.ContactInformation.Location.DisableAuditingPublishEntityEventProperty = Guid.NewGuid().ToString();
+        }));
+
+        await WithUnitOfWorkAsync((async () =>
+        {
+            var douglas = await PersonRepository.FindAsync(TestDataBuilder.UserDouglasId);
+
+            douglas.ShouldNotBeNull();
+            douglas.LastModificationTime.ShouldNotBeNull();
+        }));
+
+        EntityChangeEventHelper.DidNotReceive().PublishEntityUpdatedEvent(Arg.Any<object>());
+    }
+
 
     [Fact]
     public async Task Should_Set_Modification_And_PublishEntityEvent_If_Properties_HasDisableAuditing()
@@ -226,6 +269,27 @@ public class Auditing_Tests : Auditing_Tests<AbpEntityFrameworkCoreTestModule>
             var douglas = await PersonRepository.GetAsync(TestDataBuilder.UserDouglasId);
             douglas.ContactInformation ??= new PersonContactInformation();
             douglas.ContactInformation.DisableAuditingProperty = Guid.NewGuid().ToString();
+        }));
+
+        await WithUnitOfWorkAsync((async () =>
+        {
+            var douglas = await PersonRepository.FindAsync(TestDataBuilder.UserDouglasId);
+
+            douglas.ShouldNotBeNull();
+            douglas.LastModificationTime.ShouldNotBeNull();
+        }));
+
+        EntityChangeEventHelper.Received().PublishEntityUpdatedEvent(Arg.Any<object>());
+    }
+
+    [Fact]
+    public async Task Should_Set_Modification_And_PublishEntityEvent_If_Nested_ComplexProperties_HasDisableAuditing()
+    {
+        await WithUnitOfWorkAsync((async () =>
+        {
+            var douglas = await PersonRepository.GetAsync(TestDataBuilder.UserDouglasId);
+            douglas.ContactInformation ??= new PersonContactInformation();
+            douglas.ContactInformation.Location.DisableAuditingProperty = Guid.NewGuid().ToString();
         }));
 
         await WithUnitOfWorkAsync((async () =>

@@ -91,6 +91,22 @@ public class PersonContactInformation
 {
     public string Street { get; set; } = string.Empty;
 
+    public PersonContactLocation Location { get; set; } = new();
+
+    [DisableAuditing(UpdateModificationProps = false)]
+    public string? DisableAuditingUpdateModificationPropsProperty { get; set; }
+
+    [DisableAuditing(PublishEntityEvent = false)]
+    public string? DisableAuditingPublishEntityEventProperty { get; set; }
+
+    [DisableAuditing]
+    public string? DisableAuditingProperty { get; set; }
+}
+
+public class PersonContactLocation
+{
+    public string City { get; set; } = string.Empty;
+
     [DisableAuditing(UpdateModificationProps = false)]
     public string? DisableAuditingUpdateModificationPropsProperty { get; set; }
 

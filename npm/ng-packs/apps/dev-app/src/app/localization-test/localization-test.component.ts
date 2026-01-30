@@ -11,7 +11,7 @@ import { AsyncPipe } from '@angular/common';
   template: `
     <div class="container mt-5">
       <h2>Hybrid Localization Test</h2>
-      
+
       <abp-card cardClass="mt-4">
         <abp-card-body>
           <h5>Backend Localization (if available)</h5>
@@ -53,7 +53,6 @@ export class LocalizationTestComponent implements OnInit {
   currentLanguage$ = this.sessionState.getLanguage$();
 
   ngOnInit() {
-    // Yüklenen UI localization'ları göster
     this.loadedLocalizations = this.uiLocalizationService.getLoadedLocalizations();
   }
 }

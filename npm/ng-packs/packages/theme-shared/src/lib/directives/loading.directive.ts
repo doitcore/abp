@@ -1,16 +1,17 @@
-import { 
-  ComponentFactoryResolver, 
-  ComponentRef, 
-  Directive, 
-  ElementRef, 
-  EmbeddedViewRef, 
-  HostBinding, 
-  Injector, 
-  Input, 
-  OnDestroy, 
-  OnInit, 
-  Renderer2, 
-  inject 
+import {
+  ComponentFactoryResolver,
+  ComponentRef,
+  Directive,
+  ElementRef,
+  EmbeddedViewRef,
+  HostBinding,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  inject,
+  input
 } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -49,7 +50,7 @@ export class LoadingDirective implements OnInit, OnDestroy {
         return;
       }
 
-      this.timerSubscription = timer(this.delay)
+      this.timerSubscription = timer(this.delay())
         .pipe(take(1))
         .subscribe(() => {
           if (!this.componentRef) {
@@ -75,8 +76,7 @@ export class LoadingDirective implements OnInit, OnDestroy {
   @Input('abpLoadingTargetElement')
   targetElement: HTMLElement | undefined;
 
-  @Input('abpLoadingDelay')
-  delay = 0;
+  readonly delay = input(0, { alias: "abpLoadingDelay" });
 
   componentRef!: ComponentRef<LoadingComponent>;
   rootNode: HTMLDivElement | null = null;

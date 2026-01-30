@@ -95,7 +95,7 @@
   <label [htmlFor]="prop.id" [class]="classes || 'form-label d-inline-block'">
     <span class="d-inline-flex align-items-center gap-1 text-nowrap">
       @if (prop.displayTextResolver) {
-      {{ prop.displayTextResolver(data) | abpLocalization }}
+      {{ prop.displayTextResolver(data()) | abpLocalization }}
       } @else {
       @if (prop.isExtra) {
       {{ '::' + prop.displayName | abpLocalization }}

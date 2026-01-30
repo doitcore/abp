@@ -1,4 +1,4 @@
-import { InjectionToken, InjectOptions, Type } from '@angular/core';
+import { InjectionToken, InjectOptions, InputSignal, isSignal, Type } from '@angular/core';
 import { LinkedList } from '@abp/utils';
 
 export abstract class ActionList<R = any, A = Action<R>> extends LinkedList<A> {}
@@ -10,18 +10,26 @@ export abstract class ActionData<R = any> {
     flags?: InjectOptions,
   ) => T;
   index?: number;
-  abstract record: R;
+  abstract record: R | InputSignal<R>;
 
   get data(): ReadonlyActionData<R> {
     return {
       getInjected: this.getInjected,
       index: this.index,
-      record: this.record,
+      record: isSignal(this.record) ? this.record() : this.record,
     };
   }
 }
 
-export type ReadonlyActionData<R = any> = Readonly<Omit<ActionData<R>, 'data'>>;
+export type ReadonlyActionData<R = any> = Readonly<{
+  getInjected: <T>(
+    token: Type<T> | InjectionToken<T>,
+    notFoundValue?: T,
+    flags?: InjectOptions,
+  ) => T;
+  index?: number;
+  record: R;
+}>;
 
 export abstract class Action<R = any> {
   constructor(
@@ -33,8 +41,8 @@ export abstract class Action<R = any> {
   ) {}
 }
 
-export type ActionCallback<T, R = any> = (data: Omit<ActionData<T>, 'data'>) => R;
-export type ActionPredicate<T> = (data?: Omit<ActionData<T>, 'data'>) => boolean;
+export type ActionCallback<T, R = any> = (data: ReadonlyActionData<T>) => R;
+export type ActionPredicate<T> = (data?: ReadonlyActionData<T>) => boolean;
 
 export abstract class ActionsFactory<C extends Actions<any>> {
   protected abstract _ctor: Type<C>;

@@ -15,7 +15,7 @@
     @if (customBreadcrumb) {
       <ng-content select="abp-page-breadcrumb-container"></ng-content>
     } @else {
-      @if (breadcrumb) {
+      @if (breadcrumb()) {
         <div class="col-lg-auto ps-lg-0" *abpPagePart="pageParts.breadcrumb">
           <abp-breadcrumb></abp-breadcrumb>
         </div>

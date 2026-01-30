@@ -1,11 +1,12 @@
-import { 
-  AfterViewInit, 
-  ChangeDetectorRef, 
-  Directive, 
-  ElementRef, 
-  HostBinding, 
-  Input, 
-  inject 
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Directive,
+  ElementRef,
+  HostBinding,
+  Input,
+  inject,
+  input
 } from '@angular/core';
 
 @Directive({
@@ -15,29 +16,28 @@ export class EllipsisDirective implements AfterViewInit {
   private cdRef = inject(ChangeDetectorRef);
   private elRef = inject(ElementRef);
 
-  @Input('abpEllipsis')
-  width?: string;
+  readonly width = input<string>(undefined, { alias: "abpEllipsis" });
 
   @HostBinding('title')
   @Input()
   title?: string;
 
-  @Input('abpEllipsisEnabled')
-  enabled = true;
+  readonly enabled = input(true, { alias: "abpEllipsisEnabled" });
 
   @HostBinding('class.abp-ellipsis-inline')
   get inlineClass() {
-    return this.enabled && this.width;
+    return this.enabled() && this.width();
   }
 
   @HostBinding('class.abp-ellipsis')
   get class() {
-    return this.enabled && !this.width;
+    return this.enabled() && !this.width();
   }
 
   @HostBinding('style.max-width')
   get maxWidth() {
-    return this.enabled && this.width ? this.width || '170px' : undefined;
+    const width = this.width();
+    return this.enabled() && width ? width || '170px' : undefined;
   }
 
   ngAfterViewInit() {

@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, ContentChild, input } from '@angular/core';
+import { Component, ViewEncapsulation, ContentChild, input, effect, signal } from '@angular/core';
 import {
   PageTitleContainerComponent,
   PageBreadcrumbContainerComponent,
@@ -16,20 +16,12 @@ import { PagePartDirective } from './page-part.directive';
   imports: [BreadcrumbComponent, PageToolbarComponent, PagePartDirective],
 })
 export class PageComponent {
-  @Input() title?: string;
-
-  toolbarVisible = false;
-  _toolbarData: any;
-  @Input() set toolbar(val: any) {
-    this._toolbarData = val;
-    this.toolbarVisible = true;
-  }
-
-  get toolbarData() {
-    return this._toolbarData;
-  }
-
+  readonly title = input<string | undefined>(undefined);
+  readonly toolbarInput = input<any>(undefined, { alias: 'toolbar' });
   readonly breadcrumb = input(true);
+
+  protected readonly toolbarVisible = signal(false);
+  protected readonly toolbarData = signal<any>(undefined);
 
   pageParts = {
     title: PageParts.title,
@@ -42,10 +34,20 @@ export class PageComponent {
   customBreadcrumb?: PageBreadcrumbContainerComponent;
   @ContentChild(PageToolbarContainerComponent) customToolbar?: PageToolbarContainerComponent;
 
+  constructor() {
+    effect(() => {
+      const toolbar = this.toolbarInput();
+      if (toolbar !== undefined) {
+        this.toolbarData.set(toolbar);
+        this.toolbarVisible.set(true);
+      }
+    });
+  }
+
   get shouldRenderRow() {
     return !!(
-      this.title ||
-      this.toolbarVisible ||
+      this.title() ||
+      this.toolbarVisible() ||
       this.breadcrumb() ||
       this.customTitle ||
       this.customBreadcrumb ||

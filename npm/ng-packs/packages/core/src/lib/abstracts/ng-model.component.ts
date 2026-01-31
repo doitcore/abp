@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, Input, input } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, input } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 // Not an abstract class on purpose. Do not change!
@@ -11,16 +11,16 @@ export class AbstractNgModelComponent<T = any, U = T> implements ControlValueAcc
   onChange?: (value: T) => void;
   onTouched?: () => void;
 
-  @Input()
+  // Note: disabled needs to remain as a regular property because setDisabledState assigns to it
   disabled?: boolean;
 
-  readonly readonly = input<boolean>(undefined);
+  readonly readonly = input<boolean | undefined>(undefined);
 
   readonly valueFn = input<(value: U, previousValue?: T) => T>(value => value as any as T);
 
   readonly valueLimitFn = input<(value: T, previousValue?: T) => any>(value => false);
 
-  @Input()
+  // Note: value needs getter/setter for ControlValueAccessor and two-way binding
   set value(value: T) {
     value = this.valueFn()(value as any as U, this._value);
 

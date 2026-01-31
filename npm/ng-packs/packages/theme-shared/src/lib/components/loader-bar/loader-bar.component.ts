@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject, input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject, input, effect, signal } from '@angular/core';
 import { combineLatest, Subscription, timer } from 'rxjs';
 import { HttpWaitService, RouterWaitService, SubscriptionService } from '@abp/ng.core';
 
 @Component({
   selector: 'abp-loader-bar',
   template: `
-    <div id="abp-loader-bar" [class]="containerClass()" [class.is-loading]="isLoading">
+    <div id="abp-loader-bar" [class]="containerClass()" [class.is-loading]="isLoading()">
       <div
         class="abp-progress"
         [class.progressing]="progressLevel"
@@ -27,30 +27,25 @@ export class LoaderBarComponent implements OnDestroy, OnInit {
   private httpWaitService = inject(HttpWaitService);
   private routerWaitService = inject(RouterWaitService);
 
-  protected _isLoading!: boolean;
-
-  @Input()
-  set isLoading(value: boolean) {
-    this._isLoading = value;
-    this.cdRef.detectChanges();
-  }
-  get isLoading(): boolean {
-    return this._isLoading;
-  }
-
+  readonly isLoadingInput = input(false, { alias: 'isLoading' });
   readonly containerClass = input('abp-loader-bar');
-
   readonly color = input('#77b6ff');
 
+  protected readonly isLoading = signal(false);
+
   progressLevel = 0;
-
   interval = new Subscription();
-
   timer = new Subscription();
-
   intervalPeriod = 350;
-
   stopDelay = 800;
+
+  constructor() {
+    effect(() => {
+      const value = this.isLoadingInput();
+      this.isLoading.set(value);
+      this.cdRef.detectChanges();
+    });
+  }
 
   private readonly clearProgress = () => {
     this.progressLevel = 0;
@@ -93,9 +88,9 @@ export class LoaderBarComponent implements OnDestroy, OnInit {
   }
 
   startLoading() {
-    if (this.isLoading || !this.interval.closed) return;
+    if (this.isLoading() || !this.interval.closed) return;
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.progressLevel = 0;
     this.cdRef.detectChanges();
     this.interval = timer(0, this.intervalPeriod).subscribe(this.reportProgress);
@@ -106,7 +101,7 @@ export class LoaderBarComponent implements OnDestroy, OnInit {
     this.interval.unsubscribe();
 
     this.progressLevel = 100;
-    this.isLoading = false;
+    this.isLoading.set(false);
 
     if (!this.timer.closed) return;
 

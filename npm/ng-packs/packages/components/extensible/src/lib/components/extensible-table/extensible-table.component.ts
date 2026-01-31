@@ -5,21 +5,18 @@ import {
   Component,
   computed,
   ContentChild,
-  EventEmitter,
   inject,
   Injector,
-  Input,
   LOCALE_ID,
-  OnChanges,
   OnDestroy,
-  Output,
   PLATFORM_ID,
   signal,
-  SimpleChanges,
   TemplateRef,
   TrackByFunction,
   ViewChild,
-  input
+  input,
+  effect,
+  output
 } from '@angular/core';
 import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
@@ -47,7 +44,7 @@ import {
 import { ePropType } from '../../enums/props.enum';
 import { EntityActionList } from '../../models/entity-actions';
 import { EntityProp, EntityPropList } from '../../models/entity-props';
-import { PropData } from '../../models/props';
+import { ReadonlyPropData } from '../../models/props';
 import { ExtensionsService } from '../../services/extensions.service';
 import {
   ENTITY_PROP_TYPE_CLASSES,
@@ -87,7 +84,7 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
     }
   `],
 })
-export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit, OnDestroy {
+export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestroy {
   readonly #injector = inject(Injector);
   readonly getInjected = this.#injector.get.bind(this.#injector);
   protected readonly cdr = inject(ChangeDetectorRef);
@@ -99,53 +96,55 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   private platformId = inject(PLATFORM_ID);
   protected isBrowser = isPlatformBrowser(this.platformId);
 
-  protected _actionsText!: string;
-  @Input()
-  set actionsText(value: string) {
-    this._actionsText = value;
-  }
-
-  get actionsText(): string {
-    return this._actionsText ?? (this.actionList.length >= 1 ? 'AbpUi::Actions' : '');
-  }
-
-  @Input() data!: R[];
+  // Input signals
+  readonly actionsTextInput = input<string | undefined>(undefined, { alias: 'actionsText' });
+  readonly dataInput = input<R[]>([], { alias: 'data' });
   readonly list = input.required<ListService>();
   readonly recordsTotal = input.required<number>();
-
-  @Input() set actionsColumnWidth(width: number) {
-    this._actionsColumnWidth.set(width ? Number(width) : undefined);
-  }
-
-  @Input() actionsTemplate?: TemplateRef<any>;
-
-  @Output() tableActivate = new EventEmitter();
-
+  readonly actionsColumnWidthInput = input<number | undefined>(undefined, { alias: 'actionsColumnWidth' });
+  readonly actionsTemplate = input<TemplateRef<any> | undefined>(undefined);
   readonly selectable = input(false);
-
-  @Input() set selectionType(value: SelectionType | string) {
-    this._selectionType = typeof value === 'string' ? SelectionType[value] : value;
-  }
-  _selectionType: SelectionType = SelectionType.multiClick;
-
+  readonly selectionTypeInput = input<SelectionType | string>(SelectionType.multiClick, { alias: 'selectionType' });
   readonly selected = input<any[]>([]);
-  @Output() selectionChange = new EventEmitter<any[]>();
-
-  // Infinite scroll configuration
   readonly infiniteScroll = input(false);
   readonly isLoading = input(false);
   readonly scrollThreshold = input(10);
-  @Output() loadMore = new EventEmitter<void>();
-  readonly tableHeight = input<number>(undefined);
-
-  readonly rowDetailTemplate = input<TemplateRef<RowDetailContext<R>>>(undefined);
+  readonly tableHeight = input<number | undefined>(undefined);
+  readonly rowDetailTemplate = input<TemplateRef<RowDetailContext<R>> | undefined>(undefined);
   readonly rowDetailHeight = input<string | number>('100%');
-  @Output() rowDetailToggle = new EventEmitter<R>();
+
+  // Output signals
+  readonly tableActivate = output<any>();
+  readonly selectionChange = output<any[]>();
+  readonly loadMore = output<void>();
+  readonly rowDetailToggle = output<R>();
+
+  // Internal signals
+  protected readonly _data = signal<R[]>([]);
+  private readonly _actionsColumnWidth = signal<number | undefined>(DEFAULT_ACTIONS_COLUMN_WIDTH);
 
   @ContentChild(ExtensibleTableRowDetailComponent)
   rowDetailComponent?: ExtensibleTableRowDetailComponent<R>;
 
   @ViewChild('table', { static: false }) table!: DatatableComponent;
+
+  // Computed values
+  protected readonly actionsText = computed(() => {
+    return this.actionsTextInput() ?? (this.actionList.length >= 1 ? 'AbpUi::Actions' : '');
+  });
+
+  protected readonly selectionType = computed(() => {
+    const value = this.selectionTypeInput();
+    return typeof value === 'string' ? SelectionType[value as keyof typeof SelectionType] : value;
+  });
+
+  protected get data(): R[] {
+    return this._data();
+  }
+
+  protected set data(value: R[]) {
+    this._data.set(value);
+  }
 
   protected get effectiveRowDetailTemplate(): TemplateRef<RowDetailContext<R>> | undefined {
     return this.rowDetailComponent?.template() ?? this.rowDetailTemplate();
@@ -162,9 +161,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   readonly actionList: EntityActionList<R>;
 
   readonly trackByFn: TrackByFunction<EntityProp<R>> = (_, item) => item.name;
-
-  // Signal for actions column width
-  private readonly _actionsColumnWidth = signal<number | undefined>(DEFAULT_ACTIONS_COLUMN_WIDTH);
 
   // Infinite scroll: debounced load more subject
   private readonly loadMoreSubject = new Subject<void>();
@@ -187,6 +183,53 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
       this.permissionService.filterItemsByPolicy(
         this.actionList.toArray().map(action => ({ requiredPolicy: action.permission })),
       ).length > 0;
+
+    // Watch actionsColumnWidth input
+    effect(() => {
+      const width = this.actionsColumnWidthInput();
+      this._actionsColumnWidth.set(width ? Number(width) : undefined);
+    });
+
+    // Watch data input changes
+    effect(() => {
+      const dataValue = this.dataInput();
+      if (!dataValue) return;
+
+      if (dataValue.length < 1) {
+        this.list().totalCount = this.recordsTotal();
+      }
+
+      this._data.set(dataValue.map((record: any, index: number) => {
+        this.propList.forEach(prop => {
+          const propData = { getInjected: this.getInjected, record, index } as ReadonlyPropData;
+          const value = this.getContent(prop.value, propData);
+
+          const propKey = `_${prop.value.name}`;
+          record[propKey] = {
+            visible: prop.value.visible(propData),
+            value,
+          };
+          if (prop.value.component) {
+            record[propKey].injector = Injector.create({
+              providers: [
+                {
+                  provide: PROP_DATA_STREAM,
+                  useValue: value,
+                },
+                {
+                  provide: ROW_RECORD,
+                  useValue: record,
+                },
+              ],
+              parent: this.#injector,
+            });
+            record[propKey].component = prop.value.component;
+          }
+        });
+
+        return record;
+      }));
+    });
   }
 
   private getIcon(value: boolean) {
@@ -201,7 +244,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     return key;
   }
 
-  getContent(prop: EntityProp<R>, data: PropData): Observable<string> {
+  getContent(prop: EntityProp<R>, data: ReadonlyPropData): Observable<string> {
     return prop.valueResolver(data).pipe(
       map(value => {
         switch (prop.type) {
@@ -215,45 +258,6 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
         }
       }),
     );
-  }
-
-  ngOnChanges({ data }: SimpleChanges) {
-    if (!data?.currentValue) return;
-
-    if (data.currentValue.length < 1) {
-      this.list().totalCount = this.recordsTotal();
-    }
-
-    this.data = data.currentValue.map((record: any, index: number) => {
-      this.propList.forEach(prop => {
-        const propData = { getInjected: this.getInjected, record, index } as any;
-        const value = this.getContent(prop.value, propData);
-
-        const propKey = `_${prop.value.name}`;
-        record[propKey] = {
-          visible: prop.value.visible(propData),
-          value,
-        };
-        if (prop.value.component) {
-          record[propKey].injector = Injector.create({
-            providers: [
-              {
-                provide: PROP_DATA_STREAM,
-                useValue: value,
-              },
-              {
-                provide: ROW_RECORD,
-                useValue: record,
-              },
-            ],
-            parent: this.#injector,
-          });
-          record[propKey].component = prop.value.component;
-        }
-      });
-
-      return record;
-    });
   }
 
   isVisibleActions(rowData: any): boolean {
@@ -278,9 +282,9 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     return visibleActions.length > 0;
   }
 
-  onSelect({ selected }) {
+  onSelect({ selected }: { selected: any[] }) {
     const selectedValue = this.selected();
-    this.selected().splice(0, selectedValue.length);
+    selectedValue.splice(0, selectedValue.length);
     selectedValue.push(...selected);
     this.selectionChange.emit(selected);
   }
@@ -330,7 +334,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   ngAfterViewInit(): void {
     if (!this.infiniteScroll()) {
       this.list()?.requestStatus$?.pipe(filter(status => status === 'loading')).subscribe(() => {
-        this.data = [];
+        this._data.set([]);
         this.cdr.markForCheck();
       });
     }

@@ -9,17 +9,18 @@ export abstract class ActionData<R = any> {
     notFoundValue?: T,
     flags?: InjectOptions,
   ) => T;
-  index?: number;
+  index?: number | InputSignal<number | undefined>;
   abstract record: R | InputSignal<R>;
 
   get data(): ReadonlyActionData<R> {
     return {
       getInjected: this.getInjected,
-      index: this.index,
+      index: isSignal(this.index) ? this.index() : this.index,
       record: isSignal(this.record) ? this.record() : this.record,
     };
   }
 }
+
 
 export type ReadonlyActionData<R = any> = Readonly<{
   getInjected: <T>(

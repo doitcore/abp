@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   TrackByFunction,
   input
 } from '@angular/core';
@@ -35,9 +34,7 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class GridActionsComponent<R = any> extends AbstractActionsComponent<EntityActionList<R>> {
   readonly icon = input('fa fa-cog');
-
-  @Input() readonly index?: number;
-
+  readonly index = input<number | undefined>(undefined);
   readonly text = input('');
 
   readonly trackByFn: TrackByFunction<EntityAction<R>> = (_, item) => item.text;

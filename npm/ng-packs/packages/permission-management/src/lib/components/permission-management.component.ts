@@ -19,14 +19,14 @@ import {
   computed,
   DOCUMENT,
   ElementRef,
-  EventEmitter,
   inject,
-  Input,
-  Output,
+  input,
+  output,
   QueryList,
   signal,
   TrackByFunction,
   ViewChildren,
+  effect,
 } from '@angular/core';
 import { concat, of } from 'rxjs';
 import { finalize, switchMap, take, tap } from 'rxjs/operators';
@@ -118,49 +118,18 @@ export class PermissionManagementComponent
   protected readonly toasterService = inject(ToasterService);
   private document = inject(DOCUMENT);
 
-  @Input()
-  readonly providerName!: string;
+  // Signal inputs
+  readonly providerName = input.required<string>();
+  readonly providerKey = input.required<string>();
+  readonly hideBadges = input(false);
+  readonly entityDisplayName = input<string | undefined>(undefined);
+  readonly visibleInput = input(false, { alias: 'visible' });
 
-  @Input()
-  readonly providerKey!: string;
+  // Output signals
+  readonly visibleChange = output<boolean>();
 
-  @Input()
-  readonly hideBadges = false;
-
-  protected _visible = false;
-
-  @Input()
-  entityDisplayName: string | undefined;
-
-  @Input()
-  get visible(): boolean {
-    return this._visible;
-  }
-
-  set visible(value: boolean) {
-    if (value === this._visible) {
-      return;
-    }
-
-    if (value) {
-      this.openModal().subscribe(() => {
-        this._visible = true;
-        this.visibleChange.emit(true);
-        concat(this.selectAllInAllTabsRef.changes, this.selectAllInThisTabsRef.changes)
-          .pipe(take(1))
-          .subscribe(() => {
-            this.initModal();
-          });
-      });
-    } else {
-      this.setSelectedGroup(null);
-      this._visible = false;
-      this.visibleChange.emit(false);
-      this.filter.set('');
-    }
-  }
-
-  @Output() readonly visibleChange = new EventEmitter<boolean>();
+  // Internal state
+  protected readonly _visible = signal(false);
 
   @ViewChildren('selectAllInThisTabsRef')
   selectAllInThisTabsRef!: QueryList<ElementRef<HTMLInputElement>>;
@@ -216,6 +185,59 @@ export class PermissionManagementComponent
 
   trackByFn: TrackByFunction<PermissionGroupDto> = (_, item) => item.name;
 
+  // Getter/setter for backward compatibility
+  get visible(): boolean {
+    return this._visible();
+  }
+
+  set visible(value: boolean) {
+    if (value === this._visible()) {
+      return;
+    }
+
+    if (value) {
+      this.openModal().subscribe(() => {
+        this._visible.set(true);
+        this.visibleChange.emit(true);
+        concat(this.selectAllInAllTabsRef.changes, this.selectAllInThisTabsRef.changes)
+          .pipe(take(1))
+          .subscribe(() => {
+            this.initModal();
+          });
+      });
+    } else {
+      this.setSelectedGroup(null);
+      this._visible.set(false);
+      this.visibleChange.emit(false);
+      this.filter.set('');
+    }
+  }
+
+  constructor() {
+    // Sync visible input to internal signal
+    effect(() => {
+      const inputValue = this.visibleInput();
+      if (this._visible() !== inputValue) {
+        if (inputValue) {
+          this.openModal().subscribe(() => {
+            this._visible.set(true);
+            this.visibleChange.emit(true);
+            concat(this.selectAllInAllTabsRef.changes, this.selectAllInThisTabsRef.changes)
+              .pipe(take(1))
+              .subscribe(() => {
+                this.initModal();
+              });
+          });
+        } else {
+          this.setSelectedGroup(null);
+          this._visible.set(false);
+          this.visibleChange.emit(false);
+          this.filter.set('');
+        }
+      }
+    });
+  }
+
   getChecked(name: string) {
     return (this.permissions.find(per => per.name === name) || { isGranted: false }).isGranted;
   }
@@ -249,7 +271,7 @@ export class PermissionManagementComponent
       this.disableSelectAllTab = permissions.every(
         permission =>
           permission.isGranted &&
-          permission.grantedProviders?.every(p => p.providerName !== this.providerName),
+          permission.grantedProviders?.every(p => p.providerName !== this.providerName()),
       );
     } else {
       this.disableSelectAllTab = false;
@@ -258,7 +280,7 @@ export class PermissionManagementComponent
 
   isGrantedByOtherProviderName(grantedProviders: ProviderInfoDto[]): boolean {
     if (grantedProviders.length) {
-      return grantedProviders.findIndex(p => p.providerName !== this.providerName) > -1;
+      return grantedProviders.findIndex(p => p.providerName !== this.providerName()) > -1;
     }
     return false;
   }
@@ -348,7 +370,7 @@ export class PermissionManagementComponent
 
   setTabCheckboxState() {
     const selectablePermissions = this.selectedGroupPermissions.filter(per =>
-      per.grantedProviders.every(p => p.providerName === this.providerName),
+      per.grantedProviders.every(p => p.providerName === this.providerName()),
     );
 
     const selectedPermissions = selectablePermissions.filter(per => per.isGranted);
@@ -370,7 +392,7 @@ export class PermissionManagementComponent
 
   setGrantCheckboxState() {
     const selectablePermissions = this.permissions.filter(per =>
-      per.grantedProviders.every(p => p.providerName === this.providerName),
+      per.grantedProviders.every(p => p.providerName === this.providerName()),
     );
     const selectedAllPermissions = selectablePermissions.filter(per => per.isGranted);
     const checkboxElement = this.document.querySelector('#select-all-in-all-tabs') as any;
@@ -456,7 +478,7 @@ export class PermissionManagementComponent
 
     this.modalBusy = true;
     this.service
-      .update(this.providerName, this.providerKey, { permissions: changedPermissions })
+      .update(this.providerName(), this.providerKey(), { permissions: changedPermissions })
       .pipe(
         switchMap(() =>
           this.shouldFetchAppConfig() ? this.configState.refreshAppState() : of(null),
@@ -470,11 +492,11 @@ export class PermissionManagementComponent
   }
 
   openModal() {
-    if (!this.providerKey || !this.providerName) {
+    if (!this.providerKey() || !this.providerName()) {
       throw new Error('Provider Key and Provider Name are required.');
     }
 
-    return this.service.get(this.providerName, this.providerKey).pipe(
+    return this.service.get(this.providerName(), this.providerKey()).pipe(
       tap((permissionRes: GetPermissionListResultDto) => {
         const { groups } = permissionRes || {};
 
@@ -486,7 +508,7 @@ export class PermissionManagementComponent
         this.disabledSelectAllInAllTabs = this.permissions.every(
           per =>
             per.isGranted &&
-            per.grantedProviders.every(provider => provider.providerName !== this.providerName),
+            per.grantedProviders.every(provider => provider.providerName !== this.providerName()),
         );
       }),
     );
@@ -511,9 +533,9 @@ export class PermissionManagementComponent
   shouldFetchAppConfig() {
     const currentUser = this.configState.getOne('currentUser') as CurrentUserDto;
 
-    if (this.providerName === 'R') return currentUser.roles.some(role => role === this.providerKey);
+    if (this.providerName() === 'R') return currentUser.roles.some(role => role === this.providerKey());
 
-    if (this.providerName === 'U') return currentUser.id === this.providerKey;
+    if (this.providerName() === 'U') return currentUser.id === this.providerKey();
 
     return false;
   }

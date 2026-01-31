@@ -1,5 +1,5 @@
 import { GetPermissionListResultDto } from '@abp/ng.permission-management/proxy';
-import { EventEmitter } from '@angular/core';
+import { InputSignal, OutputEmitterRef } from '@angular/core';
 
 export namespace PermissionManagement {
   export interface State {
@@ -8,12 +8,13 @@ export namespace PermissionManagement {
 
   export interface PermissionManagementComponentInputs {
     visible: boolean;
-    readonly providerName: string;
-    readonly providerKey: string;
-    readonly hideBadges: boolean;
+    readonly providerName: InputSignal<string>;
+    readonly providerKey: InputSignal<string>;
+    readonly hideBadges: InputSignal<boolean>;
   }
 
   export interface PermissionManagementComponentOutputs {
-    readonly visibleChange: EventEmitter<boolean>;
+    readonly visibleChange: OutputEmitterRef<boolean>;
   }
 }
+

@@ -30,7 +30,6 @@ import {
 } from '@angular/core';
 import { concat, of } from 'rxjs';
 import { finalize, switchMap, take, tap } from 'rxjs/operators';
-import { PermissionManagement } from '../models';
 
 import { FormsModule } from '@angular/forms';
 
@@ -108,11 +107,7 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
     TabContent,
   ],
 })
-export class PermissionManagementComponent
-  implements
-    PermissionManagement.PermissionManagementComponentInputs,
-    PermissionManagement.PermissionManagementComponentOutputs
-{
+export class PermissionManagementComponent {
   protected readonly service = inject(PermissionsService);
   protected readonly configState = inject(ConfigStateService);
   protected readonly toasterService = inject(ToasterService);

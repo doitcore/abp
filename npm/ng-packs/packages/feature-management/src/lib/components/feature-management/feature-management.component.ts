@@ -20,7 +20,6 @@ import {
 import { Tabs, TabList, Tab, TabPanel, TabContent } from '@angular/aria/tabs';
 import { finalize } from 'rxjs/operators';
 import { FreeTextInputDirective } from '../../directives';
-import { FeatureManagement } from '../../models';
 
 enum ValueTypes {
   ToggleStringValueType = 'ToggleStringValueType',
@@ -49,11 +48,7 @@ const DEFAULT_PROVIDER_NAME = 'D';
     ModalCloseDirective,
   ],
 })
-export class FeatureManagementComponent
-  implements
-    FeatureManagement.FeatureManagementComponentInputs,
-    FeatureManagement.FeatureManagementComponentOutputs
-{
+export class FeatureManagementComponent {
   protected readonly track = inject(TrackByService);
   protected readonly toasterService = inject(ToasterService);
   protected readonly service = inject(FeaturesService);

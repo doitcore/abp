@@ -1,14 +1,13 @@
-import { InputSignal, OutputEmitterRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 export namespace FeatureManagement {
   export interface FeatureManagementComponentInputs {
     visible: boolean;
-    readonly providerName: InputSignal<string | undefined>;
-    readonly providerKey: InputSignal<string | undefined>;
+    readonly providerName: string;
+    readonly providerKey: string;
   }
 
   export interface FeatureManagementComponentOutputs {
-    readonly visibleChange: OutputEmitterRef<boolean>;
+    readonly visibleChange: EventEmitter<boolean>;
   }
 }
-

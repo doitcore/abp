@@ -24,7 +24,7 @@ If 2025 was about experimenting with LLMs, NDC London 2026 was about AI integrat
 
 One of the biggest draws of **NDC London** is the community. Between the 100+ sessions, the exhibitor hall was buzzing with live demos and networking.
 
-[https://youtu.be/yb-FILkqL7U](https://youtu.be/yb-FILkqL7U) 
+[![](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BDJHuuoHwF5VjV6WmuhA9bst5UhkY7MorbKGN5A4tGVRZLqGZzAuo1hRmloTW73PgGMlM0bOffPYO285xiXS9S0ZV%2Bzqcl8K0JhdrkhCPlToO56pCLyn4IOjn%2FtiaE6wx9QpIgojPzSsAogH4KFVS1k)](https://youtu.be/yb-FILkqL7U)
 
 ![enter image description here](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BCLbkSK3YZDZZhBGi/IBZOCXgcWHwTyS/s5v6U%2bSeQnY5yCTzMJFTu/mA4xX%2bL5tjbMPfEI8gvCwmVEfSymGFIiJLtAbP8T2zFZev%2bm74sTsQ%2b4sdsLKbdijiae3G%2b45ijWep7yFJx9BWMgV263zzvI)
 ![enter image description here](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BCrCACVWDlDjOgl9ASMeZNMVBGye%2bfya4aO6UW5Kyg9MCVLswzckRWS%2bT71AcQuWMGfiousZlSCrKNAGrosPXzuWAsxnNai3xBcj061TWjGAGX4u1AtrD0eknRxuKe2ba%2bVO7r0sZqle%2bUyZa305hhO)
@@ -39,7 +39,7 @@ We were thrilled to give away a brand-new Xbox Series S to one lucky winner\! It
 
 ![enter image description here](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BBozHxXhCL7qMtx5LAxvafvPOKaZJepGlR7tgHVvw6wGpuR4Ervipym%2busZ7eMl3uook15K1874RYEwUenBfoZSJBm33MdaHFduha9iJ7tnfTmW12QbdYM77yqfVJ7EonuJsRrNySdYrQuRI0H2RkZr)
 
-[https://youtu.be/W5HRwys8dpE](https://youtu.be/W5HRwys8dpE) 
+[![](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BAk5Y0LP%2FF6hW%2FAOSzmRqIZI%2Bi8Xjx0cVCjmS7CW%2B6ZuxIfw8jUDo1mMoYbR8pUfpo6DU8g5oMnNhqvNnwoyC%2FxTHpf8eGFOhXtoSLpZHDRy1jlbc4C%2B3yen3vteEduKKJGyNWjckD2LY17G2GztZKR)]([https://youtu.be/yb-FILkqL7U](https://youtu.be/W5HRwys8dpE))
 
 ## **Final Thoughts: See You at NDC London 2027\!**
 

@@ -3,8 +3,6 @@ The software development world converged on the **Queen Elizabeth II Centre** in
 
 We have spent five days immersed in workshops and sessions. Here is our comprehensive recap of the highlights and the technical shifts that will define 2026\.
 
-![enter image description here](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BDQpAG68Af5yfNx1fyc7sveM8WIa2qXZt4SF97CkAw%2bXOzJRO7ma6lXRwO/DJEgqwfyfRD5wlbXrdwCRZ/GNxVQFpD19hhL4RawVs7e1OFn2ASmrSV0X/aDjJkjSnbGkkmrd/369aTHh2xSN4dWcfhS)
-
 ![enter image description here](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BBjsk292Ejh%2b5X2yeS2pD9uibmq8qxh50b9eOg5U5Ib2jAFaeCHItbTyOpajIeaUzNKg/p0WHohjf1iac2%2bVL6kT/Y3ORSKpRQrdE22QJTwAxBMUryUgTQJ989hYtsvF%2bkReDR03k0gIl4ApUaji6Tg)
 
 ## **1\. High-Performance .NET and C\# Evolution**

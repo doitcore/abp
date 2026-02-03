@@ -23,6 +23,8 @@ If 2025 was about experimenting with LLMs, NDC London 2026 was about AI integrat
 
 One of the biggest draws of **NDC London** is the community. Between the 100+ sessions, the exhibitor hall was buzzing with live demos and networking.
 
+Watch the video:
+
 [![Watch the Hallway Track video](https://img.youtube.com/vi/yb-FILkqL7U/hqdefault.jpg)](https://www.youtube.com/watch?v=yb-FILkqL7U)
 
 ![enter image description here](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BCLbkSK3YZDZZhBGi/IBZOCXgcWHwTyS/s5v6U%2bSeQnY5yCTzMJFTu/mA4xX%2bL5tjbMPfEI8gvCwmVEfSymGFIiJLtAbP8T2zFZev%2bm74sTsQ%2b4sdsLKbdijiae3G%2b45ijWep7yFJx9BWMgV263zzvI)
@@ -37,6 +39,8 @@ We were thrilled to give away a brand-new Xbox Series S to one lucky winner\! It
 **Congratulations again to our 2026 winner\!** We hope you enjoy some well-deserved gaming time after a long week of learning.
 
 ![enter image description here](https://abp.io/api/file-management/file-descriptor/share?shareToken=CfDJ8NqaJZr2oLpIuRyHVjJk1BBozHxXhCL7qMtx5LAxvafvPOKaZJepGlR7tgHVvw6wGpuR4Ervipym%2busZ7eMl3uook15K1874RYEwUenBfoZSJBm33MdaHFduha9iJ7tnfTmW12QbdYM77yqfVJ7EonuJsRrNySdYrQuRI0H2RkZr)
+
+Watch the video:
 
 [![Watch the Xbox Series S giveaway](https://img.youtube.com/vi/W5HRwys8dpE/hqdefault.jpg)](https://www.youtube.com/watch?v=W5HRwys8dpE)
 

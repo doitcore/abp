@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Volo.Abp.DependencyInjection;
@@ -9,10 +10,21 @@ namespace Volo.Abp.Identity;
 public class FakeCurrentPrincipalAccessor : ThreadCurrentPrincipalAccessor
 {
     private readonly IdentityTestData _testData;
+    private readonly Lazy<ClaimsPrincipal> _principal;
 
     public FakeCurrentPrincipalAccessor(IdentityTestData testData)
     {
         _testData = testData;
+        _principal = new Lazy<ClaimsPrincipal>(() => new ClaimsPrincipal(
+            new ClaimsIdentity(
+                new List<Claim>
+                {
+                    new Claim(AbpClaimTypes.UserId, _testData.UserAdminId.ToString()),
+                    new Claim(AbpClaimTypes.UserName, "administrator"),
+                    new Claim(AbpClaimTypes.Email, "administrator@abp.io")
+                }
+            )
+        ));
     }
 
     protected override ClaimsPrincipal GetClaimsPrincipal()
@@ -20,30 +32,8 @@ public class FakeCurrentPrincipalAccessor : ThreadCurrentPrincipalAccessor
         return GetPrincipal();
     }
 
-    private ClaimsPrincipal _principal;
-
     private ClaimsPrincipal GetPrincipal()
     {
-        if (_principal == null)
-        {
-            lock (this)
-            {
-                if (_principal == null)
-                {
-                    _principal = new ClaimsPrincipal(
-                        new ClaimsIdentity(
-                            new List<Claim>
-                            {
-                                new Claim(AbpClaimTypes.UserId, _testData.UserAdminId.ToString()),
-                                new Claim(AbpClaimTypes.UserName, "administrator"),
-                                new Claim(AbpClaimTypes.Email, "administrator@abp.io")
-                            }
-                        )
-                    );
-                }
-            }
-        }
-
-        return _principal;
+        return _principal.Value;
     }
 }

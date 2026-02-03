@@ -417,12 +417,19 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
 
     protected virtual async Task FilterInputPermissionsByCurrentUserAsync(UpdatePermissionsDto input)
     {
+        if (input.Permissions.IsNullOrEmpty())
+        {
+            input.Permissions = Array.Empty<UpdatePermissionDto>();
+            return;
+        }
+
         var currentUserPermissions = await PermissionChecker.IsGrantedAsync(input.Permissions.Select(p => p.Name).ToArray());
         var grantedPermissions = currentUserPermissions.Result
             .Where(x => x.Value == PermissionGrantResult.Granted)
             .Select(x => x.Key)
             .ToHashSet();
 
+        // Filters the input DTO in-place to only include manageable permissions.
         input.Permissions = input.Permissions.Where(x => grantedPermissions.Contains(x.Name)).ToArray();
     }
 }

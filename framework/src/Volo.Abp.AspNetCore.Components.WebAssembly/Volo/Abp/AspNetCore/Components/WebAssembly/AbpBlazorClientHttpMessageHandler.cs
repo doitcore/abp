@@ -4,13 +4,15 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Volo.Abp.AspNetCore.Components.Progression;
+using Volo.Abp.AspNetCore.Components.Web;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Timing;
 
-namespace Volo.Abp.AspNetCore.Components.Web;
+namespace Volo.Abp.AspNetCore.Components.WebAssembly;
 
 public class AbpBlazorClientHttpMessageHandler : DelegatingHandler, ITransientDependency
 {
@@ -51,6 +53,7 @@ public class AbpBlazorClientHttpMessageHandler : DelegatingHandler, ITransientDe
                 options.Type = UiPageProgressType.Info;
             });
 
+            request.SetBrowserRequestStreamingEnabled(true);
             await SetLanguageAsync(request, cancellationToken);
             await SetAntiForgeryTokenAsync(request);
             await SetTimeZoneAsync(request);

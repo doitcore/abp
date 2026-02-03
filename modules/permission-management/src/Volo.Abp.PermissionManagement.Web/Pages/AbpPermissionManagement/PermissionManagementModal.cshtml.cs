@@ -135,9 +135,7 @@ public class PermissionManagementModal : AbpPageModel
 
         public bool IsDisabled(string currentProviderName)
         {
-            var grantedProviders = Permissions.SelectMany(x => x.GrantedProviders);
-
-            return Permissions.All(x => x.IsGranted && x.IsGranted) && grantedProviders.All(p => p.ProviderName != currentProviderName);
+            return Permissions.All(p => p.IsDisabled(currentProviderName));
         }
     }
 
@@ -163,7 +161,7 @@ public class PermissionManagementModal : AbpPageModel
 
         public bool IsDisabled(string currentProviderName)
         {
-            return IsEditable && IsGranted && GrantedProviders.All(p => p.ProviderName != currentProviderName);
+            return !IsEditable || (IsGranted && GrantedProviders.All(p => p.ProviderName != currentProviderName));
         }
 
         public string GetShownName(string currentProviderName)
@@ -175,6 +173,7 @@ public class PermissionManagementModal : AbpPageModel
 
             var grantedByOtherProviders = GrantedProviders
                 .Where(p => p.ProviderName != currentProviderName)
+                .Select(p => p.ProviderName)
                 .ToList();
 
             if (!grantedByOtherProviders.Any())

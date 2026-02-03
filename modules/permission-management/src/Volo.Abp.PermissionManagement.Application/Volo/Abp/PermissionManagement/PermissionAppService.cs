@@ -128,7 +128,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             }
         }
 
-        // Filter permissions for non-admin users: only show permissions they have or that are already granted
+        // Filter permissions for the current user: only show permissions they have or that are already granted
         await FilterOutputPermissionsByCurrentUserAsync(result);
 
         return result;

@@ -128,7 +128,40 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             }
         }
 
+        // Filter permissions for non-admin users: only show permissions they have or that are already granted
+        await FilterOutputPermissionsByCurrentUserAsync(result);
+
         return result;
+    }
+
+    protected virtual async Task FilterOutputPermissionsByCurrentUserAsync(GetPermissionListResultDto result)
+    {
+        // Collect all permission names
+        var allPermissionNames = result.Groups
+            .SelectMany(g => g.Permissions)
+            .Select(p => p.Name)
+            .ToArray();
+
+        if (!allPermissionNames.Any())
+        {
+            return;
+        }
+
+        // Check which permissions current user has
+        var currentUserPermissions = await PermissionChecker.IsGrantedAsync(allPermissionNames);
+        var grantedPermissionNames = currentUserPermissions.Result
+            .Where(x => x.Value == PermissionGrantResult.Granted)
+            .Select(x => x.Key)
+            .ToHashSet();
+
+        // Mark editability: users can only edit permissions they currently have
+        foreach (var group in result.Groups)
+        {
+            foreach (var permission in group.Permissions)
+            {
+                permission.IsEditable = grantedPermissionNames.Contains(permission.Name);
+            }
+        }
     }
 
     protected virtual PermissionGrantInfoDto CreatePermissionGrantInfoDto(PermissionDefinition permission)
@@ -139,7 +172,8 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
             DisplayName = permission.DisplayName?.Localize(StringLocalizerFactory),
             ParentName = permission.Parent?.Name,
             AllowedProviders = permission.Providers,
-            GrantedProviders = new List<ProviderInfoDto>()
+            GrantedProviders = new List<ProviderInfoDto>(),
+            IsEditable = true
         };
     }
 
@@ -162,6 +196,7 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
     public virtual async Task UpdateAsync(string providerName, string providerKey, UpdatePermissionsDto input)
     {
         await CheckProviderPolicy(providerName);
+        await FilterInputPermissionsByCurrentUserAsync(input);
 
         foreach (var permissionDto in input.Permissions)
         {
@@ -378,5 +413,16 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
         }
 
         await AuthorizationService.CheckAsync(policyName);
+    }
+
+    protected virtual async Task FilterInputPermissionsByCurrentUserAsync(UpdatePermissionsDto input)
+    {
+        var currentUserPermissions = await PermissionChecker.IsGrantedAsync(input.Permissions.Select(p => p.Name).ToArray());
+        var grantedPermissions = currentUserPermissions.Result
+            .Where(x => x.Value == PermissionGrantResult.Granted)
+            .Select(x => x.Key)
+            .ToHashSet();
+
+        input.Permissions = input.Permissions.Where(x => grantedPermissions.Contains(x.Name)).ToArray();
     }
 }

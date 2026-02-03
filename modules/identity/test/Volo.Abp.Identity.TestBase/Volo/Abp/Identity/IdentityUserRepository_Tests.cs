@@ -119,7 +119,8 @@ public abstract class IdentityUserRepository_Tests<TStartupModule> : AbpIdentity
     public async Task GetListByNormalizedRoleNameAsync()
     {
         var users = await UserRepository.GetListByNormalizedRoleNameAsync(LookupNormalizer.NormalizeName("supporter"));
-        users.Count.ShouldBe(2);
+        users.Count.ShouldBe(3);
+        users.ShouldContain(u => u.UserName == "administrator");
         users.ShouldContain(u => u.UserName == "john.nash");
         users.ShouldContain(u => u.UserName == "neo");
     }
@@ -127,14 +128,17 @@ public abstract class IdentityUserRepository_Tests<TStartupModule> : AbpIdentity
     [Fact]
     public async Task GetUserIdListByRoleIdAsync()
     {
+        var admin = await UserRepository.FindByNormalizedUserNameAsync(LookupNormalizer.NormalizeName("administrator"));
         var john = await UserRepository.FindByNormalizedUserNameAsync(LookupNormalizer.NormalizeName("john.nash"));
         var neo = await UserRepository.FindByNormalizedUserNameAsync(LookupNormalizer.NormalizeName("neo"));
+        admin.ShouldNotBeNull();
         john.ShouldNotBeNull();
         neo.ShouldNotBeNull();
 
         var roleId = (await RoleRepository.FindByNormalizedNameAsync(LookupNormalizer.NormalizeName("supporter"))).Id;
         var users = await UserRepository.GetUserIdListByRoleIdAsync(roleId);
-        users.Count.ShouldBe(2);
+        users.Count.ShouldBe(3);
+        users.ShouldContain(id => id == admin.Id);
         users.ShouldContain(id => id == john.Id);
         users.ShouldContain(id => id == neo.Id);
     }

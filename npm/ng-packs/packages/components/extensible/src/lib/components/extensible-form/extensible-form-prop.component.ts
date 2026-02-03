@@ -19,9 +19,7 @@ import {
   Optional,
   SimpleChanges,
   SkipSelf,
-  signal,
-  effect,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import {
   ControlContainer,
@@ -72,8 +70,8 @@ import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-f
     AsyncPipe,
     NgComponentOutlet,
     NgTemplateOutlet,
-    FormsModule
-],
+    FormsModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ExtensibleFormPropService],
   viewProviders: [

@@ -1,0 +1,189 @@
+name: Update ABP Studio Docs
+
+on:
+  repository_dispatch:
+    types: [update_studio_docs]
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      models: read
+
+    steps:
+      # -----------------------------
+      # Validate payload
+      # -----------------------------
+      - name: Validate payload
+        run: |
+          for key in version name notes url target_branch; do
+            if [ -z "${{ github.event.client_payload[key] }}" ]; then
+              echo "Missing payload field: $key"
+              exit 1
+            fi
+          done
+
+      # -----------------------------
+      # Checkout dev
+      # -----------------------------
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "docs-bot"
+          git config user.email "docs-bot@users.noreply.github.com"
+
+      # -----------------------------
+      # Create working branch
+      # -----------------------------
+      - name: Create branch
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          BRANCH="docs/studio-${VERSION}"
+          git checkout -B "$BRANCH"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      # -----------------------------
+      # Analyze existing release-notes style
+      # -----------------------------
+      - name: Analyze release notes format
+        id: format
+        run: |
+          FILE="docs/en/studio/release-notes.md"
+          if [ -f "$FILE" ]; then
+            head -20 "$FILE" > format.txt
+          else
+            echo "## Version X.Y.Z" > format.txt
+            echo "- Example entry" >> format.txt
+          fi
+          echo "FORMAT<<EOF" >> $GITHUB_OUTPUT
+          cat format.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      # -----------------------------
+      # AI: format release notes
+      # -----------------------------
+      - name: Generate release notes with AI
+        id: ai
+        uses: actions/ai-inference@v1
+        with:
+          model: openai/gpt-4.1
+          prompt: |
+            You are writing release notes for ABP Studio documentation.
+
+            Existing format example:
+            ${{ steps.format.outputs.FORMAT }}
+
+            Release info:
+            Version: ${{ github.event.client_payload.version }}
+            Name: ${{ github.event.client_payload.name }}
+            Raw notes:
+            ${{ github.event.client_payload.notes }}
+
+            Instructions:
+            - Extract only meaningful user-facing changes
+            - Use bullet points starting with "- "
+            - Be concise and professional
+            - Return ONLY bullet points
+
+      # -----------------------------
+      # Update release-notes.md
+      # -----------------------------
+      - name: Update release-notes.md
+        run: |
+          FILE="docs/en/studio/release-notes.md"
+          VERSION="${{ github.event.client_payload.version }}"
+          NAME="${{ github.event.client_payload.name }}"
+
+          mkdir -p docs/en/studio
+          touch "$FILE"
+
+          if ! grep -q "## Version $VERSION" "$FILE"; then
+            {
+              echo "## Version $VERSION - $NAME"
+              echo ""
+              echo "${{ steps.ai.outputs.response }}"
+              echo ""
+              echo "[Release Link](${{ github.event.client_payload.url }})"
+              echo ""
+              echo "---"
+              echo ""
+            } | cat - "$FILE" > "$FILE.new"
+            mv "$FILE.new" "$FILE"
+          else
+            echo "Release notes already exist"
+          fi
+
+      # -----------------------------
+      # Update version-mapping.md
+      # -----------------------------
+      - name: Update version-mapping.md
+        run: |
+          FILE="docs/en/studio/version-mapping.md"
+          VERSION="${{ github.event.client_payload.version }}"
+
+          mkdir -p docs/en/studio
+          if [ ! -f "$FILE" ]; then
+            echo "| Studio Version | ABP Version |" > "$FILE"
+            echo "|---------------|-------------|" >> "$FILE"
+          fi
+
+          if ! grep -q "| $VERSION |" "$FILE"; then
+            echo "| $VERSION | dev |" >> "$FILE"
+          fi
+
+      # -----------------------------
+      # Detect changes
+      # -----------------------------
+      - name: Check for changes
+        id: changes
+        run: |
+          git add docs/en/studio
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      # -----------------------------
+      # Commit & push
+      # -----------------------------
+      - name: Commit & push
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git commit -m "docs(studio): update docs for ${{ github.event.client_payload.version }}"
+          git push -u origin "$BRANCH"
+
+      # -----------------------------
+      # Create PR
+      # -----------------------------
+      - name: Create PR
+        id: pr
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
+        run: |
+          PR_URL=$(gh pr create \
+            --title "docs(studio): release ${{ github.event.client_payload.version }}" \
+            --body "Automated ABP Studio documentation update." \
+            --base "${{ github.event.client_payload.target_branch }}" \
+            --head "$BRANCH")
+          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+
+      # -----------------------------
+      # Enable auto-merge (branch protection safe)
+      # -----------------------------
+      - name: Enable auto-merge
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
+        run: |
+          gh pr merge "${{ steps.pr.outputs.pr_url }}" \
+            --squash \
+            --auto \
+            --admin

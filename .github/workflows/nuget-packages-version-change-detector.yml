@@ -1,0 +1,49 @@
+name: Nuget Packages Version Change Detector
+
+on:
+  pull_request:
+    paths:
+      - 'Directory.Packages.props'
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+
+jobs:
+  label:
+    if: ${{ !github.event.pull_request.draft && !startsWith(github.head_ref, 'auto-merge/') }}
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    env:
+      DOC_PATH: docs/en/package-version-changes.md
+    steps:
+      - run: gh pr edit "$PR_NUMBER" --add-label "dependency-change"
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
+          GH_REPO: ${{ github.repository }}
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - run: python .github/scripts/update_dependency_changes.py ${{ github.event.pull_request.base.ref }} ${{ github.event.pull_request.number }}
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$DOC_PATH"
+          git diff --staged --quiet || git commit -m "docs: update package version changes"
+          git push

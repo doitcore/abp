@@ -17,6 +17,7 @@ export abstract class PropData<R = any> {
   get data(): ReadonlyPropData<R> {
     return {
       getInjected: this.getInjected,
+      // `record` / `index` may be signals; always use `data.record` / `data.index`.
       index: isSignal(this.index) ? this.index() : this.index,
       record: isSignal(this.record) ? this.record() : this.record,
     };
@@ -54,7 +55,6 @@ export abstract class Prop<R = any> {
 export type PropCallback<T, R = any> = (data: ReadonlyPropData<T>, auxData?: any) => R;
 export type PropPredicate<T> = (data?: ReadonlyPropData<T>, auxData?: any) => boolean;
 export type PropDisplayTextResolver<T> = (data?: ReadonlyPropData<T>) => string;
-
 
 export abstract class PropsFactory<C extends Props<any>> {
   protected abstract _ctor: Type<C>;

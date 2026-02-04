@@ -15,12 +15,12 @@ export abstract class ActionData<R = any> {
   get data(): ReadonlyActionData<R> {
     return {
       getInjected: this.getInjected,
+      // `record` / `index` may be signals; always use `data.record` / `data.index`.
       index: isSignal(this.index) ? this.index() : this.index,
       record: isSignal(this.record) ? this.record() : this.record,
     };
   }
 }
-
 
 export type ReadonlyActionData<R = any> = Readonly<{
   getInjected: <T>(

@@ -1,4 +1,4 @@
-import { Directive, effect, inject, input, signal, ElementRef, Renderer2 } from '@angular/core';
+import { Directive, effect, inject, input, ElementRef, Renderer2 } from '@angular/core';
 
 // TODO: improve this type
 export interface FreeTextType {
@@ -22,7 +22,9 @@ export class FreeTextInputDirective {
   private readonly elRef = inject(ElementRef);
   private readonly renderer = inject(Renderer2);
 
-  readonly feature = input<FreeTextType | undefined>(undefined, { alias: 'abpFeatureManagementFreeText' });
+  readonly feature = input<FreeTextType | undefined>(undefined, {
+    alias: 'abpFeatureManagementFreeText',
+  });
 
   constructor() {
     effect(() => {

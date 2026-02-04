@@ -14,13 +14,11 @@ import {
   ElementRef,
   inject,
   Injector,
-  OnChanges,
   Optional,
-  SimpleChanges,
   SkipSelf,
   ViewChild,
   effect,
-  input
+  input,
 } from '@angular/core';
 import {
   ControlContainer,
@@ -71,7 +69,7 @@ import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-f
     AsyncPipe,
     NgComponentOutlet,
     NgTemplateOutlet,
-    FormsModule
+    FormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ExtensibleFormPropService],
@@ -112,7 +110,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
   disabledFn = (data: ReadonlyPropData) => false;
 
   get disabled() {
-    return this.disabledFn(this.data().data);
+    return this.disabledFn(this.data()?.data);
   }
 
   constructor() {
@@ -120,9 +118,9 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
     effect(() => {
       const currentProp = this.prop();
       if (!currentProp) return;
-      
+
       const { options, readonly, disabled, validators, className, template } = currentProp;
-      
+
       if (template) {
         this.injectorForCustomComponent = Injector.create({
           providers: [

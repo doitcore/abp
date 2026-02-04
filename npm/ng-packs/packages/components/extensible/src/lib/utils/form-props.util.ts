@@ -9,9 +9,8 @@ import { ExtensionsService } from '../services/extensions.service';
 import { EXTENSIONS_IDENTIFIER } from '../tokens/extensions.token';
 
 export function generateFormFromProps<R = any>(propData: PropData<R>) {
-  // Use .data to get resolved values (handles InputSignal)
   const data: ReadonlyPropData<R> = propData.data;
-  
+
   const extensions = data.getInjected(ExtensionsService<R>);
   const identifier = data.getInjected(EXTENSIONS_IDENTIFIER);
 
@@ -36,7 +35,7 @@ export function generateFormFromProps<R = any>(propData: PropData<R>) {
       value = record[name];
     }
 
-    if (typeof value === 'undefined') value = prop.defaultValue;
+    if (typeof value === 'undefined') value = prop.defaultValue as any;
 
     if (value) {
       let adapter: DateAdapter | TimeAdapter | DateTimeAdapter;
@@ -68,4 +67,3 @@ export function generateFormFromProps<R = any>(propData: PropData<R>) {
 
   return form;
 }
-

@@ -16,7 +16,7 @@ import {
   ViewChild,
   input,
   effect,
-  output
+  output,
 } from '@angular/core';
 import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
@@ -77,12 +77,14 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
   ],
   templateUrl: './extensible-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-    :host ::ng-deep .ngx-datatable.material .datatable-body .datatable-row-detail {
-      background: none;
-      padding: 0;
-    }
-  `],
+  styles: [
+    `
+      :host ::ng-deep .ngx-datatable.material .datatable-body .datatable-row-detail {
+        background: none;
+        padding: 0;
+      }
+    `,
+  ],
 })
 export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestroy {
   readonly #injector = inject(Injector);
@@ -101,10 +103,14 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
   readonly dataInput = input<R[]>([], { alias: 'data' });
   readonly list = input.required<ListService>();
   readonly recordsTotal = input.required<number>();
-  readonly actionsColumnWidthInput = input<number | undefined>(undefined, { alias: 'actionsColumnWidth' });
+  readonly actionsColumnWidthInput = input<number | undefined>(undefined, {
+    alias: 'actionsColumnWidth',
+  });
   readonly actionsTemplate = input<TemplateRef<any> | undefined>(undefined);
   readonly selectable = input(false);
-  readonly selectionTypeInput = input<SelectionType | string>(SelectionType.multiClick, { alias: 'selectionType' });
+  readonly selectionTypeInput = input<SelectionType | string>(SelectionType.multiClick, {
+    alias: 'selectionType',
+  });
   readonly selected = input<any[]>([]);
   readonly infiniteScroll = input(false);
   readonly isLoading = input(false);
@@ -199,36 +205,38 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
         this.list().totalCount = this.recordsTotal();
       }
 
-      this._data.set(dataValue.map((record: any, index: number) => {
-        this.propList.forEach(prop => {
-          const propData = { getInjected: this.getInjected, record, index } as ReadonlyPropData;
-          const value = this.getContent(prop.value, propData);
+      this._data.set(
+        dataValue.map((record: any, index: number) => {
+          this.propList.forEach(prop => {
+            const propData = { getInjected: this.getInjected, record, index } as ReadonlyPropData;
+            const value = this.getContent(prop.value, propData);
 
-          const propKey = `_${prop.value.name}`;
-          record[propKey] = {
-            visible: prop.value.visible(propData),
-            value,
-          };
-          if (prop.value.component) {
-            record[propKey].injector = Injector.create({
-              providers: [
-                {
-                  provide: PROP_DATA_STREAM,
-                  useValue: value,
-                },
-                {
-                  provide: ROW_RECORD,
-                  useValue: record,
-                },
-              ],
-              parent: this.#injector,
-            });
-            record[propKey].component = prop.value.component;
-          }
-        });
+            const propKey = `_${prop.value.name}`;
+            record[propKey] = {
+              visible: prop.value.visible(propData),
+              value,
+            };
+            if (prop.value.component) {
+              record[propKey].injector = Injector.create({
+                providers: [
+                  {
+                    provide: PROP_DATA_STREAM,
+                    useValue: value,
+                  },
+                  {
+                    provide: ROW_RECORD,
+                    useValue: record,
+                  },
+                ],
+                parent: this.#injector,
+              });
+              record[propKey].component = prop.value.component;
+            }
+          });
 
-        return record;
-      }));
+          return record;
+        }),
+      );
     });
   }
 
@@ -333,10 +341,12 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
 
   ngAfterViewInit(): void {
     if (!this.infiniteScroll()) {
-      this.list()?.requestStatus$?.pipe(filter(status => status === 'loading')).subscribe(() => {
-        this._data.set([]);
-        this.cdr.markForCheck();
-      });
+      this.list()
+        ?.requestStatus$?.pipe(filter(status => status === 'loading'))
+        .subscribe(() => {
+          this._data.set([]);
+          this.cdr.markForCheck();
+        });
     }
   }
 

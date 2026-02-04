@@ -26,6 +26,10 @@ def get_diff(base_ref):
         capture_output=True,
         text=True,
     )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"Failed to get diff for base ref 'origin/{base_ref}': {result.stderr}"
+        )
     return result.stdout
 
 
@@ -292,7 +296,9 @@ def main():
         sections.insert(0, (version, section_text))
 
     # Write document
-    os.makedirs(os.path.dirname(DOC_PATH), exist_ok=True)
+    doc_dir = os.path.dirname(DOC_PATH)
+    if doc_dir:
+        os.makedirs(doc_dir, exist_ok=True)
     with open(DOC_PATH, "w") as f:
         f.write(HEADER + "\n")
         for _, text in sections:

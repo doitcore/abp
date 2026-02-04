@@ -13,9 +13,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: dependency-changes-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
 jobs:
   label:
-    if: ${{ !github.event.pull_request.draft && !startsWith(github.head_ref, 'auto-merge/') }}
+    if: ${{ !github.event.pull_request.draft && !startsWith(github.head_ref, 'auto-merge/') && github.event.pull_request.head.repo.full_name == github.repository && !contains(github.event.head_commit.message, '[skip ci]') }}
     permissions:
       contents: write
       pull-requests: write
@@ -34,6 +38,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }} --depth=1
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -42,8 +49,17 @@ jobs:
 
       - name: Commit changes
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add "$DOC_PATH"
-          git diff --staged --quiet || git commit -m "docs: update package version changes"
-          git push
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "docs: update package version changes [skip ci]"
+            if ! git push; then
+              echo "Error: Failed to push changes. This may be due to conflicts or permission issues."
+              exit 1
+            fi
+            echo "Successfully committed and pushed documentation changes."
+          fi

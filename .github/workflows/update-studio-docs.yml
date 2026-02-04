@@ -1,0 +1,120 @@
+name: Update ABP Studio Docs
+
+on:
+  repository_dispatch:
+    types: [update_studio_docs]
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Read payload
+        run: |
+          echo "Version: ${{ github.event.client_payload.version }}"
+          echo "Target branch: ${{ github.event.client_payload.target_branch }}"
+
+      - name: Checkout dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create working branch
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          BRANCH="docs/studio-${VERSION}"
+
+          git checkout -B "$BRANCH"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      # -----------------------------
+      # Update release-notes.md
+      # -----------------------------
+      - name: Update release-notes.md
+        run: |
+          FILE="docs/en/studio/release-notes.md"
+          VERSION="${{ github.event.client_payload.version }}"
+
+          mkdir -p docs/en/studio
+
+          if [ ! -f "$FILE" ]; then
+            echo "# Release Notes" > "$FILE"
+            echo "" >> "$FILE"
+          fi
+
+          if grep -q "## Version $VERSION" "$FILE"; then
+            echo "Version already exists, skipping"
+            exit 0
+          fi
+
+          {
+            echo "## Version $VERSION"
+            echo ""
+            echo "- Documentation updated for ABP Studio $VERSION"
+            echo ""
+            echo "---"
+            echo ""
+          } > temp.md
+
+          cat temp.md "$FILE" > "$FILE.new"
+          mv "$FILE.new" "$FILE"
+          rm temp.md
+
+      # -----------------------------
+      # Update version-mapping.md
+      # -----------------------------
+      - name: Update version-mapping.md
+        run: |
+          FILE="docs/en/studio/version-mapping.md"
+          VERSION="${{ github.event.client_payload.version }}"
+
+          mkdir -p docs/en/studio
+
+          if [ ! -f "$FILE" ]; then
+            echo "| Studio Version | ABP Version |" > "$FILE"
+            echo "|---------------|-------------|" >> "$FILE"
+          fi
+
+          if grep -q "| $VERSION |" "$FILE"; then
+            echo "Mapping already exists, skipping"
+            exit 0
+          fi
+
+          echo "| $VERSION | dev |" >> "$FILE"
+
+      - name: Commit changes
+        run: |
+          git add docs/en/studio
+          git commit -m "docs(studio): update docs for ${{ github.event.client_payload.version }}"
+
+      - name: Push branch
+        run: |
+          git push -u origin "$BRANCH"
+
+      - name: Create PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_URL=$(gh pr create \
+            --title "docs(studio): release ${{ github.event.client_payload.version }}" \
+            --body "Automated documentation update for ABP Studio ${{ github.event.client_payload.version }}" \
+            --base "${{ github.event.client_payload.target_branch }}" \
+            --head "$BRANCH")
+
+          echo "PR_URL=$PR_URL" >> $GITHUB_OUTPUT
+
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr merge "$BRANCH" --squash --auto

@@ -18,13 +18,16 @@ jobs:
       # -----------------------------
       - name: Validate payload
         run: |
-          for key in version name notes url target_branch; do
-            if [ -z "${{ github.event.client_payload[key] }}" ]; then
+          required_keys=(version name notes url target_branch)
+
+          for key in "${required_keys[@]}"; do
+            value="$(jq -r --arg key "$key" '.client_payload[$key] // ""' "$GITHUB_EVENT_PATH")"
+
+            if [ -z "$value" ] || [ "$value" = "null" ]; then
               echo "Missing payload field: $key"
               exit 1
             fi
           done
-
       # -----------------------------
       # Checkout dev
       # -----------------------------

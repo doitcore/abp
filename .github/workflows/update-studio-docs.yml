@@ -10,30 +10,86 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      models: read
 
     steps:
-      - name: Read payload
+      # -----------------------------
+      # Validate payload
+      # -----------------------------
+      - name: Validate payload
         run: |
-          echo "Version: ${{ github.event.client_payload.version }}"
-          echo "Target branch: ${{ github.event.client_payload.target_branch }}"
+          for key in version name notes url target_branch; do
+            if [ -z "${{ github.event.client_payload[key] }}" ]; then
+              echo "Missing payload field: $key"
+              exit 1
+            fi
+          done
 
-      - name: Checkout dev
-        uses: actions/checkout@v4
+      # -----------------------------
+      # Checkout dev
+      # -----------------------------
+      - uses: actions/checkout@v4
         with:
           ref: dev
           fetch-depth: 0
 
       - name: Configure git
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "docs-bot"
+          git config user.email "docs-bot@users.noreply.github.com"
 
-      - name: Create working branch
+      # -----------------------------
+      # Create working branch
+      # -----------------------------
+      - name: Create branch
         run: |
           VERSION="${{ github.event.client_payload.version }}"
           BRANCH="docs/studio-${VERSION}"
           git checkout -B "$BRANCH"
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      # -----------------------------
+      # Analyze existing release-notes style
+      # -----------------------------
+      - name: Analyze release notes format
+        id: format
+        run: |
+          FILE="docs/en/studio/release-notes.md"
+          if [ -f "$FILE" ]; then
+            head -20 "$FILE" > format.txt
+          else
+            echo "## Version X.Y.Z" > format.txt
+            echo "- Example entry" >> format.txt
+          fi
+          echo "FORMAT<<EOF" >> $GITHUB_OUTPUT
+          cat format.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      # -----------------------------
+      # AI: format release notes
+      # -----------------------------
+      - name: Generate release notes with AI
+        id: ai
+        uses: actions/ai-inference@v1
+        with:
+          model: openai/gpt-4.1
+          prompt: |
+            You are writing release notes for ABP Studio documentation.
+
+            Existing format example:
+            ${{ steps.format.outputs.FORMAT }}
+
+            Release info:
+            Version: ${{ github.event.client_payload.version }}
+            Name: ${{ github.event.client_payload.name }}
+            Raw notes:
+            ${{ github.event.client_payload.notes }}
+
+            Instructions:
+            - Extract only meaningful user-facing changes
+            - Use bullet points starting with "- "
+            - Be concise and professional
+            - Return ONLY bullet points
 
       # -----------------------------
       # Update release-notes.md
@@ -42,29 +98,25 @@ jobs:
         run: |
           FILE="docs/en/studio/release-notes.md"
           VERSION="${{ github.event.client_payload.version }}"
+          NAME="${{ github.event.client_payload.name }}"
 
           mkdir -p docs/en/studio
-
-          if [ ! -f "$FILE" ]; then
-            echo "# Release Notes" > "$FILE"
-            echo "" >> "$FILE"
-          fi
+          touch "$FILE"
 
           if ! grep -q "## Version $VERSION" "$FILE"; then
             {
-              echo "## Version $VERSION"
+              echo "## Version $VERSION - $NAME"
               echo ""
-              echo "- Documentation updated for ABP Studio $VERSION"
+              echo "${{ steps.ai.outputs.response }}"
+              echo ""
+              echo "[Release Link](${{ github.event.client_payload.url }})"
               echo ""
               echo "---"
               echo ""
-            } > temp.md
-
-            cat temp.md "$FILE" > "$FILE.new"
+            } | cat - "$FILE" > "$FILE.new"
             mv "$FILE.new" "$FILE"
-            rm temp.md
           else
-            echo "Release notes already contain $VERSION, skipping"
+            echo "Release notes already exist"
           fi
 
       # -----------------------------
@@ -76,7 +128,6 @@ jobs:
           VERSION="${{ github.event.client_payload.version }}"
 
           mkdir -p docs/en/studio
-
           if [ ! -f "$FILE" ]; then
             echo "| Studio Version | ABP Version |" > "$FILE"
             echo "|---------------|-------------|" >> "$FILE"
@@ -84,46 +135,55 @@ jobs:
 
           if ! grep -q "| $VERSION |" "$FILE"; then
             echo "| $VERSION | dev |" >> "$FILE"
-          else
-            echo "Version mapping already exists, skipping"
           fi
 
-      # ⭐ KRİTİK: değişiklik var mı kontrol et
+      # -----------------------------
+      # Detect changes
+      # -----------------------------
       - name: Check for changes
         id: changes
         run: |
           git add docs/en/studio
           if git diff --cached --quiet; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No documentation changes detected"
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Commit changes
+      # -----------------------------
+      # Commit & push
+      # -----------------------------
+      - name: Commit & push
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           git commit -m "docs(studio): update docs for ${{ github.event.client_payload.version }}"
-
-      - name: Push branch
-        if: steps.changes.outputs.has_changes == 'true'
-        run: |
           git push -u origin "$BRANCH"
 
+      # -----------------------------
+      # Create PR
+      # -----------------------------
       - name: Create PR
+        id: pr
         if: steps.changes.outputs.has_changes == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
         run: |
-          gh pr create \
+          PR_URL=$(gh pr create \
             --title "docs(studio): release ${{ github.event.client_payload.version }}" \
-            --body "Automated documentation update for ABP Studio ${{ github.event.client_payload.version }}" \
+            --body "Automated ABP Studio documentation update." \
             --base "${{ github.event.client_payload.target_branch }}" \
-            --head "$BRANCH"
+            --head "$BRANCH")
+          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
 
+      # -----------------------------
+      # Enable auto-merge (branch protection safe)
+      # -----------------------------
       - name: Enable auto-merge
         if: steps.changes.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.BOT_SECRET }}
         run: |
-          gh pr merge "$BRANCH" --squash --auto
+          gh pr merge "${{ steps.pr.outputs.pr_url }}" \
+            --squash \
+            --auto \
+            --admin

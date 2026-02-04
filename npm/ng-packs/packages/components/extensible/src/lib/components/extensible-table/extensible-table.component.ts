@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
-  ContentChild,
+  EventEmitter,
   inject,
   Injector,
   Input,
@@ -16,8 +16,9 @@ import {
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
-  ViewChild,
-  output
+  output,
+  contentChild,
+  viewChild
 } from '@angular/core';
 import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
@@ -140,17 +141,16 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   @Input() rowDetailHeight: string | number = '100%';
   readonly rowDetailToggle = output<R>();
 
-  @ContentChild(ExtensibleTableRowDetailComponent)
-  rowDetailComponent?: ExtensibleTableRowDetailComponent<R>;
+  readonly rowDetailComponent = contentChild(ExtensibleTableRowDetailComponent);
 
-  @ViewChild('table', { static: false }) table!: DatatableComponent;
+  readonly table = viewChild.required<DatatableComponent>('table');
 
   protected get effectiveRowDetailTemplate(): TemplateRef<RowDetailContext<R>> | undefined {
-    return this.rowDetailComponent?.template() ?? this.rowDetailTemplate;
+    return this.rowDetailComponent()?.template() ?? this.rowDetailTemplate;
   }
 
   protected get effectiveRowDetailHeight(): string | number {
-    return this.rowDetailComponent?.rowHeight() ?? this.rowDetailHeight;
+    return this.rowDetailComponent()?.rowHeight() ?? this.rowDetailHeight;
   }
 
   hasAtLeastOnePermittedAction: boolean;
@@ -317,8 +317,9 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   }
 
   toggleExpandRow(row: R): void {
-    if (this.table && this.table.rowDetail) {
-      this.table.rowDetail.toggleExpandRow(row);
+    const table = this.table();
+    if (table && table.rowDetail) {
+      table.rowDetail.toggleExpandRow(row);
     }
     this.rowDetailToggle.emit(row);
   }

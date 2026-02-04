@@ -1,6 +1,6 @@
 @if (shouldRenderRow) {
   <div class="row entry-row">
-    @if (customTitle) {
+    @if (customTitle()) {
       <ng-content select="abp-page-title-container"></ng-content>
     } @else {
       @if (title) {
@@ -12,7 +12,7 @@
       }
     }
 
-    @if (customBreadcrumb) {
+    @if (customBreadcrumb()) {
       <ng-content select="abp-page-breadcrumb-container"></ng-content>
     } @else {
       @if (breadcrumb) {
@@ -22,7 +22,7 @@
       }
     }
 
-    @if (customToolbar) {
+    @if (customToolbar()) {
       <ng-content select="abp-page-toolbar-container"></ng-content>
     } @else {
       @if (toolbarVisible) {

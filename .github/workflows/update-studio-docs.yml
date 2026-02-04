@@ -32,7 +32,6 @@ jobs:
         run: |
           VERSION="${{ github.event.client_payload.version }}"
           BRANCH="docs/studio-${VERSION}"
-
           git checkout -B "$BRANCH"
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
@@ -51,23 +50,22 @@ jobs:
             echo "" >> "$FILE"
           fi
 
-          if grep -q "## Version $VERSION" "$FILE"; then
-            echo "Version already exists, skipping"
-            exit 0
+          if ! grep -q "## Version $VERSION" "$FILE"; then
+            {
+              echo "## Version $VERSION"
+              echo ""
+              echo "- Documentation updated for ABP Studio $VERSION"
+              echo ""
+              echo "---"
+              echo ""
+            } > temp.md
+
+            cat temp.md "$FILE" > "$FILE.new"
+            mv "$FILE.new" "$FILE"
+            rm temp.md
+          else
+            echo "Release notes already contain $VERSION, skipping"
           fi
-
-          {
-            echo "## Version $VERSION"
-            echo ""
-            echo "- Documentation updated for ABP Studio $VERSION"
-            echo ""
-            echo "---"
-            echo ""
-          } > temp.md
-
-          cat temp.md "$FILE" > "$FILE.new"
-          mv "$FILE.new" "$FILE"
-          rm temp.md
 
       # -----------------------------
       # Update version-mapping.md
@@ -84,37 +82,48 @@ jobs:
             echo "|---------------|-------------|" >> "$FILE"
           fi
 
-          if grep -q "| $VERSION |" "$FILE"; then
-            echo "Mapping already exists, skipping"
-            exit 0
+          if ! grep -q "| $VERSION |" "$FILE"; then
+            echo "| $VERSION | dev |" >> "$FILE"
+          else
+            echo "Version mapping already exists, skipping"
           fi
 
-          echo "| $VERSION | dev |" >> "$FILE"
-
-      - name: Commit changes
+      # ⭐ KRİTİK: değişiklik var mı kontrol et
+      - name: Check for changes
+        id: changes
         run: |
           git add docs/en/studio
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No documentation changes detected"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
           git commit -m "docs(studio): update docs for ${{ github.event.client_payload.version }}"
 
       - name: Push branch
+        if: steps.changes.outputs.has_changes == 'true'
         run: |
           git push -u origin "$BRANCH"
 
       - name: Create PR
-        id: pr
+        if: steps.changes.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          PR_URL=$(gh pr create \
+          gh pr create \
             --title "docs(studio): release ${{ github.event.client_payload.version }}" \
             --body "Automated documentation update for ABP Studio ${{ github.event.client_payload.version }}" \
             --base "${{ github.event.client_payload.target_branch }}" \
-            --head "$BRANCH")
-
-          echo "PR_URL=$PR_URL" >> $GITHUB_OUTPUT
+            --head "$BRANCH"
 
       - name: Enable auto-merge
+        if: steps.changes.outputs.has_changes == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
         run: |
           gh pr merge "$BRANCH" --squash --auto

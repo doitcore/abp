@@ -136,7 +136,9 @@ def merge_changes(existing, new):
         elif pkg in merged_added:
             existing_ver, existing_pr = merged_added[pkg]
             merged_pr = merge_prs(existing_pr, pr)
-            merged_added[pkg] = (new_ver, merged_pr)
+            # Convert added to updated since the version changed again
+            del merged_added[pkg]
+            merged_updated[pkg] = (existing_ver, new_ver, merged_pr)
         else:
             merged_updated[pkg] = (old_ver, new_ver, pr)
 
@@ -155,16 +157,33 @@ def merge_changes(existing, new):
     for pkg, (ver, pr) in new_removed.items():
         if pkg in merged_added:
             existing_ver, existing_pr = merged_added[pkg]
-            del merged_added[pkg]
-            # No need to merge PR here as the package is being removed
+            # Only delete if versions match (added then removed the same version)
+            if existing_ver == ver:
+                del merged_added[pkg]
+            else:
+                # Version changed between add and remove, convert to updated then removed
+                del merged_added[pkg]
+                merged_removed[pkg] = (ver, merge_prs(existing_pr, pr))
         elif pkg in merged_updated:
             old_ver, new_ver, existing_pr = merged_updated.pop(pkg)
             merged_pr = merge_prs(existing_pr, pr)
+            # Only keep as removed if the final state is different from original
             merged_removed[pkg] = (old_ver, merged_pr)
         else:
             merged_removed[pkg] = (ver, pr)
 
+    # Remove updated entries where old and new versions are the same
     merged_updated = {k: v for k, v in merged_updated.items() if v[0] != v[1]}
+    
+    # Remove added entries that are also in removed with the same version
+    for pkg in list(merged_added.keys()):
+        if pkg in merged_removed:
+            added_ver, added_pr = merged_added[pkg]
+            removed_ver, removed_pr = merged_removed[pkg]
+            if added_ver == removed_ver:
+                # Package was added and removed at the same version, cancel out
+                del merged_added[pkg]
+                del merged_removed[pkg]
 
     return merged_updated, merged_added, merged_removed
 

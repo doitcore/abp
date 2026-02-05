@@ -62,8 +62,8 @@ public partial class PermissionManagementModal
 
             NormalizePermissionGroup();
 
-            GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
-            GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
+            GrantAll = _allGroups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+            GrantAny = !GrantAll && _allGroups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
 
             await InvokeAsync(_modal.Show);
         }

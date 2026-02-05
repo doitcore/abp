@@ -19,9 +19,7 @@ import {
   Optional,
   SimpleChanges,
   SkipSelf,
-  ViewChild,
-  signal,
-  effect,
+  viewChild,
 } from '@angular/core';
 import {
   ControlContainer,
@@ -72,8 +70,8 @@ import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-f
     AsyncPipe,
     NgComponentOutlet,
     NgTemplateOutlet,
-    FormsModule
-],
+    FormsModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ExtensibleFormPropService],
   viewProviders: [
@@ -98,7 +96,7 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   @Input() prop!: FormProp;
   @Input() first?: boolean;
   @Input() isFirstGroup?: boolean;
-  @ViewChild('field') private fieldRef!: ElementRef<HTMLElement>;
+  private readonly fieldRef = viewChild.required<ElementRef<HTMLElement>>('field');
 
   injectorForCustomComponent?: Injector;
   asterisk = '';
@@ -158,9 +156,9 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.isFirstGroup && this.first && this.fieldRef) {
+    if (this.isFirstGroup && this.first && this.fieldRef()) {
       requestAnimationFrame(() => {
-        this.fieldRef.nativeElement.focus();
+        this.fieldRef().nativeElement.focus();
       });
     }
   }

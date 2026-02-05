@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, ContentChild } from '@angular/core';
+import { Component, Input, ViewEncapsulation, contentChild } from '@angular/core';
 import {
   PageTitleContainerComponent,
   PageBreadcrumbContainerComponent,
@@ -37,19 +37,18 @@ export class PageComponent {
     toolbar: PageParts.toolbar,
   };
 
-  @ContentChild(PageTitleContainerComponent) customTitle?: PageTitleContainerComponent;
-  @ContentChild(PageBreadcrumbContainerComponent)
-  customBreadcrumb?: PageBreadcrumbContainerComponent;
-  @ContentChild(PageToolbarContainerComponent) customToolbar?: PageToolbarContainerComponent;
+  readonly customTitle = contentChild(PageTitleContainerComponent);
+  readonly customBreadcrumb = contentChild(PageBreadcrumbContainerComponent);
+  readonly customToolbar = contentChild(PageToolbarContainerComponent);
 
   get shouldRenderRow() {
     return !!(
       this.title ||
       this.toolbarVisible ||
       this.breadcrumb ||
-      this.customTitle ||
-      this.customBreadcrumb ||
-      this.customToolbar ||
+      this.customTitle() ||
+      this.customBreadcrumb() ||
+      this.customToolbar() ||
       this.pageParts
     );
   }

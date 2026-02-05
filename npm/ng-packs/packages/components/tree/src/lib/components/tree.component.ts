@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
+  contentChild,
   EventEmitter,
   inject,
   Input,
@@ -60,9 +60,9 @@ export class TreeComponent implements OnInit {
 
   dropdowns = {} as { [key: string]: NgbDropdown };
 
-  @ContentChild('menu') menu: TemplateRef<any>;
-  @ContentChild(TreeNodeTemplateDirective) customNodeTemplate: TreeNodeTemplateDirective;
-  @ContentChild(ExpandedIconTemplateDirective) expandedIconTemplate: ExpandedIconTemplateDirective;
+  readonly menu = contentChild<TemplateRef<any>>('menu');
+  readonly customNodeTemplate = contentChild(TreeNodeTemplateDirective);
+  readonly expandedIconTemplate = contentChild(ExpandedIconTemplateDirective);
   @Output() readonly checkedKeysChange = new EventEmitter();
   @Output() readonly expandedKeysChange = new EventEmitter<string[]>();
   @Output() readonly selectedNodeChange = new EventEmitter();

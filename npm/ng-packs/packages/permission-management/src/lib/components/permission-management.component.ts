@@ -15,21 +15,22 @@ import {
   UpdatePermissionDto,
 } from '@abp/ng.permission-management/proxy';
 import {
+  afterNextRender,
   Component,
   computed,
   DOCUMENT,
   ElementRef,
   EventEmitter,
   inject,
+  Injector,
   Input,
   Output,
-  QueryList,
   signal,
   TrackByFunction,
-  ViewChildren,
+  viewChildren
 } from '@angular/core';
-import { concat, of } from 'rxjs';
-import { finalize, switchMap, take, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { finalize, switchMap, tap } from 'rxjs/operators';
 import { PermissionManagement } from '../models';
 
 import { FormsModule } from '@angular/forms';
@@ -116,6 +117,7 @@ export class PermissionManagementComponent
   protected readonly service = inject(PermissionsService);
   protected readonly configState = inject(ConfigStateService);
   protected readonly toasterService = inject(ToasterService);
+  private readonly injector = inject(Injector);
   private document = inject(DOCUMENT);
 
   @Input()
@@ -146,11 +148,9 @@ export class PermissionManagementComponent
       this.openModal().subscribe(() => {
         this._visible = true;
         this.visibleChange.emit(true);
-        concat(this.selectAllInAllTabsRef.changes, this.selectAllInThisTabsRef.changes)
-          .pipe(take(1))
-          .subscribe(() => {
-            this.initModal();
-          });
+        afterNextRender(() => {
+          this.initModal();
+        }, { injector: this.injector });
       });
     } else {
       this.setSelectedGroup(null);
@@ -162,10 +162,8 @@ export class PermissionManagementComponent
 
   @Output() readonly visibleChange = new EventEmitter<boolean>();
 
-  @ViewChildren('selectAllInThisTabsRef')
-  selectAllInThisTabsRef!: QueryList<ElementRef<HTMLInputElement>>;
-  @ViewChildren('selectAllInAllTabsRef')
-  selectAllInAllTabsRef!: QueryList<ElementRef<HTMLInputElement>>;
+  selectAllInThisTabsRef = viewChildren<ElementRef<HTMLInputElement>>('selectAllInThisTabsRef');
+  selectAllInAllTabsRef = viewChildren<ElementRef<HTMLInputElement>>('selectAllInAllTabsRef');
 
   data: GetPermissionListResultDto = { groups: [], entityDisplayName: '' };
 

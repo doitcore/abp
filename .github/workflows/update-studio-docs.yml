@@ -14,26 +14,25 @@ jobs:
 
     steps:
       # -----------------------------
-      # Validate payload
+      # Validate payload (safe)
       # -----------------------------
       - name: Validate payload
         run: |
           required_keys=(version name notes url target_branch)
-
           for key in "${required_keys[@]}"; do
-            value="$(jq -r --arg key "$key" '.client_payload[$key] // ""' "$GITHUB_EVENT_PATH")"
-
+            value="$(jq -r --arg k "$key" '.client_payload[$k] // ""' "$GITHUB_EVENT_PATH")"
             if [ -z "$value" ] || [ "$value" = "null" ]; then
               echo "Missing payload field: $key"
               exit 1
             fi
           done
+
       # -----------------------------
-      # Checkout dev
+      # Checkout target branch
       # -----------------------------
       - uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: ${{ github.event.client_payload.target_branch }}
           fetch-depth: 0
 
       - name: Configure git
@@ -52,47 +51,46 @@ jobs:
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
       # -----------------------------
-      # Analyze existing release-notes style
+      # Prepare raw release notes
       # -----------------------------
-      - name: Analyze release notes format
-        id: format
+      - name: Save raw release notes
         run: |
-          FILE="docs/en/studio/release-notes.md"
-          if [ -f "$FILE" ]; then
-            head -20 "$FILE" > format.txt
-          else
-            echo "## Version X.Y.Z" > format.txt
-            echo "- Example entry" >> format.txt
-          fi
-          echo "FORMAT<<EOF" >> $GITHUB_OUTPUT
-          cat format.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          mkdir -p .tmp
+          jq -r '.client_payload.notes' "$GITHUB_EVENT_PATH" > .tmp/raw-notes.txt
 
       # -----------------------------
-      # AI: format release notes
+      # Try AI formatting (optional)
       # -----------------------------
-      - name: Generate release notes with AI
+      - name: Generate release notes with AI (optional)
         id: ai
+        continue-on-error: true
         uses: actions/ai-inference@v1
         with:
           model: openai/gpt-4.1
           prompt: |
-            You are writing release notes for ABP Studio documentation.
+            You are a technical writer.
 
-            Existing format example:
-            ${{ steps.format.outputs.FORMAT }}
+            Convert the following release notes into concise, user-facing bullet points.
+            Rules:
+            - Use "-" bullets
+            - Keep it short and clear
+            - Skip internal / irrelevant details
 
-            Release info:
-            Version: ${{ github.event.client_payload.version }}
-            Name: ${{ github.event.client_payload.name }}
-            Raw notes:
+            Release notes:
             ${{ github.event.client_payload.notes }}
 
-            Instructions:
-            - Extract only meaningful user-facing changes
-            - Use bullet points starting with "- "
-            - Be concise and professional
-            - Return ONLY bullet points
+      # -----------------------------
+      # Decide final notes (AI or fallback)
+      # -----------------------------
+      - name: Decide final release notes
+        run: |
+          if [ -n "${{ steps.ai.outputs.response }}" ]; then
+            echo "Using AI-formatted release notes"
+            echo "${{ steps.ai.outputs.response }}" > .tmp/final-notes.txt
+          else
+            echo "AI unavailable – using raw release notes"
+            sed 's/^/- /' .tmp/raw-notes.txt > .tmp/final-notes.txt
+          fi
 
       # -----------------------------
       # Update release-notes.md
@@ -102,25 +100,28 @@ jobs:
           FILE="docs/en/studio/release-notes.md"
           VERSION="${{ github.event.client_payload.version }}"
           NAME="${{ github.event.client_payload.name }}"
+          URL="${{ github.event.client_payload.url }}"
 
           mkdir -p docs/en/studio
           touch "$FILE"
 
-          if ! grep -q "## Version $VERSION" "$FILE"; then
-            {
-              echo "## Version $VERSION - $NAME"
-              echo ""
-              echo "${{ steps.ai.outputs.response }}"
-              echo ""
-              echo "[Release Link](${{ github.event.client_payload.url }})"
-              echo ""
-              echo "---"
-              echo ""
-            } | cat - "$FILE" > "$FILE.new"
-            mv "$FILE.new" "$FILE"
-          else
-            echo "Release notes already exist"
+          if grep -q "## Version $VERSION" "$FILE"; then
+            echo "Release notes already contain $VERSION, skipping"
+            exit 0
           fi
+
+          {
+            echo "## Version $VERSION - $NAME"
+            echo ""
+            cat .tmp/final-notes.txt
+            echo ""
+            echo "[Release Link]($URL)"
+            echo ""
+            echo "---"
+            echo ""
+          } | cat - "$FILE" > "$FILE.new"
+
+          mv "$FILE.new" "$FILE"
 
       # -----------------------------
       # Update version-mapping.md
@@ -141,7 +142,7 @@ jobs:
           fi
 
       # -----------------------------
-      # Detect changes
+      # Check for changes
       # -----------------------------
       - name: Check for changes
         id: changes
@@ -166,17 +167,15 @@ jobs:
       # Create PR
       # -----------------------------
       - name: Create PR
-        id: pr
         if: steps.changes.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.BOT_SECRET }}
         run: |
-          PR_URL=$(gh pr create \
+          gh pr create \
             --title "docs(studio): release ${{ github.event.client_payload.version }}" \
-            --body "Automated ABP Studio documentation update." \
+            --body "Automated documentation update for ABP Studio." \
             --base "${{ github.event.client_payload.target_branch }}" \
-            --head "$BRANCH")
-          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+            --head "$BRANCH"
 
       # -----------------------------
       # Enable auto-merge (branch protection safe)
@@ -186,7 +185,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.BOT_SECRET }}
         run: |
-          gh pr merge "${{ steps.pr.outputs.pr_url }}" \
-            --squash \
-            --auto \
-            --admin
+          gh pr merge "$BRANCH" --squash --auto --admin

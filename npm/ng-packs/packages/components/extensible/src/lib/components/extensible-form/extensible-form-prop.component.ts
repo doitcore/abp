@@ -110,13 +110,16 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
   disabledFn = (data: ReadonlyPropData) => false;
 
   get disabled() {
-    return this.disabledFn(this.data()?.data);
+    const data = this.data()?.data;
+    if (!data) return false;
+    return this.disabledFn(data);
   }
 
   constructor() {
     // Watch prop changes and update state
     effect(() => {
       const currentProp = this.prop();
+      const data = this.data()?.data;
       if (!currentProp) return;
 
       const { options, readonly, disabled, validators, className, template } = currentProp;
@@ -130,7 +133,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
             },
             {
               provide: EXTENSIONS_FORM_PROP_DATA,
-              useValue: this.data()?.data?.record,
+              useValue: data?.record,
             },
             { provide: ControlContainer, useExisting: FormGroupDirective },
           ],
@@ -138,14 +141,14 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
         });
       }
 
-      if (options) this.options$ = options(this.data().data);
-      if (readonly) this.readonly = readonly(this.data().data);
+      if (options) this.options$ = options(data);
+      if (readonly) this.readonly = readonly(data);
 
       if (disabled) {
         this.disabledFn = disabled;
       }
       if (validators) {
-        this.validators = validators(this.data().data);
+        this.validators = validators(data);
         this.setAsterisk();
       }
       if (className !== undefined) {
@@ -200,7 +203,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.isFirstGroup() && this.first() && this.fieldRef) {
+    if (!!this.isFirstGroup() && !!this.first() && this.fieldRef) {
       requestAnimationFrame(() => {
         this.fieldRef.nativeElement.focus();
       });

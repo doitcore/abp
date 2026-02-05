@@ -60,10 +60,9 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
       const options = this.options();
 
       untracked(() => {
-        if (this.chart) {
-          this.chart.destroy();
-          this.initChart();
-        }
+        if (!this.chart) return;
+        this.chart.destroy();
+        this.initChart(data, options);
       });
     });
   }
@@ -71,7 +70,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     import('chart.js/auto').then(module => {
       Chart = module.default;
-      this.initChart();
+      this.initChart(this.data(), this.options());
       this.initialized.emit(true);
     });
   }
@@ -97,8 +96,8 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private initChart = () => {
-    const opts = this.options() || {};
+  private initChart = (data: any, options: any) => {
+    const opts = options || {};
     opts.responsive = this.responsive();
 
     // allows chart to resize in responsive mode
@@ -108,8 +107,8 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
 
     this.chart = new Chart(this.canvas.nativeElement, {
       type: this.type() as any,
-      data: this.data(),
-      options: this.options(),
+      data: data,
+      options: opts,
       plugins: this.plugins(),
     });
   };
@@ -138,7 +137,7 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
   reinit = () => {
     if (!this.chart) return;
     this.chart.destroy();
-    this.initChart();
+    this.initChart(this.data(), this.options());
   };
 
   ngOnDestroy() {

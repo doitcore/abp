@@ -108,7 +108,7 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
   });
   readonly actionsTemplate = input<TemplateRef<any> | undefined>(undefined);
   readonly selectable = input(false);
-  readonly selectionTypeInput = input<SelectionType | string>(SelectionType.multiClick, {
+  readonly selectionTypeInput = input<SelectionType | keyof typeof SelectionType>(SelectionType.multiClick, {
     alias: 'selectionType',
   });
   readonly selected = input<any[]>([]);
@@ -205,39 +205,39 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
         this.list().totalCount = this.recordsTotal();
       }
 
-      this._data.set(
-        dataValue.map((record: any, index: number) => {
-          this.propList.forEach(prop => {
-            const propData = { getInjected: this.getInjected, record, index } as ReadonlyPropData;
-            const value = this.getContent(prop.value, propData);
-
-            const propKey = `_${prop.value.name}`;
-            record[propKey] = {
-              visible: prop.value.visible(propData),
-              value,
-            };
-            if (prop.value.component) {
-              record[propKey].injector = Injector.create({
-                providers: [
-                  {
-                    provide: PROP_DATA_STREAM,
-                    useValue: value,
-                  },
-                  {
-                    provide: ROW_RECORD,
-                    useValue: record,
-                  },
-                ],
-                parent: this.#injector,
-              });
-              record[propKey].component = prop.value.component;
-            }
-          });
-
-          return record;
-        }),
-      );
+      this._data.set(dataValue.map((record, index) => this.prepareRecord(record, index)));
     });
+  }
+
+  private prepareRecord(record: any, index: number): any {
+    this.propList.forEach(prop => {
+      const propData = { getInjected: this.getInjected, record, index } as ReadonlyPropData;
+      const value = this.getContent(prop.value, propData);
+
+      const propKey = `_${prop.value.name}`;
+      record[propKey] = {
+        visible: prop.value.visible(propData),
+        value,
+      };
+      if (prop.value.component) {
+        record[propKey].injector = Injector.create({
+          providers: [
+            {
+              provide: PROP_DATA_STREAM,
+              useValue: value,
+            },
+            {
+              provide: ROW_RECORD,
+              useValue: record,
+            },
+          ],
+          parent: this.#injector,
+        });
+        record[propKey].component = prop.value.component;
+      }
+    });
+
+    return record;
   }
 
   private getIcon(value: boolean) {

@@ -150,11 +150,12 @@ export class TreeComponent implements OnInit {
   onSelectedNodeChange(node: NzTreeNode) {
     this._selectedNode.set(node.origin.entity);
     if (this.changeCheckboxWithNode()) {
+      const keys = this._checkedKeys();
       let newVal;
       if (node.isChecked) {
-        newVal = this._checkedKeys().filter(x => x !== node.key);
+        newVal = keys.filter(x => x !== node.key);
       } else {
-        newVal = [...this._checkedKeys(), node.key];
+        newVal = [...keys, node.key];
       }
       this.selectedNodeChange.emit(node);
       this._checkedKeys.set(newVal);

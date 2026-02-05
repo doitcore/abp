@@ -16,9 +16,13 @@ export class AbpVisibleDirective implements OnDestroy {
 
   readonly abpVisible = input<VisibleInput>();
 
+  private lastInput: VisibleInput;
+
   constructor() {
     effect(() => {
       const value = this.abpVisible();
+      if (value === this.lastInput) return;
+      this.lastInput = value;
       this.condition$ = checkType(value);
       this.subscribeToCondition();
     });

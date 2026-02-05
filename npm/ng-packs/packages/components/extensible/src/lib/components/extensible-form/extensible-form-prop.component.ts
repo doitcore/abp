@@ -120,7 +120,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
     effect(() => {
       const currentProp = this.prop();
       const data = this.data()?.data;
-      if (!currentProp) return;
+      if (!currentProp || !data) return;
 
       const { options, readonly, disabled, validators, className, template } = currentProp;
 

@@ -40,7 +40,7 @@
 {
     <Modal @ref="CreateModal" Closing="@ClosingCreateModal">
         <ModalContent Centered="true">
-            <Form>
+            <Form id="CreateTenantForm">
                 <ModalHeader>
                     <ModalTitle>@L["NewTenant"]</ModalTitle>
                     <CloseButton Clicked="CloseCreateModalAsync"/>
@@ -89,7 +89,7 @@
                 </ModalBody>
                 <ModalFooter>
                     <Button Color="Color.Primary" Outline Clicked="CloseCreateModalAsync">@L["Cancel"]</Button>
-                    <SubmitButton Clicked="@CreateEntityAsync"/>
+                    <SubmitButton Form="CreateTenantForm" Clicked="@CreateEntityAsync"/>
                 </ModalFooter>
             </Form>
         </ModalContent>
@@ -101,7 +101,7 @@
 {
     <Modal @ref="EditModal" Closing="@ClosingEditModal">
         <ModalContent Centered="true">
-            <Form>
+            <Form id="EditTenantForm">
                 <ModalHeader>
                     <ModalTitle>@L["Edit"]</ModalTitle>
                     <CloseButton Clicked="CloseEditModalAsync"/>
@@ -123,7 +123,7 @@
                 </ModalBody>
                 <ModalFooter>
                     <Button Color="Color.Primary" Outline Clicked="CloseEditModalAsync">@L["Cancel"]</Button>
-                    <SubmitButton Clicked="@UpdateEntityAsync"/>
+                    <SubmitButton Form="EditTenantForm" Clicked="@UpdateEntityAsync"/>
                 </ModalFooter>
             </Form>
         </ModalContent>

@@ -137,13 +137,37 @@ jobs:
           mv "$FILE.new" "$FILE"
 
       # -------------------------------------------------
+      # Fetch latest stable ABP version
+      # -------------------------------------------------
+      - name: Fetch latest ABP stable version
+        id: abp
+        env:
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
+        run: |
+          RESPONSE=$(curl -fsS \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/abpframework/abp/releases/latest)
+
+          ABP_VERSION=$(echo "$RESPONSE" | jq -r '.tag_name')
+
+          if [ -z "$ABP_VERSION" ] || [ "$ABP_VERSION" = "null" ]; then
+            echo "❌ Could not determine latest ABP version"
+            exit 1
+          fi
+
+          echo "Latest ABP version: $ABP_VERSION"
+          echo "ABP_VERSION=$ABP_VERSION" >> $GITHUB_ENV
+
+      # -------------------------------------------------
       # Update version-mapping.md (INSIDE table)
       # -------------------------------------------------
       - name: Update version-mapping.md (smart)
+        env:
+          STUDIO_VERSION: ${{ github.event.client_payload.version }}
+          ABP_VERSION: ${{ env.ABP_VERSION }}
         run: |
           FILE="docs/en/studio/version-mapping.md"
-          STUDIO_VERSION="${{ github.event.client_payload.version }}"
-          ABP_VERSION="dev"   # gerekiyorsa payload’dan alabilirsin
 
           mkdir -p docs/en/studio
 
@@ -154,16 +178,17 @@ jobs:
             exit 0
           fi
 
-          python3 <<'EOF'
+          python3 <<EOF
+          import os
           import re
           from packaging.version import Version
 
+          studio = Version(os.environ["STUDIO_VERSION"])
+          abp = os.environ["ABP_VERSION"]
           file_path = "docs/en/studio/version-mapping.md"
-          studio = Version("${STUDIO_VERSION}")
-          abp = "${ABP_VERSION}"
 
           with open(file_path) as f:
-            lines = f.readlines()
+              lines = f.readlines()
 
           header = lines[:2]
           rows = lines[2:]
@@ -171,45 +196,41 @@ jobs:
           new_rows = []
           handled = False
 
+          def parse_range(r):
+              if "-" in r:
+                  a, b = r.split("-")
+                  return Version(a.strip()), Version(b.strip())
+              v = Version(r.strip())
+              return v, v
+
           for row in rows:
-            m = re.match(r"\|\s*(.+?)\s*\|\s*(.+?)\s*\|", row)
-            if not m:
-              new_rows.append(row)
-              continue
+              m = re.match(r"\|\s*(.+?)\s*\|\s*(.+?)\s*\|", row)
+              if not m:
+                  new_rows.append(row)
+                  continue
 
-            studio_range, abp_version = m.groups()
+              studio_range, abp_version = m.groups()
 
-            if abp_version != abp:
-              new_rows.append(row)
-              continue
+              if abp_version != abp:
+                  new_rows.append(row)
+                  continue
 
-            # range cases
-            if "-" in studio_range:
-              start, end = [Version(v.strip()) for v in studio_range.split("-")]
+              start, end = parse_range(studio_range)
+
               if start <= studio <= end:
-                handled = True
-                new_rows.append(row)  # already covered
+                  handled = True
+                  new_rows.append(row)
               elif studio == end.next_patch():
-                handled = True
-                new_rows.append(f"| {start} - {studio} | {abp} |\n")
+                  handled = True
+                  new_rows.append(f"| {start} - {studio} | {abp} |\\n")
               else:
-                new_rows.append(row)
-            else:
-              v = Version(studio_range)
-              if studio == v:
-                handled = True
-                new_rows.append(row)
-              elif studio == v.next_patch():
-                handled = True
-                new_rows.append(f"| {v} - {studio} | {abp} |\n")
-              else:
-                new_rows.append(row)
+                  new_rows.append(row)
 
           if not handled:
-            new_rows.insert(0, f"| {studio} | {abp} |\n")
+              new_rows.insert(0, f"| {studio} | {abp} |\\n")
 
           with open(file_path, "w") as f:
-            f.writelines(header + new_rows)
+              f.writelines(header + new_rows)
           EOF
 
       # -------------------------------------------------

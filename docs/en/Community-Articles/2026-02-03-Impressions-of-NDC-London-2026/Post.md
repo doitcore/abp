@@ -76,7 +76,7 @@ Carly is a Developer Advocate Lead at Elastic in London with deep experience in 
 
 ### Modular Monoliths | Kevlin Henney 
 
-![Kevlin](D:\github\volosoft\abp\docs\en\Community-Articles\2026-02-03-Impressions-of-NDC-London-2026\6)
+![Kevlin](6)
 
 Kevlin frames the “microservices vs monolith” debate as a false dichotomy. His core argument is simple but powerful: problems rarely come from *being a monolith* — they come from being a **poorly structured one**. Modularity is not a deployment choice; it is an architectural discipline.
 
@@ -103,11 +103,29 @@ Kevlin frames the “microservices vs monolith” debate as a false dichotomy. H
 
 ### AI Coding Agents & Skills | Steve Sanderson
 
-![steve-sanderson-talk](D:\github\volosoft\abp\docs\en\Community-Articles\2026-02-03-Impressions-of-NDC-London-2026\steve-sanderson-talk.png)
+**Being productive with AI Agents**
 
-In this session, Steve started how Microsoft is excessively using AI tools for PRs, reproducing bug reports etc... He's now working on **GitHub Co-Pilot Coding Agent Runtime Team**. He says, we use brains and hands less then anytime. And he summarized the AI assisted development into 10 outlines. These are  Subagents, Plan Mode, Skills, Delegate, Memories, Hooks, MCP, Infinite Sessions, Plugins and Git Workflow. Let's see his statements for each of these headings:
+![steve-sanderson-talk](steve-sanderson-talk.png)
+
+In this session, Steve started how Microsoft is excessively using AI tools for PRs, reproducing bug reports etc... He's now working on **GitHub Co-Pilot Coding Agent Runtime Team**. He says, we use brains and hands less then anytime. 
+
+![image-20260206004021726](steve-sanderson-talk_1.png)
+
+**In 1 Week 293 PRs Opened by the help of AI**
+
+![image-20260206004403643](steve-sanderson-talk_2.png)
+
+**He created a new feature to Copilot with the help of Copilot in minutes**
+
+![Steve](steve-sanderson-talk_3.png)
+
+> Code is cheap! Prototypes are almost free!
+
+And he summarized the AI assisted development into 10 outlines. These are  Subagents, Plan Mode, Skills, Delegate, Memories, Hooks, MCP, Infinite Sessions, Plugins and Git Workflow. Let's see his statements for each of these headings:
 
 #### **1. Subagents**
+
+![image-20260206005620904](steve-sanderson-talk_4.png)
 
 - Break big problems into smaller, specialized agents.
 - Each subagent should have a clear responsibility and limited scope.
@@ -115,13 +133,16 @@ In this session, Steve started how Microsoft is excessively using AI tools for P
 - Reduces hallucination by narrowing context per agent.
 - Easier to debug: you can inspect each agent’s output separately.
 
+
 ------
 
 #### **2. Plan Mode**
 
+![steve-sanderson-talk_6](steve-sanderson-talk_6.png)
+
 - Always start with a plan before generating code.
 - The plan should be explicit, human-readable, and reviewable.
-- Helps align expectations between you and the AI.
+- You'll align your expectations with the AI's next steps.
 - Prevents wasted effort on wrong directions.
 - Encourages structured thinking instead of trial-and-error coding.
 
@@ -129,71 +150,101 @@ In this session, Steve started how Microsoft is excessively using AI tools for P
 
 #### **3. Skills**
 
+![steve-sanderson-talk_7](steve-sanderson-talk_7.png)
+
+- These are just Markdown files but (can be also tools, scripts as well)
 - Skills are reusable capabilities for AI agents.
+- You cannot just give all the info (as Markdown) to the AI context (limited!), skills are being used when necessary (by their Description field)
 - Treat skills like APIs: versioned, documented, and shareable.
-- Prefer many small skills over one monolithic skill.
+- Prefer many small skills over one big skill set.
 - Store skills in Git, not in chat history.
 - Skills should integrate with real tools (CI, GitHub, browsers, etc.).
+
+#### 3.1 Skill > Test Your Project Skill
+
+![steve-sanderson-talk_8](steve-sanderson-talk_8.png)
 
 ------
 
 #### **4. Delegate**
 
-- Don’t micromanage — delegate well-defined tasks.
-- Give clear inputs, constraints, and success criteria.
-- Let the AI own the implementation details.
-- Review outcomes instead of every intermediate step.
-- Use delegation for repetitive or mechanical work.
+> didn't mention much about this topic
+
+- “Delegate” refers to **offloading local work to the cloud**.
+- Using remote computers for AI stuff not your local resources (agent continues the task remotely)
+
+##### **Ralph Force Do While Over and Over Until It Finishes** 
+
+https://awesomeclaude.ai/ralph-wiggum
+
+>  Who knows how much tokens it uses :)
+
+![image-20260206010621010](steve-sanderson-talk_5.png)
 
 ------
 
 #### **5. Memories**
 
-- Long-term memory should capture decisions, not chat noise.
-- Store *why* something was done, not every detail of *how*.
-- Keep memory sparse and structured.
+> didn't mention much about this topic
+
+- It's like don't write tests like this but write like that, and AI will remember it among your team members.
+
+- Copilot Memory allows Copilot to learn about your codebase, helping Copilot coding agent, Copilot code review, and Copilot CLI to work more effectively in a repository.
+
 - Treat memory like documentation that evolves over time.
-- Be careful about leaking sensitive data into persistent memory.
+
+- Copilot Memory is **turned off by default** 
+
+- https://docs.github.com/en/copilot/how-tos/use-copilot-agents/copilot-memory
+
+  
 
 ------
 
 #### **6. Hooks**
 
-- Hooks connect AI actions to your real workflow.
+> didn't mention much about this topic
+
+![image-20260206015638169](steve-sanderson-talk_10.png)
+
+- Execute custom shell commands at key points during agent execution.
 - Examples: pre-commit checks, PR reviews, test triggers.
 - Hooks make AI proactive instead of reactive.
 - They reduce manual context switching for developers.
-- Best hooks are lightweight and predictable.
+- https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/use-hooks
 
 ------
 
-#### **7. MCP (Model Context Protocol)**
+#### **7. MCP**
 
-- Standard way for models to talk to external tools.
+- Talk to external tools.
+
 - Enables safe, controlled access to systems (files, APIs, databases).
+
 - Prevents random tool usage; everything is explicit.
-- Encourages ecosystem of interoperable tools.
-- Critical for production-grade AI assistants.
+
+  
 
 ------
 
 #### **8. Infinite Sessions**
 
+![Infinite Sessions](D:\github\volosoft\abp\docs\en\Community-Articles\2026-02-03-Impressions-of-NDC-London-2026\steve-sanderson-talk_11.png)
+
 - AI should remember the “project context,” not just the last message.
 - Reduces repetition and re-explaining.
 - Enables deeper reasoning over time.
-- Works best when combined with structured memory.
-- Still requires periodic cleanup to avoid context bloat.
+- Memory + skills + hooks together make “infinite sessions” possible.
+- https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices#3-leverage-infinite-sessions
 
 ------
 
 #### **9. Plugins**
 
+![Plugins](D:\github\volosoft\abp\docs\en\Community-Articles\2026-02-03-Impressions-of-NDC-London-2026\steve-sanderson-talk_12.png)
+
 - Extend AI capabilities beyond core model features.
-- Plugins should solve real workflow problems, not demos.
-- Prefer composable plugins over custom hacks.
-- Security matters — don’t give plugins unlimited access.
-- Treat plugins like dependencies: review and maintain them.
+- https://github.com/marketplace?type=apps&copilot_app=true
 
 ------
 
@@ -204,20 +255,26 @@ In this session, Steve started how Microsoft is excessively using AI tools for P
 - Use AI for PR descriptions and code reviews.
 - Keep humans in the loop for design decisions.
 - Branching strategy still matters; AI doesn’t replace it.
+- Treat AI like a junior teammate: helpful, but needs supervision.
+- CI + tests remain your primary safety net, not the model.
+- Keep feedback loops fast: generate → test → review → refine.
 
-#### **Lessons for Developers from Steve's Talk**
+**Copilot as SDK** 
+
+You can wrap GitHub CoPilot into your app as below:
+
+![steve-sanderson-talk_9](steve-sanderson-talk_9.png)
+
+#### **As a Developer What You Need to Get from Steve's Talk;**
 
 - Coding agents work best when you treat them like programmable teammates, not autocomplete tools.
 - “Skills” are the right abstraction for scaling AI assistants across a team.
-- A skill is fundamentally a structured Markdown file + metadata + optional scripts/tools.
-- Load **descriptions first, details later** — this keeps LLM context small and reliable.
 - Treat skills like shared APIs: version them, review them, and store them in source control.
 - Skills can be installed from Git repos (marketplaces), not just created locally.
 - Slash commands make skills fast, explicit, and reproducible in daily workflow.
 - Use skills to bridge AI ↔ real systems (e.g., GitHub Actions, Playwright, build status).
 - Automation skills are most valuable when they handle end-to-end flows (browser + app + data).
 - Let the agent *discover* the right skill rather than hard-coding every step.
-- Prefer small, composable skills over one “god skill.”
 - Skills reduce hallucination risk by constraining what the agent is allowed to do.
 
 ---
@@ -250,6 +307,6 @@ Software stocks fall on AI disruption fears on Feb 4, 2026 in NASDAQ. Software a
 
 
 
-![Reuters](D:\github\volosoft\abp\docs\en\Community-Articles\2026-02-03-Impressions-of-NDC-London-2026\7.png)
+![Reuters](7.png)
 
 **We need to be well prepared for this war.**

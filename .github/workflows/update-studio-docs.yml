@@ -1,0 +1,261 @@
+name: Update ABP Studio Docs
+
+on:
+  repository_dispatch:
+    types: [update_studio_docs]
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      models: read
+
+    steps:
+      # -------------------------------------------------
+      # Validate payload (safe & strict)
+      # -------------------------------------------------
+      - name: Validate payload
+        run: |
+          required_keys=(version name notes url target_branch)
+          for key in "${required_keys[@]}"; do
+            value="$(jq -r --arg k "$key" '.client_payload[$k] // ""' "$GITHUB_EVENT_PATH")"
+            if [ -z "$value" ] || [ "$value" = "null" ]; then
+              echo "Missing payload field: $key"
+              exit 1
+            fi
+          done
+
+      # -------------------------------------------------
+      # Checkout target branch
+      # -------------------------------------------------
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.target_branch }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "docs-bot"
+          git config user.email "docs-bot@users.noreply.github.com"
+
+      # -------------------------------------------------
+      # Create working branch
+      # -------------------------------------------------
+      - name: Create branch
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          BRANCH="docs/studio-${VERSION}"
+          git checkout -B "$BRANCH"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+
+      # -------------------------------------------------
+      # Save raw release notes
+      # -------------------------------------------------
+      - name: Save raw release notes
+        run: |
+          mkdir -p .tmp
+          jq -r '.client_payload.notes' "$GITHUB_EVENT_PATH" > .tmp/raw-notes.txt
+
+      # -------------------------------------------------
+      # Try AI formatting (OPTIONAL)
+      # -------------------------------------------------
+      - name: Generate release notes with AI (optional)
+        id: ai
+        continue-on-error: true
+        uses: actions/ai-inference@v1
+        with:
+          model: openai/gpt-4.1
+          prompt: |
+            You are a technical writer.
+
+            Convert the following release notes into concise, user-facing bullet points.
+            Rules:
+            - Use "-" bullets
+            - Keep it short and clear
+            - Skip internal or low-level changes
+
+            Release notes:
+            ${{ github.event.client_payload.notes }}
+
+      # -------------------------------------------------
+      # Decide final release notes (AI or fallback)
+      # -------------------------------------------------
+      - name: Decide final release notes
+        run: |
+          if [ -n "${{ steps.ai.outputs.response }}" ]; then
+            echo "✅ Using AI formatted notes"
+            echo "${{ steps.ai.outputs.response }}" > .tmp/final-notes.txt
+          else
+            echo "⚠️ AI unavailable – using raw notes"
+            sed 's/^/- /' .tmp/raw-notes.txt > .tmp/final-notes.txt
+          fi
+
+      # -------------------------------------------------
+      # Update release-notes.md (UNDER Latest)
+      # -------------------------------------------------
+      - name: Update release-notes.md
+        run: |
+          FILE="docs/en/studio/release-notes.md"
+          VERSION="${{ github.event.client_payload.version }}"
+          NAME="${{ github.event.client_payload.name }}"
+          URL="${{ github.event.client_payload.url }}"
+          DATE="$(date +%Y-%m-%d)"
+
+          mkdir -p docs/en/studio
+          touch "$FILE"
+
+          if grep -q "## $VERSION" "$FILE"; then
+            echo "Release notes already contain $VERSION"
+            exit 0
+          fi
+
+          ENTRY=$(cat <<EOF
+
+          ## $VERSION ($DATE)
+
+          $(cat .tmp/final-notes.txt)
+
+          [Release Link]($URL)
+
+          EOF
+          )
+
+          awk -v entry="$ENTRY" '
+          /Latest/ && !inserted {
+            print
+            print entry
+            inserted=1
+            next
+          }
+          { print }
+          END {
+            if (!inserted) print entry
+          }' "$FILE" > "$FILE.new"
+
+          mv "$FILE.new" "$FILE"
+
+      # -------------------------------------------------
+      # Update version-mapping.md (INSIDE table)
+      # -------------------------------------------------
+      - name: Update version-mapping.md (smart)
+        run: |
+          FILE="docs/en/studio/version-mapping.md"
+          STUDIO_VERSION="${{ github.event.client_payload.version }}"
+          ABP_VERSION="dev"   # gerekiyorsa payload’dan alabilirsin
+
+          mkdir -p docs/en/studio
+
+          if [ ! -f "$FILE" ]; then
+            echo "| ABP Studio Version | ABP Version |" > "$FILE"
+            echo "|-------------------|-------------|" >> "$FILE"
+            echo "| $STUDIO_VERSION | $ABP_VERSION |" >> "$FILE"
+            exit 0
+          fi
+
+          python3 <<'EOF'
+          import re
+          from packaging.version import Version
+
+          file_path = "docs/en/studio/version-mapping.md"
+          studio = Version("${STUDIO_VERSION}")
+          abp = "${ABP_VERSION}"
+
+          with open(file_path) as f:
+            lines = f.readlines()
+
+          header = lines[:2]
+          rows = lines[2:]
+
+          new_rows = []
+          handled = False
+
+          for row in rows:
+            m = re.match(r"\|\s*(.+?)\s*\|\s*(.+?)\s*\|", row)
+            if not m:
+              new_rows.append(row)
+              continue
+
+            studio_range, abp_version = m.groups()
+
+            if abp_version != abp:
+              new_rows.append(row)
+              continue
+
+            # range cases
+            if "-" in studio_range:
+              start, end = [Version(v.strip()) for v in studio_range.split("-")]
+              if start <= studio <= end:
+                handled = True
+                new_rows.append(row)  # already covered
+              elif studio == end.next_patch():
+                handled = True
+                new_rows.append(f"| {start} - {studio} | {abp} |\n")
+              else:
+                new_rows.append(row)
+            else:
+              v = Version(studio_range)
+              if studio == v:
+                handled = True
+                new_rows.append(row)
+              elif studio == v.next_patch():
+                handled = True
+                new_rows.append(f"| {v} - {studio} | {abp} |\n")
+              else:
+                new_rows.append(row)
+
+          if not handled:
+            new_rows.insert(0, f"| {studio} | {abp} |\n")
+
+          with open(file_path, "w") as f:
+            f.writelines(header + new_rows)
+          EOF
+
+      # -------------------------------------------------
+      # Check for changes
+      # -------------------------------------------------
+      - name: Check for changes
+        id: changes
+        run: |
+          git add docs/en/studio
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      # -------------------------------------------------
+      # Commit & push
+      # -------------------------------------------------
+      - name: Commit & push
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git commit -m "docs(studio): release ${{ github.event.client_payload.version }}"
+          git push -u origin "$BRANCH"
+
+      # -------------------------------------------------
+      # Create PR
+      # -------------------------------------------------
+      - name: Create PR
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
+        run: |
+          PR_URL=$(gh pr create \
+            --title "docs(studio): release ${{ github.event.client_payload.version }}" \
+            --body "Automated documentation update for ABP Studio." \
+            --base "${{ github.event.client_payload.target_branch }}" \
+            --head "$BRANCH")
+
+          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+
+      # -------------------------------------------------
+      # Enable auto-merge (branch protection safe)
+      # -------------------------------------------------
+      - name: Enable auto-merge
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_SECRET }}
+        run: |
+          gh pr merge "$PR_URL" --squash --auto

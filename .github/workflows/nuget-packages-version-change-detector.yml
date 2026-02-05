@@ -1,3 +1,9 @@
+# Automatically detects and documents NuGet package version changes in PRs.
+# Triggers on changes to Directory.Packages.props and:
+# - Adds 'dependency-change' label to the PR
+# - Updates docs/en/package-version-changes.md with version changes
+# - Commits the documentation back to the PR branch
+# Note: Only runs for PRs from the same repository (not forks) to ensure write permissions.
 name: Nuget Packages Version Change Detector
 
 on:
@@ -36,7 +42,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Fetch base branch
         run: git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }} --depth=1

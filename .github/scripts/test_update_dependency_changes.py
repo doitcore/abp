@@ -14,7 +14,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from update_dependency_changes import merge_changes, merge_prs, render_section
+from update_dependency_changes import merge_changes, render_section
 
 
 def test_update_then_revert():

@@ -11,11 +11,16 @@ DOC_PATH = os.environ.get("DOC_PATH", "docs/en/package-version-changes.md")
 
 def get_version():
     """Read the current version from common.props."""
-    tree = ET.parse("common.props")
-    root = tree.getroot()
-    version_elem = root.find(".//Version")
-    if version_elem is not None:
-        return version_elem.text
+    try:
+        tree = ET.parse("common.props")
+        root = tree.getroot()
+        version_elem = root.find(".//Version")
+        if version_elem is not None:
+            return version_elem.text
+    except FileNotFoundError:
+        print("Error: 'common.props' file not found.", file=sys.stderr)
+    except ET.ParseError as ex:
+        print(f"Error: Failed to parse 'common.props': {ex}", file=sys.stderr)
     return None
 
 
@@ -48,12 +53,15 @@ def get_existing_doc_from_base(base_ref):
 def parse_diff_packages(lines, prefix):
     """Parse package versions from diff lines with the given prefix (+ or -)."""
     packages = {}
-    pattern = re.compile(r'Include="([^"]+)".*Version="([^"]+)"')
+    # Use separate patterns to handle different attribute orders
+    include_pattern = re.compile(r'Include="([^"]+)"')
+    version_pattern = re.compile(r'Version="([^"]+)"')
     for line in lines:
         if line.startswith(prefix) and "PackageVersion" in line and not line.startswith(prefix * 3):
-            match = pattern.search(line)
-            if match:
-                packages[match.group(1)] = match.group(2)
+            include_match = include_pattern.search(line)
+            version_match = version_pattern.search(line)
+            if include_match and version_match:
+                packages[include_match.group(1)] = version_match.group(1)
     return packages
 
 
@@ -253,7 +261,19 @@ def main():
         sys.exit(1)
 
     base_ref = sys.argv[1]
-    pr_number = f"#{sys.argv[2]}"
+    pr_arg = sys.argv[2]
+    
+    # Validate PR number is numeric
+    if not re.fullmatch(r"\d+", pr_arg):
+        print("Invalid PR number; must be numeric.")
+        sys.exit(1)
+    
+    # Validate base_ref doesn't contain dangerous characters
+    if not re.fullmatch(r"[a-zA-Z0-9/_.-]+", base_ref):
+        print("Invalid base ref; contains invalid characters.")
+        sys.exit(1)
+    
+    pr_number = f"#{pr_arg}"
 
     version = get_version()
     if not version:

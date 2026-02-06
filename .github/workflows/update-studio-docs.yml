@@ -43,16 +43,24 @@ jobs:
             echo "url=${{ github.event.client_payload.url }}" >> $GITHUB_OUTPUT
             echo "target_branch=${{ github.event.client_payload.target_branch || 'dev' }}" >> $GITHUB_OUTPUT
             
-            mkdir -p .tmp
-            jq -r '.client_payload.notes' "$GITHUB_EVENT_PATH" > .tmp/raw-notes.txt
+            # Save notes to environment variable (multiline)
+            {
+              echo "RAW_NOTES<<NOTES_DELIMITER_EOF"
+              jq -r '.client_payload.notes' "$GITHUB_EVENT_PATH"
+              echo "NOTES_DELIMITER_EOF"
+            } >> $GITHUB_ENV
           else
             echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
             echo "name=${{ github.event.inputs.name }}" >> $GITHUB_OUTPUT
             echo "url=${{ github.event.inputs.url }}" >> $GITHUB_OUTPUT
             echo "target_branch=${{ github.event.inputs.target_branch || 'dev' }}" >> $GITHUB_OUTPUT
             
-            mkdir -p .tmp
-            echo "${{ github.event.inputs.notes }}" > .tmp/raw-notes.txt
+            # Save notes to environment variable (multiline)
+            {
+              echo "RAW_NOTES<<NOTES_DELIMITER_EOF"
+              echo "${{ github.event.inputs.notes }}"
+              echo "NOTES_DELIMITER_EOF"
+            } >> $GITHUB_ENV
           fi
 
       - name: Validate payload
@@ -74,7 +82,7 @@ jobs:
             echo "❌ Missing: url"
             exit 1
           fi
-          if [ ! -s .tmp/raw-notes.txt ]; then
+          if [ -z "$RAW_NOTES" ]; then
             echo "❌ Missing: release notes"
             exit 1
           fi
@@ -158,7 +166,7 @@ jobs:
             Version: ${{ steps.payload.outputs.version }}
             Name: ${{ steps.payload.outputs.name }}
             Raw notes:
-            $(cat .tmp/raw-notes.txt)
+            ${{ env.RAW_NOTES }}
             
             CRITICAL RULES:
             1. Extract ONLY essential, user-facing changes
@@ -181,6 +189,8 @@ jobs:
       # -------------------------------------------------
       - name: Prepare final release notes
         run: |
+          mkdir -p .tmp
+          
           AI_RESPONSE="${{ steps.ai.outputs.response }}"
           
           if [ -n "$AI_RESPONSE" ] && [ "$AI_RESPONSE" != "null" ]; then
@@ -189,8 +199,8 @@ jobs:
           else
             echo "⚠️ AI unavailable - using raw release notes with basic formatting"
             
-            # Basic fallback: ensure each line starts with "- "
-            while IFS= read -r line; do
+            # Use environment variable for raw notes
+            echo "$RAW_NOTES" | while IFS= read -r line; do
               # Skip empty lines
               if [ -z "$line" ]; then
                 continue
@@ -202,7 +212,7 @@ jobs:
               else
                 echo "$line"
               fi
-            done < .tmp/raw-notes.txt > .tmp/final-notes.txt
+            done > .tmp/final-notes.txt
           fi
           
           echo "=== Final release notes ==="

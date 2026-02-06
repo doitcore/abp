@@ -227,7 +227,7 @@ https://awesomeclaude.ai/ralph-wiggum
 
 #### **8. Infinite Sessions**
 
-![Infinite Sessions](D:\github\volosoft\abp\docs\en\Community-Articles\2026-02-03-Impressions-of-NDC-London-2026\steve-sanderson-talk_11.png)
+![Infinite Sessions](steve-sanderson-talk_11.png)
 
 - AI should remember the “project context,” not just the last message.
 - Reduces repetition and re-explaining.
@@ -239,7 +239,7 @@ https://awesomeclaude.ai/ralph-wiggum
 
 #### **9. Plugins**
 
-![Plugins](D:\github\volosoft\abp\docs\en\Community-Articles\2026-02-03-Impressions-of-NDC-London-2026\steve-sanderson-talk_12.png)
+![Plugins](steve-sanderson-talk_12.png)
 
 - Extend AI capabilities beyond core model features.
 - https://github.com/marketplace?type=apps&copilot_app=true
@@ -281,7 +281,7 @@ You can wrap GitHub CoPilot into your app as below:
 
 - This is your code tech stack for a basic .NET project: 
 
-  - Assembly > MSIL > C# > ASP.NET Core > NuGet + NPM  > Your Handmade Business Code 
+  - Assembly > MSIL > C# > ASP.NET Core > ...ABP... >NuGet + NPM  > Your Handmade Business Code 
 
     When we ask a development to an AI assisted IDE,  AI never starts from Assembly or even it's not writing an existing NPM package. It basically uses what's there on the market. So we know frameworks like ASP.NET Core, ABP will always be there after AI evolution. 
 

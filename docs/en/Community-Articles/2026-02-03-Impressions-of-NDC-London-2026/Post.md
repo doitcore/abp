@@ -1,18 +1,16 @@
-# NDC London 2026: A .NET Conf From a Developer’s Perspective
-
-![](0.png)
+![Cover](0.png)
 
 This year we attended NDC London as a sponsor for [ABP](https://abp.io).  The conference was held at the same place [Queen Elizabeth II](https://qeiicentre.london/) as previous years. I guess this is the best conf for .NET developers around the world (thanks to the NDC team). And we attend last 5 years. It was 3 full days started from 28 to 30 January 2026. As an exhibitor we talked a lot with the attendees who stopped by our booth or while we were eating or in the conf rooms. 
 
 This is the best opportunity to know what everyone is doing in software society. While I was explaining ABP to the people who first time heard, I also ask about what they do in their work. Developers mostly work on web platforms. And as you know, there's an AI transformation in our sector. That's why I wonder if other people also stick to the latest AI trend! Well... not as I expected. In Volosoft, we are tightly following AI trends, using in our daily development, injecting this new technology to our product and trying to benefit this as much as possible. 
 
-![1](1.png)
+![Our booth](1.png)
 
 This new AI trend is same as the invention of printing (by Johannes Gutenberg in 1450) or it's similar to invention of calculators (by William S. Burroughs in 1886). The countries who benefit these inventions got a huge increase in their welfare level. So, we welcome this new AI invention in software development, design, devops and testing. I also see this as a big wave in the ocean, if you are prepared and develop your skills, you can play with it 🌊 and it's called surfing or you'll die against the AI wave in this ocean.  But not all the companies react this transformation quickly. Many developers use it like ChatGpt conversation (copy-paste from it) or using GitHub Co-Pilot in a limited manner. But as I heard from Steven Sanderson's session and other Microsoft employees, they are already using it to reproduce the bugs reported in the issues or creating even feature PRs via Co-Pilot. That's a good!  
 
 Here're some pictures from the conf and that's me on the left side with brown shoes :)
 
-![2](2.png)
+![Alper & Halil](2.png)
 
 Another thing I see, there's a decrease in the number of attendees'. I don't know the real reason but probably the IT companies cut the budget for conferences. As you also hear, many companies layoff because of the AI replaces some of the positions. 
 
@@ -24,7 +22,7 @@ I was expecting more AI oriented sessions but it was less then my expectations. 
 
 ### The Dangers of Probably-Working Software | Damian Brady
 
-![3](3.png)
+![Damian Session](3.png)
 
 The first session and keynote was from Damian Brady. He's part of Developer Advocacy team at GitHub. And the topic was "The dangers of probably-working software". He started with some negative impact of how generative AI is killing software, and he ended like this a not so bad, we can benefit from the AI transformation. First time I hear "sleepwalking" term for the development. He was telling when we generate code via AI, and if we don't review well-enough, we're sleepwalkers. And that's correct! and good analogy for this case. This talk centers on a powerful lesson: *“**Don’t ship code you don’t truly understand.**”*
  Damian tells a personal story from his early .NET days when he implemented a **Huffman compression algorithm** based largely on Wikipedia. The code **“worked” in small tests** but **failed in production**. The experience forced him to deeply understand the algorithm rather than relying on copied solutions. Through this story, he explores themes of trust, complexity, testing, and mental models in software engineering.
@@ -44,7 +42,7 @@ The first session and keynote was from Damian Brady. He's part of Developer Advo
 
 ### Playing The Long Game | Sheena O'Connell
 
-![4](4.png)
+![Sheena Session](4.png)
 
 Sheena is a former software engineer who now trains and supports tech educators. She talks about AI tools...
 AI tools are everywhere but poorly understood; there’s hype, risks, and mixed results. The key question is how individuals and organisations should play the long game (long-term strategy) so skilled human engineers—especially juniors—can still grow and thrive. 
@@ -56,17 +54,17 @@ AI is creating new roles (like AI security, observability, and operations) and n
 
 Organizations are becoming more dynamic and project-based, with shorter planning cycles, higher trust, and more experimentation — but also risk of “shiny new toy” syndrome. Research shows AI can boost productivity by 15–20% in many cases, especially in simpler, greenfield projects and popular languages, but it can actually reduce productivity on very complex work. Overall, the recommendation is to focus on using AI well (not just the newest model), add monitoring and guardrails, keep flexibility, and build tools that allow safe experimentation.
 
-![4_1](4_1.png)
+![Sheena Session 2](4_1.png)
 
 We’re in a messy, fast-moving AI era where LLM tools are everywhere but poorly understood. There’s a lot of hype and marketing noise, making it hard even for technical people to separate reality from fantasy. Different archetypes have emerged — from AI-optimists to skeptics — and both extremes have risks. AI is great for quick prototyping but unreliable for complex work, so teams need guardrails, better practices, and a focus on learning rather than “writing more code faster.” The key question is how individuals and organizations can play the long game so strong human engineers — especially juniors — can still grow and thrive in an AI-driven world.
 
-![4_2](4_2.png)
+![Sheena Session 3](4_2.png)
 
 ---
 
 ### Crafting Intelligent Agents with Context Engineering | Carly Richmond
 
-![5](5.png)
+![Carly Session](5.png)
 
 Carly is a Developer Advocate Lead at Elastic in London with deep experience in web development and agile delivery from her years in investment banking. A practical UI engineer. She brings a clear, hands-on perspective to building real-world AI systems. In her talk on **“Crafting Intelligent Agents with Context Engineering,”** she argues that prompt engineering isn’t enough — and shows how carefully shaping context across data, tools, and systems is key to creating reliable, useful AI agents. She mentioned about the context of an AI process. The context consists of Instructions, Short Memory, Long Memory, RAG, User Prompts, Tools, Structured Output.
 
@@ -76,7 +74,7 @@ Carly is a Developer Advocate Lead at Elastic in London with deep experience in 
 
 ### Modular Monoliths | Kevlin Henney 
 
-![Kevlin](6)
+![Kevlin Session](6.png)
 
 Kevlin frames the “microservices vs monolith” debate as a false dichotomy. His core argument is simple but powerful: problems rarely come from *being a monolith* — they come from being a **poorly structured one**. Modularity is not a deployment choice; it is an architectural discipline.
 
@@ -105,7 +103,7 @@ Kevlin frames the “microservices vs monolith” debate as a false dichotomy. H
 
 **Being productive with AI Agents**
 
-![steve-sanderson-talk](steve-sanderson-talk.png)
+![Steve Session](steve-sanderson-talk.png)
 
 In this session, Steve started how Microsoft is excessively using AI tools for PRs, reproducing bug reports etc... He's now working on **GitHub Co-Pilot Coding Agent Runtime Team**. He says, we use brains and hands less then anytime. 
 

@@ -43,16 +43,24 @@ jobs:
             echo "url=${{ github.event.client_payload.url }}" >> $GITHUB_OUTPUT
             echo "target_branch=${{ github.event.client_payload.target_branch || 'dev' }}" >> $GITHUB_OUTPUT
             
-            mkdir -p .tmp
-            jq -r '.client_payload.notes' "$GITHUB_EVENT_PATH" > .tmp/raw-notes.txt
+            # Save notes to environment variable (multiline)
+            {
+              echo "RAW_NOTES<<NOTES_DELIMITER_EOF"
+              jq -r '.client_payload.notes' "$GITHUB_EVENT_PATH"
+              echo "NOTES_DELIMITER_EOF"
+            } >> $GITHUB_ENV
           else
             echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
             echo "name=${{ github.event.inputs.name }}" >> $GITHUB_OUTPUT
             echo "url=${{ github.event.inputs.url }}" >> $GITHUB_OUTPUT
             echo "target_branch=${{ github.event.inputs.target_branch || 'dev' }}" >> $GITHUB_OUTPUT
             
-            mkdir -p .tmp
-            echo "${{ github.event.inputs.notes }}" > .tmp/raw-notes.txt
+            # Save notes to environment variable (multiline)
+            {
+              echo "RAW_NOTES<<NOTES_DELIMITER_EOF"
+              echo "${{ github.event.inputs.notes }}"
+              echo "NOTES_DELIMITER_EOF"
+            } >> $GITHUB_ENV
           fi
 
       - name: Validate payload
@@ -74,7 +82,7 @@ jobs:
             echo "❌ Missing: url"
             exit 1
           fi
-          if [ ! -s .tmp/raw-notes.txt ]; then
+          if [ -z "$RAW_NOTES" ]; then
             echo "❌ Missing: release notes"
             exit 1
           fi
@@ -158,7 +166,7 @@ jobs:
             Version: ${{ steps.payload.outputs.version }}
             Name: ${{ steps.payload.outputs.name }}
             Raw notes:
-            $(cat .tmp/raw-notes.txt)
+            ${{ env.RAW_NOTES }}
             
             CRITICAL RULES:
             1. Extract ONLY essential, user-facing changes
@@ -181,28 +189,64 @@ jobs:
       # -------------------------------------------------
       - name: Prepare final release notes
         run: |
+          mkdir -p .tmp
+          
           AI_RESPONSE="${{ steps.ai.outputs.response }}"
           
           if [ -n "$AI_RESPONSE" ] && [ "$AI_RESPONSE" != "null" ]; then
             echo "✅ Using AI-formatted release notes"
             echo "$AI_RESPONSE" > .tmp/final-notes.txt
           else
-            echo "⚠️ AI unavailable - using raw release notes with basic formatting"
+            echo "⚠️ AI unavailable - using aggressive cleaning on raw release notes"
             
-            # Basic fallback: ensure each line starts with "- "
-            while IFS= read -r line; do
+            # Clean and format raw notes with aggressive filtering
+            echo "$RAW_NOTES" | while IFS= read -r line; do
               # Skip empty lines
-              if [ -z "$line" ]; then
-                continue
-              fi
+              [ -z "$line" ] && continue
               
-              # Add bullet if not present
-              if [[ ! "$line" =~ ^[[:space:]]*- ]]; then
-                echo "- $line"
-              else
-                echo "$line"
-              fi
-            done < .tmp/raw-notes.txt > .tmp/final-notes.txt
+              # Skip section headers
+              [[ "$line" =~ ^#+.*What.*Changed ]] && continue
+              [[ "$line" =~ ^##[[:space:]] ]] && continue
+              
+              # Skip full changelog links
+              [[ "$line" =~ ^\*\*Full\ Changelog ]] && continue
+              [[ "$line" =~ ^Full\ Changelog ]] && continue
+              
+              # Remove leading bullet/asterisk
+              line=$(echo "$line" | sed 's/^[[:space:]]*[*-][[:space:]]*//')
+              
+              # Aggressive cleaning: remove entire " by @user in https://..." suffix
+              line=$(echo "$line" | sed 's/[[:space:]]*by @[a-zA-Z0-9_-]*[[:space:]]*in https:\/\/github\.com\/[^[:space:]]*//g')
+              
+              # Remove remaining "by @username" or "by username"
+              line=$(echo "$line" | sed 's/[[:space:]]*by @[a-zA-Z0-9_-]*[[:space:]]*$//g')
+              line=$(echo "$line" | sed 's/[[:space:]]*by [a-zA-Z0-9_-]*[[:space:]]*$//g')
+              
+              # Remove standalone @mentions
+              line=$(echo "$line" | sed 's/@[a-zA-Z0-9_-]*//g')
+              
+              # Clean trailing periods if orphaned
+              line=$(echo "$line" | sed 's/\.[[:space:]]*$//')
+              
+              # Trim all whitespace
+              line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              
+              # Skip if line is empty or too short
+              [ -z "$line" ] && continue
+              [ ${#line} -lt 5 ] && continue
+              
+              # Capitalize first letter if lowercase
+              line="$(echo ${line:0:1} | tr '[:lower:]' '[:upper:]')${line:1}"
+              
+              # Add clean bullet and output
+              echo "- $line"
+            done > .tmp/final-notes.txt
+          fi
+          
+          # Safety check: verify we have content
+          if [ ! -s .tmp/final-notes.txt ]; then
+            echo "⚠️ No valid release notes extracted, using minimal fallback"
+            echo "- Release ${{ steps.payload.outputs.version }}" > .tmp/final-notes.txt
           fi
           
           echo "=== Final release notes ==="
@@ -358,18 +402,27 @@ jobs:
 
           # Find table start (skip SEO and headers)
           table_start = 0
+          table_end = 0
           for i, line in enumerate(lines):
               if line.strip().startswith('|') and '**ABP Studio Version**' in line:
                   table_start = i
+              elif table_start > 0 and line.strip() and not line.strip().startswith('|'):
+                  table_end = i
                   break
 
           if table_start == 0:
               print("❌ Could not find version mapping table")
               exit(1)
 
-          # Extract header + separator + data rows
-          header_lines = lines[:table_start+2]  # Keep everything before data rows
-          data_rows = [l for l in lines[table_start+2:] if l.strip().startswith('|')]
+          # If no end found, table goes to end of file
+          if table_end == 0:
+              table_end = len(lines)
+
+          # Extract sections
+          before_table = lines[:table_start]  # Everything before table
+          table_header = lines[table_start:table_start+2]  # Header + separator
+          data_rows = [l for l in lines[table_start+2:table_end] if l.strip().startswith('|')]  # Data rows
+          after_table = lines[table_end:]  # Everything after table
 
           new_rows = []
           handled = False
@@ -449,9 +502,12 @@ jobs:
               new_rows.insert(0, new_row)
               print(f"✅ Added new mapping: {studio_ver} -> {abp_ver}")
 
-          # Write updated file
+          # Write updated file - preserve ALL content
           with open(file_path, 'w') as f:
-              f.writelines(header_lines + new_rows)
+              f.writelines(before_table)  # SEO, title, intro text
+              f.writelines(table_header)  # Table header
+              f.writelines(new_rows)      # Updated data rows
+              f.writelines(after_table)   # Content after table (preview section, etc.)
 
           print("MAPPING_UPDATED=true")
           PYTHON_EOF

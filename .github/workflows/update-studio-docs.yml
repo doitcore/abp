@@ -197,40 +197,56 @@ jobs:
             echo "✅ Using AI-formatted release notes"
             echo "$AI_RESPONSE" > .tmp/final-notes.txt
           else
-            echo "⚠️ AI unavailable - using raw release notes with cleaning"
+            echo "⚠️ AI unavailable - using aggressive cleaning on raw release notes"
             
-            # Clean and format raw notes
+            # Clean and format raw notes with aggressive filtering
             echo "$RAW_NOTES" | while IFS= read -r line; do
               # Skip empty lines
               [ -z "$line" ] && continue
               
-              # Skip GitHub PR metadata lines
-              [[ "$line" =~ ^(Full\ Changelog|\*\*Full\ Changelog) ]] && continue
+              # Skip section headers
+              [[ "$line" =~ ^#+.*What.*Changed ]] && continue
+              [[ "$line" =~ ^##[[:space:]] ]] && continue
               
-              # Clean GitHub username mentions (@username -> username)
-              line=$(echo "$line" | sed 's/@\([a-zA-Z0-9_-]*\)/\1/g')
+              # Skip full changelog links
+              [[ "$line" =~ ^\*\*Full\ Changelog ]] && continue
+              [[ "$line" =~ ^Full\ Changelog ]] && continue
               
-              # Clean GitHub PR/issue links - extract just the description
-              line=$(echo "$line" | sed 's#in https://github.com/[^[:space:]]*##g')
-              line=$(echo "$line" | sed 's#by [a-zA-Z0-9_-]* in##g')
+              # Remove leading bullet/asterisk
+              line=$(echo "$line" | sed 's/^[[:space:]]*[*-][[:space:]]*//')
               
-              # Clean extra "by username" mentions
-              line=$(echo "$line" | sed 's/by [a-zA-Z0-9_-]*$//g')
+              # Aggressive cleaning: remove entire " by @user in https://..." suffix
+              line=$(echo "$line" | sed 's/[[:space:]]*by @[a-zA-Z0-9_-]*[[:space:]]*in https:\/\/github\.com\/[^[:space:]]*//g')
               
-              # Trim whitespace
+              # Remove remaining "by @username" or "by username"
+              line=$(echo "$line" | sed 's/[[:space:]]*by @[a-zA-Z0-9_-]*[[:space:]]*$//g')
+              line=$(echo "$line" | sed 's/[[:space:]]*by [a-zA-Z0-9_-]*[[:space:]]*$//g')
+              
+              # Remove standalone @mentions
+              line=$(echo "$line" | sed 's/@[a-zA-Z0-9_-]*//g')
+              
+              # Clean trailing periods if orphaned
+              line=$(echo "$line" | sed 's/\.[[:space:]]*$//')
+              
+              # Trim all whitespace
               line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
               
-              # Skip if line is now empty
+              # Skip if line is empty or too short
               [ -z "$line" ] && continue
+              [ ${#line} -lt 5 ] && continue
               
-              # Add bullet if not present
-              if [[ ! "$line" =~ ^[[:space:]]*[-*] ]]; then
-                echo "- $line"
-              else
-                # Normalize to dash
-                echo "$line" | sed 's/^[[:space:]]*\*/- /'
-              fi
+              # Capitalize first letter if lowercase
+              line="$(echo ${line:0:1} | tr '[:lower:]' '[:upper:]')${line:1}"
+              
+              # Add clean bullet and output
+              echo "- $line"
             done > .tmp/final-notes.txt
+          fi
+          
+          # Safety check: verify we have content
+          if [ ! -s .tmp/final-notes.txt ]; then
+            echo "⚠️ No valid release notes extracted, using minimal fallback"
+            echo "- Release ${{ steps.payload.outputs.version }}" > .tmp/final-notes.txt
           fi
           
           echo "=== Final release notes ==="

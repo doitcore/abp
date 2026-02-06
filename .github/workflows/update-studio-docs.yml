@@ -197,20 +197,38 @@ jobs:
             echo "✅ Using AI-formatted release notes"
             echo "$AI_RESPONSE" > .tmp/final-notes.txt
           else
-            echo "⚠️ AI unavailable - using raw release notes with basic formatting"
+            echo "⚠️ AI unavailable - using raw release notes with cleaning"
             
-            # Use environment variable for raw notes
+            # Clean and format raw notes
             echo "$RAW_NOTES" | while IFS= read -r line; do
               # Skip empty lines
-              if [ -z "$line" ]; then
-                continue
-              fi
+              [ -z "$line" ] && continue
+              
+              # Skip GitHub PR metadata lines
+              [[ "$line" =~ ^(Full\ Changelog|\*\*Full\ Changelog) ]] && continue
+              
+              # Clean GitHub username mentions (@username -> username)
+              line=$(echo "$line" | sed 's/@\([a-zA-Z0-9_-]*\)/\1/g')
+              
+              # Clean GitHub PR/issue links - extract just the description
+              line=$(echo "$line" | sed 's#in https://github.com/[^[:space:]]*##g')
+              line=$(echo "$line" | sed 's#by [a-zA-Z0-9_-]* in##g')
+              
+              # Clean extra "by username" mentions
+              line=$(echo "$line" | sed 's/by [a-zA-Z0-9_-]*$//g')
+              
+              # Trim whitespace
+              line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              
+              # Skip if line is now empty
+              [ -z "$line" ] && continue
               
               # Add bullet if not present
-              if [[ ! "$line" =~ ^[[:space:]]*- ]]; then
+              if [[ ! "$line" =~ ^[[:space:]]*[-*] ]]; then
                 echo "- $line"
               else
-                echo "$line"
+                # Normalize to dash
+                echo "$line" | sed 's/^[[:space:]]*\*/- /'
               fi
             done > .tmp/final-notes.txt
           fi
@@ -368,18 +386,27 @@ jobs:
 
           # Find table start (skip SEO and headers)
           table_start = 0
+          table_end = 0
           for i, line in enumerate(lines):
               if line.strip().startswith('|') and '**ABP Studio Version**' in line:
                   table_start = i
+              elif table_start > 0 and line.strip() and not line.strip().startswith('|'):
+                  table_end = i
                   break
 
           if table_start == 0:
               print("❌ Could not find version mapping table")
               exit(1)
 
-          # Extract header + separator + data rows
-          header_lines = lines[:table_start+2]  # Keep everything before data rows
-          data_rows = [l for l in lines[table_start+2:] if l.strip().startswith('|')]
+          # If no end found, table goes to end of file
+          if table_end == 0:
+              table_end = len(lines)
+
+          # Extract sections
+          before_table = lines[:table_start]  # Everything before table
+          table_header = lines[table_start:table_start+2]  # Header + separator
+          data_rows = [l for l in lines[table_start+2:table_end] if l.strip().startswith('|')]  # Data rows
+          after_table = lines[table_end:]  # Everything after table
 
           new_rows = []
           handled = False
@@ -459,9 +486,12 @@ jobs:
               new_rows.insert(0, new_row)
               print(f"✅ Added new mapping: {studio_ver} -> {abp_ver}")
 
-          # Write updated file
+          # Write updated file - preserve ALL content
           with open(file_path, 'w') as f:
-              f.writelines(header_lines + new_rows)
+              f.writelines(before_table)  # SEO, title, intro text
+              f.writelines(table_header)  # Table header
+              f.writelines(new_rows)      # Updated data rows
+              f.writelines(after_table)   # Content after table (preview section, etc.)
 
           print("MAPPING_UPDATED=true")
           PYTHON_EOF

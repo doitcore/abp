@@ -1,15 +1,19 @@
+```json
+//[doc-seo]
+{
+    "Description": "Discover how to implement AI management in your ABP Framework application, enhancing workspace dynamics with easy installation options."
+}
+```
+
 # AI Management (Pro)
 
 > You must have an ABP Team or a higher license to use this module.
 
-> **⚠️ Important Notice**
-> The **AI Management Module** is currently in **preview**. The documentation and implementation are subject to change.
-
-This module implements AI (Artificial Intelligence) management capabilities on top of the [Artificial Intelligence Workspaces](../../framework/infrastructure/artificial-intelligence/index.md) feature of the ABP Framework and allows to manage workspaces dynamically from the application including UI components and API endpoints.
+This module implements AI (Artificial Intelligence) management capabilities on top of the [Artificial Intelligence Workspaces](../../framework/infrastructure/artificial-intelligence/index.md) feature of the ABP Framework and allows managing workspaces dynamically from the application, including UI components and API endpoints.
 
 ## How to Install
 
-AI Management module is not pre-installed in [the startup templates](../solution-templates/layered-web-application). You can install it using the ABP CLI or ABP Studio.
+The **AI Management Module** is not included in [the startup templates](../solution-templates/layered-web-application) by default. However, when creating a new application with [ABP Studio](../../tools/abp-studio/index.md), you can easily enable it during setup via the *AI Integration* step in the project creation wizard. Alternatively, you can install it using the ABP CLI or ABP Studio:
 
 **Using ABP CLI:**
 
@@ -33,7 +37,7 @@ AI Management module packages are designed for various usage scenarios. Packages
 
 ### Menu Items
 
-AI Management module adds the following items to the "Main" menu:
+The **AI Management Module** adds the following items to the "Main" menu:
 
 * **AI Management**: Root menu item for AI Management module. (`AIManagement`)
   * **Workspaces**: Workspace management page. (`AIManagement.Workspaces`)

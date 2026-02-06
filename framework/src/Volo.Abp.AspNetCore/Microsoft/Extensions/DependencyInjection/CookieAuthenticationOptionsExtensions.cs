@@ -46,11 +46,14 @@ public static class CookieAuthenticationOptionsExtensions
                 {
                     var openIdConnectOptions = await GetOpenIdConnectOptions(principalContext, oidcAuthenticationScheme);
 
+                    var clientId = principalContext.Properties.GetString("client_id");
+                    var clientSecret = principalContext.Properties.GetString("client_secret");
+
                     var response = await openIdConnectOptions.Backchannel.IntrospectTokenAsync(new TokenIntrospectionRequest
                     {
                         Address = openIdConnectOptions.Configuration?.IntrospectionEndpoint ?? openIdConnectOptions.Authority!.EnsureEndsWith('/') + "connect/introspect",
-                        ClientId = openIdConnectOptions.ClientId!,
-                        ClientSecret = openIdConnectOptions.ClientSecret,
+                        ClientId = clientId ?? openIdConnectOptions.ClientId!,
+                        ClientSecret = clientSecret ?? openIdConnectOptions.ClientSecret,
                         Token = accessToken
                     });
 
@@ -82,7 +85,7 @@ public static class CookieAuthenticationOptionsExtensions
         return options;
     }
 
-    private async static Task<OpenIdConnectOptions> GetOpenIdConnectOptions(CookieValidatePrincipalContext principalContext, string oidcAuthenticationScheme)
+    private static async Task<OpenIdConnectOptions> GetOpenIdConnectOptions(CookieValidatePrincipalContext principalContext, string oidcAuthenticationScheme)
     {
         var openIdConnectOptions = principalContext.HttpContext.RequestServices.GetRequiredService<IOptionsMonitor<OpenIdConnectOptions>>().Get(oidcAuthenticationScheme);
         var cancellationTokenProvider = principalContext.HttpContext.RequestServices.GetRequiredService<ICancellationTokenProvider>();

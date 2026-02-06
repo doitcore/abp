@@ -9,45 +9,12 @@
 
 This document contains **brief release notes** for each ABP Studio release. Release notes only include **major features** and **visible enhancements**. Therefore, they don't include all the development done in the related version. 
 
-## 2.1.9 (2026-01-30) Latest
+## 2.1.4 (2025-12-30) Latest
 
-* Fixed an issue where the Studio MCP server CLI output was corrupted.
-
-## 2.1.8 (2026-01-29)
-
-* Added Studio MCP server support so AI tools can monitor applications linked to ABP Studio.
-* Added AI rules for ABP Studio templates.
-* Added "Open with > Cursor" option.
-* Improved task failure experience by showing logs on failures and enhancing error messages.
-* Added option to terminate application-related processes.
-* Fixed Solution Runner stability issues and log scrolling problems.
-
-## 2.1.7 (2026-01-23)
-
-* Added management UI for custom solution commands.
-* Added ability to show logs of background jobs.
-* Updated Aspire to `13.1`.
-* Fixed Host Dashboard page route issue.
-
-## 2.1.6 (2026-01-13)
-
-* Enhanced runnable task logs window.
-* Fixed tooltip line height problem.
-
-## 2.1.5 (2026-01-13)
-
-* Added `version` command to the CLI.
-* Updated ABP Framework to `10.0.2` and LeptonX to `5.0.2`.
-* Solution Runner: don't try to re-run the app if there is a build error.
-* Improved license information window and Community License visuals.
-* Replaced "Clear Cookies" with "Clear site data".
-
-## 2.1.4 (2025-12-30)
-
-* Set SQLite as default DB for Community Edition.
-* Improved task panel experience and task log visibility.
-* Fixed Kubernetes cluster deployment issues for microservices and application solutions.
-* Fixed UI theme switching and tooltip placement issues.
+* Fixed books sample for blazor-webapp tiered solution.
+* Fixed K8s cluster deployment issues for microservices.
+* Fixed docker build problem on microservice template.
+* Showed logs of the executed tasks.
 
 ## 2.1.3 (2025-12-15)
 

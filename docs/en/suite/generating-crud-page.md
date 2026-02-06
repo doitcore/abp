@@ -270,6 +270,29 @@ In the example above, the `IdentityUser` entity is selected as the navigation pr
 
 > **Note:** Ensure that your solution is built properly before establishing relationship between your own entity and a module entity because ABP Suite scans assemblies and finds which ABP modules you are using and lists their entities in the navigation property model if you have checked the **Include entities from ABP modules** checkbox.
 
+#### Extending with Custom Module Entities
+
+If you want to extend ABP Suite's system to list entities from your own custom modules (not just ABP's built-in modules), you can configure the `module-entity-extension.json` file. This file is located in the `.suite` folder at the root of your solution (`/.suite/module-entity-extension.json`).
+
+Here is the default sample file content:
+
+```json
+{
+  "Modules": [
+    {
+      "DomainProjectDllFileName": "MySampleModule.MyProject.Domain.dll"
+    }
+  ]
+}
+```
+
+By defining the `DomainProjectDllFileName` property, ABP Suite will scan the specified module's **.dll** and list its entities in the navigation property model. This allows you to create navigation properties that reference entities from your custom modules.
+
+> **Important:** When extending with custom module entities, ensure that:
+> - Your current solution properly depends on the related module.
+> - All module references are correctly configured.
+> - The solution is built successfully before attempting to establish relationships.
+
 #### Adding An Existing Entity as a Navigation Property
 
 Alternatively, you can add `IdentityUser` entity (or any other entity) as a navigation property to an entity by manually entering the required information. See the screenshot below:
@@ -294,7 +317,7 @@ There are some adjustments you may need to make before generating CRUD pages for
 
 - Check if your environment variables have `rootNamespace` defined as explained [here](../framework/ui/angular/service-proxies.md#angular-project-configuration).
 
-- Check if your [workspace configuration](https://angular.io/guide/workspace-config) satisfies one of the following. Examples assume your solution namespace is `BookStore`, `Acme.BookStore`, or `Acme.Retail.BookStore`.
+- Check if your [workspace configuration](https://angular.dev/reference/configs/workspace-config) satisfies one of the following. Examples assume your solution namespace is `BookStore`, `Acme.BookStore`, or `Acme.Retail.BookStore`.
   - Project key is in pascal case. E.g. `BookStore`.
   - Project key is in camel case. E.g. `bookStore`.
   - Project key is in kebab case. E.g. `book-store`.

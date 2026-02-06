@@ -312,6 +312,29 @@ public class IdentityUserAppService_Tests : AbpIdentityApplicationTestBase
     }
 
     [Fact]
+    public async Task UpdateRolesAsync_Admin_Can_Assign_Any_Role()
+    {
+        // admin user can assign roles they do not have (e.g. "sale")
+        using (_currentPrincipalAccessor.Change(new[]
+               {
+                   new Claim(AbpClaimTypes.UserId, _testData.UserAdminId.ToString()),
+                   new Claim(AbpClaimTypes.Role, "admin")
+               }))
+        {
+            await _userAppService.UpdateRolesAsync(
+                _testData.UserDavidId,
+                new IdentityUserUpdateRolesDto
+                {
+                    RoleNames = new[] { "sale" }
+                }
+            );
+        }
+
+        var roleNames = await _userRepository.GetRoleNamesAsync(_testData.UserDavidId);
+        roleNames.ShouldContain("sale");
+    }
+
+    [Fact]
     public async Task UpdateRolesAsync_Self_Cannot_Add_New_Roles()
     {
         // neo only has "supporter", tries to add "admin" to self

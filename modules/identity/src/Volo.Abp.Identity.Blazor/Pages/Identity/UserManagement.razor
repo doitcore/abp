@@ -142,13 +142,13 @@
                                 <TabPanel Name="Roles">
                                     @if (NewUserRoles != null)
                                     {
-                                        @foreach (var role in NewUserRoles)
-                                        {
-                                            <Field>
-                                                <input type="hidden" @bind-value="@role.Name" />
-                                                <Check TValue="bool" @bind-Checked="@role.IsAssigned">@role.Name</Check>
-                                            </Field>
-                                        }
+                                            @foreach (var role in NewUserRoles)
+                                            {
+                                                <Field>
+                                                    <input type="hidden" @bind-value="@role.Name" />
+                                                    <Check TValue="bool" @bind-Checked="@role.IsAssigned" Disabled="@(!role.IsAssignable)">@role.Name</Check>
+                                                </Field>
+                                            }
                                     }
                                 </TabPanel>
                             </Content>
@@ -277,7 +277,7 @@
                                             {
                                                 <Field>
                                                     <input type="hidden" @bind-value="@role.Name" />
-                                                    <Check TValue="bool" @bind-Checked="@role.IsAssigned">@role.Name</Check>
+                                                    <Check TValue="bool" @bind-Checked="@role.IsAssigned" Disabled="@(!role.IsAssignable)">@role.Name</Check>
                                                 </Field>
                                             }
                                         }

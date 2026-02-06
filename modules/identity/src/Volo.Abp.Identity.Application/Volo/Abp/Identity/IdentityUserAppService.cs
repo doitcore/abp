@@ -9,6 +9,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Data;
 using Volo.Abp.ObjectExtending;
+using Volo.Abp.Roles;
 using Volo.Abp.Users;
 
 namespace Volo.Abp.Identity;
@@ -70,8 +71,18 @@ public class IdentityUserAppService : IdentityAppServiceBase, IIdentityUserAppSe
     [Authorize(IdentityPermissions.Users.Default)]
     public virtual async Task<ListResultDto<IdentityRoleDto>> GetAssignableRolesAsync()
     {
-        var currentUserRoles = await UserManager.GetRolesAsync(await UserManager.GetByIdAsync(CurrentUser.GetId()));
-        var list = (await RoleRepository.GetListAsync(currentUserRoles)).OrderBy(x => x.Name).ToList();
+        List<IdentityRole> list;
+
+        if (await HasAdminRoleAsync())
+        {
+            list = (await RoleRepository.GetListAsync()).OrderBy(x => x.Name).ToList();
+        }
+        else
+        {
+            var currentUserRoles = await UserManager.GetRolesAsync(await UserManager.GetByIdAsync(CurrentUser.GetId()));
+            list = (await RoleRepository.GetListAsync(currentUserRoles)).OrderBy(x => x.Name).ToList();
+        }
+
         return new ListResultDto<IdentityRoleDto>(ObjectMapper.Map<List<IdentityRole>, List<IdentityRoleDto>>(list));
     }
 
@@ -200,6 +211,13 @@ public class IdentityUserAppService : IdentityAppServiceBase, IIdentityUserAppSe
 
     protected virtual async Task<string[]> FilterRolesByCurrentUserAsync(IdentityUser user, string[] inputRoleNames)
     {
+        if (await HasAdminRoleAsync())
+        {
+            return (inputRoleNames ?? Array.Empty<string>())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
         var targetCurrentRoleSet = (await UserManager.GetRolesAsync(user)).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var operatorUser = await UserManager.GetByIdAsync(CurrentUser.GetId());
@@ -214,5 +232,10 @@ public class IdentityUserAppService : IdentityAppServiceBase, IIdentityUserAppSe
             .Concat(desiredManageableRoles)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
+    }
+
+    protected virtual Task<bool> HasAdminRoleAsync()
+    {
+        return Task.FromResult(CurrentUser.IsInRole(AbpRoleConsts.AdminRoleName));
     }
 }

@@ -10,6 +10,8 @@ using Volo.Abp.Localization;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.SimpleStateChecking;
 using Volo.Abp.PermissionManagement.Localization;
+using Volo.Abp.Roles;
+using Volo.Abp.Users;
 
 namespace Volo.Abp.PermissionManagement;
 
@@ -136,6 +138,11 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
 
     protected virtual async Task FilterOutputPermissionsByCurrentUserAsync(GetPermissionListResultDto result)
     {
+        if (await HasAdminRoleAsync())
+        {
+            return;
+        }
+
         // Collect all permission names
         var allPermissionNames = result.Groups
             .SelectMany(g => g.Permissions)
@@ -417,6 +424,11 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
 
     protected virtual async Task FilterInputPermissionsByCurrentUserAsync(UpdatePermissionsDto input)
     {
+        if (await HasAdminRoleAsync())
+        {
+            return;
+        }
+
         if (input.Permissions.IsNullOrEmpty())
         {
             input.Permissions = Array.Empty<UpdatePermissionDto>();
@@ -431,5 +443,10 @@ public class PermissionAppService : ApplicationService, IPermissionAppService
 
         // Filters the input DTO in-place to only include manageable permissions.
         input.Permissions = input.Permissions.Where(x => grantedPermissions.Contains(x.Name)).ToArray();
+    }
+
+    protected virtual Task<bool> HasAdminRoleAsync()
+    {
+        return Task.FromResult(CurrentUser.IsInRole(AbpRoleConsts.AdminRoleName));
     }
 }

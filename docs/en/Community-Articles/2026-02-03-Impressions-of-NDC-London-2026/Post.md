@@ -20,8 +20,17 @@ I was expecting more AI oriented sessions but it was less then my expectations. 
 
 Here's a quick video from the exhibitors area on the 3rd floor and our ABP booth's Xbox raffle:
 
-[![Video 1](youtube-cover-1.png)](https://youtu.be/U1kiYG12KgA)
 
+<iframe 
+  width="560" 
+  height="315" 
+  src="https://youtu.be/U1kiYG12KgA" 
+  frameborder="0" 
+  allowfullscreen>
+</iframe>
+
+
+[![Video 1](youtube-cover-1.png)](https://youtu.be/U1kiYG12KgA)
 [![Video 2](youtube-cover-2.png)](https://youtu.be/7o0WX70qYw0)
 
 

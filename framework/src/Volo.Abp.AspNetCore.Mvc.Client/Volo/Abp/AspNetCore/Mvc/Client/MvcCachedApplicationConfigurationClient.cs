@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
@@ -84,19 +85,42 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
 
     private async Task<ApplicationConfigurationDto> GetRemoteConfigurationAsync()
     {
-        var config = await ApplicationConfigurationAppService.GetAsync(
+        var cultureName = CultureInfo.CurrentUICulture.Name;
+
+        var configTask = ApplicationConfigurationAppService.GetAsync(
             new ApplicationConfigurationRequestOptions
             {
                 IncludeLocalizationResources = false
             }
         );
 
-        var localizationDto = await ApplicationLocalizationClientProxy.GetAsync(
-            new ApplicationLocalizationRequestDto {
-                CultureName = config.Localization.CurrentCulture.Name,
+        var localizationTask = ApplicationLocalizationClientProxy.GetAsync(
+            new ApplicationLocalizationRequestDto
+            {
+                CultureName = cultureName,
                 OnlyDynamics = true
             }
         );
+
+        var config = await configTask;
+
+        ApplicationLocalizationDto localizationDto;
+        // In most cases, the culture matches and we can reuse the concurrent request.
+        // If not, we discard it and make a new request with the correct culture.
+        if (string.Equals(config.Localization.CurrentCulture.Name, cultureName, StringComparison.OrdinalIgnoreCase))
+        {
+            localizationDto = await localizationTask;
+        }
+        else
+        {
+            localizationDto = await ApplicationLocalizationClientProxy.GetAsync(
+                new ApplicationLocalizationRequestDto
+                {
+                    CultureName = config.Localization.CurrentCulture.Name,
+                    OnlyDynamics = true
+                }
+            );
+        }
 
         config.Localization.Resources = localizationDto.Resources;
 

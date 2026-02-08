@@ -8,6 +8,7 @@ using Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations;
 using Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations.ClientProxies;
 using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
+using Volo.Abp.Localization;
 using Volo.Abp.Threading;
 using Volo.Abp.Users;
 
@@ -107,12 +108,18 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
         ApplicationLocalizationDto localizationDto;
         // In most cases, the culture matches and we can reuse the concurrent request.
         // If not, we discard it and make a new request with the correct culture.
-        if (string.Equals(config.Localization.CurrentCulture.Name, cultureName, StringComparison.OrdinalIgnoreCase))
+        if (CultureHelper.IsCompatibleCulture(config.Localization.CurrentCulture.Name, cultureName))
         {
             localizationDto = await localizationTask;
         }
         else
         {
+            // Observe the discarded task to prevent UnobservedTaskException.
+            _ = localizationTask.ContinueWith(
+                static t => _ = t.Exception,
+                TaskContinuationOptions.OnlyOnFaulted
+            );
+
             localizationDto = await ApplicationLocalizationClientProxy.GetAsync(
                 new ApplicationLocalizationRequestDto
                 {

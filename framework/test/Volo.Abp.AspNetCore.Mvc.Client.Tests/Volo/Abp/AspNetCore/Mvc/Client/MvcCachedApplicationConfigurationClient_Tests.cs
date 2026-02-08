@@ -6,6 +6,7 @@ using NSubstitute;
 using Shouldly;
 using Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations;
 using Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations.ClientProxies;
+using Volo.Abp.Localization;
 using Xunit;
 
 namespace Volo.Abp.AspNetCore.Mvc.Client;
@@ -36,21 +37,24 @@ public class MvcCachedApplicationConfigurationClient_Tests : AbpAspNetCoreMvcCli
     {
         var cultureName = "en";
 
-        _configProxy.GetAsync(Arg.Any<ApplicationConfigurationRequestOptions>()).Returns(CreateConfigDto(cultureName));
-
-        var expectedResources = new Dictionary<string, ApplicationLocalizationResourceDto>
+        using (CultureHelper.Use(cultureName))
         {
-            ["TestResource"] = new()
-        };
+            _configProxy.GetAsync(Arg.Any<ApplicationConfigurationRequestOptions>()).Returns(CreateConfigDto(cultureName));
 
-        _localizationProxy.GetAsync(Arg.Any<ApplicationLocalizationRequestDto>()).Returns(new ApplicationLocalizationDto { Resources = expectedResources });
+            var expectedResources = new Dictionary<string, ApplicationLocalizationResourceDto>
+            {
+                ["TestResource"] = new()
+            };
 
-        var result = await _applicationConfigurationClient.GetAsync();
+            _localizationProxy.GetAsync(Arg.Any<ApplicationLocalizationRequestDto>()).Returns(new ApplicationLocalizationDto { Resources = expectedResources });
 
-        result.Localization.Resources.ShouldBe(expectedResources);
+            var result = await _applicationConfigurationClient.GetAsync();
 
-        await _configProxy.Received(1).GetAsync(Arg.Is<ApplicationConfigurationRequestOptions>(x => x.IncludeLocalizationResources == false));
-        await _localizationProxy.Received(1).GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == cultureName && x.OnlyDynamics == true));
+            result.Localization.Resources.ShouldBe(expectedResources);
+
+            await _configProxy.Received(1).GetAsync(Arg.Is<ApplicationConfigurationRequestOptions>(x => x.IncludeLocalizationResources == false));
+            await _localizationProxy.Received(1).GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == cultureName && x.OnlyDynamics == true));
+        }
     }
 
     [Fact]
@@ -59,22 +63,26 @@ public class MvcCachedApplicationConfigurationClient_Tests : AbpAspNetCoreMvcCli
         var currentCulture = "en";
         var serverCulture = "tr";
 
-        _configProxy.GetAsync(Arg.Any<ApplicationConfigurationRequestOptions>()).Returns(CreateConfigDto(serverCulture));
-
-        var wrongResources = new Dictionary<string, ApplicationLocalizationResourceDto>();
-        var correctResources = new Dictionary<string, ApplicationLocalizationResourceDto>
+        using (CultureHelper.Use(currentCulture))
         {
-            ["TestResource"] = new()
-        };
+            _configProxy.GetAsync(Arg.Any<ApplicationConfigurationRequestOptions>()).Returns(CreateConfigDto(serverCulture));
 
-        _localizationProxy.GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == currentCulture)).Returns(new ApplicationLocalizationDto { Resources = wrongResources });
-        _localizationProxy.GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == serverCulture)).Returns(new ApplicationLocalizationDto { Resources = correctResources });
+            var wrongResources = new Dictionary<string, ApplicationLocalizationResourceDto>();
+            var correctResources = new Dictionary<string, ApplicationLocalizationResourceDto>
+            {
+                ["TestResource"] = new()
+            };
 
-        var result = await _applicationConfigurationClient.GetAsync();
+            _localizationProxy.GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == currentCulture)).Returns(new ApplicationLocalizationDto { Resources = wrongResources });
+            _localizationProxy.GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == serverCulture)).Returns(new ApplicationLocalizationDto { Resources = correctResources });
 
-        result.Localization.Resources.ShouldBe(correctResources);
+            var result = await _applicationConfigurationClient.GetAsync();
 
-        await _localizationProxy.Received(1).GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == serverCulture));
+            result.Localization.Resources.ShouldBe(correctResources);
+
+            await _localizationProxy.Received(1).GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == currentCulture));
+            await _localizationProxy.Received(1).GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == serverCulture));
+        }
     }
 
     private static ApplicationConfigurationDto CreateConfigDto(string cultureName)

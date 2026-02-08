@@ -18,6 +18,14 @@ The food was great during the conference. It was more like eating sessions for m
 
 I was expecting more AI oriented sessions but it was less then my expectations. Even though I was an exhibitor, I tried to attend some of the session. I'll tell you my notes.
 
+Here's a quick video from the exhibitors area on the 3rd floor and our ABP booth's Xbox raffle:
+
+[![Video 1](youtube-cover-1.png)](https://youtu.be/U1kiYG12KgA)
+
+[![Video 2](youtube-cover-2.png)](https://youtu.be/7o0WX70qYw0)
+
+
+
 ## Sessions / Talks
 
 ### The Dangers of Probably-Working Software | Damian Brady

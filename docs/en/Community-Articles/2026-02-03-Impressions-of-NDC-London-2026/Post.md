@@ -20,10 +20,10 @@ I was expecting more AI oriented sessions but it was less then my expectations. 
 
 Here's a quick video from the exhibitors area on the 3rd floor and our ABP booth's Xbox raffle:
 
-**Video 1: NDC Conference 2026 Environment ** [https://youtu.be/U1kiYG12KgA](https://youtu.be/U1kiYG12KgA)
+**Video 1: NDC Conference 2026 Environment** 👉  [https://youtu.be/U1kiYG12KgA](https://youtu.be/U1kiYG12KgA)
 [![Video 1](youtube-cover-1.png)](https://youtu.be/U1kiYG12KgA)
 
-**Video 2: Our raffle for XBOX** — [https://youtu.be/7o0WX70qYw0](https://youtu.be/7o0WX70qYw0)
+**Video 2: Our raffle for XBOX** 👉 [https://youtu.be/7o0WX70qYw0](https://youtu.be/7o0WX70qYw0)
 [![Video 2](youtube-cover-2.png)](https://youtu.be/7o0WX70qYw0)
 
 

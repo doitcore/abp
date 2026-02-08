@@ -84,7 +84,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
         return configuration;
     }
 
-    private async Task<ApplicationConfigurationDto> GetRemoteConfigurationAsync()
+    protected virtual async Task<ApplicationConfigurationDto> GetRemoteConfigurationAsync()
     {
         var cultureName = CultureInfo.CurrentUICulture.Name;
 
@@ -103,23 +103,13 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
             }
         );
 
-        var config = await configTask;
+        await Task.WhenAll(configTask, localizationTask);
 
-        ApplicationLocalizationDto localizationDto;
-        // In most cases, the culture matches and we can reuse the concurrent request.
-        // If not, we discard it and make a new request with the correct culture.
-        if (CultureHelper.IsCompatibleCulture(config.Localization.CurrentCulture.Name, cultureName))
-        {
-            localizationDto = await localizationTask;
-        }
-        else
-        {
-            // Observe the discarded task to prevent UnobservedTaskException.
-            _ = localizationTask.ContinueWith(
-                static t => _ = t.Exception,
-                TaskContinuationOptions.OnlyOnFaulted
-            );
+        var config = configTask.Result;
+        var localizationDto = localizationTask.Result;
 
+        if (!CultureHelper.IsCompatibleCulture(config.Localization.CurrentCulture.Name, cultureName))
+        {
             localizationDto = await ApplicationLocalizationClientProxy.GetAsync(
                 new ApplicationLocalizationRequestDto
                 {
@@ -134,7 +124,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
         return config;
     }
 
-    public ApplicationConfigurationDto Get()
+    public virtual ApplicationConfigurationDto Get()
     {
         string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;

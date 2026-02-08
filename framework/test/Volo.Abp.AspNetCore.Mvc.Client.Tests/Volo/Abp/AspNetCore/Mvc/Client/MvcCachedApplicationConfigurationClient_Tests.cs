@@ -33,13 +33,14 @@ public class MvcCachedApplicationConfigurationClient_Tests : AbpAspNetCoreMvcCli
     }
 
     [Fact]
-    public async Task Should_Use_Concurrent_Requests_When_Culture_Matches()
+    public async Task Should_Use_CurrentUICulture_For_Localization_Request()
     {
         var cultureName = "en";
 
         using (CultureHelper.Use(cultureName))
         {
-            _configProxy.GetAsync(Arg.Any<ApplicationConfigurationRequestOptions>()).Returns(CreateConfigDto(cultureName));
+            var configTcs = new TaskCompletionSource<ApplicationConfigurationDto>();
+            _configProxy.GetAsync(Arg.Any<ApplicationConfigurationRequestOptions>()).Returns(configTcs.Task);
 
             var expectedResources = new Dictionary<string, ApplicationLocalizationResourceDto>
             {
@@ -48,12 +49,18 @@ public class MvcCachedApplicationConfigurationClient_Tests : AbpAspNetCoreMvcCli
 
             _localizationProxy.GetAsync(Arg.Any<ApplicationLocalizationRequestDto>()).Returns(new ApplicationLocalizationDto { Resources = expectedResources });
 
-            var result = await _applicationConfigurationClient.GetAsync();
+            var resultTask = _applicationConfigurationClient.GetAsync();
+
+            // Localization request should be fired before config completes (concurrent).
+            await _localizationProxy.Received(1).GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == cultureName && x.OnlyDynamics == true));
+
+            // Now let config complete.
+            configTcs.SetResult(CreateConfigDto(cultureName));
+            var result = await resultTask;
 
             result.Localization.Resources.ShouldBe(expectedResources);
 
             await _configProxy.Received(1).GetAsync(Arg.Is<ApplicationConfigurationRequestOptions>(x => x.IncludeLocalizationResources == false));
-            await _localizationProxy.Received(1).GetAsync(Arg.Is<ApplicationLocalizationRequestDto>(x => x.CultureName == cultureName && x.OnlyDynamics == true));
         }
     }
 

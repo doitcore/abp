@@ -287,6 +287,9 @@ The UI provides a complete research experience:
 - **Research History** table with past queries and their results
 
 
+![Dashboard 1](images/image-3.png)
+
+![Dashboard 2](images/image-4.png)
 
 ---
 
@@ -359,7 +362,7 @@ This project demonstrates the foundation of a multi-agent system. Future enhance
 | **Semantic Kernel** | [github.com/microsoft/semantic-kernel](https://github.com/microsoft/semantic-kernel) |
 | **MCP .NET SDK** | [NuGet: ModelContextProtocol](https://www.nuget.org/packages/ModelContextProtocol) |
 | **A2A .NET SDK** | [NuGet: A2A](https://www.nuget.org/packages/A2A) |
-| **Our Source Code** | [GitHub Repository](#) |
+| **Our Source Code** | [GitHub Repository](https://github.com/fahrigedik/agent-ecosystem-in-abp) |
 
 ---
 

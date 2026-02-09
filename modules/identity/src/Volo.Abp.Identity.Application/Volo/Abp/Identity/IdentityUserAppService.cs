@@ -224,9 +224,9 @@ public class IdentityUserAppService : IdentityAppServiceBase, IIdentityUserAppSe
         var operatorOwnRoleSet = (await UserManager.GetRolesAsync(operatorUser)).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var inputRoleNameSet = new HashSet<string>(inputRoleNames ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
-        var keepUnmanageableRoles = targetCurrentRoleSet.Except(operatorOwnRoleSet);
+        var keepUnmanageableRoles = targetCurrentRoleSet.Except(operatorOwnRoleSet, StringComparer.OrdinalIgnoreCase);
 
-        var desiredManageableRoles = inputRoleNameSet.Intersect(operatorOwnRoleSet);
+        var desiredManageableRoles = inputRoleNameSet.Intersect(operatorOwnRoleSet, StringComparer.OrdinalIgnoreCase);
 
         return keepUnmanageableRoles
             .Concat(desiredManageableRoles)

@@ -35,6 +35,12 @@ AI Management module packages are designed for various usage scenarios. Packages
 
 ## User Interface
 
+This module provides UI integration for all three officially supported UI frameworks by ABP:
+
+* **MVC / Razor Pages** UI
+* **Angular** UI  
+* **Blazor** UI (Server & WebAssembly)
+
 ### Menu Items
 
 The **AI Management Module** adds the following items to the "Main" menu:
@@ -456,14 +462,15 @@ Your application acts as a proxy, forwarding these requests to the AI Management
 | **4. Client Proxy**       | No                | Remote Service | Remote Service | Yes         | API Gateway pattern, proxy services       |
 
 
-
-## Client Usage (MVC UI)
+## Client Usage
 
 AI Management uses different packages depending on the usage scenario:
 
 - **`Volo.AIManagement.*` packages**: These contain the core AI functionality and are used when your application hosts and manages its own AI operations. These packages don't expose any application service and endpoints to be consumed by default.
 
 - **`Volo.AIManagement.Client.*` packages**: These are designed for applications that need to consume AI services from a remote application. They provide both server and client side of remote access to the AI services.
+
+### MVC / Razor Pages UI
 
 **List of packages:**
 - `Volo.AIManagement.Client.Application`
@@ -472,10 +479,12 @@ AI Management uses different packages depending on the usage scenario:
 - `Volo.AIManagement.Client.HttpApi.Client`
 - `Volo.AIManagement.Client.Web`
 
-### The Chat Widget
+#### The Chat Widget
+
 The `Volo.AIManagement.Client.Web` package provides a chat widget to allow you to easily integrate a chat interface into your application that uses a specific AI workspace named `ChatClientChatViewComponent`.
 
-#### Basic Usage
+##### Basic Usage
+
 You can invoke the `ChatClientChatViewComponent` Widget in your razor page with the following code:
 
 ```csharp
@@ -487,8 +496,10 @@ You can invoke the `ChatClientChatViewComponent` Widget in your razor page with 
 
 ![ai-management-workspaces](../../images/ai-management-widget.png)
 
-#### Properties
+##### Properties
+
 You can customize the chat widget with the following properties:
+
 - `WorkspaceName`: The name of the workspace to use.
 - `ComponentId`: Unique identifier for accessing the component via JavaScript API (stored in abp.chatComponents).
 - `ConversationId`: The unique identifier for persisting and retrieving chat history from client-side storage.
@@ -508,7 +519,8 @@ You can customize the chat widget with the following properties:
 })
 ```
 
-#### Using the Conversation Id
+##### Using the Conversation Id
+
 You can use the `ConversationId` property to specify the id of the conversation to use. When the Conversation Id is provided, the chat will be stored at the client side and will be retrieved when the user revisits the page that contains the chat widget. If it's not provided or provided as **null**, the chat will be temporary and will not be saved, it'll be lost when the component lifetime ends. 
 
 ```csharp
@@ -519,7 +531,8 @@ You can use the `ConversationId` property to specify the id of the conversation 
 })
 ```
 
-#### JavaScript API
+##### JavaScript API
+
 The chat components are initialized automatically when the ViewComponent is rendered in the page. All the initialized components in the page are stored in the `abp.chatComponents` object. You can retrieve a specific component by its `ComponentId` which is defined while invoking the ViewComponent.
 
 ```csharp
@@ -598,6 +611,141 @@ chatComponent.off('messageSent', callbackFunction);
         chatComponent.clearConversation();
     });
 });
+```
+
+### Angular UI
+
+#### Installation
+
+In order to configure the application to use the AI Management module, you first need to import `provideAIManagementConfig` from `@volo/abp.ng.ai-management/config` to root application configuration. Then, you will need to append it to the `appConfig` array:
+
+```js
+// app.config.ts
+import { provideAIManagementConfig } from '@volo/abp.ng.ai-management/config';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    // ...
+    provideAIManagementConfig(),
+  ],
+};
+```
+
+The AI Management module should be imported and lazy-loaded in your routing array. It has a static `createRoutes` method for configuration. It is available for import from `@volo/abp.ng.ai-management`.
+
+```js
+// app.routes.ts
+const APP_ROUTES: Routes = [
+  // ...
+  {
+    path: 'ai-management',
+    loadChildren: () =>
+      import('@volo/abp.ng.ai-management').then(m => m.createRoutes(/* options here */)),
+  },
+];
+```
+
+#### Services / Models
+
+AI Management module services and models are generated via `generate-proxy` command of the [ABP CLI](../../cli). If you need the module's proxies, you can run the following command in the Angular project directory:
+
+```bash
+abp generate-proxy --module aiManagement
+```
+
+#### Remote Endpoint URL
+
+The AI Management module remote endpoint URLs can be configured in the environment files.
+
+```js
+export const environment = {
+  // other configurations
+  apis: {
+    default: {
+      url: 'default url here',
+    },
+    AIManagement: {
+      url: 'AI Management remote url here',
+    },
+    // other api configurations
+  },
+};
+```
+
+The AI Management module remote URL configurations shown above are optional.
+
+> If you don't set the `AIManagement` property, the `default.url` will be used as fallback.
+
+#### The Chat Widget
+
+The `@volo/abp.ng.ai-management` package provides a `ChatInterfaceComponent` (`abp-chat-interface`) that you can use to embed a chat interface into your Angular application that communicates with a specific AI workspace.
+
+**Example: You can use the `abp-chat-interface` component in your template**:
+
+```html
+<abp-chat-interface
+  [workspaceName]="'mylama'"
+  [conversationId]="'my-conversation-id'"
+/>
+```
+
+- `workspaceName` (required): The name of the workspace to use.
+- `conversationId`: The unique identifier for persisting and retrieving chat history from client-side storage. When provided, the chat history is stored in the browser and restored when the user revisits the page. If `null`, the chat is ephemeral and will be lost when the component is destroyed.
+- `providerName`: The name of the AI provider. Used for displaying contextual error messages.
+
+### Blazor UI
+
+#### Remote Endpoint URL
+
+The AI Management module remote endpoint URLs can be configured in your `appsettings.json`:
+
+```json
+"RemoteServices": {
+  "Default": {
+    "BaseUrl": "Default url here"
+  },
+  "AIManagement": {
+    "BaseUrl": "AI Management remote url here"
+  }
+}
+```
+
+For **Blazor WebAssembly**, you can also configure the remote endpoint URL via `AIManagementClientBlazorWebAssemblyOptions`:
+
+```csharp
+Configure<AIManagementClientBlazorWebAssemblyOptions>(options =>
+{
+    options.RemoteServiceUrl = builder.Configuration["RemoteServices:AIManagement:BaseUrl"];
+});
+```
+
+> If you don't set the `BaseUrl` for AIManagement, the `Default.BaseUrl` will be used as fallback.
+
+#### The Chat Widget
+
+The `Volo.AIManagement.Client.Blazor` package provides a `ChatClientChat` Blazor component that you can use to embed a chat interface into your Blazor application that communicates with a specific AI workspace.
+
+**Example: You can use the `ChatClientChat` component in your Blazor page:**
+
+```xml
+<ChatClientChat WorkspaceName="mylama"
+                ConversationId="@("my-conversation-" + CurrentUser.Id)"
+                ShowStreamCheckbox="true"
+                OnFirstMessage="HandleFirstMessageAsync" />
+```
+
+- `WorkspaceName` (required): The name of the workspace to use.
+- `ConversationId`: The unique identifier for persisting and retrieving chat history from client-side storage. When provided, the chat history is stored in the browser's local storage and restored when the user revisits the page. If not provided or `null`, the chat is ephemeral and will be lost when the component is disposed.
+- `Title`: The title displayed in the chat widget header.
+- `ShowStreamCheckbox`: Whether to show a checkbox that allows the user to toggle streaming on and off. Default is `false`.
+- `OnFirstMessage`: An `EventCallback<FirstMessageEventArgs>` that is triggered when the first message is sent in a conversation. It can be used to determine the chat title after the first prompt like applied in the chat playground. The event args contain `ConversationId` and `Message` properties. 
+
+```xml
+<ChatClientChat WorkspaceName="mylama"
+                ConversationId="@("my-support-conversation-" + CurrentUser.Id)"
+                Title="My Custom Title"
+                ShowStreamCheckbox="true"
+                OnFirstMessage="@HandleFirstMessage" />
 ```
 
 ## Using Dynamic Workspace Configurations for custom requirements

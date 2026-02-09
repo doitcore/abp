@@ -35,6 +35,12 @@ AI Management module packages are designed for various usage scenarios. Packages
 
 ## User Interface
 
+This module provides UI integration for all three officially supported UI frameworks by ABP:
+
+* **MVC / Razor Pages** UI
+* **Angular** UI  
+* **Blazor** UI (Server & WebAssembly)
+
 ### Menu Items
 
 The **AI Management Module** adds the following items to the "Main" menu:
@@ -665,15 +671,34 @@ The AI Management module remote URL configurations shown above are optional.
 
 > If you don't set the `AIManagement` property, the `default.url` will be used as fallback.
 
+### Blazor Server UI
+
+#### Remote Endpoint URL
+
+The AI Management module remote endpoint URLs can be configured in your Blazor Server project's `appsettings.json`:
+
+```json
+"RemoteServices": {
+  "Default": {
+    "BaseUrl": "Default url here"
+  },
+  "AIManagement": {
+    "BaseUrl": "AI Management remote url here"
+  }
+}
+```
+
+> If you don't set the `BaseUrl` for AIManagement, the `Default.BaseUrl` will be used as fallback.
+
 ### Blazor WebAssembly UI
 
 #### Remote Endpoint URL
 
 
-The AI Management module remote endpoint URLs can be configured via the `AIManagementClientBlazorOptions`.
+The AI Management module remote endpoint URLs can be configured via the `AIManagementClientBlazorWebAssemblyOptions`.
 
 ```csharp
-Configure<AIManagementClientBlazorOptions>(options =>
+Configure<AIManagementClientBlazorWebAssemblyOptions>(options =>
 {
     options.RemoteServiceUrl = builder.Configuration["RemoteServices:AIManagement:BaseUrl"];
 });

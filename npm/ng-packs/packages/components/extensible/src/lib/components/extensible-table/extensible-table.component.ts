@@ -11,12 +11,12 @@ import {
   LOCALE_ID,
   OnChanges,
   OnDestroy,
-  Output,
   PLATFORM_ID,
   signal,
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
+  output,
   contentChild,
   viewChild
 } from '@angular/core';
@@ -118,7 +118,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
   @Input() actionsTemplate?: TemplateRef<any>;
 
-  @Output() tableActivate = new EventEmitter();
+  readonly tableActivate = output();
 
   @Input() selectable = false;
 
@@ -128,18 +128,18 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   _selectionType: SelectionType = SelectionType.multiClick;
 
   @Input() selected: any[] = [];
-  @Output() selectionChange = new EventEmitter<any[]>();
+  readonly selectionChange = output<any[]>();
 
   // Infinite scroll configuration
   @Input() infiniteScroll = false;
   @Input() isLoading = false;
   @Input() scrollThreshold = 10;
-  @Output() loadMore = new EventEmitter<void>();
+  readonly loadMore = output<void>();
   @Input() tableHeight: number;
 
   @Input() rowDetailTemplate?: TemplateRef<RowDetailContext<R>>;
   @Input() rowDetailHeight: string | number = '100%';
-  @Output() rowDetailToggle = new EventEmitter<R>();
+  readonly rowDetailToggle = output<R>();
 
   readonly rowDetailComponent = contentChild(ExtensibleTableRowDetailComponent);
 

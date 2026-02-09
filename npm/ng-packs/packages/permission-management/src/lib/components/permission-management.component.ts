@@ -20,13 +20,13 @@ import {
   computed,
   DOCUMENT,
   ElementRef,
-  EventEmitter,
   inject,
   Injector,
   Input,
-  Output,
+  QueryList,
   signal,
   TrackByFunction,
+  output,
   viewChildren
 } from '@angular/core';
 import { of } from 'rxjs';
@@ -160,7 +160,7 @@ export class PermissionManagementComponent
     }
   }
 
-  @Output() readonly visibleChange = new EventEmitter<boolean>();
+  readonly visibleChange = output<boolean>();
 
   selectAllInThisTabsRef = viewChildren<ElementRef<HTMLInputElement>>('selectAllInThisTabsRef');
   selectAllInAllTabsRef = viewChildren<ElementRef<HTMLInputElement>>('selectAllInAllTabsRef');

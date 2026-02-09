@@ -604,9 +604,6 @@ chatComponent.off('messageSent', callbackFunction);
 
 ### Angular UI
 
-**List of packages:**
-- `@volo/abp.ng.ai-management`
-
 #### Installation
 
 In order to configure the application to use the AI Management module, you first need to import `provideAIManagementConfig` from `@volo/abp.ng.ai-management/config` to root application configuration. Then, you will need to append it to the `appConfig` array.
@@ -664,17 +661,14 @@ export const environment = {
 };
 ```
 
-The AI Management module remote URL configuration shown above is optional.
+The AI Management module remote URL configurations shown above are optional.
 
 > If you don't set the `AIManagement` property, the `default.url` will be used as fallback.
 
-### Blazor UI
-
-**List of packages:**
-- `Volo.AIManagement.Client.Blazor`
-- `Volo.AIManagement.Client.Blazor.WebAssembly`
+### Blazor WebAssembly UI
 
 #### Remote Endpoint URL
+
 
 The AI Management module remote endpoint URLs can be configured via the `AIManagementClientBlazorOptions`.
 
@@ -684,8 +678,6 @@ Configure<AIManagementClientBlazorOptions>(options =>
     options.RemoteServiceUrl = builder.Configuration["RemoteServices:AIManagement:BaseUrl"];
 });
 ```
-
-Configure the remote service URL in your `appsettings.json`:
 
 ```json
 "RemoteServices": {

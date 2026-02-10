@@ -56,7 +56,7 @@ Earlier, before MCP, if you wanted your LLM to do things such as search the web,
 
 MCP follows a simple **Client-Server architecture**:
 
-![mcp client server](<images/mcp-client-server-1200x700 (1).png>)
+![mcp client server](images/mcp-client-server-1200x700.png)
 
 The flow is straightforward:
 

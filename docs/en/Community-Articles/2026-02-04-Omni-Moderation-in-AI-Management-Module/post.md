@@ -52,8 +52,9 @@ When you send content to the Moderation API (through model or directly to the AP
 - **`flagged`**: A boolean indicating whether the content violates any of OpenAI's usage policies. This is your primary indicator for whether to block content.
 - **`categories`**: A dictionary containing boolean flags for each category, telling you exactly which policies were violated.
 - **`category_scores`**: Confidence scores ranging from 0 to 1 for each category, allowing you to implement custom thresholds if needed.
+- **`category_applied_input_types`**: A dictionary containing information on which input types were flagged for each category. For example, if both the image and text inputs to the model are flagged for "violence/graphic", the `violence/graphic` property will be set to `["image", "text"]`. This is only available on omni models.
 
-For more detailed information about the model's capabilities and best practices, refer to the [OpenAI Moderation Guide](https://platform.openai.com/docs/guides/moderation).
+> For more detailed information about the model's capabilities and best practices, refer to the [OpenAI Moderation Guide](https://platform.openai.com/docs/guides/moderation).
 
 ## The AI Management Module: Your Dynamic AI Configuration Hub
 
@@ -87,7 +88,9 @@ The **AI Management Module** comes with built-in support for popular AI provider
 
 Now let's put theory into practice by building a complete content moderation system. We'll create an ABP application with the **AI Management Module**, configure OpenAI as our provider, set up the CMS Kit Comment Feature, and implement automatic content moderation for all user comments.
 
-### Step 1: Creating the Application with AI Management Module
+### Step 1: Creating an Application with AI Management Module
+
+> In this tutorial, I'll create a **layered MVC application** named **ContentModeration**. If you already have an existing solution, you can follow along by replacing the namespaces accordingly. Otherwise, feel free to follow the solution creation steps below.
 
 The most straightforward way to create an application with the AI Management Module is through **ABP Studio**. When you create a new project, you'll encounter an **AI Integration** step in the project creation wizard. This wizard allows you to:
 
@@ -96,16 +99,18 @@ The most straightforward way to create an application with the AI Management Mod
 - Set up initial workspace configurations
 - Automatically install all required NuGet packages
 
+> **Note:** The AI Integration tab in ABP Studio currently only supports the **MVC/Razor Pages** UI. Support for **Angular** and **Blazor** UIs will be added in upcoming versions.
+
 ![ABP Studio AI Management](images/abp-studio-ai-management.png)
 
-During the wizard, select **OpenAI** as your AI provider and provide your API key. The wizard will automatically:
+During the wizard, select **OpenAI** as your AI provider, set the model name as `omni-moderation-latest` and provide your API key. The wizard will automatically:
 
 1. Install the `Volo.AIManagement.*` packages across your solution
 2. Install the `Volo.AIManagement.OpenAI` package for OpenAI provider support (you can use any OpenAI compatible model here, including Gemini, Claude and GPT models)
 3. Configure the necessary module dependencies
 4. Set up initial database migrations
 
-**Alternative Installation Method**
+**Alternative Installation Method:**
 
 If you have an existing project or prefer manual installation, you can add the module using the ABP CLI:
 
@@ -125,10 +130,10 @@ If you configured OpenAI during the project creation wizard, you'll already have
 
 | Property | Value | Description |
 |----------|-------|-------------|
-| **Name** | `ContentModerator` | A unique identifier for this workspace (no spaces allowed) |
+| **Name** | `OpenAIAssistant` | A unique identifier for this workspace (no spaces allowed) |
 | **Provider** | `OpenAI` | The AI provider to use |
 | **Model** | `omni-moderation-latest` | The specific model for content moderation |
-| **API Key** | Your OpenAI API key | Authentication credential for the OpenAI API |
+| **API Key** | `<Your-OpenAI-API-key>` | Authentication credential for the OpenAI API |
 | **Description** | `Workspace for content moderation` | A helpful description for administrators |
 
 The beauty of this approach is that you can modify any of these settings at runtime through the UI. Need to rotate your API key? Just update it in the workspace configuration. Want to test a different model? Change it without touching your code.
@@ -137,7 +142,7 @@ The beauty of this approach is that you can modify any of these settings at runt
 
 Now let's add the CMS Kit Module to enable the Comment Feature. The CMS Kit provides a robust, production-ready commenting system that we'll enhance with our content moderation.
 
-**Install the CMS Kit Module**
+**Install the CMS Kit Module:**
 
 Run the following command in your solution directory:
 
@@ -145,7 +150,9 @@ Run the following command in your solution directory:
 abp add-module Volo.CmsKit --skip-db-migrations
 ```
 
-**Enable the Comment Feature**
+> Also, you can add the related module through ABP Studio UI.
+
+**Enable the Comment Feature:**
 
 By default, CMS Kit features are disabled to keep your application lean. Open the `GlobalFeatureConfigurator` class in your `*.Domain.Shared` project and enable the Comment Feature:
 
@@ -153,9 +160,9 @@ By default, CMS Kit features are disabled to keep your application lean. Open th
 using Volo.Abp.GlobalFeatures;
 using Volo.Abp.Threading;
 
-namespace ContentModerationDemo;
+namespace ContentModeration;
 
-public static class ContentModerationDemoGlobalFeatureConfigurator
+public static class ContentModerationGlobalFeatureConfigurator
 {
     private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
 
@@ -165,6 +172,7 @@ public static class ContentModerationDemoGlobalFeatureConfigurator
         {
             GlobalFeatureManager.Instance.Modules.CmsKit(cmsKit =>
             {
+                //only enable the Comment Feature
                 cmsKit.Comments.Enable();
             });
         });
@@ -172,7 +180,7 @@ public static class ContentModerationDemoGlobalFeatureConfigurator
 }
 ```
 
-**Configure the Comment Entity Types**
+**Configure the Comment Entity Types:**
 
 Open your `*DomainModule` class and configure which entity types can have comments. For our demo, we'll enable comments on "Article" entities:
 
@@ -186,14 +194,14 @@ Configure<CmsKitCommentOptions>(options =>
 });
 ```
 
-**Add the Comment Component to a Page**
+**Add the Comment Component to a Page:**
 
-Finally, let's add the commenting interface to a page. Open the `Index.cshtml` file in your `*.Web` project and add the Comment component:
+Finally, let's add the commenting interface to a page. Open the `Index.cshtml` file in your `*.Web` project and add the Comment component (replace with the following content):
 
 ```html
 @page
 @using Volo.CmsKit.Public.Web.Pages.CmsKit.Shared.Components.Commenting
-@model ContentModerationDemo.Web.Pages.IndexModel
+@model ContentModeration.Web.Pages.IndexModel
 
 <div class="container mt-4">
     <div class="card">
@@ -202,13 +210,13 @@ Finally, let's add the commenting interface to a page. Open the `Index.cshtml` f
         </div>
         <div class="card-body">
             <p class="lead">
-                Share your thoughts in the comments below. Our AI-powered moderation system 
-                automatically reviews all comments to ensure a safe and respectful environment 
+                Share your thoughts in the comments below. Our AI-powered moderation system
+                automatically reviews all comments to ensure a safe and respectful environment
                 for everyone.
             </p>
-            
-            <hr />
-            
+
+            <hr/>
+
             <h4>Comments</h4>
             @await Component.InvokeAsync(typeof(CommentingViewComponent), new
             {
@@ -221,11 +229,15 @@ Finally, let's add the commenting interface to a page. Open the `Index.cshtml` f
 </div>
 ```
 
-At this point, you have a fully functional commenting system. Users can post comments, reply to existing comments, and interact with the community. However, there's no content moderation yet—any content, including harmful content, would be accepted. Let's fix that.
+At this point, you have a fully functional commenting system. Users can post comments, reply to existing comments, and interact with the community. 
+
+![](./images/example-comment.png)
+
+However, there's no content moderation yet and any content, including harmful content, would be accepted. Let's fix that!
 
 ## Implementing the Content Moderation Service
 
-Now comes the exciting part: implementing the content moderation service that leverages OpenAI's omni-moderation model to automatically screen all comments before they're published.
+**Now comes the exciting part:** implementing the content moderation service that leverages OpenAI's `omni-moderation` model to automatically screen all comments before they're published.
 
 ### Understanding the Architecture
 
@@ -248,7 +260,7 @@ First, let's define the interface in your `*.Application.Contracts` project. Thi
 ```csharp
 using System.Threading.Tasks;
 
-namespace ContentModerationDemo.Moderation;
+namespace ContentModeration.Moderation;
 
 public interface IContentModerator
 {
@@ -266,9 +278,9 @@ using System.Threading.Tasks;
 using OpenAI.Moderations;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
-using Volo.AIManagement;
+using Volo.AIManagement.Workspaces.Configuration;
 
-namespace ContentModerationDemo.Moderation;
+namespace ContentModeration.Moderation;
 
 public class ContentModerator : IContentModerator, ITransientDependency
 {
@@ -289,11 +301,11 @@ public class ContentModerator : IContentModerator, ITransientDependency
 
         // Retrieve the workspace configuration from AI Management Module
         // This allows runtime configuration changes without redeployment
-        var config = await _workspaceConfigurationStore.GetOrNullAsync("ContentModerator");
+        var config = await _workspaceConfigurationStore.GetOrNullAsync<OpenAIAssistantWorkspace>();
 
         if(config == null)
         {
-            throw new UserFriendlyException("Could not find the ContentModerator workspace!");
+            throw new UserFriendlyException("Could not find the 'OpenAIAssistant' workspace!");
         }
 
         var client = new ModerationClient(
@@ -322,28 +334,16 @@ public class ContentModerator : IContentModerator, ITransientDependency
     {
         var flaggedCategories = new List<string>();
 
-        if (result.Harassment.Flagged) 
+        if (result.Harassment.Flagged)
+        {
             flaggedCategories.Add("harassment");
+        }
         if (result.HarassmentThreatening.Flagged) 
+        {
             flaggedCategories.Add("threatening harassment");
-        if (result.Hate.Flagged) 
-            flaggedCategories.Add("hate speech");
-        if (result.HateThreatening.Flagged) 
-            flaggedCategories.Add("threatening hate speech");
-        if (result.SelfHarm.Flagged) 
-            flaggedCategories.Add("self-harm content");
-        if (result.SelfHarmIntent.Flagged) 
-            flaggedCategories.Add("self-harm intent");
-        if (result.SelfHarmInstructions.Flagged) 
-            flaggedCategories.Add("self-harm instructions");
-        if (result.Sexual.Flagged) 
-            flaggedCategories.Add("sexual content");
-        if (result.SexualMinors.Flagged) 
-            flaggedCategories.Add("sexual content involving minors");
-        if (result.Violence.Flagged) 
-            flaggedCategories.Add("violent content");
-        if (result.ViolenceGraphic.Flagged) 
-            flaggedCategories.Add("graphic violence");
+        }
+        
+        //other categories...
 
         return flaggedCategories;
     }
@@ -359,15 +359,16 @@ The final piece of the puzzle is integrating our moderation service with the CMS
 ```csharp
 using System;
 using System.Threading.Tasks;
-using ContentModerationDemo.Moderation;
+using ContentModeration.Moderation;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 using Volo.CmsKit.Comments;
 using Volo.CmsKit.Public.Comments;
 using Volo.CmsKit.Users;
+using Volo.Abp.SettingManagement;
 
-namespace ContentModerationDemo.Comments;
+namespace ContentModeration.Comments;
 
 [Dependency(ReplaceServices = true)]
 [ExposeServices(typeof(ICommentPublicAppService), typeof(CommentPublicAppService), typeof(MyCommentAppService))]
@@ -381,8 +382,9 @@ public class MyCommentAppService : CommentPublicAppService
         IDistributedEventBus distributedEventBus,
         CommentManager commentManager,
         IOptionsSnapshot<CmsKitCommentOptions> cmsCommentOptions,
+        ISettingManager settingManager,
         IContentModerator contentModerator)
-        : base(commentRepository, cmsUserLookupService, distributedEventBus, commentManager, cmsCommentOptions)
+        : base(commentRepository, cmsUserLookupService, distributedEventBus, commentManager, cmsCommentOptions, settingManager)
     {
         ContentModerator = contentModerator;
     }
@@ -420,8 +422,7 @@ The same flow applies to comment updates, ensuring users can't circumvent modera
 
 Here's the full flow in action — submitting a comment with harmful content and seeing the moderation kick in:
 
-//TODO: add the demo gif below!!!
-![Content moderation demo](images/demo.gif)
+![Content moderation demo](demo.gif)
 
 ## The Power of Dynamic Configuration - What AI Management Module Provides to You?
 
@@ -445,6 +446,16 @@ The dynamic configuration approach shines in multi-environment scenarios:
 - **Production**: Use your production API key with appropriate security measures
 
 All these configurations can be managed through the UI or via data seeding, without environment-specific code changes.
+
+### Actively Maintained & What's Coming Next
+
+The AI Management Module is **actively maintained** and continuously evolving. The team is working on exciting new capabilities that will further expand what you can do with AI in your ABP applications:
+
+- **MCP (Model Context Protocol) Support** — Coming in **v10.2**, MCP support will allow your AI workspaces to interact with external tools and data sources, enabling more sophisticated AI-powered workflows.
+- **RAG (Retrieval-Augmented Generation) System** — Also planned for **v10.2**, the built-in RAG system will let you ground AI responses in your own data, making AI features more accurate and context-aware.
+- **And More** — Additional features and improvements are on the roadmap to make AI integration even more seamless.
+
+Since the module is built on ABP's modular architecture, adopting these new capabilities will be straightforward — you can simply update the module and start using the new features without rewriting your existing AI integrations.
 
 ### Permission-Based Access Control
 

@@ -169,16 +169,7 @@ public class HomeController : AbpController
 
 [Application service](../architecture/domain-driven-design/application-services.md) method calls also included into the audit log by default. You can use the `[DisableAuditing]` in service or method level.
 
-> ### Blazor Server Limitation (Entity History)
->
-> In `Blazor Server` applications, entity change history is currently not guaranteed to be complete for every UI interaction.
->
-> Blazor Server uses SignalR-based event handling, and under some flows the audit scope/action tracking may not align with `DbContext.SaveChanges`, which can cause missing or partial entity change records.
->
-> This is a known platform-level limitation and not a regular configuration issue.
->
-> Related discussions:
-> - https://github.com/abpframework/abp/issues/11682
+> **Blazor Server limitation (Entity history):** In `Blazor Server` applications, entity change history is currently not guaranteed to be complete for every UI interaction. Blazor Server uses SignalR-based event handling, and under some flows the audit scope/action tracking may not align with `DbContext.SaveChanges`, which can cause missing or partial entity change records. This is a known platform-level limitation and not a regular configuration issue. See [#11682](https://github.com/abpframework/abp/issues/11682) for related discussions.
 
 #### Enable/Disable for Other Services
 

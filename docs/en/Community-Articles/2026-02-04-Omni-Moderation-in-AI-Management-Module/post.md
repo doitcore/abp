@@ -309,7 +309,7 @@ public class ContentModerator : IContentModerator, ITransientDependency
         }
 
         var client = new ModerationClient(
-            model: "omni-moderation-latest",
+            model: config.Model,
             apiKey: config.ApiKey
         );
 

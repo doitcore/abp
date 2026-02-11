@@ -81,6 +81,10 @@ Claude Desktop config file locations:
 }
 ```
 
+### Quick Reference
+
+You can run `abp help mcp-studio` at any time to see the available options and example configuration snippets for each supported IDE directly in your terminal.
+
 ### Generating Config Files from ABP Studio
 
 When creating a new solution, ABP Studio can generate MCP configuration files for Cursor and VS Code automatically.

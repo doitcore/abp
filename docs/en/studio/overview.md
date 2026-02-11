@@ -99,6 +99,23 @@ This pane is dedicated to managing Kubernetes services. It simplifies the proces
 
 ![kubernetes-integration-kubernetes-panel](./images/overview/kubernetes-integration-kubernetes.png)
 
+### AI Assistant
+
+The AI Assistant is an integrated chat interface within ABP Studio that provides intelligent assistance for ABP-related questions. You can access it from the left sidebar by clicking the AI icon.
+
+For external AI tool integrations through MCP, see the [Model Context Protocol (MCP)](./model-context-protocol.md) documentation.
+
+![ai-assistant](./images/overview/ai-assistant.png)
+
+Key features of the AI Assistant include:
+
+- **Chat Interface**: Ask anything about ABP Framework, and get instant, context-aware responses to help with your development workflow.
+- **File Attachments**: Attach files to your conversations to get more specific assistance with your code or configuration.
+- **Recent Chats**: Access your conversation history to continue previous discussions or reference past solutions.
+- **Credits System**: The AI Assistant uses a credits-based system, with usage tracked and displayed in the interface.
+
+> **Note**: Review the Privacy Notice available in the AI Assistant panel to understand how your data is handled.
+
 ## Application Monitoring Area
 
 The [Application Monitoring Area](./monitoring-applications.md) is a functional component within ABP Studio that displays real-time operational status and metrics for applications. It indicates the active state of applications, the count of running instances, and so on. The user interface is organized into several tabs: Overall, Browse, HTTP Requests, Events, Exceptions, and Logs. Now let's examine the **Overall** tab.

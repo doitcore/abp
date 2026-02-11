@@ -10,10 +10,6 @@
 ````json
 //[doc-nav]
 {
-  "Previous": {
-    "Name": "Monitoring Applications",
-    "Path": "studio/monitoring-applications"
-  },
   "Next": {
     "Name": "Working with Kubernetes",
     "Path": "studio/kubernetes"

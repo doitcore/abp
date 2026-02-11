@@ -4,14 +4,13 @@ import {
   ChangeDetectorRef, 
   Component, 
   ElementRef, 
-  EventEmitter, 
   Input, 
   OnChanges, 
   OnDestroy, 
-  Output, 
   SimpleChanges, 
   ViewChild, 
-  inject 
+  inject,
+  output,
 } from '@angular/core';
 
 let Chart: any;
@@ -53,9 +52,8 @@ export class ChartComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   @Input() responsive = true;
 
-  @Output() dataSelect = new EventEmitter();
-
-  @Output() initialized = new EventEmitter<boolean>();
+  readonly dataSelect = output<any>();
+  readonly initialized = output<boolean>();
 
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 

@@ -19,9 +19,7 @@ import {
   Optional,
   SimpleChanges,
   SkipSelf,
-  ViewChild,
-  signal,
-  effect,
+  viewChild,
 } from '@angular/core';
 import {
   ControlContainer,
@@ -49,7 +47,7 @@ import { eExtensibleComponents } from '../../enums/components';
 import { ExtensibleDateTimePickerComponent } from '../date-time-picker/extensible-date-time-picker.component';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { ExtensibleFormPropService } from '../../services/extensible-form-prop.service';
-import { AsyncPipe, NgClass, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-form-multiselect.component';
 
@@ -70,7 +68,6 @@ import { ExtensibleFormMultiselectComponent } from '../multi-select/extensible-f
     PermissionDirective,
     LocalizationPipe,
     AsyncPipe,
-    NgClass,
     NgComponentOutlet,
     NgTemplateOutlet,
     FormsModule,
@@ -99,7 +96,7 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   @Input() prop!: FormProp;
   @Input() first?: boolean;
   @Input() isFirstGroup?: boolean;
-  @ViewChild('field') private fieldRef!: ElementRef<HTMLElement>;
+  private readonly fieldRef = viewChild.required<ElementRef<HTMLElement>>('field');
 
   injectorForCustomComponent?: Injector;
   asterisk = '';
@@ -159,9 +156,9 @@ export class ExtensibleFormPropComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.isFirstGroup && this.first && this.fieldRef) {
+    if (this.isFirstGroup && this.first && this.fieldRef()) {
       requestAnimationFrame(() => {
-        this.fieldRef.nativeElement.focus();
+        this.fieldRef().nativeElement.focus();
       });
     }
   }

@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { Component, Input, OnInit, output } from '@angular/core';
 import { Toaster } from '../../models/toaster';
 import { LocalizationPipe } from '@abp/ng.core';
 
@@ -7,13 +6,13 @@ import { LocalizationPipe } from '@abp/ng.core';
   selector: 'abp-toast',
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.scss'],
-  imports: [NgClass, LocalizationPipe],
+  imports: [LocalizationPipe],
 })
 export class ToastComponent implements OnInit {
   @Input()
   toast!: Toaster.Toast;
 
-  @Output() remove = new EventEmitter<number>();
+  readonly remove = output<number>();
 
   get severityClass(): string {
     if (!this.toast || !this.toast.severity) return '';

@@ -2,12 +2,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
+  contentChild,
   EventEmitter,
   inject,
   Input,
   OnInit,
-  Output,
+  output,
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
@@ -60,14 +60,14 @@ export class TreeComponent implements OnInit {
 
   dropdowns = {} as { [key: string]: NgbDropdown };
 
-  @ContentChild('menu') menu: TemplateRef<any>;
-  @ContentChild(TreeNodeTemplateDirective) customNodeTemplate: TreeNodeTemplateDirective;
-  @ContentChild(ExpandedIconTemplateDirective) expandedIconTemplate: ExpandedIconTemplateDirective;
-  @Output() readonly checkedKeysChange = new EventEmitter();
-  @Output() readonly expandedKeysChange = new EventEmitter<string[]>();
-  @Output() readonly selectedNodeChange = new EventEmitter();
-  @Output() readonly dropOver = new EventEmitter<DropEvent>();
-  @Output() readonly nzExpandChange = new EventEmitter<NzFormatEmitEvent>();
+  readonly menu = contentChild<TemplateRef<any>>('menu');
+  readonly customNodeTemplate = contentChild(TreeNodeTemplateDirective);
+  readonly expandedIconTemplate = contentChild(ExpandedIconTemplateDirective);
+  readonly checkedKeysChange = output<any>();
+  readonly expandedKeysChange = output<string[]>();
+  readonly selectedNodeChange = output<any>();
+  readonly dropOver = output<DropEvent>();
+  readonly nzExpandChange = output<NzFormatEmitEvent>();
   @Input() noAnimation = true;
   @Input() draggable: boolean;
   @Input() checkable: boolean;

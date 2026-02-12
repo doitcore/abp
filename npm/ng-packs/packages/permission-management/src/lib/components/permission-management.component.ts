@@ -15,24 +15,27 @@ import {
   UpdatePermissionDto,
 } from '@abp/ng.permission-management/proxy';
 import {
+  afterNextRender,
   Component,
   computed,
   DOCUMENT,
   ElementRef,
-  EventEmitter,
   inject,
+  Injector,
   Input,
-  Output,
   QueryList,
   signal,
   TrackByFunction,
-  ViewChildren,
+  output,
+  viewChildren
 } from '@angular/core';
-import { concat, of } from 'rxjs';
-import { finalize, switchMap, take, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { finalize, switchMap, tap } from 'rxjs/operators';
 import { PermissionManagement } from '../models';
-import { NgStyle } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
+
+import { Tabs, TabList, Tab, TabPanel, TabContent } from '@angular/aria/tabs';
 
 type PermissionWithStyle = PermissionGrantInfoDto & {
   style: string;
@@ -56,7 +59,7 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
         max-height: calc(100vh - 23.1rem);
       }
 
-      .lpx-scroll-pills-container ul {
+      .lpx-scroll-pills-container .nav-pills {
         display: block;
         overflow-y: auto;
       }
@@ -66,7 +69,7 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
         .scroll-in-modal {
           max-height: calc(100vh - 15rem);
         }
-        .lpx-scroll-pills-container ul {
+        .lpx-scroll-pills-container .nav-pills {
           max-height: 500px;
         }
       }
@@ -81,12 +84,12 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
         padding-bottom: 0 !important;
       }
 
-      .lpx-scroll-pills-container ul li {
+      .lpx-scroll-pills-container .nav-item {
         margin-bottom: 10px;
         border-radius: 10px;
       }
 
-      .lpx-scroll-pills-container ul li a.active {
+      .lpx-scroll-pills-container .nav-item .nav-link.active {
         color: #fff !important;
         border-color: #6c5dd3 !important;
         background-color: #6c5dd3 !important;
@@ -95,11 +98,15 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
   ],
   imports: [
     FormsModule,
-    NgStyle,
     ModalComponent,
     LocalizationPipe,
     ButtonComponent,
     ModalCloseDirective,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanel,
+    TabContent,
   ],
 })
 export class PermissionManagementComponent
@@ -110,6 +117,7 @@ export class PermissionManagementComponent
   protected readonly service = inject(PermissionsService);
   protected readonly configState = inject(ConfigStateService);
   protected readonly toasterService = inject(ToasterService);
+  private readonly injector = inject(Injector);
   private document = inject(DOCUMENT);
 
   @Input()
@@ -140,11 +148,9 @@ export class PermissionManagementComponent
       this.openModal().subscribe(() => {
         this._visible = true;
         this.visibleChange.emit(true);
-        concat(this.selectAllInAllTabsRef.changes, this.selectAllInThisTabsRef.changes)
-          .pipe(take(1))
-          .subscribe(() => {
-            this.initModal();
-          });
+        afterNextRender(() => {
+          this.initModal();
+        }, { injector: this.injector });
       });
     } else {
       this.setSelectedGroup(null);
@@ -154,12 +160,10 @@ export class PermissionManagementComponent
     }
   }
 
-  @Output() readonly visibleChange = new EventEmitter<boolean>();
+  readonly visibleChange = output<boolean>();
 
-  @ViewChildren('selectAllInThisTabsRef')
-  selectAllInThisTabsRef!: QueryList<ElementRef<HTMLInputElement>>;
-  @ViewChildren('selectAllInAllTabsRef')
-  selectAllInAllTabsRef!: QueryList<ElementRef<HTMLInputElement>>;
+  selectAllInThisTabsRef = viewChildren<ElementRef<HTMLInputElement>>('selectAllInThisTabsRef');
+  selectAllInAllTabsRef = viewChildren<ElementRef<HTMLInputElement>>('selectAllInAllTabsRef');
 
   data: GetPermissionListResultDto = { groups: [], entityDisplayName: '' };
 
@@ -416,6 +420,13 @@ export class PermissionManagementComponent
       }
     }
     this.onChangeGroup(this.selectedGroup);
+  }
+
+  onTabChange(groupName: string) {
+    const group = this.permissionGroups().find(g => g.name === groupName);
+    if (group) {
+      this.onChangeGroup(group);
+    }
   }
 
   onChangeGroup(group: PermissionGroupDto) {

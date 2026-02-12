@@ -11,19 +11,21 @@ import {
   LOCALE_ID,
   OnChanges,
   OnDestroy,
-  Output,
   PLATFORM_ID,
   signal,
   SimpleChanges,
   TemplateRef,
   TrackByFunction,
+  output,
+  contentChild,
+  viewChild
 } from '@angular/core';
 import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
 import { Observable, filter, map, Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
+import { NgxDatatableModule, SelectionType, DatatableComponent } from '@swimlane/ngx-datatable';
 
 import {
   ABP,
@@ -53,6 +55,8 @@ import {
   ROW_RECORD,
 } from '../../tokens/extensions.token';
 import { GridActionsComponent } from '../grid-actions/grid-actions.component';
+import { ExtensibleTableRowDetailComponent } from './extensible-table-row-detail';
+import { RowDetailContext } from '../../models/row-detail';
 
 const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
 
@@ -75,6 +79,12 @@ const DEFAULT_ACTIONS_COLUMN_WIDTH = 150;
   ],
   templateUrl: './extensible-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [`
+    :host ::ng-deep .ngx-datatable.material .datatable-body .datatable-row-detail {
+      background: none;
+      padding: 0;
+    }
+  `],
 })
 export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewInit, OnDestroy {
   readonly #injector = inject(Injector);
@@ -108,7 +118,7 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
 
   @Input() actionsTemplate?: TemplateRef<any>;
 
-  @Output() tableActivate = new EventEmitter();
+  readonly tableActivate = output();
 
   @Input() selectable = false;
 
@@ -118,14 +128,30 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
   _selectionType: SelectionType = SelectionType.multiClick;
 
   @Input() selected: any[] = [];
-  @Output() selectionChange = new EventEmitter<any[]>();
+  readonly selectionChange = output<any[]>();
 
   // Infinite scroll configuration
   @Input() infiniteScroll = false;
   @Input() isLoading = false;
   @Input() scrollThreshold = 10;
-  @Output() loadMore = new EventEmitter<void>();
+  readonly loadMore = output<void>();
   @Input() tableHeight: number;
+
+  @Input() rowDetailTemplate?: TemplateRef<RowDetailContext<R>>;
+  @Input() rowDetailHeight: string | number = '100%';
+  readonly rowDetailToggle = output<R>();
+
+  readonly rowDetailComponent = contentChild(ExtensibleTableRowDetailComponent);
+
+  readonly table = viewChild.required<DatatableComponent>('table');
+
+  protected get effectiveRowDetailTemplate(): TemplateRef<RowDetailContext<R>> | undefined {
+    return this.rowDetailComponent()?.template() ?? this.rowDetailTemplate;
+  }
+
+  protected get effectiveRowDetailHeight(): string | number {
+    return this.rowDetailComponent()?.rowHeight() ?? this.rowDetailHeight;
+  }
 
   hasAtLeastOnePermittedAction: boolean;
 
@@ -288,6 +314,14 @@ export class ExtensibleTableComponent<R = any> implements OnChanges, AfterViewIn
     if (!this.infiniteScroll) return 'auto';
 
     return this.tableHeight ? `${this.tableHeight}px` : 'auto';
+  }
+
+  toggleExpandRow(row: R): void {
+    const table = this.table();
+    if (table && table.rowDetail) {
+      table.rowDetail.toggleExpandRow(row);
+    }
+    this.rowDetailToggle.emit(row);
   }
 
   ngAfterViewInit(): void {

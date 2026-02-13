@@ -37,7 +37,7 @@ public class ActionApiDescriptionModel
 
     }
 
-    public static ActionApiDescriptionModel Create([NotNull] string uniqueName, [NotNull] MethodInfo method, [NotNull] string url, string? httpMethod, [NotNull] IList<string> supportedVersions, bool? allowAnonymous = null, string? requiredPolicy, string? implementFrom = null)
+    public static ActionApiDescriptionModel Create([NotNull] string uniqueName, [NotNull] MethodInfo method, [NotNull] string url, string? httpMethod, [NotNull] IList<string> supportedVersions, bool? allowAnonymous = null, string? requiredPolicy = null, string? implementFrom = null)
     {
         Check.NotNull(uniqueName, nameof(uniqueName));
         Check.NotNull(method, nameof(method));

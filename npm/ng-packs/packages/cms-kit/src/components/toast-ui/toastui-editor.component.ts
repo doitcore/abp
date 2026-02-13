@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Component,
   AfterViewInit,
@@ -8,10 +9,12 @@ import {
   forwardRef,
   inject,
   PLATFORM_ID,
+  DestroyRef,
 } from '@angular/core';
 import Editor from '@toast-ui/editor';
 
 import { AbpLocalStorageService } from '@abp/ng.core';
+import { THEME_CHANGE_TOKEN } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'abp-toastui-editor',
@@ -33,6 +36,8 @@ export class ToastuiEditorComponent implements AfterViewInit, ControlValueAccess
 
   private platformId = inject(PLATFORM_ID);
   private localStorageService = inject(AbpLocalStorageService);
+  private destroyRef = inject(DestroyRef);
+  private themeChange$ = inject(THEME_CHANGE_TOKEN, { optional: true });
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
@@ -58,8 +63,9 @@ export class ToastuiEditorComponent implements AfterViewInit, ControlValueAccess
     }
 
     this.initializeEditor();
-    // TODO: Revise this approach on lepton side :: Service injection through DI
-    // this.setupThemeListener();
+    if (this.themeChange$) {
+      this.setupThemeListener();
+    }
   }
 
   private getTheme(): string {
@@ -79,6 +85,37 @@ export class ToastuiEditorComponent implements AfterViewInit, ControlValueAccess
     this.editor.addHook('change', () => {
       const value = this.editor.getMarkdown();
       this.onChange(value);
+    });
+  }
+
+  private setupThemeListener(): void {
+    this.themeChange$!.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(style => {
+      if (!this.editor) {
+        return;
+      }
+      const wrapper =
+        this.editorContainer.nativeElement.querySelector('.toastui-editor-defaultUI') ??
+        this.editorContainer.nativeElement;
+
+      const { styleName } = style;
+
+      switch (styleName) {
+        case 'dark':
+          wrapper.classList.add('toastui-editor-dark');
+          break;
+        case 'system':
+          const isSystemDark =
+            typeof window !== 'undefined' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (!isSystemDark) {
+            wrapper.classList.remove('toastui-editor-dark');
+          } else {
+            wrapper.classList.add('toastui-editor-dark');
+          }
+          break;
+        default:
+          wrapper.classList.remove('toastui-editor-dark');
+      }
     });
   }
 }

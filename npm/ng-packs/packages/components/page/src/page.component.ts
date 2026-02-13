@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ContentChild, input, effect, signal } from '@angular/core';
+import { Component, ViewEncapsulation, input, effect, signal, contentChild } from '@angular/core';
 import {
   PageTitleContainerComponent,
   PageBreadcrumbContainerComponent,
@@ -29,10 +29,9 @@ export class PageComponent {
     toolbar: PageParts.toolbar,
   };
 
-  @ContentChild(PageTitleContainerComponent) customTitle?: PageTitleContainerComponent;
-  @ContentChild(PageBreadcrumbContainerComponent)
-  customBreadcrumb?: PageBreadcrumbContainerComponent;
-  @ContentChild(PageToolbarContainerComponent) customToolbar?: PageToolbarContainerComponent;
+  readonly customTitle = contentChild(PageTitleContainerComponent);
+  readonly customBreadcrumb = contentChild(PageBreadcrumbContainerComponent);
+  readonly customToolbar = contentChild(PageToolbarContainerComponent);
 
   constructor() {
     effect(() => {
@@ -49,9 +48,9 @@ export class PageComponent {
       this.title() ||
       this.toolbarVisible() ||
       this.breadcrumb() ||
-      this.customTitle ||
-      this.customBreadcrumb ||
-      this.customToolbar ||
+      this.customTitle() ||
+      this.customBreadcrumb() ||
+      this.customToolbar() ||
       this.pageParts
     );
   }

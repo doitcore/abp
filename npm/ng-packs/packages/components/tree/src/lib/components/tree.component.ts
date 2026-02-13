@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
+  contentChild,
   inject,
   OnInit,
   TemplateRef,
@@ -61,11 +61,9 @@ export class TreeComponent implements OnInit {
 
   dropdowns = {} as { [key: string]: NgbDropdown };
 
-  @ContentChild('menu') menu!: TemplateRef<any>;
-  @ContentChild(TreeNodeTemplateDirective) customNodeTemplate!: TreeNodeTemplateDirective;
-  @ContentChild(ExpandedIconTemplateDirective) expandedIconTemplate!: ExpandedIconTemplateDirective;
-  
-  // Output signals
+  readonly menu = contentChild<TemplateRef<any>>('menu');
+  readonly customNodeTemplate = contentChild(TreeNodeTemplateDirective);
+  readonly expandedIconTemplate = contentChild(ExpandedIconTemplateDirective);
   readonly checkedKeysChange = output<any>();
   readonly expandedKeysChange = output<string[]>();
   readonly selectedNodeChange = output<any>();
@@ -83,7 +81,7 @@ export class TreeComponent implements OnInit {
   readonly selectedNodeInput = input<any>(undefined, { alias: 'selectedNode' });
   readonly changeCheckboxWithNode = input<boolean | undefined>(undefined);
   readonly isNodeSelectedFn = input<(node: any) => boolean>(
-    (node) => this._selectedNode() === node.key,
+    (node) => this._selectedNode()?.id === node.key,
     { alias: 'isNodeSelected' }
   );
   readonly beforeDropFn = input<(event: NzFormatBeforeDropEvent) => any>(

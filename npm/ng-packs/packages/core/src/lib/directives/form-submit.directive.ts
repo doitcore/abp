@@ -2,11 +2,10 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
-  EventEmitter,
   OnInit,
-  Output,
   inject,
-  input
+  input,
+  output
 } from '@angular/core';
 import { FormGroupDirective, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { fromEvent } from 'rxjs';
@@ -34,7 +33,7 @@ export class FormSubmitDirective implements OnInit {
 
   readonly markAsDirtyWhenSubmit = input(true);
 
-  @Output() readonly ngSubmit = new EventEmitter();
+  readonly ngSubmit = output();
 
   executedNgSubmit = false;
 

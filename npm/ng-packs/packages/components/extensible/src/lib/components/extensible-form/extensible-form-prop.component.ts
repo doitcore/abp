@@ -16,7 +16,7 @@ import {
   Injector,
   Optional,
   SkipSelf,
-  ViewChild,
+  viewChild,
   effect,
   input,
 } from '@angular/core';
@@ -95,7 +95,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
   readonly prop = input.required<FormProp>();
   readonly first = input<boolean | undefined>(undefined);
   readonly isFirstGroup = input<boolean | undefined>(undefined);
-  @ViewChild('field') private fieldRef!: ElementRef<HTMLElement>;
+  private readonly fieldRef = viewChild.required<ElementRef<HTMLElement>>('field');
 
   injectorForCustomComponent?: Injector;
   asterisk = '';
@@ -205,9 +205,9 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (!!this.isFirstGroup() && !!this.first() && this.fieldRef) {
+    if (this.isFirstGroup() && this.first() && this.fieldRef()) {
       requestAnimationFrame(() => {
-        this.fieldRef.nativeElement.focus();
+        this.fieldRef().nativeElement.focus();
       });
     }
   }

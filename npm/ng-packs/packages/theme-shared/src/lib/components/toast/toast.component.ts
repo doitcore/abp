@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import { Component, OnInit, input, output } from '@angular/core';
 import { Toaster } from '../../models/toaster';
 import { LocalizationPipe } from '@abp/ng.core';
 
@@ -11,7 +11,7 @@ import { LocalizationPipe } from '@abp/ng.core';
 export class ToastComponent implements OnInit {
   readonly toast = input.required<Toaster.Toast>();
 
-  @Output() remove = new EventEmitter<number>();
+  readonly remove = output<number>();
 
   get severityClass(): string {
     const toast = this.toast();

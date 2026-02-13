@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, OnInit, Output, inject, input } from '@angular/core';
+import { Directive, ElementRef, OnInit, inject, input, output } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { SubscriptionService } from '../services/subscription.service';
@@ -13,7 +13,7 @@ export class InputEventDebounceDirective implements OnInit {
 
   readonly debounce = input(300);
 
-  @Output('input.debounce') readonly debounceEvent = new EventEmitter<Event>();
+  readonly debounceEvent = output<Event>({ alias: 'input.debounce' });
 
   ngOnInit(): void {
     const input$ = fromEvent<InputEvent>(this.el.nativeElement, 'input').pipe(

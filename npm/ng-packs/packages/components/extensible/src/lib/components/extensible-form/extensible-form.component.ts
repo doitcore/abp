@@ -5,9 +5,8 @@ import {
   Component,
   inject,
   Optional,
-  QueryList,
   SkipSelf,
-  ViewChildren,
+  viewChildren,
   input,
   signal,
   effect
@@ -43,8 +42,7 @@ export class ExtensibleFormComponent<R = any> {
   private readonly extensions = inject(ExtensionsService);
   private readonly identifier = inject(EXTENSIONS_IDENTIFIER);
 
-  @ViewChildren(ExtensibleFormPropComponent)
-  formProps!: QueryList<ExtensibleFormPropComponent>;
+  readonly formProps = viewChildren(ExtensibleFormPropComponent);
 
   readonly selectedRecord = input<R | undefined>(undefined);
 

@@ -5,6 +5,7 @@ import {
   Component,
   computed,
   ContentChild,
+  EventEmitter,
   inject,
   Injector,
   LOCALE_ID,
@@ -17,6 +18,8 @@ import {
   input,
   effect,
   output,
+  contentChild,
+  viewChild
 } from '@angular/core';
 import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
@@ -129,10 +132,9 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
   protected readonly _data = signal<R[]>([]);
   private readonly _actionsColumnWidth = signal<number | undefined>(DEFAULT_ACTIONS_COLUMN_WIDTH);
 
-  @ContentChild(ExtensibleTableRowDetailComponent)
-  rowDetailComponent?: ExtensibleTableRowDetailComponent<R>;
+  readonly rowDetailComponent = contentChild(ExtensibleTableRowDetailComponent);
 
-  @ViewChild('table', { static: false }) table!: DatatableComponent;
+  readonly table = viewChild.required<DatatableComponent>('table');
 
   // Computed values
   protected readonly actionsText = computed(() => {
@@ -153,11 +155,11 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
   }
 
   protected get effectiveRowDetailTemplate(): TemplateRef<RowDetailContext<R>> | undefined {
-    return this.rowDetailComponent?.template() ?? this.rowDetailTemplate();
+    return this.rowDetailComponent()?.template() ?? this.rowDetailTemplate();
   }
 
   protected get effectiveRowDetailHeight(): string | number {
-    return this.rowDetailComponent?.rowHeight() ?? this.rowDetailHeight();
+    return this.rowDetailComponent()?.rowHeight() ?? this.rowDetailHeight();
   }
 
   hasAtLeastOnePermittedAction: boolean;
@@ -333,8 +335,9 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
   }
 
   toggleExpandRow(row: R): void {
-    if (this.table && this.table.rowDetail) {
-      this.table.rowDetail.toggleExpandRow(row);
+    const table = this.table();
+    if (table && table.rowDetail) {
+      table.rowDetail.toggleExpandRow(row);
     }
     this.rowDetailToggle.emit(row);
   }

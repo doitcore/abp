@@ -4,13 +4,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   OnDestroy,
-  Output,
   ViewChild,
   effect,
   inject,
   input,
+  output,
   untracked,
 } from '@angular/core';
 
@@ -47,8 +46,8 @@ export class ChartComponent implements AfterViewInit, OnDestroy {
   readonly height = input<string>();
   readonly responsive = input<boolean>(true);
 
-  @Output() dataSelect = new EventEmitter();
-  @Output() initialized = new EventEmitter<boolean>();
+  readonly dataSelect = output<any>();
+  readonly initialized = output<boolean>();
 
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 

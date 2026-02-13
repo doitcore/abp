@@ -18,13 +18,15 @@ import {
   Component,
   computed,
   DOCUMENT,
+  effect,
   ElementRef,
   inject,
-  Input,
+  input,
   output,
   QueryList,
   signal,
   TrackByFunction,
+  untracked,
   ViewChildren,
 } from '@angular/core';
 import { concat, of } from 'rxjs';
@@ -112,17 +114,43 @@ export class PermissionManagementComponent {
   protected readonly toasterService = inject(ToasterService);
   private document = inject(DOCUMENT);
 
-  // Classic inputs for ReplaceableTemplateDirective compatibility
-  @Input() providerName!: string;
-  @Input() providerKey!: string;
-  @Input() hideBadges = false;
-  @Input() entityDisplayName?: string;
+
+  readonly providerNameInput = input('', { alias: 'providerName' });
+  readonly providerKeyInput = input('', { alias: 'providerKey' });
+  readonly hideBadgesInput = input(false, { alias: 'hideBadges' });
+  readonly entityDisplayName = input<string | undefined>(undefined);
+  readonly visibleInput = input(false, { alias: 'visible' });
 
   // Output signals
   readonly visibleChange = output<boolean>();
 
   // Internal state
   protected readonly _visible = signal(false);
+
+  // Backward-compatible getters/setters for ReplaceableTemplateDirective.
+  private _providerNameOverride?: string;
+  get providerName(): string {
+    return this._providerNameOverride ?? this.providerNameInput();
+  }
+  set providerName(value: string) {
+    this._providerNameOverride = value;
+  }
+
+  private _providerKeyOverride?: string;
+  get providerKey(): string {
+    return this._providerKeyOverride ?? this.providerKeyInput();
+  }
+  set providerKey(value: string) {
+    this._providerKeyOverride = value;
+  }
+
+  private _hideBadgesOverride?: boolean;
+  get hideBadges(): boolean {
+    return this._hideBadgesOverride ?? this.hideBadgesInput();
+  }
+  set hideBadges(value: boolean) {
+    this._hideBadgesOverride = value;
+  }
 
   @ViewChildren('selectAllInThisTabsRef')
   selectAllInThisTabsRef!: QueryList<ElementRef<HTMLInputElement>>;
@@ -178,8 +206,7 @@ export class PermissionManagementComponent {
 
   trackByFn: TrackByFunction<PermissionGroupDto> = (_, item) => item.name;
 
-  // Getter/setter for visible - used by ReplaceableTemplateDirective
-  @Input()
+  // Getter/setter for visible - used by ReplaceableTemplateDirective and internal code
   get visible(): boolean {
     return this._visible();
   }
@@ -207,7 +234,29 @@ export class PermissionManagementComponent {
     }
   }
 
-
+  constructor() {
+    effect(() => {
+      const inputValue = this.visibleInput();
+      untracked(() => {
+        if (this._visible() !== inputValue) {
+          if (inputValue) {
+            this.openModal().subscribe(() => {
+              this._visible.set(true);
+              concat(this.selectAllInAllTabsRef.changes, this.selectAllInThisTabsRef.changes)
+                .pipe(take(1))
+                .subscribe(() => {
+                  this.initModal();
+                });
+            });
+          } else {
+            this.setSelectedGroup(null);
+            this._visible.set(false);
+            this.filter.set('');
+          }
+        }
+      });
+    });
+  }
 
   getChecked(name: string) {
     return (this.permissions.find(per => per.name === name) || { isGranted: false }).isGranted;

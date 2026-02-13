@@ -39,7 +39,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { DateAdapter, DisabledDirective, TimeAdapter } from '@abp/ng.theme.shared';
 import { EXTRA_PROPERTIES_KEY } from '../../constants/extra-properties';
 import { FormProp } from '../../models/form-props';
-import { PropData, ReadonlyPropData } from '../../models/props';
+import { ReadonlyPropData } from '../../models/props';
 import { selfFactory } from '../../utils/factory.util';
 import { addTypeaheadTextSuffix } from '../../utils/typeahead.util';
 import { eExtensibleComponents } from '../../enums/components';
@@ -91,7 +91,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
   private injector = inject(Injector);
   private readonly form = this.#groupDirective.form;
 
-  readonly data = input.required<PropData>();
+  readonly data = input.required<ReadonlyPropData>();
   readonly prop = input.required<FormProp>();
   readonly first = input<boolean | undefined>(undefined);
   readonly isFirstGroup = input<boolean | undefined>(undefined);
@@ -110,7 +110,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
   disabledFn = (data: ReadonlyPropData) => false;
 
   get disabled() {
-    const data = this.data()?.data;
+    const data = this.data();
     if (!data) return false;
     return this.disabledFn(data);
   }
@@ -119,7 +119,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
     // Watch prop changes and update state
     effect(() => {
       const currentProp = this.prop();
-      const data = this.data()?.data;
+      const data = this.data();
       if (!currentProp || !data) return;
 
       const { options, readonly, disabled, validators, className, template } = currentProp;
@@ -158,6 +158,8 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
       const [keyControl, valueControl] = this.getTypeaheadControls();
       if (keyControl && valueControl)
         this.typeaheadModel = { key: keyControl.value, value: valueControl.value };
+
+      this.cdRef.markForCheck();
     });
   }
 
@@ -175,7 +177,7 @@ export class ExtensibleFormPropComponent implements AfterViewInit {
       ? text$.pipe(
           debounceTime(300),
           distinctUntilChanged(),
-          switchMap(text => this.prop()?.options?.(this.data().data, text) || of([])),
+          switchMap(text => this.prop()?.options?.(this.data(), text) || of([])),
         )
       : of([]);
 

@@ -57,20 +57,25 @@ You can inject `ICorrelationIdProvider` into any service to access the current c
 ```csharp
 public class MyService : ITransientDependency
 {
+    public ILogger<MyService> Logger { get; set; }
+
     private readonly ICorrelationIdProvider _correlationIdProvider;
 
     public MyService(ICorrelationIdProvider correlationIdProvider)
     {
+        Logger = NullLogger<MyService>.Instance;
         _correlationIdProvider = correlationIdProvider;
     }
 
-    public void DoSomething()
+    public async Task DoSomethingAsync()
     {
         // Get the current correlation ID
         var correlationId = _correlationIdProvider.Get();
-        
+
         // Use it for logging, tracing, etc.
         Logger.LogInformation("Processing with Correlation ID: {CorrelationId}", correlationId);
+
+        await SomeOperationAsync();
     }
 }
 ```
@@ -136,9 +141,9 @@ No manual configuration is required. ABP's `ClientProxyBase` automatically reads
 
 ### Distributed Event Bus
 
-When you publish a [distributed event](../infrastructure/event-bus/distributed/index.md), ABP automatically attaches the current correlation ID to the outgoing event message. When the event is consumed (potentially by a different service), the correlation ID is extracted from the message and set in the consumer's context.
+When you publish a [distributed event](./event-bus/distributed/index.md), ABP automatically attaches the current correlation ID to the outgoing event message. When the event is consumed (potentially by a different service), the correlation ID is extracted from the message and set in the consumer's context.
 
-> This works with all supported event bus providers. Including, [RabbitMQ](../infrastructure/event-bus/distributed/rabbitmq.md), [Kafka](../infrastructure/event-bus/distributed/kafka.md), [Azure Service Bus](../infrastructure/event-bus/distributed/azure.md) and [Rebus](../infrastructure/event-bus/distributed/rebus.md).
+> This works with all supported event bus providers, including [RabbitMQ](./event-bus/distributed/rabbitmq.md), [Kafka](./event-bus/distributed/kafka.md), [Azure Service Bus](./event-bus/distributed/azure.md) and [Rebus](./event-bus/distributed/rebus.md).
 
 ```
 Service A publishes event (CorrelationId: abc123)

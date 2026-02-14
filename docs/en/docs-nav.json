@@ -702,6 +702,10 @@
               "path": "framework/infrastructure/concurrency-check.md"
             },
             {
+              "text": "Correlation ID",
+              "path": "framework/infrastructure/correlation-id.md"
+            },
+            {
               "text": "Current User",
               "path": "framework/infrastructure/current-user.md"
             },

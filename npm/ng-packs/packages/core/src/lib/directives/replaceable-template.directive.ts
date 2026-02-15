@@ -1,5 +1,6 @@
 import {
   Directive,
+  effect,
   Injector,
   OnChanges,
   OnInit,
@@ -54,6 +55,13 @@ export class ReplaceableTemplateDirective implements OnInit, OnChanges {
         this.setDefaultComponentInputs();
       },
     };
+
+    effect(() => {
+      const data = this.data();
+      if (data?.inputs && this.defaultComponentRef) {
+        this.setDefaultComponentInputs();
+      }
+    });
   }
 
   ngOnInit() {

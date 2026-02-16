@@ -5,7 +5,7 @@
     }
   }
 
-  <div [ngClass]="containerClassName" class="mb-2">
+  <div [class]="containerClassName" class="mb-2">
     @switch (getComponent(prop)) {
       @case ('input') {
         <ng-template [ngTemplateOutlet]="label" />
@@ -135,7 +135,7 @@
             <i
               class="fa"
               aria-hidden="true"
-              [ngClass]="{
+              [class]="{
                 'fa-eye-slash': !showPassword,
                 'fa-eye': showPassword,
               }"
@@ -152,7 +152,7 @@
 </ng-container>
 
 <ng-template #label let-classes>
-  <label [htmlFor]="prop.id" [ngClass]="classes || 'form-label d-inline-block'">
+  <label [htmlFor]="prop.id" [class]="classes || 'form-label d-inline-block'">
     <span class="d-inline-flex align-items-center gap-1 text-nowrap">
       @if (prop.displayTextResolver) {
         {{ prop.displayTextResolver(data) | abpLocalization }}
@@ -166,7 +166,7 @@
       {{ asterisk }}
       @if (prop.tooltip) {
         <i
-          [ngbTooltip]="prop.tooltip.text | abpLocalization: prop.tooltip.params"
+          [ngbTooltip]="prop.tooltip.text | abpLocalization"
           [placement]="prop.tooltip.placement || 'auto'"
           container="body"
           class="bi bi-info-circle"

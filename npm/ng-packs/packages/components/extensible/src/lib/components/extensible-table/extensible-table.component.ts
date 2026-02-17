@@ -4,8 +4,6 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
-  ContentChild,
-  EventEmitter,
   inject,
   Injector,
   LOCALE_ID,
@@ -14,12 +12,11 @@ import {
   signal,
   TemplateRef,
   TrackByFunction,
-  ViewChild,
   input,
   effect,
   output,
   contentChild,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { AsyncPipe, isPlatformBrowser, NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 
@@ -111,9 +108,12 @@ export class ExtensibleTableComponent<R = any> implements AfterViewInit, OnDestr
   });
   readonly actionsTemplate = input<TemplateRef<any> | undefined>(undefined);
   readonly selectable = input(false);
-  readonly selectionTypeInput = input<SelectionType | keyof typeof SelectionType>(SelectionType.multiClick, {
-    alias: 'selectionType',
-  });
+  readonly selectionTypeInput = input<SelectionType | keyof typeof SelectionType>(
+    SelectionType.multiClick,
+    {
+      alias: 'selectionType',
+    },
+  );
   readonly selected = input<any[]>([]);
   readonly infiniteScroll = input(false);
   readonly isLoading = input(false);

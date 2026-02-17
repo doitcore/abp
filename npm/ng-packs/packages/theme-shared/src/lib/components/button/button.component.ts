@@ -4,14 +4,12 @@ import {
   ElementRef,
   OnInit,
   Renderer2,
-  ViewChild,
   computed,
-  effect,
   inject,
   input,
   output,
   signal,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { ABP, StopPropagationDirective } from '@abp/ng.core';
 

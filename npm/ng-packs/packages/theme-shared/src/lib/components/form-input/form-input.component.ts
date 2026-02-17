@@ -34,7 +34,7 @@ import { AbstractNgModelComponent, LocalizationPipe } from '@abp/ng.core';
   imports: [LocalizationPipe, FormsModule],
 })
 export class FormInputComponent extends AbstractNgModelComponent {
-  readonly inputId = input.required<string>();
+  readonly inputId = input<string>();
   readonly inputReadonly = input(false);
   readonly label = input('');
   readonly labelClass = input('form-label');

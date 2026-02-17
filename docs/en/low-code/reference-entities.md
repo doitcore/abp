@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Link dynamic entities to existing C# entities like IdentityUser using Reference Entities in the ABP Low-Code Module."
+    "Description": "Link dynamic entities to existing C# entities like IdentityUser using Reference Entities in the ABP Low-Code System."
 }
 ```
 
@@ -13,7 +13,7 @@ Reference Entities allow you to create foreign key relationships from dynamic en
 
 Dynamic entities defined via [Attributes](fluent-api.md) or [model.json](model-json.md) normally reference other dynamic entities. However, you may need to link to entities like ABP's `IdentityUser`, `Tenant`, or your own C# entity classes. Reference entities make this possible.
 
-Unlike dynamic entities, reference entities are **read-only** from the Low-Code Module's perspective — they don't get CRUD pages or APIs. They are used solely for:
+Unlike dynamic entities, reference entities are **read-only** from the Low-Code System's perspective — they don't get CRUD pages or APIs. They are used solely for:
 
 * **Foreign key lookups** — dropdown selection in UI forms
 * **Display values** — showing the referenced entity's display property in grids

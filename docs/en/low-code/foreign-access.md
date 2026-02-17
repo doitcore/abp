@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Control access to related entities through foreign key relationships using Foreign Access in the ABP Low-Code Module."
+    "Description": "Control access to related entities through foreign key relationships using Foreign Access in the ABP Low-Code System."
 }
 ```
 

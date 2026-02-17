@@ -1,6 +1,9 @@
 ---
 description: "ABP permission system and authorization patterns"
-globs: "**/*Permission*.cs,**/*AppService*.cs,**/*Controller*.cs"
+globs:
+  - "**/*Permission*.cs"
+  - "**/*AppService*.cs"
+  - "**/*Controller*.cs"
 alwaysApply: false
 ---
 

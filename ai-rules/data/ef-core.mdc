@@ -1,6 +1,9 @@
 ---
 description: "ABP Entity Framework Core patterns - DbContext, migrations, repositories"
-globs: "**/*.EntityFrameworkCore/**/*.cs,**/EntityFrameworkCore/**/*.cs,**/*DbContext*.cs"
+globs:
+  - "**/*.EntityFrameworkCore/**/*.cs"
+  - "**/EntityFrameworkCore/**/*.cs"
+  - "**/*DbContext*.cs"
 alwaysApply: false
 ---
 

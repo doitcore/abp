@@ -1,6 +1,8 @@
 ---
 description: "ABP layer dependency rules and project structure guardrails"
-globs: "**/*.csproj,**/*Module*.cs"
+globs:
+  - "**/*.csproj"
+  - "**/*Module*.cs"
 alwaysApply: false
 ---
 

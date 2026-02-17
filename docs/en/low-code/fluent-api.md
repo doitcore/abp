@@ -182,7 +182,7 @@ public string InternalNotes { get; set; }
 Controls whether clients can set this property value. Useful for computed or server-assigned fields:
 
 ````csharp
-[DynamicPropertySetByClients(Allow = false)]
+[DynamicPropertySetByClients(false)]
 public string RegistrationNumber { get; set; }
 ````
 
@@ -217,7 +217,7 @@ public class Organization
 }
 ````
 
-> The `Name` parameter must be one of: `"Create"`, `"Update"`, or `"Delete"`. Multiple interceptors can be added to the same class (`AllowMultiple = true`).
+> The `Name` parameter must be one of: `"Create"`, `"Update"`, or `"Delete"`. The `InterceptorType` can be `Pre`, `Post`, or `Replace`. When `Replace` is used, the default DB operation is skipped entirely and only the JavaScript handler runs. Multiple interceptors can be added to the same class (`AllowMultiple = true`).
 
 See [Interceptors](interceptors.md) for the full JavaScript context API.
 
@@ -292,7 +292,7 @@ public override void ConfigureServices(ServiceConfigurationContext context)
 | `SetParent(entityName)` | Set parent entity for nesting |
 | `SetUI(action)` | Configure entity-level UI |
 | `ConfigureProperty(name, action)` | Configure a specific property |
-| `AddInterceptor(name, type, js)` | Add a JavaScript interceptor |
+| `AddInterceptor(name, type, js)` | Add a JavaScript interceptor. `name`: `"Create"`, `"Update"`, or `"Delete"`. `type`: `Pre`, `Post`, or `Replace` |
 
 ### Property Configuration Methods
 

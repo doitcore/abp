@@ -15,13 +15,13 @@ Interceptors allow you to run custom JavaScript code before, after, or instead o
 |---------|------|---------------|
 | `Create` | `Pre` | Before entity creation — validation, default values |
 | `Create` | `Post` | After entity creation — notifications, related data |
-| `Create` | `Replace` | Instead of entity creation — the default DB insert is skipped, only JavaScript runs |
+| `Create` | `Replace` | Instead of entity creation — **must return the new entity's Id** (see below) |
 | `Update` | `Pre` | Before entity update — validation, authorization |
 | `Update` | `Post` | After entity update — sync, notifications |
-| `Update` | `Replace` | Instead of entity update — the default DB update is skipped, only JavaScript runs |
+| `Update` | `Replace` | Instead of entity update — no return value needed |
 | `Delete` | `Pre` | Before entity deletion — dependency checks |
 | `Delete` | `Post` | After entity deletion — cleanup |
-| `Delete` | `Replace` | Instead of entity deletion — the default DB delete is skipped, only JavaScript runs |
+| `Delete` | `Replace` | Instead of entity deletion — no return value needed |
 
 ## Defining Interceptors with Attributes
 
@@ -177,11 +177,13 @@ When you need to completely replace the default create operation with custom log
 {
   "commandName": "Create",
   "type": "Replace",
-  "javascript": "var data = context.commandArgs.data;\ndata['Code'] = 'PRD-' + Date.now();\nawait db.insert('LowCodeDemo.Products.Product', data);\ncontext.log('Product created with custom code: ' + data['Code']);"
+  "javascript": "var data = context.commandArgs.data;\ndata['Code'] = 'PRD-' + Date.now();\nvar result = await db.insert('LowCodeDemo.Products.Product', data);\ncontext.log('Product created with custom code: ' + data['Code']);\nreturn result.Id;"
 }
 ```
 
-> When `Replace` is used, the standard database operation does not run. You are responsible for performing any necessary persistence in your JavaScript handler.
+> **Important:** `Replace-Create` interceptors **must** return the new entity's `Id` (Guid). The system uses this value to fetch and return the created entity. Use `return result.Id;` after `db.insert(...)`.
+>
+> `Replace-Update` and `Replace-Delete` interceptors do not need to return a value.
 
 ### Pre-Update: Self-Reference Check
 

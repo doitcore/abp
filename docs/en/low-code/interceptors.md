@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Add custom business logic to dynamic entity CRUD operations using Interceptors in the ABP Low-Code Module. Validate, transform, and react to data changes with JavaScript."
+    "Description": "Add custom business logic to dynamic entity CRUD operations using Interceptors in the ABP Low-Code System. Validate, transform, and react to data changes with JavaScript."
 }
 ```
 

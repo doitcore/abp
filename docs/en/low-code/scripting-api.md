@@ -1,13 +1,13 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Server-side JavaScript Scripting API for ABP Low-Code Module. Query, filter, aggregate data and perform CRUD operations with database-level execution."
+    "Description": "Server-side JavaScript Scripting API for ABP Low-Code System. Query, filter, aggregate data and perform CRUD operations with database-level execution."
 }
 ```
 
 # Scripting API
 
-The Low-Code Module provides a server-side JavaScript scripting engine for executing custom business logic within [interceptors](interceptors.md) and [custom endpoints](custom-endpoints.md). Scripts run in a sandboxed environment with access to a database API backed by EF Core.
+The Low-Code System provides a server-side JavaScript scripting engine for executing custom business logic within [interceptors](interceptors.md) and [custom endpoints](custom-endpoints.md). Scripts run in a sandboxed environment with access to a database API backed by EF Core.
 
 ## Unified Database API (`db`)
 

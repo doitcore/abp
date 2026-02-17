@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Define custom REST API endpoints with JavaScript handlers in the ABP Low-Code Module. Create dynamic APIs without writing C# controllers."
+    "Description": "Define custom REST API endpoints with JavaScript handlers in the ABP Low-Code System. Create dynamic APIs without writing C# controllers."
 }
 ```
 

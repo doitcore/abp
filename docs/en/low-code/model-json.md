@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Define dynamic entities using model.json in the ABP Low-Code Module. Learn about entity properties, enums, foreign keys, validators, UI configuration, and migration requirements."
+    "Description": "Define dynamic entities using model.json in the ABP Low-Code System. Learn about entity properties, enums, foreign keys, validators, UI configuration, and migration requirements."
 }
 ```
 

@@ -19,11 +19,9 @@
       <ngx-datatable-row-detail [rowHeight]="effectiveRowDetailHeight">
         <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
           <ng-container
-            *ngTemplateOutlet="
-              effectiveRowDetailTemplate;
-              context: { row: row, expanded: expanded }
-            "
-          />
+            [ngTemplateOutlet]="effectiveRowDetailTemplate"
+            [ngTemplateOutletContext]="{ row: row, expanded: expanded }"
+          ></ng-container>
         </ng-template>
       </ngx-datatable-row-detail>
 
@@ -111,17 +109,14 @@
         [sortable]="false"
       >
         <ng-template let-row="row" let-i="rowIndex" ngx-datatable-cell-template>
-          <ng-container
-            *ngTemplateOutlet="
-              actionsTemplate() || gridActions;
-              context: { $implicit: row, index: i }
-            "
-          ></ng-container>
-          <ng-template #gridActions>
-            @if (isVisibleActions(row)) {
-              <abp-grid-actions [index]="i" [record]="row" text="AbpUi::Actions"></abp-grid-actions>
-            }
-          </ng-template>
+          @if (actionsTemplate(); as template) {
+            <ng-container
+              [ngTemplateOutlet]="template"
+              [ngTemplateOutletContext]="{ $implicit: row, index: i }"
+            ></ng-container>
+          } @else if (isVisibleActions(row)) {
+            <abp-grid-actions [index]="i" [record]="row" text="AbpUi::Actions"></abp-grid-actions>
+          }
         </ng-template>
       </ngx-datatable-column>
     }

@@ -169,6 +169,7 @@ export class ForDirective implements OnChanges {
 
     // Recreate differ if items array reference changed
     if (this.lastItemsRef !== itemsValue) {
+      this.vcRef.clear();
       this.differ = null;
       this.lastItemsRef = itemsValue;
     }

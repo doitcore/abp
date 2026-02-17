@@ -994,7 +994,7 @@ public abstract class AbpDbContext<TDbContext> : DbContext, IAbpEfCoreDbContext,
         return expression;
     }
 
-    protected virtual bool UseDbFunction()
+    public virtual bool UseDbFunction()
     {
         return LazyServiceProvider != null && GlobalFilterOptions.Value.UseDbFunction && DbContextOptions.FindExtension<AbpDbContextOptionsExtension>() != null;
     }

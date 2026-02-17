@@ -7,7 +7,7 @@
 
 # Interceptors
 
-Interceptors allow you to run custom JavaScript code before or after Create, Update, and Delete operations on dynamic entities.
+Interceptors allow you to run custom JavaScript code before, after, or instead of Create, Update, and Delete operations on dynamic entities.
 
 ## Interceptor Types
 
@@ -15,10 +15,13 @@ Interceptors allow you to run custom JavaScript code before or after Create, Upd
 |---------|------|---------------|
 | `Create` | `Pre` | Before entity creation — validation, default values |
 | `Create` | `Post` | After entity creation — notifications, related data |
+| `Create` | `Replace` | Instead of entity creation — the default DB insert is skipped, only JavaScript runs |
 | `Update` | `Pre` | Before entity update — validation, authorization |
 | `Update` | `Post` | After entity update — sync, notifications |
+| `Update` | `Replace` | Instead of entity update — the default DB update is skipped, only JavaScript runs |
 | `Delete` | `Pre` | Before entity deletion — dependency checks |
 | `Delete` | `Post` | After entity deletion — cleanup |
+| `Delete` | `Replace` | Instead of entity deletion — the default DB delete is skipped, only JavaScript runs |
 
 ## Defining Interceptors with Attributes
 
@@ -42,7 +45,7 @@ public class Organization
 }
 ````
 
-The `Name` parameter must be one of: `"Create"`, `"Update"`, or `"Delete"`. This maps directly to the CRUD command being intercepted. Multiple interceptors can be added to the same class (`AllowMultiple = true`).
+The `Name` parameter must be one of: `"Create"`, `"Update"`, or `"Delete"`. The `InterceptorType` can be `Pre`, `Post`, or `Replace`. When `Replace` is used, the default database operation is completely skipped and only your JavaScript handler executes. Multiple interceptors can be added to the same class (`AllowMultiple = true`).
 
 ## Defining Interceptors in model.json
 
@@ -66,7 +69,7 @@ Add interceptors to the `interceptors` array of an entity:
 | Field | Type | Description |
 |-------|------|-------------|
 | `commandName` | string | `"Create"`, `"Update"`, or `"Delete"` |
-| `type` | string | `"Pre"` or `"Post"` |
+| `type` | string | `"Pre"`, `"Post"`, or `"Replace"` |
 | `javascript` | string | JavaScript code to execute |
 
 ## JavaScript Context
@@ -166,7 +169,21 @@ globalError = 'Cannot delete this entity!';
 }
 ```
 
-### Pre-Create: Self-Reference Check
+### Replace-Create: Custom Insert Logic
+
+When you need to completely replace the default create operation with custom logic:
+
+```json
+{
+  "commandName": "Create",
+  "type": "Replace",
+  "javascript": "var data = context.commandArgs.data;\ndata['Code'] = 'PRD-' + Date.now();\nawait db.insert('LowCodeDemo.Products.Product', data);\ncontext.log('Product created with custom code: ' + data['Code']);"
+}
+```
+
+> When `Replace` is used, the standard database operation does not run. You are responsible for performing any necessary persistence in your JavaScript handler.
+
+### Pre-Update: Self-Reference Check
 
 ```json
 {

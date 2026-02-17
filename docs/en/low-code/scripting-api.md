@@ -278,7 +278,6 @@ Direct CRUD methods on the `db` object:
 | Method | Description | Returns |
 |--------|-------------|---------|
 | `db.get(entityName, id)` | Get by ID | `Promise<object\|null>` |
-| `db.getList(entityName, take?)` | Get list | `Promise<object[]>` |
 | `db.getCount(entityName)` | Get count | `Promise<number>` |
 | `db.insert(entityName, entity)` | Insert new | `Promise<object>` |
 | `db.update(entityName, entity)` | Update existing | `Promise<object>` |

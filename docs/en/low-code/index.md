@@ -53,37 +53,7 @@ Run `dotnet ef migrations add Added_Product` and start your application. You get
 
 ## Getting Started
 
-### 1. Install NuGet Packages
-
-| Package | Layer |
-|---------|-------|
-| `Volo.Abp.LowCode.Domain.Shared` | Domain.Shared |
-| `Volo.Abp.LowCode.Domain` | Domain |
-| `Volo.Abp.LowCode.Application.Contracts` | Application.Contracts |
-| `Volo.Abp.LowCode.Application` | Application |
-| `Volo.Abp.LowCode.HttpApi` | HttpApi |
-| `Volo.Abp.LowCode.HttpApi.Client` | HttpApi.Client |
-| `Volo.Abp.LowCode.EntityFrameworkCore` | EF Core |
-| `Volo.Abp.LowCode.Blazor` | Blazor UI (SSR) |
-| `Volo.Abp.LowCode.Blazor.Server` | Blazor Server |
-| `Volo.Abp.LowCode.Blazor.WebAssembly` | Blazor WebAssembly |
-| `Volo.Abp.LowCode.Installer` | Auto module discovery |
-
-### 2. Add Module Dependencies
-
-````csharp
-[DependsOn(
-    typeof(AbpLowCodeApplicationModule),
-    typeof(AbpLowCodeEntityFrameworkCoreModule),
-    typeof(AbpLowCodeHttpApiModule),
-    typeof(AbpLowCodeBlazorModule)
-)]
-public class YourModule : AbpModule
-{
-}
-````
-
-### 3. Register Your Assembly
+### 1. Register Your Assembly
 
 In your Domain module, register the assembly that contains your `[DynamicEntity]` classes:
 
@@ -96,7 +66,7 @@ public override void ConfigureServices(ServiceConfigurationContext context)
 }
 ````
 
-### 4. Configure DbContext
+### 2. Configure DbContext
 
 Call `ConfigureDynamicEntities()` in your `DbContext`:
 
@@ -108,7 +78,7 @@ protected override void OnModelCreating(ModelBuilder builder)
 }
 ````
 
-### 5. Define Your First Entity
+### 3. Define Your First Entity
 
 ````csharp
 [DynamicEntity]
@@ -125,7 +95,7 @@ public class Customer
 }
 ````
 
-### 6. Add Migration and Run
+### 4. Add Migration and Run
 
 ```bash
 dotnet ef migrations add Added_Customer

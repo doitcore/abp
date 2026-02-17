@@ -118,8 +118,6 @@ if (user) {
 | Entity | Name for `entityName` | Typical Display Property |
 |--------|----------------------|--------------------------|
 | ABP Identity User | `Volo.Abp.Identity.IdentityUser` | `UserName` |
-| ABP Identity Role | `Volo.Abp.Identity.IdentityRole` | `Name` |
-| ABP Tenant | `Volo.Saas.Tenant` | `Name` |
 
 ## See Also
 

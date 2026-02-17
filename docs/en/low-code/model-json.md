@@ -206,13 +206,52 @@ Add validation rules to properties:
 }
 ```
 
-| Validator | Parameters | Description |
-|-----------|------------|-------------|
-| `required` | — | Value is required |
-| `minLength` | `length` | Minimum string length |
-| `maxLength` | `length` | Maximum string length |
-| `emailAddress` | — | Must be a valid email |
-| `range` | `min`, `max` | Numeric range |
+Additional validator examples:
+
+```json
+{
+  "name": "Website",
+  "validators": [
+    { "type": "url", "message": "Please enter a valid URL" }
+  ]
+},
+{
+  "name": "PhoneNumber",
+  "validators": [
+    { "type": "phone" }
+  ]
+},
+{
+  "name": "ProductCode",
+  "validators": [
+    { "type": "regularExpression", "pattern": "^[A-Z]{3}-\\d{4}$", "message": "Code must be in format ABC-1234" }
+  ]
+},
+{
+  "name": "Price",
+  "type": "decimal",
+  "validators": [
+    { "type": "range", "minimum": 0.01, "maximum": 99999.99 }
+  ]
+}
+```
+
+| Validator | Parameters | Applies To | Description |
+|-----------|------------|------------|-------------|
+| `required` | `allowEmptyStrings` (optional) | All types | Value is required |
+| `minLength` | `length` | String | Minimum string length |
+| `maxLength` | `length` | String | Maximum string length |
+| `stringLength` | `minimumLength`, `maximumLength` | String | String length range (min and max together) |
+| `emailAddress` | — | String | Must be a valid email |
+| `phone` | — | String | Must be a valid phone number |
+| `url` | — | String | Must be a valid URL |
+| `creditCard` | — | String | Must be a valid credit card number |
+| `regularExpression` | `pattern` | String | Must match the regex pattern |
+| `range` | `minimum`, `maximum` | Numeric | Numeric range |
+| `min` | `minimum` | Numeric | Minimum numeric value |
+| `max` | `maximum` | Numeric | Maximum numeric value |
+
+> All validators accept an optional `message` parameter for a custom error message. The `regularExpression` validator also accepts the alias `pattern`, and `emailAddress` also accepts `email`.
 
 ## UI Configuration
 

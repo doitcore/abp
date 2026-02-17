@@ -61,18 +61,36 @@ Inside custom endpoint scripts, you have access to:
 
 | Variable | Description |
 |----------|-------------|
+| `request` | Full request object |
 | `route` | Route parameter values (e.g., `route.id`) |
+| `params` | Alias for route parameters |
 | `query` | Query string parameters (e.g., `query.q`, `query.page`) |
 | `body` | Request body (for POST/PUT) |
-| `user` | Current user (same as `context.currentUser` in interceptors) |
+| `headers` | Request headers |
+| `user` | Current user (same as `context.currentUser` in [Interceptors](interceptors.md)) |
+| `email` | Email sender (same as `context.emailSender` in [Interceptors](interceptors.md)) |
 
 ### Response Helpers
 
 | Function | HTTP Status | Description |
 |----------|-------------|-------------|
 | `ok(data)` | 200 | Success response with data |
-| `notFound(message)` | 404 | Not found response |
+| `created(data)` | 201 | Created response with data |
+| `noContent()` | 204 | No content response |
 | `badRequest(message)` | 400 | Bad request response |
+| `unauthorized(message)` | 401 | Unauthorized response |
+| `forbidden(message)` | 403 | Forbidden response |
+| `notFound(message)` | 404 | Not found response |
+| `error(message)` | 500 | Internal server error response |
+| `response(statusCode, data, error)` | Custom | Custom status code response |
+
+### Logging
+
+| Function | Description |
+|----------|-------------|
+| `log(message)` | Log an informational message |
+| `logWarning(message)` | Log a warning message |
+| `logError(message)` | Log an error message |
 
 ### Database API
 

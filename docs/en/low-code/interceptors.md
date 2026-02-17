@@ -78,32 +78,51 @@ Inside interceptor scripts, you have access to:
 
 ### `context.commandArgs`
 
-| Property | Type | Description |
+| Property / Method | Type | Description |
 |----------|------|-------------|
 | `data` | object | Entity data dictionary (for Create/Update) |
 | `entityId` | string | Entity ID (for Update/Delete) |
+| `commandName` | string | Command name (`"Create"`, `"Update"`, or `"Delete"`) |
+| `entityName` | string | Full entity name |
 | `getValue(name)` | function | Get a property value |
 | `setValue(name, value)` | function | Set a property value (Pre-interceptors only) |
+| `hasValue(name)` | function | Check if a property exists in the data |
+| `removeValue(name)` | function | Remove a property from the data |
 
 ### `context.currentUser`
 
-| Property | Type | Description |
+| Property / Method | Type | Description |
 |----------|------|-------------|
 | `isAuthenticated` | bool | Whether user is logged in |
+| `id` | string | User ID |
 | `userName` | string | Username |
 | `email` | string | Email address |
+| `name` | string | First name |
+| `surName` | string | Last name |
+| `phoneNumber` | string | Phone number |
+| `phoneNumberVerified` | bool | Whether phone is verified |
+| `emailVerified` | bool | Whether email is verified |
+| `tenantId` | string | Tenant ID (for multi-tenant apps) |
 | `roles` | string[] | User's role names |
-| `id` | string | User ID |
+| `isInRole(roleName)` | function | Check if user has a specific role |
 
 ### `context.emailSender`
 
+| Property / Method | Description |
+|--------|-------------|
+| `isAvailable` | Whether the email sender is configured and available |
+| `sendAsync(to, subject, body)` | Send a plain-text email |
+| `sendHtmlAsync(to, subject, htmlBody)` | Send an HTML email |
+
+### Logging
+
 | Method | Description |
 |--------|-------------|
-| `sendAsync(to, subject, body)` | Send an email |
+| `context.log(message)` | Log an informational message |
+| `context.logWarning(message)` | Log a warning message |
+| `context.logError(message)` | Log an error message |
 
-### `context.log(message)`
-
-Log a message (use instead of `console.log`).
+> Use these methods instead of `console.log` (which is blocked in the sandbox).
 
 ### `db` (Database API)
 

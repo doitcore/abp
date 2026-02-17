@@ -57,7 +57,6 @@ var result = await db.query('LowCodeDemo.Products.Product')
 | `thenByDescending(x => x.Property)` | Secondary sort descending | `QueryBuilder` |
 | `skip(n)` | Skip n records | `QueryBuilder` |
 | `take(n)` | Take n records | `QueryBuilder` |
-| `reverse()` | Reverse sort order | `QueryBuilder` |
 | `toList()` | Execute and return array | `Promise<object[]>` |
 | `count()` | Return count | `Promise<number>` |
 | `any()` | Check if any matches exist | `Promise<boolean>` |
@@ -71,7 +70,6 @@ var result = await db.query('LowCodeDemo.Products.Product')
 | `select(x => projection)` | Project to custom shape | `QueryBuilder` |
 | `join(entity, alias, condition)` | Inner join | `QueryBuilder` |
 | `leftJoin(entity, alias, condition)` | Left join | `QueryBuilder` |
-| `chunk(size)` | Split into chunks | `Promise<object[][]>` |
 
 ### Supported Operators in Lambda
 
@@ -279,6 +277,7 @@ Direct CRUD methods on the `db` object:
 |--------|-------------|---------|
 | `db.get(entityName, id)` | Get by ID | `Promise<object\|null>` |
 | `db.getCount(entityName)` | Get count | `Promise<number>` |
+| `db.exists(entityName)` | Check if any records exist | `Promise<boolean>` |
 | `db.insert(entityName, entity)` | Insert new | `Promise<object>` |
 | `db.update(entityName, entity)` | Update existing | `Promise<object>` |
 | `db.delete(entityName, id)` | Delete by ID | `Promise<void>` |
@@ -311,12 +310,16 @@ Available in [interceptors](interceptors.md):
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `context.commandArgs` | object | Command arguments (data, entityId) |
+| `context.commandArgs` | object | Command arguments (data, entityId, commandName, entityName) |
 | `context.commandArgs.getValue(name)` | function | Get property value |
 | `context.commandArgs.setValue(name, value)` | function | Set property value |
-| `context.currentUser` | object | Current user (isAuthenticated, userName, email, roles, id) |
-| `context.emailSender` | object | Email sending (`sendAsync(to, subject, body)`) |
-| `context.log(msg)` | function | Logging |
+| `context.commandArgs.hasValue(name)` | function | Check if a property exists |
+| `context.commandArgs.removeValue(name)` | function | Remove a property value |
+| `context.currentUser` | object | Current user info (see [Interceptors](interceptors.md) for full list) |
+| `context.emailSender` | object | Email sending (`sendAsync`, `sendHtmlAsync`) |
+| `context.log(msg)` | function | Log an informational message |
+| `context.logWarning(msg)` | function | Log a warning message |
+| `context.logError(msg)` | function | Log an error message |
 
 ## Security
 

@@ -248,6 +248,24 @@ public class Organization
 }
 ````
 
+### Enum Localization
+
+Enum values can be localized using ABP's localization system. Add localization keys in the format `Enum:{EnumTypeName}.{ValueName}` to your localization JSON files:
+
+```json
+{
+  "culture": "en",
+  "texts": {
+    "Enum:OrganizationType.Corporate": "Corporate",
+    "Enum:OrganizationType.Enterprise": "Enterprise",
+    "Enum:OrganizationType.Startup": "Startup",
+    "Enum:OrganizationType.Consulting": "Consulting"
+  }
+}
+```
+
+The Blazor UI automatically uses these localization keys for enum dropdowns and display values. If no localization key is found, the enum member name is used as-is.
+
 ## Fluent API
 
 The Fluent API has the **highest priority** in the configuration system. Use `AbpDynamicEntityConfig.EntityConfigurations` to override any attribute or JSON setting programmatically.
@@ -263,47 +281,98 @@ public override void ConfigureServices(ServiceConfigurationContext context)
         "MyApp.Products.Product",
         entity =>
         {
-            entity.SetDisplayProperty("Name");
+            entity.DefaultDisplayPropertyName = "Name";
 
-            entity.ConfigureProperty("Price", prop =>
+            var priceProperty = entity.AddOrGetProperty("Price");
+            priceProperty.AsRequired();
+            priceProperty.UI = new EntityPropertyUIDescriptor
             {
-                prop.SetRequired(true);
-                prop.SetUI(ui =>
-                {
-                    ui.SetDisplayName("Unit Price");
-                    ui.SetCreationFormAvailability(EntityPropertyUIFormAvailability.Available);
-                });
-            });
+                DisplayName = "Unit Price",
+                CreationFormAvailability = EntityPropertyUIFormAvailability.Available
+            };
 
-            entity.ConfigureProperty("InternalNotes", prop =>
-            {
-                prop.SetServerOnly(true);
-            });
+            entity.AddOrGetProperty("InternalNotes").AsServerOnly();
         }
     );
 }
 ````
 
-### Entity Configuration Methods
+You can also use the generic overload with a type parameter:
 
-| Method | Description |
+````csharp
+AbpDynamicEntityConfig.EntityConfigurations.Configure<Product>(entity =>
+{
+    entity.DefaultDisplayPropertyName = "Name";
+});
+````
+
+### Entity Configuration
+
+The `Configure` method provides an `EntityDescriptor` instance. You can set its properties directly:
+
+| Property / Method | Description |
 |--------|-------------|
-| `SetDisplayProperty(name)` | Set the display property for lookups |
-| `SetParent(entityName)` | Set parent entity for nesting |
-| `SetUI(action)` | Configure entity-level UI |
-| `ConfigureProperty(name, action)` | Configure a specific property |
-| `AddInterceptor(name, type, js)` | Add a JavaScript interceptor. `name`: `"Create"`, `"Update"`, or `"Delete"`. `type`: `Pre`, `Post`, or `Replace`. `Replace-Create` must return the new entity's Id |
+| `DefaultDisplayPropertyName` | Set the display property for lookups |
+| `Parent` | Set parent entity name for nesting |
+| `UI` | Set entity-level UI (`EntityUIDescriptor` with `PageTitle`) |
+| `AddOrGetProperty(name)` | Get or create a property descriptor for configuration |
+| `FindProperty(name)` | Find a property descriptor by name (returns `null` if not found) |
+| `GetProperty(name)` | Get a property descriptor by name (throws if not found) |
+| `Interceptors` | List of `CommandInterceptorDescriptor` — add interceptors directly |
 
-### Property Configuration Methods
+### Property Configuration
 
-| Method | Description |
+`AddOrGetProperty` returns an `EntityPropertyDescriptor`. Configure it using direct property assignment and extension methods:
+
+| Property / Extension Method | Description |
 |--------|-------------|
-| `SetRequired(bool)` | Mark as required |
-| `SetUnique(bool)` | Mark as unique |
-| `SetServerOnly(bool)` | Hide from clients |
-| `SetAllowSetByClients(bool)` | Allow client writes |
-| `SetForeignKey(entityName, displayProp, access)` | Configure foreign key |
-| `SetUI(action)` | Configure property UI |
+| `.AsRequired(bool)` | Mark as required (extension method, returns the descriptor for chaining) |
+| `.AsServerOnly(bool)` | Hide from clients (extension method, returns the descriptor for chaining) |
+| `.MapToDbField(bool)` | Control if property is stored in DB (extension method, returns the descriptor for chaining) |
+| `.IsUnique` | Set to `true` to mark as unique |
+| `.AllowSetByClients` | Set to `false` to prevent client writes |
+| `.ForeignKey` | Set a `ForeignKeyDescriptor` to configure foreign key relationship |
+| `.UI` | Set an `EntityPropertyUIDescriptor` to configure property UI |
+
+### Chaining Extension Methods
+
+The extension methods `AsRequired()`, `AsServerOnly()`, and `MapToDbField()` return the property descriptor, enabling fluent chaining:
+
+````csharp
+entity.AddOrGetProperty("InternalNotes")
+    .AsServerOnly()
+    .AsRequired()
+    .MapToDbField();
+````
+
+### Configuring Foreign Keys
+
+````csharp
+AbpDynamicEntityConfig.EntityConfigurations.Configure(
+    "MyApp.Orders.Order",
+    entity =>
+    {
+        var customerIdProperty = entity.AddOrGetProperty("CustomerId");
+        customerIdProperty.ForeignKey = new ForeignKeyDescriptor
+        {
+            EntityName = "MyApp.Customers.Customer",
+            DisplayPropertyName = "Name",
+            Access = ForeignAccess.Edit
+        };
+    }
+);
+````
+
+### Adding Interceptors
+
+````csharp
+entity.Interceptors.Add(new CommandInterceptorDescriptor
+{
+    CommandName = "Create",
+    Type = InterceptorType.Pre,
+    Javascript = "if(!context.commandArgs.data['Name']) { globalError = 'Name is required!'; }"
+});
+````
 
 ## Assembly Registration
 

@@ -170,6 +170,74 @@ See [model.json Structure](model-json.md) for the full specification.
 | **Scripting API** | Server-side JavaScript for database queries and CRUD | [Scripting API](scripting-api.md) |
 | **Custom Endpoints** | REST APIs with JavaScript handlers | [Custom Endpoints](custom-endpoints.md) |
 | **Foreign Access** | View/Edit related entities from the parent's UI | [Foreign Access](foreign-access.md) |
+| **Export** | Export entity data to Excel (XLSX) or CSV | See below |
+
+## Export (Excel / CSV)
+
+The Low-Code System provides built-in export functionality for all dynamic entities. Users can export filtered data to **Excel (XLSX)** or **CSV** directly from the Blazor UI.
+
+### How It Works
+
+1. The client calls `GET /api/low-code/entities/{entityName}/download-token` to obtain a single-use download token (valid for 30 seconds).
+2. The client calls `GET /api/low-code/entities/{entityName}/export-as-excel` or `GET /api/low-code/entities/{entityName}/export-as-csv` with the token and optional filters.
+
+### API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/low-code/entities/{entityName}/download-token` | Get a single-use download token |
+| `GET /api/low-code/entities/{entityName}/export-as-excel` | Export as Excel (.xlsx) |
+| `GET /api/low-code/entities/{entityName}/export-as-csv` | Export as CSV (.csv) |
+
+Export requests accept the same filtering, sorting, and search parameters as the list endpoint. Server-only properties are automatically excluded, and foreign key columns display the referenced entity's display value instead of the raw ID.
+
+## Custom Commands and Queries
+
+The Low-Code System allows you to replace or extend the default CRUD operations by implementing custom command and query handlers in C#.
+
+### Custom Commands
+
+Create a class that implements `ILcCommand<TResult>` and decorate it with `[CustomCommand]`:
+
+````csharp
+[CustomCommand("Create", "MyApp.Products.Product")]
+public class CustomProductCreateCommand : LcCommandBase<DynamicEntityDto>
+{
+    public override async Task<DynamicEntityDto> ExecuteWithResultAsync(DynamicCommandArgs commandArgs)
+    {
+        // Your custom create logic here
+        // ...
+    }
+}
+````
+
+| Parameter | Description |
+|-----------|-------------|
+| `commandName` | The command to replace: `"Create"`, `"Update"`, or `"Delete"` |
+| `entityName` | Full entity name (e.g., `"MyApp.Products.Product"`) |
+
+### Custom Queries
+
+Create a class that implements `ILcQuery<TResult>` and decorate it with `[CustomQuery]`:
+
+````csharp
+[CustomQuery("List", "MyApp.Products.Product")]
+public class CustomProductListQuery : ILcQuery<DynamicQueryResult>
+{
+    public async Task<DynamicQueryResult> ExecuteAsync(DynamicQueryArgs queryArgs)
+    {
+        // Your custom list query logic here
+        // ...
+    }
+}
+````
+
+| Parameter | Description |
+|-----------|-------------|
+| `queryName` | The query to replace: `"List"` or `"Single"` |
+| `entityName` | Full entity name (e.g., `"MyApp.Products.Product"`) |
+
+Custom commands and queries are automatically discovered and registered at startup. They completely replace the default handler for the specified entity and operation.
 
 ## Internals
 
@@ -182,8 +250,12 @@ See [model.json Structure](model-json.md) for the full specification.
 
 ### Application Layer
 
-* `DynamicEntityAppService`: CRUD operations for all dynamic entities.
-* `DynamicEntityUIAppService`: UI definitions, menu items, and page configurations.
+* `DynamicEntityAppService`: CRUD operations for all dynamic entities (Get, GetList, Create, Update, Delete, Export).
+* `DynamicEntityUIAppService`: UI definitions, menu items, and page configurations. Provides:
+  * `GetUiDefinitionAsync(entityName)` — Full UI definition (filters, columns, forms, children, foreign access actions, permissions)
+  * `GetUiCreationFormDefinitionAsync(entityName)` — Creation form fields with validation rules
+  * `GetUiEditFormDefinitionAsync(entityName)` — Edit form fields with validation rules
+  * `GetMenuItemsAsync()` — Menu items for all entities that have a `pageTitle` configured (filtered by permissions)
 * `DynamicPermissionDefinitionProvider`: Auto-generates permissions per entity.
 * `CustomEndpointExecutor`: Executes JavaScript-based custom endpoints.
 

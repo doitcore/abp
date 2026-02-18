@@ -136,6 +136,8 @@ Set this variable to a string to **abort** the operation and return an error:
 globalError = 'Cannot delete this entity!';
 ```
 
+![Interceptor validation error displayed in the UI](images/interceptor-error.png)
+
 ## Examples
 
 ### Pre-Create: Validation

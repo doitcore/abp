@@ -34,7 +34,7 @@ Traditionally, adding a new entity with full CRUD functionality to an ABP applic
 **With Low-Code, a single C# class replaces all of the above:**
 
 ````csharp
-[DynamicEntity]
+[DynamicEntity(DefaultDisplayPropertyName = "Name")]
 [DynamicEntityUI(PageTitle = "Products")]
 public class Product : DynamicEntityBase
 {

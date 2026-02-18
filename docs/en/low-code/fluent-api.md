@@ -524,7 +524,45 @@ public static class MyAppLowCodeInitializer
 }
 ````
 
-Then call `await MyAppLowCodeInitializer.InitializeAsync();` in your `Program.cs` before building the application.
+Configure your DbContext to implement `IDbContextWithDynamicEntities`:
+
+````csharp
+public class MyAppDbContext : AbpDbContext<MyAppDbContext>, IDbContextWithDynamicEntities
+{
+    // ... constructors and DbSets ...
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.ConfigureDynamicEntities();
+        base.OnModelCreating(builder);
+    }
+}
+````
+
+Configure your DbContextFactory for EF Core CLI commands:
+
+````csharp
+public class MyAppDbContextFactory : IDesignTimeDbContextFactory<MyAppDbContext>
+{
+    public MyAppDbContext CreateDbContext(string[] args)
+    {
+        var configuration = BuildConfiguration();
+        
+        MyAppEfCoreEntityExtensionMappings.Configure();
+
+        // ----- Ensure Low-Code system is initialized before running migrations ---
+        LowCodeEfCoreTypeBuilderExtensions.Configure();
+        AsyncHelper.RunSync(MyAppLowCodeInitializer.InitializeAsync);
+        // -------------------------------
+
+        var builder = new DbContextOptionsBuilder<MyAppDbContext>()
+            .UseSqlServer(configuration.GetConnectionString("Default"));
+        
+        return new MyAppDbContext(builder.Options);
+    }
+    
+    // ... BuildConfiguration method ...
+}
 
 This gives you four auto-generated pages (Customers, Products, Orders with nested OrderLines), complete with permissions, menu items, foreign key lookups, and interceptor-based business rules.
 

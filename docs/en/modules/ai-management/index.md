@@ -25,6 +25,30 @@ abp add-module Volo.AIManagement
 
 Open ABP Studio, navigate to your solution explorer, **Right Click** on the project and select **Import Module**. Choose `Volo.AIManagement` from `NuGet` tab and check the "Install this Module" checkbox. Click the "OK" button to install the module.
 
+### Adding an AI Provider
+
+> [!IMPORTANT]
+> The AI Management module requires **at least one AI provider** package to be installed. Without a provider, the module won't be able to create chat clients for your workspaces.
+
+Install one of the built-in provider packages using the ABP CLI:
+
+**For OpenAI (including Azure OpenAI-compatible endpoints):**
+
+```bash
+abp add-package Volo.AIManagement.OpenAI
+```
+
+**For Ollama (local AI models):**
+
+```bash
+abp add-package Volo.AIManagement.Ollama
+```
+
+> [!TIP]
+> You can install multiple provider packages to support different AI providers simultaneously in your workspaces.
+
+If you need to integrate with a provider that isn't covered by the built-in packages, you can implement your own. See the [Implementing Custom AI Provider Factories](#implementing-custom-ai-provider-factories) section for details.
+
 ## Packages
 
 This module follows the [module development best practices guide](../../framework/architecture/best-practices) and consists of several NuGet and NPM packages. See the guide if you want to understand the packages and relations between them.

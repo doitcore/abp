@@ -154,8 +154,8 @@ Call `ConfigureDynamicEntities()` in your `DbContext`:
 ````csharp
 protected override void OnModelCreating(ModelBuilder builder)
 {
-    base.OnModelCreating(builder);
     builder.ConfigureDynamicEntities();
+    base.OnModelCreating(builder);
 }
 ````
 

@@ -282,6 +282,8 @@ Direct CRUD methods on the `db` object:
 | `db.update(entityName, entity)` | Update existing | `Promise<object>` |
 | `db.delete(entityName, id)` | Delete by ID | `Promise<void>` |
 
+> **Note:** The `entityName` parameter can be either a **dynamic entity** (e.g., `"LowCodeDemo.Products.Product"`) or a **[reference entity](reference-entities.md)** (e.g., `"Volo.Abp.Identity.IdentityUser"`). However, `insert`, `update`, and `delete` operations only work on dynamic entities — reference entities are read-only.
+
 ```javascript
 // Get by ID
 var product = await db.get('LowCodeDemo.Products.Product', id);

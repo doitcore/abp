@@ -128,7 +128,7 @@ public Guid CustomerId { get; set; }
 
 | Parameter | Description |
 |-----------|-------------|
-| `entityName` | Full name of the referenced entity (or [reference entity](reference-entities.md)) |
+| `entityName` | Full name of the target entity — can be a **dynamic entity** (e.g., `"MyApp.Customers.Customer"`) or a **[reference entity](reference-entities.md)** (e.g., `"Volo.Abp.Identity.IdentityUser"`) |
 | `displayPropertyName` | Property to show in lookups |
 | `access` | `ForeignAccess.None`, `ForeignAccess.View`, or `ForeignAccess.Edit` (see [Foreign Access](foreign-access.md)) |
 

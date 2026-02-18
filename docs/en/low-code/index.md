@@ -238,14 +238,14 @@ See [model.json Structure](model-json.md) for the full specification.
 
 | Feature | Description | Documentation |
 |---------|-------------|---------------|
-| **Attributes & Fluent API** | Define entities with C# attributes and configure programmatically | [Fluent API & Attributes](fluent-api.md) |
-| **model.json** | Declarative entity definitions in JSON | [model.json Structure](model-json.md) |
-| **Reference Entities** | Link to existing entities like `IdentityUser` | [Reference Entities](reference-entities.md) |
+| **Attributes & Fluent API** | Define dynamic entities with C# attributes and configure programmatically | [Fluent API & Attributes](fluent-api.md) |
+| **model.json** | Declarative dynamic entity definitions in JSON | [model.json Structure](model-json.md) |
+| **Reference Entities** | Read-only access to existing C# entities (e.g., `IdentityUser`) for foreign key lookups | [Reference Entities](reference-entities.md) |
 | **Interceptors** | Pre/Post hooks for Create, Update, Delete with JavaScript | [Interceptors](interceptors.md) |
 | **Scripting API** | Server-side JavaScript for database queries and CRUD | [Scripting API](scripting-api.md) |
 | **Custom Endpoints** | REST APIs with JavaScript handlers | [Custom Endpoints](custom-endpoints.md) |
-| **Foreign Access** | View/Edit related entities from the parent's UI | [Foreign Access](foreign-access.md) |
-| **Export** | Export entity data to Excel (XLSX) or CSV | See below |
+| **Foreign Access** | View/Edit related dynamic entities from the target entity's UI | [Foreign Access](foreign-access.md) |
+| **Export** | Export dynamic entity data to Excel (XLSX) or CSV | See below |
 
 ## Export (Excel / CSV)
 

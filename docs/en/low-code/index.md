@@ -53,20 +53,95 @@ Run `dotnet ef migrations add Added_Product` and start your application. You get
 
 ## Getting Started
 
-### 1. Register Your Assembly
+### 1. Create a Low-Code Initializer
 
-In your Domain module, register the assembly that contains your `[DynamicEntity]` classes:
+Create a static initializer class in your Domain project's `_Dynamic` folder that registers your assembly and calls `DynamicModelManager.Instance.InitializeAsync()`:
 
 ````csharp
-public override void ConfigureServices(ServiceConfigurationContext context)
+using Volo.Abp.Identity;
+using Volo.Abp.LowCode.Configuration;
+using Volo.Abp.LowCode.Modeling;
+using Volo.Abp.Threading;
+
+namespace MyApp._Dynamic;
+
+public static class MyAppLowCodeInitializer
 {
-    AbpDynamicEntityConfig.SourceAssemblies.Add(
-        new DynamicEntityAssemblyInfo(typeof(YourDomainModule).Assembly)
-    );
+    private static readonly AsyncOneTimeRunner Runner = new();
+    
+    public static async Task InitializeAsync()
+    {
+        await Runner.RunAsync(async () =>
+        {
+            // Register reference entities (optional — for linking to existing C# entities)
+            AbpDynamicEntityConfig.ReferencedEntityList.Add<IdentityUser>(
+                nameof(IdentityUser.UserName),
+                nameof(IdentityUser.Email)
+            );
+            
+            // Register assemblies containing [DynamicEntity] classes and model.json
+            var sourcePath = ResolveDomainSourcePath();
+            AbpDynamicEntityConfig.SourceAssemblies.Add(
+                new DynamicEntityAssemblyInfo(
+                    typeof(MyAppDomainModule).Assembly,
+                    rootNamespace: "MyApp",
+                    projectRootPath: sourcePath  // Required for model.json hot-reload in development
+                )
+            );
+            
+            // Fluent API configurations (optional — highest priority)
+            AbpDynamicEntityConfig.EntityConfigurations.Configure("MyApp.Products.Product", entity =>
+            {
+                entity.AddOrGetProperty("InternalNotes").AsServerOnly();
+            });
+            
+            // Initialize the dynamic model manager
+            await DynamicModelManager.Instance.InitializeAsync();
+        });
+    }
+    
+    private static string ResolveDomainSourcePath()
+    {
+        // Traverse up from bin folder to find the Domain project source
+        var baseDir = AppContext.BaseDirectory;
+        var current = new DirectoryInfo(baseDir);
+        
+        for (int i = 0; i < 10 && current != null; i++)
+        {
+            var candidate = Path.Combine(current.FullName, "src", "MyApp.Domain");
+            if (Directory.Exists(Path.Combine(candidate, "_Dynamic")))
+            {
+                return candidate;
+            }
+            current = current.Parent;
+        }
+        
+        // Fallback for production (embedded resource will be used instead)
+        return string.Empty;
+    }
 }
 ````
 
-### 2. Configure DbContext
+> The `projectRootPath` parameter enables hot-reload of `model.json` during development. When the path is empty or the file doesn't exist, the module falls back to reading `model.json` as an embedded resource.
+
+### 2. Call the Initializer in Program.cs
+
+The initializer must be called **before** the application starts. Add it to `Program.cs`:
+
+````csharp
+public static async Task<int> Main(string[] args)
+{
+    // Initialize Low-Code before building the application
+    await MyAppLowCodeInitializer.InitializeAsync();
+    
+    var builder = WebApplication.CreateBuilder(args);
+    // ... rest of your startup code
+}
+````
+
+> **Important:** The initializer must also be called in your `DbMigrator` project and any other entry points (AuthServer, HttpApi.Host, etc.) that use dynamic entities. This ensures EF Core migrations can discover the entity schema.
+
+### 3. Configure DbContext
 
 Call `ConfigureDynamicEntities()` in your `DbContext`:
 

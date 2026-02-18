@@ -27,7 +27,8 @@
                 },
                 "required": [
                     "name"
-                ]
+                ],
+                "additionalProperties": false
             },
             "minItems": 1
         }

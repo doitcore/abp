@@ -39,10 +39,13 @@ AbpDynamicEntityConfig.EntityConfigurations.Configure(
     "MyApp.Orders.Order",
     entity =>
     {
-        entity.ConfigureProperty("CustomerId", prop =>
+        var customerIdProperty = entity.AddOrGetProperty("CustomerId");
+        customerIdProperty.ForeignKey = new ForeignKeyDescriptor
         {
-            prop.SetForeignKey("MyApp.Customers.Customer", "Name", ForeignAccess.Edit);
-        });
+            EntityName = "MyApp.Customers.Customer",
+            DisplayPropertyName = "Name",
+            Access = ForeignAccess.Edit
+        };
     }
 );
 ````

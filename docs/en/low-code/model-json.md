@@ -88,7 +88,6 @@ Each entity has the following structure:
   "displayProperty": "Name",
   "parent": null,
   "properties": [],
-  "foreignKeys": [],
   "interceptors": [],
   "ui": {}
 }

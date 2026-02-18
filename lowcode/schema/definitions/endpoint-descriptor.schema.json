@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:abp:lowcode:endpoint-descriptor",
   "title": "Custom Endpoint Descriptor",
   "description": "Defines a custom HTTP endpoint that executes JavaScript code",
   "type": "object",

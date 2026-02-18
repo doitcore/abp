@@ -1,7 +1,12 @@
 {
   "extends": "./tsconfig.lib.json",
   "compilerOptions": {
-    "declarationMap": false
+    "declarationMap": false,
+    "target": "ES2022",
+    "useDefineForClassFields": false,
+    "skipLibCheck": true
   },
-  "exclude": ["**/*.spec.ts", "jest.config.ts", "src/test-setup.ts", "**/*.test.ts"]
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
 }

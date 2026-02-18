@@ -376,13 +376,23 @@ entity.Interceptors.Add(new CommandInterceptorDescriptor
 
 ## Assembly Registration
 
-Register assemblies containing `[DynamicEntity]` classes:
+Register assemblies containing `[DynamicEntity]` classes in your [Low-Code Initializer](index.md#1-create-a-low-code-initializer):
 
 ````csharp
 AbpDynamicEntityConfig.SourceAssemblies.Add(
-    new DynamicEntityAssemblyInfo(typeof(MyDomainModule).Assembly)
+    new DynamicEntityAssemblyInfo(
+        typeof(MyDomainModule).Assembly,
+        rootNamespace: "MyApp",
+        projectRootPath: sourcePath  // For model.json hot-reload
+    )
 );
 ````
+
+| Parameter | Description |
+|-----------|-------------|
+| `assembly` | The assembly containing `[DynamicEntity]` classes and/or `model.json` |
+| `rootNamespace` | Root namespace for the assembly (used for embedded resource lookup) |
+| `projectRootPath` | Path to the Domain project source folder (enables `model.json` hot-reload in development) |
 
 You can also register entity types directly:
 
@@ -485,19 +495,33 @@ public class OrderLine
 }
 ````
 
-Register everything in your Domain module:
+Register everything in your [Low-Code Initializer](index.md#1-create-a-low-code-initializer):
 
 ````csharp
-public override void ConfigureServices(ServiceConfigurationContext context)
+public static class MyAppLowCodeInitializer
 {
-    AbpDynamicEntityConfig.SourceAssemblies.Add(
-        new DynamicEntityAssemblyInfo(typeof(MyDomainModule).Assembly)
-    );
-
-    // Reference existing ABP entities
-    AbpDynamicEntityConfig.ReferencedEntityList.Add<IdentityUser>("UserName");
+    private static readonly AsyncOneTimeRunner Runner = new();
+    
+    public static async Task InitializeAsync()
+    {
+        await Runner.RunAsync(async () =>
+        {
+            // Reference existing ABP entities
+            AbpDynamicEntityConfig.ReferencedEntityList.Add<IdentityUser>("UserName");
+            
+            // Register assembly
+            AbpDynamicEntityConfig.SourceAssemblies.Add(
+                new DynamicEntityAssemblyInfo(typeof(MyDomainModule).Assembly)
+            );
+            
+            // Initialize
+            await DynamicModelManager.Instance.InitializeAsync();
+        });
+    }
 }
 ````
+
+Then call `await MyAppLowCodeInitializer.InitializeAsync();` in your `Program.cs` before building the application.
 
 This gives you four auto-generated pages (Customers, Products, Orders with nested OrderLines), complete with permissions, menu items, foreign key lookups, and interceptor-based business rules.
 

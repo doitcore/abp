@@ -34,7 +34,7 @@ Traditionally, adding a new entity with full CRUD functionality to an ABP applic
 ````csharp
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Products")]
-public class Product
+public class Product : DynamicEntityBase
 {
     [DynamicPropertyUnique]
     public string Name { get; set; }
@@ -158,7 +158,7 @@ protected override void OnModelCreating(ModelBuilder builder)
 ````csharp
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Customers")]
-public class Customer
+public class Customer : DynamicEntityBase
 {
     public string Name { get; set; }
 
@@ -188,7 +188,7 @@ Define entities as C# classes with attributes. You get compile-time checking, In
 ````csharp
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Orders")]
-public class Order
+public class Order : DynamicEntityBase
 {
     [DynamicForeignKey("MyApp.Customers.Customer", "Name", ForeignAccess.Edit)]
     public Guid CustomerId { get; set; }
@@ -198,7 +198,7 @@ public class Order
 }
 
 [DynamicEntity(Parent = "MyApp.Orders.Order")]
-public class OrderLine
+public class OrderLine : DynamicEntityBase
 {
     [DynamicForeignKey("MyApp.Products.Product", "Name")]
     public Guid ProductId { get; set; }
@@ -276,9 +276,9 @@ Create a class that implements `ILcCommand<TResult>` and decorate it with `[Cust
 
 ````csharp
 [CustomCommand("Create", "MyApp.Products.Product")]
-public class CustomProductCreateCommand : LcCommandBase<DynamicEntityDto>
+public class CustomProductCreateCommand : CreateCommand<Product>
 {
-    public override async Task<DynamicEntityDto> ExecuteWithResultAsync(DynamicCommandArgs commandArgs)
+    public override async Task<Guid> ExecuteWithResultAsync(DynamicCommandArgs commandArgs)
     {
         // Your custom create logic here
         // ...
@@ -302,6 +302,18 @@ public class CustomProductListQuery : ILcQuery<DynamicQueryResult>
     public async Task<DynamicQueryResult> ExecuteAsync(DynamicQueryArgs queryArgs)
     {
         // Your custom list query logic here
+        // ...
+    }
+}
+````
+
+````csharp
+[CustomQuery("Single", "MyApp.Products.Product")]
+public class CustomProductListQuery : ILcQuery<DynamicEntityDto>
+{
+    public async Task<DynamicEntityDto> ExecuteAsync(DynamicQueryArgs queryArgs)
+    {
+        // Your custom single query logic here
         // ...
     }
 }

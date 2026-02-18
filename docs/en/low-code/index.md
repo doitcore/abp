@@ -15,7 +15,7 @@ The ABP Low-Code System allows you to define entities using C# attributes or Flu
 * **Menu items** (auto-added to the admin sidebar)
 * **Full Blazor UI** (data grid, create/edit modals, filters, foreign key lookups)
 
-No need to write entity classes, DTOs, application services, repositories, or UI pages manually.
+No need to write DTOs, application services, repositories, or UI pages manually.
 
 ## Why Low-Code?
 

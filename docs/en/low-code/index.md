@@ -7,7 +7,7 @@
 
 # Low-Code System
 
-The ABP Low-Code System lets you define entities using C# attributes or Fluent API and automatically generates:
+The ABP Low-Code System allows you to define entities using C# attributes or Fluent API and automatically generates:
 
 * **Database tables** (via EF Core migrations)
 * **CRUD REST APIs** (Get, GetList, Create, Update, Delete)
@@ -19,7 +19,7 @@ No need to write entity classes, DTOs, application services, repositories, or UI
 
 ## Why Low-Code?
 
-Traditionally, adding a new entity to an ABP application requires:
+Traditionally, adding a new entity with full CRUD functionality to an ABP application requires:
 
 1. Entity class in Domain
 2. DbContext configuration in EF Core
@@ -157,7 +157,7 @@ Alternatively, define entities in a JSON file without writing C# classes:
 
 See [model.json Structure](model-json.md) for the full specification.
 
-> Both approaches can be combined. The [three-layer configuration system](fluent-api.md#configuration-priority) merges Attributes, JSON, and Fluent API with clear priority rules.
+> Both approaches can be combined. The [three-layer configuration system](fluent-api.md#three-layer-configuration-system) merges Attributes, JSON, and Fluent API with clear priority rules.
 
 ## Key Features
 

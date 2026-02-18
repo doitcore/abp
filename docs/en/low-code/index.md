@@ -17,6 +17,8 @@ The ABP Low-Code System allows you to define entities using C# attributes or Flu
 
 No need to write DTOs, application services, repositories, or UI pages manually.
 
+![Auto-generated menu items in the sidebar](images/menu-items.png)
+
 ## Why Low-Code?
 
 Traditionally, adding a new entity with full CRUD functionality to an ABP application requires:
@@ -50,6 +52,10 @@ public class Product : DynamicEntityBase
 ````
 
 Run `dotnet ef migrations add Added_Product` and start your application. You get a complete Product management page with search, filtering, sorting, pagination, create/edit forms, and foreign key dropdown — all auto-generated.
+
+![Auto-generated data grid with search, filters, and actions](images/data-grid.png)
+
+![Auto-generated create/edit modal with form fields and foreign key lookups](images/create-modal.png)
 
 ## Getting Started
 

@@ -16,7 +16,7 @@ C# Attributes and the Fluent API are the **recommended way** to define dynamic e
 ````csharp
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Products")]
-public class Product : DynamicEntityBase
+public class Product
 {
     [DynamicPropertyUnique]
     public string Name { get; set; }
@@ -30,7 +30,18 @@ public class Product : DynamicEntityBase
 }
 ````
 
-### Step 2: Add Migration and Run
+### Step 2: Register the Assembly
+
+````csharp
+public override void ConfigureServices(ServiceConfigurationContext context)
+{
+    AbpDynamicEntityConfig.SourceAssemblies.Add(
+        new DynamicEntityAssemblyInfo(typeof(YourDomainModule).Assembly)
+    );
+}
+````
+
+### Step 3: Add Migration and Run
 
 ```bash
 dotnet ef migrations add Added_Product
@@ -39,12 +50,12 @@ dotnet ef database update
 
 You now have a complete Product management page with data grid, create/edit modals, search, sorting, and pagination.
 
-### Step 3: Add Relationships
+### Step 4: Add Relationships
 
 ````csharp
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Orders")]
-public class Order : DynamicEntityBase
+public class Order
 {
     [DynamicForeignKey("MyApp.Customers.Customer", "Name", ForeignAccess.Edit)]
     public Guid CustomerId { get; set; }
@@ -54,7 +65,7 @@ public class Order : DynamicEntityBase
 }
 
 [DynamicEntity(Parent = "MyApp.Orders.Order")]
-public class OrderLine : DynamicEntityBase
+public class OrderLine
 {
     [DynamicForeignKey("MyApp.Products.Product", "Name")]
     public Guid ProductId { get; set; }
@@ -86,7 +97,7 @@ Marks a class as a dynamic entity. The entity name is derived from the class nam
 
 ````csharp
 [DynamicEntity]
-public class Product : DynamicEntityBase
+public class Product
 {
     public string Name { get; set; }
     public decimal Price { get; set; }
@@ -97,7 +108,7 @@ Use the `Parent` property for parent-child (master-detail) relationships:
 
 ````csharp
 [DynamicEntity(Parent = "MyApp.Orders.Order")]
-public class OrderLine : DynamicEntityBase
+public class OrderLine
 {
     public Guid ProductId { get; set; }
     public int Quantity { get; set; }
@@ -111,7 +122,7 @@ Configures entity-level UI. Entities with `PageTitle` get a menu item and a dedi
 ````csharp
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Product Management")]
-public class Product : DynamicEntityBase
+public class Product
 {
     // ...
 }
@@ -157,6 +168,10 @@ public string RegistrationNumber { get; set; }
 | `EditingFormAvailability` | enum | `Available` | Visibility on edit form |
 | `QuickLookOrder` | int | `-2` | Order in quick-look panel |
 
+The quick-look panel shows a summary of the selected record:
+
+![Quick-look panel showing entity details](images/quick-look.png)
+
 ### `[DynamicPropertyServerOnly]`
 
 Hides a property from API clients entirely. It is stored in the database but never returned to the client:
@@ -200,7 +215,7 @@ Defines JavaScript interceptors on a class for CRUD lifecycle hooks:
     InterceptorType.Post,
     "context.log('Deleted: ' + context.commandArgs.entityId);"
 )]
-public class Organization : DynamicEntityBase
+public class Organization
 {
     public string Name { get; set; }
 }
@@ -230,7 +245,7 @@ Reference in an entity:
 ````csharp
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Organizations")]
-public class Organization : DynamicEntityBase
+public class Organization
 {
     public string Name { get; set; }
     public OrganizationType OrganizationType { get; set; }
@@ -261,38 +276,28 @@ The Fluent API has the **highest priority** in the configuration system. Use `Ab
 
 ### Basic Usage
 
-Configure in your Low-Code Initializer (e.g. `MyAppLowCodeInitializer`):
+Configure in your Domain module's `ConfigureServices`:
 
 ````csharp
-public static class MyAppLowCodeInitializer
+public override void ConfigureServices(ServiceConfigurationContext context)
 {
-    private static readonly AsyncOneTimeRunner Runner = new();
-
-    public static async Task InitializeAsync()
-    {
-        await Runner.RunAsync(async () =>
+    AbpDynamicEntityConfig.EntityConfigurations.Configure(
+        "MyApp.Products.Product",
+        entity =>
         {
-            AbpDynamicEntityConfig.EntityConfigurations.Configure(
-                "MyApp.Products.Product",
-                entity =>
-                {
-                    entity.DefaultDisplayPropertyName = "Name";
+            entity.DefaultDisplayPropertyName = "Name";
 
-                    var priceProperty = entity.AddOrGetProperty("Price");
-                    priceProperty.AsRequired();
-                    priceProperty.UI = new EntityPropertyUIDescriptor
-                    {
-                        DisplayName = "Unit Price",
-                        CreationFormAvailability = EntityPropertyUIFormAvailability.Available
-                    };
+            var priceProperty = entity.AddOrGetProperty("Price");
+            priceProperty.AsRequired();
+            priceProperty.UI = new EntityPropertyUIDescriptor
+            {
+                DisplayName = "Unit Price",
+                CreationFormAvailability = EntityPropertyUIFormAvailability.Available
+            };
 
-                    entity.AddOrGetProperty("InternalNotes").AsServerOnly();
-                }
-            );
-
-            await DynamicModelManager.Instance.InitializeAsync();
-        });
-    }
+            entity.AddOrGetProperty("InternalNotes").AsServerOnly();
+        }
+    );
 }
 ````
 
@@ -434,7 +439,7 @@ public enum OrderStatus
 // Customer entity
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Customers")]
-public class Customer : DynamicEntityBase
+public class Customer
 {
     [DynamicPropertyUnique]
     public string Name { get; set; }
@@ -452,7 +457,7 @@ public class Customer : DynamicEntityBase
 // Product entity
 [DynamicEntity]
 [DynamicEntityUI(PageTitle = "Products")]
-public class Product : DynamicEntityBase
+public class Product
 {
     [DynamicPropertyUnique]
     public string Name { get; set; }
@@ -473,7 +478,7 @@ public class Product : DynamicEntityBase
         }
     }"
 )]
-public class Order : DynamicEntityBase
+public class Order
 {
     [DynamicForeignKey("MyApp.Customers.Customer", "Name", ForeignAccess.Edit)]
     public Guid CustomerId { get; set; }
@@ -484,7 +489,7 @@ public class Order : DynamicEntityBase
 }
 
 [DynamicEntity(Parent = "MyApp.Orders.Order")]
-public class OrderLine : DynamicEntityBase
+public class OrderLine
 {
     [DynamicForeignKey("MyApp.Products.Product", "Name")]
     public Guid ProductId { get; set; }

@@ -108,6 +108,8 @@ Set the `access` field on a foreign key property:
 
 When foreign access is configured between two **dynamic entities**:
 
+![Actions menu showing foreign access items (Order, Visited Country, etc.)](images/actions-menu.png)
+
 ### `ForeignAccess.View`
 
 An **action menu item** appears on the target entity's data grid row (e.g., a "Visited Countries" item on the Country row). Clicking it opens a read-only modal showing related records.
@@ -115,6 +117,8 @@ An **action menu item** appears on the target entity's data grid row (e.g., a "V
 ### `ForeignAccess.Edit`
 
 An **action menu item** appears on the target entity's data grid row (e.g., an "Orders" item on the Customer row). Clicking it opens a fully functional CRUD modal where users can create, edit, and delete related records.
+
+![Foreign access modal with full CRUD capabilities](images/foreign-access-modal.png)
 
 ### `ForeignAccess.None`
 

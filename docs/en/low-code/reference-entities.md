@@ -7,35 +7,56 @@
 
 # Reference Entities
 
-Reference Entities allow you to create foreign key relationships from dynamic entities to **existing (static) C# entities** that are already defined in your application or in ABP modules.
+Reference Entities allow you to create foreign key relationships from **dynamic entities** to **existing C# entities** that live outside the Low-Code System.
+
+## Dynamic Entities vs Reference Entities
+
+| | Dynamic Entities | Reference Entities |
+|---|-----------------|-------------------|
+| **Definition** | Defined via `[DynamicEntity]` attribute or `model.json` | Existing C# classes (e.g., `IdentityUser`, `Tenant`) |
+| **CRUD Operations** | Full CRUD (Create, Read, Update, Delete) | **Read-only** — no create/update/delete |
+| **UI Pages** | Auto-generated pages with data grids and forms | No UI pages |
+| **Permissions** | Auto-generated permissions | No permissions |
+| **Purpose** | Primary data management | Foreign key lookups and display values |
+| **Registration** | `AbpDynamicEntityConfig.SourceAssemblies` | `AbpDynamicEntityConfig.ReferencedEntityList` |
 
 ## Overview
 
-Dynamic entities defined via [Attributes](fluent-api.md) or [model.json](model-json.md) normally reference other dynamic entities. However, you may need to link to entities like ABP's `IdentityUser`, `Tenant`, or your own C# entity classes. Reference entities make this possible.
+Dynamic entities defined via [Attributes](fluent-api.md) or [model.json](model-json.md) can reference **other dynamic entities** using foreign keys. However, you may also need to link to entities that exist **outside** the Low-Code System — such as ABP's `IdentityUser`, `Tenant`, or your own C# entity classes.
 
-Unlike dynamic entities, reference entities are **read-only** from the Low-Code System's perspective — they don't get CRUD pages or APIs. They are used solely for:
+**Reference entities** make this possible by exposing existing entities for:
 
 * **Foreign key lookups** — dropdown selection in UI forms
-* **Display values** — showing the referenced entity's display property in grids
-* **Query support** — querying via the [Scripting API](scripting-api.md)
+* **Display values** — showing the entity's display property in grids instead of raw GUIDs
+* **Read-only queries** — querying via the [Scripting API](scripting-api.md)
+
+> **Key distinction:** When you define a foreign key with `entityName`, the system checks if it's a registered **reference entity** first. If not found, it assumes it's a **dynamic entity**.
 
 ## Registering Reference Entities
 
-Register reference entities in your Domain module's `ConfigureServices` using `AbpDynamicEntityConfig.ReferencedEntityList`:
+Register reference entities in your [Low-Code Initializer](index.md#1-create-a-low-code-initializer) using `AbpDynamicEntityConfig.ReferencedEntityList`:
 
 ````csharp
-public override void ConfigureServices(ServiceConfigurationContext context)
+public static async Task InitializeAsync()
 {
-    AbpDynamicEntityConfig.ReferencedEntityList.Add<IdentityUser>(
-        "UserName"        // Default display property
-    );
+    await Runner.RunAsync(async () =>
+    {
+        // Register reference entity with default display property only
+        AbpDynamicEntityConfig.ReferencedEntityList.Add<IdentityUser>(
+            "UserName"
+        );
 
-    AbpDynamicEntityConfig.ReferencedEntityList.Add<IdentityUser>(
-        "UserName",       // Default display property
-        "UserName",       // Exposed properties
-        "Email",
-        "PhoneNumber"
-    );
+        // Register reference entity with additional exposed properties
+        AbpDynamicEntityConfig.ReferencedEntityList.Add<IdentityUser>(
+            "UserName",       // Default display property
+            "UserName",       // Exposed properties (for queries and display)
+            "Email",
+            "PhoneNumber"
+        );
+        
+        // ... rest of initialization
+        await DynamicModelManager.Instance.InitializeAsync();
+    });
 }
 ````
 

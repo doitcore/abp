@@ -185,9 +185,11 @@ Define a foreign key relationship inline on a property:
 
 | Attribute | Description |
 |-----------|-------------|
-| `entityName` | **Required.** Full name of the referenced entity |
+| `entityName` | **Required.** Full name of the target entity — can be a **dynamic entity** (e.g., `"LowCodeDemo.Customers.Customer"`) or a **[reference entity](reference-entities.md)** (e.g., `"Volo.Abp.Identity.IdentityUser"`) |
 | `displayPropertyName` | Property to display in lookups (defaults to entity's `displayProperty`) |
 | `access` | [Foreign access](foreign-access.md) level: `"none"`, `"view"`, or `"edit"` |
+
+> **Note:** [Reference entities](reference-entities.md) are existing C# entities (like ABP's `IdentityUser`) that are registered for read-only access. Unlike dynamic entities, they don't get CRUD pages — they're used only for foreign key lookups and display values.
 
 ### Validators
 

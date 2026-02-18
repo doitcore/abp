@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model.schema.json",
   "title": "ABP Low Code Model",
   "description": "Schema for ABP Low Code model.json configuration file",
   "type": "object",

@@ -136,7 +136,7 @@ using (_dataFilter.Disable<IMultiTenant>())
 **The Magic:** Starting with **ABP v9.0**, new project templates use **Mapperly** instead of AutoMapper. Any class using Mapperly attributes is automatically configured.
 
 ```csharp
-// Starting with ABP v9.0, new projects use Mapperly instead of AutoMapper
+// Starting with ABP v10.0, new projects use Mapperly instead of AutoMapper
 
 // Inherit from MapperBase - automatically registered with IObjectMapper
 public partial class UserMapper : MapperBase<User, UserDto>
@@ -464,8 +464,10 @@ No explicit registration needed - just add files and they're available!
 Add `[RequiresFeature]` to restrict access based on feature flags:
 
 ```csharp
-| 9 | **Object Mapping** | Mapperly (compile-time) | Inherit from `MapperBase` / `TwoWayMapperBase` and use `[Mapper]` attribute |
-public async Task DoSomethingAsync() { }
+[RequiresFeature("MyApp.Features.SomeFeature")]
+public async Task DoSomethingAsync()
+{
+}
 ```
 
 The `FeatureInterceptor` is added only when `[RequiresFeature]` attribute is present on the class or method.

@@ -60,8 +60,8 @@ public partial class PermissionManagementModal
 
             NormalizePermissionGroup();
 
-            GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
-            GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
+            GrantAll = _allGroups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+            GrantAny = !GrantAll && _allGroups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
 
             await InvokeAsync(_modal.Show);
         }
@@ -188,8 +188,8 @@ public partial class PermissionManagementModal
             }
         }
 
-        GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
-        GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
+        GrantAll = _allGroups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+        GrantAny = !GrantAll && _allGroups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
         await InvokeAsync(StateHasChanged);
     }
 
@@ -211,8 +211,8 @@ public partial class PermissionManagementModal
             }
         }
 
-        GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
-        GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
+        GrantAll = _allGroups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+        GrantAny = !GrantAll && _allGroups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
         await InvokeAsync(StateHasChanged);
     }
 
@@ -334,8 +334,8 @@ public partial class PermissionManagementModal
         _permissionGroupSearchText = value;
         _groups = _permissionGroupSearchText.IsNullOrWhiteSpace() ? _allGroups.ToList() : _allGroups.Where(x => x.DisplayName.Contains(_permissionGroupSearchText, StringComparison.OrdinalIgnoreCase) || x.Permissions.Any(permission => permission.DisplayName.Contains(_permissionGroupSearchText, StringComparison.OrdinalIgnoreCase))).ToList();
 
-        GrantAll = _groups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
-        GrantAny = !GrantAll && _groups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
+        GrantAll = _allGroups.SelectMany(x => x.Permissions).All(p => p.IsGranted);
+        GrantAny = !GrantAll && _allGroups.SelectMany(x => x.Permissions).Any(p => p.IsGranted);
 
         NormalizePermissionGroup(false);
 

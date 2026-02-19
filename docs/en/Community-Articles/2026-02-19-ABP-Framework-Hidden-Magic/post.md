@@ -215,19 +215,101 @@ public class RemoteServiceAttribute : Attribute
 
 ---
 
-## 13. Permission Checks Are Automatic
+## 13. Auto API Controllers - Application Services Become REST APIs Automatically
 
-**The Magic:** Every application service method is automatically protected. If you don't specify permissions, it still checks for login - no `[Authorize]` attribute needed!
+**The Magic:** When you create an application service (class implementing an interface or inheriting from `ApplicationService`), ABP **automatically** creates REST API endpoints for it - no manual controller needed!
+
+```csharp
+// This interface is automatically exposed as /api/app/product
+public interface IProductAppService
+{
+    Task<List<ProductDto>> GetListAsync();
+    Task<ProductDto> CreateAsync(CreateProductDto input);
+    Task DeleteAsync(Guid id);
+}
+
+// The implementation automatically becomes an API Controller
+public class ProductAppService : ApplicationService, IProductAppService
+{
+    public Task<List<ProductDto>> GetListAsync() { ... }
+    public Task<ProductDto> CreateAsync(CreateProductDto input) { ... }
+    public Task DeleteAsync(Guid id) { ... }
+}
+
+// Available endpoints (auto-generated):
+// GET  /api/app/product
+// POST /api/app/product
+// DELETE /api/app/product/{id}
+```
+
+**Where it happens:** `Volo.Abp.AspNetCore.Mvc/AbpServiceConvention.cs`
+
+The framework:
+- Converts camelCase method names to kebab-case routes
+- Maps HTTP methods automatically (Get→GET, Create→POST, Delete→DELETE)
+- Generates proper DTOs from parameters and return types
+- Handles serialization/deserialization
 
 ---
 
-## 14. Background Workers Auto-Registration
+## 14. Dynamic Client Proxies - Client-Side Code Generated Automatically
+
+**The Magic:** On the client side, you don't need to write HTTP client code. ABP automatically generates **Dynamic JavaScript Proxies** and **Dynamic C# Proxies** that let you call your APIs as if they were local method calls!
+
+**JavaScript (MVC/Razor Pages):**
+```javascript
+// Just call it like a local function!
+var products = await productAppService.getList();
+await productAppService.create({ name: "New Product" });
+await productAppService.delete(id);
+```
+
+**C# (Blazor/Console Apps):**
+```csharp
+// Inject and use like local method calls!
+public class ProductListModel : PageModel
+{
+    private readonly IProductAppService _productAppService;
+    
+    public async Task OnGetAsync()
+    {
+        // Actually makes HTTP call to the server!
+        var products = await _productAppService.GetListAsync();
+    }
+}
+```
+
+**Where it happens:** 
+- JavaScript: `Volo.Abp.AspNetCore.Mvc.UI` - Dynamic JavaScript proxies
+- C#: `Volo.Abp.AspNetCore.Mvc.Client` - Dynamic C# HTTP clients
+
+This is why you can inject application service interfaces directly in Blazor and call them like local methods!
+
+---
+
+## 15. Permission Checks
+
+By default, all application service methods and controllers are **public** and accessible. Add `[Authorize]` or `[AbpAuthorize]` to restrict access:
+
+```csharp
+[Authorize]
+public async Task CreateAsync(CreateDto input) { }
+
+[AbpAuthorize("MyApp.Permissions.CanCreate")]
+public async Task CreateAsync(CreateDto input) { }
+```
+
+The `AuthorizationInterceptor` is added only when `[Authorize]` attribute is present on the class or method.
+
+---
+
+## 16. Background Workers Auto-Registration
 
 **The Magic:** Background workers are enabled by default, and any class implementing `IBackgroundWorker` or `IQuartzBackgroundWorker` is auto-registered.
 
 ---
 
-## 15. Entity ID Generation
+## 17. Entity ID Generation
 
 **The Magic:** ABP automatically detects the best ID generation strategy based on the entity type:
 
@@ -239,7 +321,7 @@ public class RemoteServiceAttribute : Attribute
 
 ---
 
-## 16. Anti-Forgery Token Magic
+## 18. Anti-Forgery Token Magic
 
 **The Magic:** ABP automatically handles CSRF protection with these hardcoded values:
 
@@ -251,7 +333,7 @@ private const string AntiForgeryHeaderName = "RequestVerificationToken";
 
 ---
 
-## 17. Automatic Event Handler Discovery
+## 19. Automatic Event Handler Discovery
 
 **The Magic:** Any class implementing `IEventHandler<TEvent>` is automatically subscribed to handle events - no manual registration needed!
 
@@ -268,7 +350,7 @@ public class OrderCreatedHandler : IEventHandler<OrderCreatedEvent>
 
 ---
 
-## 18. Unit of Work Events - Automatic Save
+## 20. Unit of Work Events - Automatic Save
 
 **The Magic:** Events are not fired immediately - they're collected during the unit of work and fired at the end when everything succeeds!
 
@@ -285,7 +367,7 @@ This ensures transactional consistency - if your UOW fails, no events are fired.
 
 ---
 
-## 19. Distributed Event Bus - Outbox Pattern
+## 21. Distributed Event Bus - Outbox Pattern
 
 **The Magic:** ABP implements the Outbox Pattern automatically for distributed events, ensuring no events are lost!
 
@@ -300,7 +382,7 @@ foreach (var outboxConfig in AbpDistributedEventBusOptions.Outboxes.Values.Order
 
 ---
 
-## 20. Automatic Object Extension Properties
+## 22. Automatic Object Extension Properties
 
 **The Magic:** Any property decorated with `[DisableAuditing]` is automatically excluded from audit logs without any configuration!
 
@@ -312,7 +394,7 @@ public string SecretData { get; set; }
 
 ---
 
-## 21. Virtual File System
+## 23. Virtual File System
 
 **The Magic:** ABP provides a virtual file system that merges embedded resources from all modules into a single virtual path!
 
@@ -327,7 +409,7 @@ This is how ABP modules include static files (CSS, JS, images) that work without
 
 ---
 
-## 22. Automatic JSON Serialization Settings
+## 24. Automatic JSON Serialization Settings
 
 **The Magic:** ABP pre-configures JSON serialization with:
 
@@ -340,7 +422,7 @@ All configured automatically.
 
 ---
 
-## 23. Token-Based Configuration Magic
+## 25. Token-Based Configuration Magic
 
 **The Magic:** Many settings support tokens that are resolved at runtime:
 
@@ -357,7 +439,7 @@ All configured automatically.
 
 ---
 
-## 24. Localization Automatic Discovery
+## 26. Localization Automatic Discovery
 
 **The Magic:** All `.json` localization files in the application are automatically discovered and loaded:
 
@@ -372,15 +454,20 @@ No explicit registration needed - just add files and they're available!
 
 ---
 
-## 25. Feature Checkers Work Automatically
+## 27. Feature Checks
 
-**The Magic:** Features are checked automatically when calling application services.
+Add `[RequiresFeature]` to restrict access based on feature flags:
 
-**Where it happens:** `FeatureInterceptor` automatically validates feature requirements.
+```csharp
+[RequiresFeature("MyApp.Feature.CanDoSomething")]
+public async Task DoSomethingAsync() { }
+```
+
+The `FeatureInterceptor` is added only when `[RequiresFeature]` attribute is present on the class or method.
 
 ---
 
-## 26. API Versioning Convention
+## 28. API Versioning Convention
 
 **The Magic:** ABP automatically handles API versioning with sensible defaults:
 
@@ -392,7 +479,7 @@ All configured automatically unless overridden.
 
 ---
 
-## 27. Health Check Endpoints
+## 29. Health Check Endpoints
 
 **The Magic:** Health check endpoints are auto-registered:
 
@@ -407,7 +494,7 @@ Includes automatic checks for:
 
 ---
 
-## 28. Swagger/OpenAPI Auto-Configuration
+## 30. Swagger/OpenAPI Auto-Configuration
 
 **The Magic:** If you reference `Volo.Abp.AspNetCore.Mvc.UI.Swagger`, Swagger UI is automatically generated with:
 
@@ -420,7 +507,7 @@ No configuration needed beyond the package reference!
 
 ---
 
-## 29. Tenant Resolution Priority Chain
+## 31. Tenant Resolution Priority Chain
 
 **The Magic:** ABP automatically resolves tenants in this order (first match wins):
 
@@ -432,7 +519,7 @@ No configuration needed beyond the package reference!
 
 ---
 
-## 30. Background Job Queue Magic
+## 32. Background Job Queue Magic
 
 **The Magic:** Background jobs are automatically retried with exponential backoff:
 
@@ -461,24 +548,28 @@ No configuration needed beyond the package reference!
 | 8 | **Multi-Tenancy Filter** | Enabled by default | Must disable for host data |
 | 9 | **Object Mapping** | Mapperly (compile-time) | Use `[MapperGenerator]` attribute |
 | 10 | **Data Seeds** | Auto-discovery | Implement `IDataSeedContributor` |
-| 11 | **Permissions** | Auto-discovery | Define via `PermissionDefinitionProvider` |
-| 12 | **Settings** | Auto-discovery | Define via `ISettingDefinitionProvider` |
-| 13 | **Features** | Auto-discovery | Define via `IFeatureDefinitionProvider` |
-| 14 | **Widgets** | Auto-discovery | Implement `IWidget` |
-| 15 | **Background Workers** | Auto-registration | Implement `IBackgroundWorker` |
-| 16 | **Event Handlers** | Auto-discovery | Implement `IEventHandler<TEvent>` |
-| 17 | **UOW Events** | Deferred execution | Transactional consistency |
-| 18 | **Distributed Events** | Outbox pattern | Reliable messaging |
-| 19 | **Virtual Files** | Module merging | No manual file copying |
-| 20 | **JSON Settings** | Pre-configured | Works out of box |
-| 21 | **Token Replacement** | Runtime resolution | Dynamic configuration |
-| 22 | **Localization** | Auto-discovery | Just add JSON files |
-| 23 | **Feature Checks** | Auto-intercepted | No manual checks |
-| 24 | **API Versioning** | Default versioning | Convention-based |
-| 25 | **Health Checks** | Auto-registered | Built-in monitoring |
-| 26 | **Swagger** | Auto-generated | API documentation |
-| 27 | **Tenant Resolution** | Multi-source chain | Flexible resolution |
-| 28 | **Job Retries** | Auto with backoff | Reliability |
+| 11 | **Remote Services** | Enabled by default | Can disable per service/method |
+| 12 | **Auto API Controllers** | App services → REST APIs | No manual controller needed |
+| 13 | **Dynamic Client Proxies** | Auto-generated | Call APIs like local methods |
+| 14 | **Permissions** | NOT automatic | Must add `[Authorize]` |
+| 15 | **Settings** | Auto-discovery | Define via `ISettingDefinitionProvider` |
+| 16 | **Features** | NOT automatic | Must add `[RequiresFeature]` |
+| 17 | **Background Workers** | Auto-registration | Implement `IBackgroundWorker` |
+| 18 | **Entity ID Generation** | Auto by type | Guid, int, string strategies |
+| 19 | **Anti-Forgery** | Auto-enabled | Token cookie/header handling |
+| 20 | **Event Handlers** | Auto-discovery | Implement `IEventHandler<TEvent>` |
+| 21 | **UOW Events** | Deferred execution | Transactional consistency |
+| 22 | **Distributed Events** | Outbox pattern | Reliable messaging |
+| 23 | **Virtual Files** | Module merging | Embedded resources as virtual |
+| 24 | **JSON Settings** | Pre-configured | CamelCase, null handling |
+| 25 | **Token Replacement** | Runtime resolution | `{TENANT_ID}`, `{USER_ID}` |
+| 26 | **Localization** | Auto-discovery | JSON files in /Localization |
+| 27 | **API Versioning** | Default v1.0 | URL, header, query support |
+| 28 | **Health Checks** | Auto-registered | /health, /health/ready, /health/live |
+| 29 | **Swagger** | Auto-generated | With authorization support |
+| 30 | **Tenant Resolution** | Multi-source chain | Route → Query → Header → Cookie |
+| 31 | **Job Retries** | Auto with backoff | 3 retries default |
+| 32 | **Widgets** | Auto-discovery | Implement `IWidget` |
 
 ---
 

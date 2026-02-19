@@ -427,23 +427,6 @@ All configured automatically.
 
 ---
 
-## 25. Token-Based Configuration Magic
-
-**The Magic:** Many settings support tokens that are resolved at runtime:
-
-```csharp
-// These tokens are automatically replaced
-"ConnectionStrings": {
-    "Default": "Server=localhost;Database=MyApp_{TENANT_ID}"
-}
-```
-
-- `{TENANT_ID}` - Replaced with current tenant ID
-- `{USER_ID}` - Replaced with current user ID
-- `{CURRENT_TIME}` - Replaced with current datetime
-
----
-
 ## 26. Localization Automatic Discovery
 
 **The Magic:** All `.json` localization files in the application are automatically discovered and loaded:
@@ -514,19 +497,7 @@ No configuration needed beyond the package reference!
 
 ---
 
-## 31. Tenant Resolution Priority Chain
-
-**The Magic:** ABP automatically resolves tenants in this order (first match wins):
-
-1. **Route** - From URL path (`/api/v1/[tenant]/...`)
-2. **Query String** - From `__tenant` query parameter
-3. **Header** - From `__tenant` header
-4. **Cookie** - From `__tenant` cookie
-5. **Subdomain** - From URL subdomain (`tenant.domain.com`)
-
----
-
-## 32. Background Job Queue Magic
+## 31. Background Job Queue Magic
 
 **The Magic:** Background jobs are automatically retried with exponential backoff:
 
@@ -569,14 +540,13 @@ No configuration needed beyond the package reference!
 | 22 | **Distributed Events** | Outbox pattern | Reliable messaging |
 | 23 | **Virtual Files** | Module merging | Embedded resources as virtual |
 | 24 | **JSON Settings** | Pre-configured | CamelCase, null handling |
-| 25 | **Token Replacement** | Runtime resolution | `{TENANT_ID}`, `{USER_ID}` |
+| 25 | **Tenant Resolution** | Multi-source chain | Route → Query → Header → Cookie → Subdomain |
 | 26 | **Localization** | Auto-discovery | JSON files in /Localization |
 | 27 | **API Versioning** | Default v1.0 | URL, header, query support |
 | 28 | **Health Checks** | Auto-registered | /health, /health/ready, /health/live |
 | 29 | **Swagger** | Auto-generated | With authorization support |
-| 30 | **Tenant Resolution** | Multi-source chain | Route → Query → Header → Cookie |
-| 31 | **Job Retries** | Auto with backoff | 3 retries default |
-| 32 | **Widgets** | Auto-discovery | Implement `IWidget` |
+| 30 | **Background Job Queue** | Auto with backoff | 3 retries default |
+| 31 | **Widgets** | Auto-discovery | Implement `IWidget` |
 
 ---
 

@@ -133,15 +133,22 @@ using (_dataFilter.Disable<IMultiTenant>())
 
 ## 8. Object Mapping (Mapperly - The New Standard)
 
-**The Magic:** ABP now uses **Mapperly** instead of AutoMapper in new project templates. Any class using Mapperly attributes is automatically configured.
+**The Magic:** Starting with **ABP v9.0**, new project templates use **Mapperly** instead of AutoMapper. Any class using Mapperly attributes is automatically configured.
 
 ```csharp
-// New ABP projects use Mapperly instead of AutoMapper
-[MapperGenerator]
-public partial class MyMapper : MapperBase
+// Starting with ABP v9.0, new projects use Mapperly instead of AutoMapper
+
+// Inherit from MapperBase - automatically registered with IObjectMapper
+public partial class UserMapper : MapperBase<User, UserDto>
 {
-    public partial UserDto MapToDto(User user);
-    public partial User MapToEntity(UserDto dto);
+    public override partial UserDto Map(User source);
+}
+
+// For two-way mapping
+public partial class UserTwoWayMapper : TwoWayMapperBase<User, UserDto>
+{
+    public override partial UserDto Map(User source);
+    public override partial User ReverseMap(UserDto source);
 }
 ```
 
@@ -159,8 +166,6 @@ context.Services.OnRegistered(context =>
     }
 });
 ```
-
-**Migration Note:** If you're on an older project using AutoMapper, you can manually add `Volo.Abp.AutoMapper` package and configure it. However, new templates come with Mapperly out of the box.
 
 ---
 
@@ -546,7 +551,7 @@ No configuration needed beyond the package reference!
 | 6 | **Security Log** | Always on | Can configure what to log |
 | 7 | **Soft Delete Filter** | Enabled by default | Must disable to query deleted |
 | 8 | **Multi-Tenancy Filter** | Enabled by default | Must disable for host data |
-| 9 | **Object Mapping** | Mapperly (compile-time) | Use `[MapperGenerator]` attribute |
+| 9 | **Object Mapping** | Mapperly (compile-time) | Inherit from `MapperBase` |
 | 10 | **Data Seeds** | Auto-discovery | Implement `IDataSeedContributor` |
 | 11 | **Remote Services** | Enabled by default | Can disable per service/method |
 | 12 | **Auto API Controllers** | App services → REST APIs | No manual controller needed |

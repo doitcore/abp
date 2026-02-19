@@ -464,7 +464,7 @@ No explicit registration needed - just add files and they're available!
 Add `[RequiresFeature]` to restrict access based on feature flags:
 
 ```csharp
-[RequiresFeature("MyApp.Feature.CanDoSomething")]
+| 9 | **Object Mapping** | Mapperly (compile-time) | Inherit from `MapperBase` / `TwoWayMapperBase` and use `[Mapper]` attribute |
 public async Task DoSomethingAsync() { }
 ```
 

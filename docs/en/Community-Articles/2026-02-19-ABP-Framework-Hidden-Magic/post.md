@@ -16,7 +16,7 @@ public class MyService : IMyService, ITransientDependency
 }
 ```
 
-**Where it happens:** `Volo.Abp.Core/DependencyInjection/ConventionalRegistrarBase.cs`
+**Where it happens:** `Volo.Abp.Core/Volo/Abp/DependencyInjection/ConventionalRegistrarBase.cs`
 
 The framework scans all assemblies and automatically determines service lifetime from class hierarchy. This is why you rarely need to manually register services in ABP.
 

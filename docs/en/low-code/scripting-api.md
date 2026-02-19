@@ -251,9 +251,7 @@ var grouped = await db.query('Product')
 
 | Limit | Default | Description |
 |-------|---------|-------------|
-| `MaxGroupCount` | 100 | Maximum groups |
-| `MaxItemsPerGroup` | 50 | Items per group |
-| `MaxTotalGroupedItems` | 1000 | Total items across groups |
+| `MaxGroupCount` | No limit | Maximum groups |
 
 ## Math Functions
 
@@ -323,28 +321,53 @@ Available in [interceptors](interceptors.md):
 | `context.logWarning(msg)` | function | Log a warning message |
 | `context.logError(msg)` | function | Log an error message |
 
+## Configuration
+
+You can configure scripting limits using `AbpLowCodeScriptingOptions` in your module's `ConfigureServices` method:
+
+```csharp
+Configure<AbpLowCodeScriptingOptions>(options =>
+{
+    // Script execution limits (null = no limit)
+    options.Script.Timeout = TimeSpan.FromMinutes(1);
+    options.Script.MaxStatements = 100_000;
+    options.Script.MaxMemoryBytes = 512 * 1024 * 1024; // 512 MB
+    options.Script.MaxRecursionDepth = 500;
+
+    // Query API limits (null = no limit)
+    options.Query.MaxLimit = 10_000;
+    options.Query.DefaultLimit = 1000;
+    options.Query.MaxExpressionNodes = 200;
+    options.Query.MaxExpressionDepth = 20;
+    options.Query.MaxArraySize = 500;
+    options.Query.MaxGroupCount = 500;
+});
+```
+
+All limits default to `null` (no limit). Configure them based on your security requirements and expected workload.
+
 ## Security
 
 ### Sandbox Constraints
 
 | Constraint | Default | Configurable |
 |------------|---------|--------------|
-| Script Timeout | 10 seconds | Yes |
-| Max Statements | 10,000 | Yes |
-| Memory Limit | 10 MB | Yes |
-| Recursion Depth | 100 levels | Yes |
+| Script Timeout | No limit | Yes |
+| Max Statements | No limit | Yes |
+| Memory Limit | No limit | Yes |
+| Recursion Depth | No limit | Yes |
 | CLR Access | Disabled | No |
 
 ### Query Security Limits
 
 | Limit | Default | Description |
 |-------|---------|-------------|
-| MaxExpressionNodes | 100 | Max AST nodes per expression |
-| MaxExpressionDepth | 10 | Max nesting depth |
-| MaxNavigationDepth | 5 | Max navigation property depth |
-| MaxLimit (take) | 1000 | Max records per query |
-| DefaultLimit | 100 | Default if `take()` not specified |
-| MaxArraySize (includes) | 100 | Max array size for IN operations |
+| MaxExpressionNodes | No limit | Max AST nodes per expression |
+| MaxExpressionDepth | No limit | Max nesting depth |
+| MaxLimit (take) | No limit | Max records per query |
+| DefaultLimit | No limit | Default if `take()` not specified |
+| MaxArraySize (includes) | No limit | Max array size for IN operations |
+| MaxGroupCount | No limit | Max groups in GroupBy |
 
 ### Property Whitelist
 

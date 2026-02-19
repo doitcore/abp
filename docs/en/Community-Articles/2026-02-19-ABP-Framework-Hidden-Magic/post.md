@@ -217,8 +217,8 @@ public class RemoteServiceAttribute : Attribute
 
 ## 13. Permission Checks Are Automatic
 
-**The Magic:** Every application service method is automatically protected. If you don't specify permissions, it still checks for login - no `[Authorize]` attribute needed!
-
+**The Magic:** Application services that inherit from `ApplicationService` are automatically wrapped with authorization interceptors, so you can declaratively protect methods with permission or authorization attributes instead of manual checks.
+Without such attributes (or explicit configuration), methods are not automatically limited to authenticated users, so you still need to configure permissions or `[Authorize]` where protection is required.
 ---
 
 ## 14. Background Workers Auto-Registration

@@ -1,6 +1,10 @@
 ---
 description: "ABP MVC and Razor Pages UI patterns"
-globs: "**/*.cshtml,**/Pages/**/*.cs,**/Views/**/*.cs,**/Controllers/**/*.cs"
+globs:
+  - "**/*.cshtml"
+  - "**/Pages/**/*.cs"
+  - "**/Views/**/*.cs"
+  - "**/Controllers/**/*.cs"
 alwaysApply: false
 ---
 

@@ -1,6 +1,9 @@
 ---
 description: "ABP Angular UI patterns and best practices"
-globs: "**/angular/**/*.ts,**/angular/**/*.html,**/*.component.ts"
+globs:
+  - "**/angular/**/*.ts"
+  - "**/angular/**/*.html"
+  - "**/*.component.ts"
 alwaysApply: false
 ---
 

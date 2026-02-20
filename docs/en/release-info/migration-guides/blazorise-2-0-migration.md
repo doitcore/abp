@@ -80,6 +80,8 @@ Typical updates:
 - `Method(context)` -> `Method(context.Item)`
 - `() => Method(context)` -> `() => Method(context.Item)`
 
+Important: This change applies to DataGrid template contexts only (`DisplayTemplate` in `DataGridColumn`, `DataGridEntityActionsColumn`, etc.). In non-DataGrid templates (for example `TreeView` `NodeContent`), `context` is already the item and should remain unchanged (for example `DeleteMenuItemAsync(context)`).
+
 ### 5.3 Width type change (string -> Fluent sizing)
 
 DataGrid column `Width` moved from plain string to fluent sizing APIs:

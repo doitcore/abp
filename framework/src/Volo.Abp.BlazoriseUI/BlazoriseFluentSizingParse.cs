@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Volo.Abp.BlazoriseUI;
 
-public static class BlaoriseFluentSizingParse
+public static class BlazoriseFluentSizingParse
 {
     private static readonly Regex SizingPattern = new Regex(
         @"^(\d+(?:\.\d+)?)(px|rem|em|ch|vw|vh|%)$",

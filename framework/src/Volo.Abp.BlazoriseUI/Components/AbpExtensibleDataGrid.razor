@@ -73,7 +73,7 @@
                     {
                         @if (column.ValueConverter == null)
                         {
-                            <DataGridColumn TItem="TItem" Field="@column.Data" Width="@Width.Px(column.Width)" Caption="@column.Title" Sortable="@column.Sortable" DisplayFormat="@column.DisplayFormat" DisplayFormatProvider="@column.DisplayFormatProvider" Displayable="column.Visible" >
+                            <DataGridColumn TItem="TItem" Field="@column.Data" Width="@BlaoriseFluentSizingParse.Parse(column.Width, SizingType.Width)" Caption="@column.Title" Sortable="@column.Sortable" DisplayFormat="@column.DisplayFormat" DisplayFormatProvider="@column.DisplayFormatProvider" Displayable="column.Visible" >
                                 <DisplayTemplate>
                                     @RenderCustomTableColumnComponent(column.Component, context.Item!)
                                 </DisplayTemplate>
@@ -81,7 +81,7 @@
                         }
                         else
                         {
-                            <DataGridColumn TItem="TItem" Field="@column.Data" Width="@Width.Px(column.Width)"  Caption="@column.Title" Sortable="@column.Sortable" Displayable="column.Visible">
+                            <DataGridColumn TItem="TItem" Field="@column.Data" Width="@BlaoriseFluentSizingParse.Parse(column.Width, SizingType.Width)"  Caption="@column.Title" Sortable="@column.Sortable" Displayable="column.Visible">
                                 <DisplayTemplate>
                                     @RenderCustomTableColumnComponent(column.Component, context.Item!)
                                 </DisplayTemplate>
@@ -96,7 +96,7 @@
                             {
                                 <DataGridColumn TItem="TItem"
                                                 Field="@column.Data"
-                                                Width="@Width.Px(column.Width)"
+                                                Width="@BlaoriseFluentSizingParse.Parse(column.Width, SizingType.Width)"
                                                 Caption="@column.Title"
                                                 Sortable="@column.Sortable"
                                                 DisplayFormat="@column.DisplayFormat"
@@ -107,7 +107,7 @@
                             {
                                 <DataGridColumn TItem="TItem"
                                                 Field="@column.Data"
-                                                Width="@Width.Px(column.Width)"
+                                                Width="@BlaoriseFluentSizingParse.Parse(column.Width, SizingType.Width)"
                                                 Caption="@column.Title"
                                                 Sortable="@column.Sortable"
                                                 Displayable="column.Visible">
@@ -119,7 +119,7 @@
                         }
                         else
                         {
-                            <DataGridColumn TItem="TItem" Field="@nameof(IHasExtraProperties.ExtraProperties)" SortField="@column.PropertyName" Width="@Width.Px(column.Width)" Caption="@column.Title" Displayable="column.Visible" Sortable="@column.Sortable">
+                            <DataGridColumn TItem="TItem" Field="@nameof(IHasExtraProperties.ExtraProperties)" SortField="@column.PropertyName" Width="@BlaoriseFluentSizingParse.Parse(column.Width, SizingType.Width)" Caption="@column.Title" Displayable="column.Visible" Sortable="@column.Sortable">
                                 <DisplayTemplate>
                                     @{
                                         var entity = context as IHasExtraProperties;

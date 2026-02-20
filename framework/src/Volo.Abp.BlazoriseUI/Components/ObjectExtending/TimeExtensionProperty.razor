@@ -7,7 +7,7 @@
 {
     <Validation Validator="@Validate" MessageLocalizer="@LH.Localize">
         <Field>
-            <FieldLabel>@PropertyInfo.GetLocalizedDisplayName(StringLocalizerFactory)</FieldLabel>-->
+            <FieldLabel>@PropertyInfo.GetLocalizedDisplayName(StringLocalizerFactory)</FieldLabel>
             <TimeInput TValue="TimeSpan?" @bind-Value="@Value" Disabled="IsReadonlyField">
                  <Feedback>
                     <ValidationError/>

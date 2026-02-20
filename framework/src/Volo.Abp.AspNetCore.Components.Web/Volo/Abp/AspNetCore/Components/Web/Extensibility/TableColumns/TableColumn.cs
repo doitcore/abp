@@ -11,10 +11,7 @@ public class TableColumn
 
     public string Data { get; set; } = default!;
 
-    /// <summary>
-    /// px
-    /// </summary>
-    public double Width { get; set; } = default!;
+    public string Width { get; set; } = default!;
 
     public string PropertyName { get; set; } = default!;
 

@@ -70,6 +70,8 @@ For empty placeholder items, set explicit `TValue`:
 
 - `CurrentPage` -> `Page` on `DataGrid`
 
+Important: `AbpExtensibleDataGrid` still uses `CurrentPage` (for example ABP v10.2). Do not rename it to `Page`.
+
 ### 5.2 DisplayTemplate context type change
 
 Inside `DisplayTemplate`, use `context.Item` instead of directly using `context`.

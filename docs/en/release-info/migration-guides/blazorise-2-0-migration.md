@@ -39,6 +39,9 @@ Migrate old binding/value APIs to the new `Value` model.
 - `@bind-Checked` -> `@bind-Value`
 - `Checked` / `CheckedChanged` -> `Value` / `ValueChanged`
 - `CheckedValue` / `CheckedValueChanged` -> `Value` / `ValueChanged`
+- `@bind-Date` / `@bind-Time` -> `@bind-Value`
+- `Date` / `DateChanged` -> `Value` / `ValueChanged`
+- `Time` / `TimeChanged` -> `Value` / `ValueChanged`
 - `@bind-SelectedValue` (for `Select`) -> `@bind-Value`
 - `SelectedValue` / `SelectedValueChanged` (for `Select`) -> `Value` / `ValueChanged`
 
@@ -49,6 +52,12 @@ Migrate old binding/value APIs to the new `Value` model.
 For `SelectionMode="DateInputSelectionMode.Range"`:
 
 - `ValueChanged` -> `ValuesChanged`
+
+### DatePicker single value mode
+
+For non-range `DatePicker` usage:
+
+- `Date` / `DateChanged` -> `Value` / `ValueChanged`
 
 ### Select multiple mode
 
@@ -81,6 +90,7 @@ Typical updates:
 - `context.Property` -> `context.Item.Property`
 - `Method(context)` -> `Method(context.Item)`
 - `() => Method(context)` -> `() => Method(context.Item)`
+- For custom template variable names, same rule applies: `row.Property` -> `row.Item.Property`
 
 Important: This change applies to DataGrid template contexts only (`DisplayTemplate` in `DataGridColumn`, `DataGridEntityActionsColumn`, etc.). In non-DataGrid templates (for example `TreeView` `NodeContent`), `context` is already the item and should remain unchanged (for example `DeleteMenuItemAsync(context)`).
 
@@ -90,6 +100,7 @@ DataGrid column `Width` moved from plain string to fluent sizing APIs:
 
 - `Width="30px"` -> `Width="Width.Px(30)"`
 - `Width="60px"` -> `Width="Width.Px(60)"`
+- `Width="0.5rem"` -> `Width="Width.Px(8)"` (or another equivalent pixel value)
 - `Width="50%"` -> `Width="Width.Percent(50)"` or `Width="Width.Is50"`
 - `Width="100%"` -> `Width="Width.Is100"`
 

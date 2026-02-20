@@ -413,6 +413,7 @@ namespace MyCompanyName.MyProjectName.Migrations
                     EntityVersion = table.Column<int>(type: "int", nullable: false),
                     LastPasswordChangeTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastSignInTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Leaved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -464,7 +465,7 @@ namespace MyCompanyName.MyProjectName.Migrations
                     ChangeType = table.Column<byte>(type: "tinyint", nullable: false),
                     EntityTenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EntityId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    EntityTypeFullName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    EntityTypeFullName = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -710,7 +711,7 @@ namespace MyCompanyName.MyProjectName.Migrations
                     NewValue = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     OriginalValue = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     PropertyName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    PropertyTypeFullName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
+                    PropertyTypeFullName = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false)
                 },
                 constraints: table =>
                 {

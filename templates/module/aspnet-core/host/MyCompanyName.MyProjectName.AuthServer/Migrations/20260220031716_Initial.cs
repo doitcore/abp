@@ -61,28 +61,6 @@ namespace MyCompanyName.MyProjectName.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AbpBackgroundJobs",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ApplicationName = table.Column<string>(type: "nvarchar(96)", maxLength: 96, nullable: true),
-                    JobName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    JobArgs = table.Column<string>(type: "nvarchar(max)", maxLength: 1048576, nullable: false),
-                    TryCount = table.Column<short>(type: "smallint", nullable: false, defaultValue: (short)0),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NextTryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastTryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsAbandoned = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Priority = table.Column<byte>(type: "tinyint", nullable: false, defaultValue: (byte)15),
-                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbpBackgroundJobs", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AbpClaimTypes",
                 columns: table => new
                 {
@@ -435,6 +413,7 @@ namespace MyCompanyName.MyProjectName.Migrations
                     EntityVersion = table.Column<int>(type: "int", nullable: false),
                     LastPasswordChangeTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastSignInTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Leaved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -550,7 +529,7 @@ namespace MyCompanyName.MyProjectName.Migrations
                     ChangeType = table.Column<byte>(type: "tinyint", nullable: false),
                     EntityTenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EntityId = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    EntityTypeFullName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    EntityTypeFullName = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -821,7 +800,7 @@ namespace MyCompanyName.MyProjectName.Migrations
                     NewValue = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     OriginalValue = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     PropertyName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    PropertyTypeFullName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false)
+                    PropertyTypeFullName = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -887,11 +866,6 @@ namespace MyCompanyName.MyProjectName.Migrations
                 name: "IX_AbpAuditLogs_TenantId_UserId_ExecutionTime",
                 table: "AbpAuditLogs",
                 columns: new[] { "TenantId", "UserId", "ExecutionTime" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AbpBackgroundJobs_IsAbandoned_NextTryTime",
-                table: "AbpBackgroundJobs",
-                columns: new[] { "IsAbandoned", "NextTryTime" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AbpEntityChanges_AuditLogId",
@@ -1138,9 +1112,6 @@ namespace MyCompanyName.MyProjectName.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogExcelFiles");
-
-            migrationBuilder.DropTable(
-                name: "AbpBackgroundJobs");
 
             migrationBuilder.DropTable(
                 name: "AbpClaimTypes");

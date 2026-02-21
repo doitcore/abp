@@ -29,6 +29,8 @@ Blazorise 2.0 uses new input component names:
 - `DateEdit` -> `DateInput`
 - `TimeEdit` -> `TimeInput`
 - `NumericEdit` -> `NumericInput`
+- `ColorEdit` -> `ColorInput`
+- `FileEdit` -> `FileInput`
 
 ## 3. Binding API normalization to Value/ValueChanged
 
@@ -44,14 +46,17 @@ Migrate old binding/value APIs to the new `Value` model.
 - `Time` / `TimeChanged` -> `Value` / `ValueChanged`
 - `@bind-SelectedValue` (for `Select`) -> `@bind-Value`
 - `SelectedValue` / `SelectedValueChanged` (for `Select`) -> `Value` / `ValueChanged`
+- `@bind-Checked` (for `Switch`) -> `@bind-Value`
+- `Checked` / `CheckedChanged` (for `Switch`) -> `Value` / `ValueChanged`
 
 ## 4. DatePicker and Select multiple changes
 
 ### DatePicker range mode
 
-For `SelectionMode="DateInputSelectionMode.Range"`:
+For `SelectionMode="DateInputSelectionMode.Range"`, the old `Dates` / `DatesChanged` parameters are replaced by the unified `Value` / `ValueChanged`. Use an array or `IReadOnlyList<T>` as `TValue`:
 
-- `ValueChanged` -> `ValuesChanged`
+- `@bind-Dates` -> `@bind-Value` (with `TValue="DateTime[]"` or `TValue="IReadOnlyList<DateTime>"`)
+- `Dates` / `DatesChanged` -> `Value` / `ValueChanged`
 
 ### DatePicker single value mode
 
@@ -61,11 +66,23 @@ For non-range `DatePicker` usage:
 
 ### Select multiple mode
 
-For `<Select Multiple ...>`:
+For `<Select Multiple ...>`, the old `SelectedValues` / `SelectedValuesChanged` parameters are replaced by the unified `Value` / `ValueChanged`. Use an array or `IReadOnlyList<T>` as `TValue`:
 
-- `Value` -> `Values`
-- `ValueChanged` -> `ValuesChanged`
-- `@bind-Value` -> `@bind-Values`
+- `@bind-SelectedValues` -> `@bind-Value` (with `TValue="string[]"` or `TValue="IReadOnlyList<string>"`)
+- `SelectedValues` / `SelectedValuesChanged` -> `Value` / `ValueChanged`
+
+Example:
+
+```razor
+<Select TValue="int[]" @bind-Value="Selected" Multiple>
+    <SelectItem Value="1">One</SelectItem>
+    <SelectItem Value="2">Two</SelectItem>
+</Select>
+
+@code {
+    private int[] Selected { get; set; } = new int[] { 1 };
+}
+```
 
 ### Empty SelectItem type requirement
 
@@ -91,6 +108,11 @@ Typical updates:
 - `Method(context)` -> `Method(context.Item)`
 - `() => Method(context)` -> `() => Method(context.Item)`
 - For custom template variable names, same rule applies: `row.Property` -> `row.Item.Property`
+
+The same rule also applies to action handlers in `DataGridEntityActionsColumn` and `DataGridCommandColumn` (such as `Clicked`, `Visible`, and `ConfirmationMessage`):
+
+- `Clicked="async () => await action.Clicked(context)"` -> `Clicked="async () => await action.Clicked(context.Item)"`
+- `Visible="action.Visible(context)"` -> `Visible="action.Visible(context.Item)"`
 
 Important: This change applies to DataGrid template contexts only (`DisplayTemplate` in `DataGridColumn`, `DataGridEntityActionsColumn`, etc.). In non-DataGrid templates (for example `TreeView` `NodeContent`), `context` is already the item and should remain unchanged (for example `DeleteMenuItemAsync(context)`).
 
@@ -132,3 +154,4 @@ Width="@BlazoriseFluentSizingParse.Parse(column.Width)" // column.Width is a str
 This document may not cover all Blazorise 2.0 changes. For completeness, refer to the official migration guide and release notes:
 
 - [Blazorise 2.0 - Release Notes](https://blazorise.com/news/release-notes/200)
+- [Blazorise 2.0 - Migration Guide](https://blazorise.com/news/migration/200)

@@ -44,7 +44,7 @@ You need to call the `UseAbpTickerQ` extension method in the `OnApplicationIniti
 public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
 {
     // (default: TickerQStartMode.Immediate)
-    context.GetHost().UseAbpTickerQ(startMode: ...);
+    context.GetHost().UseAbpTickerQ(qStartMode: ...);
 }
 ```
 

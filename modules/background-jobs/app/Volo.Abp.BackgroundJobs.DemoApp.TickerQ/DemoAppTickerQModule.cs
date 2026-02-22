@@ -94,7 +94,8 @@ public class DemoAppTickerQModule : AbpModule
         await backgroundWorkerManager.AddAsync(context.ServiceProvider.GetRequiredService<MyBackgroundWorker>());
 
         var app = context.GetApplicationBuilder();
-        (app as IHost)?.UseAbpTickerQ();
+
+        context.GetHost().UseAbpTickerQ();
 
         var timeTickerManager = context.ServiceProvider.GetRequiredService<ITimeTickerManager<TimeTickerEntity>>();
         await timeTickerManager.AddAsync(new TimeTickerEntity

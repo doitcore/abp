@@ -36,14 +36,13 @@ public override void ConfigureServices(ServiceConfigurationContext context)
 
 ### UseAbpTickerQ
 
-You need to call the `UseAbpTickerQ` extension method in the `OnApplicationInitialization` method of your module. The method is an extension on `IHost`, so cast the application builder accordingly:
+You need to call the `UseAbpTickerQ` extension method in the `OnApplicationInitialization` method of your module:
 
 ```csharp
 public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
 {
-    var app = context.GetApplicationBuilder();
     // (default: TickerQStartMode.Immediate)
-    (app as IHost)?.UseAbpTickerQ(startMode: ...);
+    context.GetHost().UseAbpTickerQ(startMode: ...);
 }
 ```
 

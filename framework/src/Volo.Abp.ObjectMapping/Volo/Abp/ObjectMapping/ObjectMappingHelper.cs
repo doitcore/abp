@@ -55,8 +55,8 @@ public static class ObjectMappingHelper
             return true;
         }
 
-        if (type.IsGenericType &&
-            supportedCollectionTypes.Contains(type.GetGenericTypeDefinition()) ||
+        if ((type.IsGenericType &&
+             supportedCollectionTypes.Contains(type.GetGenericTypeDefinition())) ||
             type.GetInterfaces().Any(i => i.IsGenericType && supportedCollectionTypes.Contains(i.GetGenericTypeDefinition())))
         {
             if (!type.IsGenericType)

@@ -14,9 +14,9 @@ Also see the following notes about ABP releases:
 * [ABP Studio release notes](../studio/release-notes.md)
 * [Change logs for ABP pro packages](https://abp.io/pro-releases)
 
-## 10.1 (2026-01-06)
+## 10.1 (2026-02-17)
 
-> This is currently a RC (release-candidate) and you can see the detailed **[blog post / announcement](https://abp.io/community/announcements/announcing-abp-10-1-release-candidate-cyqui19d)** for the v10.1 release.
+See the detailed **[blog post / announcement](https://abp.io/community/announcements/announcing-abp-10-1-stable-release-z4xfn1me)** for the v10.1 release.
 
 * Resource-Based Authorization
 * Introducing the [TickerQ Background Worker Provider](../framework/infrastructure/background-workers/tickerq.md)

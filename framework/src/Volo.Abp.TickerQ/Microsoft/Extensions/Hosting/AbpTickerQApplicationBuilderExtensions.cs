@@ -1,16 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using TickerQ.DependencyInjection;
 using TickerQ.Utilities;
 using TickerQ.Utilities.Enums;
 using Volo.Abp.TickerQ;
 
-namespace Microsoft.AspNetCore.Builder;
+namespace Microsoft.Extensions.Hosting;
 
 public static class AbpTickerQApplicationBuilderExtensions
 {
-    public static IApplicationBuilder UseAbpTickerQ(this IApplicationBuilder app, TickerQStartMode qStartMode = TickerQStartMode.Immediate)
+    public static IHost UseAbpTickerQ(this IHost app, TickerQStartMode qStartMode = TickerQStartMode.Immediate)
     {
-        var abpTickerQFunctionProvider = app.ApplicationServices.GetRequiredService<AbpTickerQFunctionProvider>();
+        var abpTickerQFunctionProvider = app.Services.GetRequiredService<AbpTickerQFunctionProvider>();
         TickerFunctionProvider.RegisterFunctions(abpTickerQFunctionProvider.Functions);
         TickerFunctionProvider.RegisterRequestType(abpTickerQFunctionProvider.RequestTypes);
 

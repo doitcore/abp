@@ -1,3 +1,10 @@
+```json
+//[doc-seo]
+{
+  "Description": "Combine backend and UI localizations in Angular: use JSON files to override or extend server-sidtexts with the same key format and abpLocalization pipe."
+}
+```
+
 # Hybrid Localization
 
 Hybrid localization lets you combine **backend localizations** (from the ABP server) with **UI localizations** (JSON files in your Angular app). UI values take priority over backend values for the same key, so you can override or extend server-side texts without changing the backend.
@@ -16,7 +23,7 @@ Enable hybrid localization in your app config via `provideAbpCore` and `withOpti
 
 ```typescript
 // app.config.ts
-import { provideAbpCore, withOptions } from '@abp/ng.core';
+import { provideAbpCore, withOptions } from "@abp/ng.core";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,7 +32,7 @@ export const appConfig: ApplicationConfig = {
         // ...other options
         uiLocalization: {
           enabled: true,
-          basePath: '/assets/localization',  // optional; default is '/assets/localization'
+          basePath: "/assets/localization", // optional; default is '/assets/localization'
         },
       }),
     ),
@@ -34,10 +41,10 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-| Option     | Description                                                                 | Default                 |
-|-----------|-----------------------------------------------------------------------------|-------------------------|
-| `enabled` | Turn on UI localization loading from `{basePath}/{culture}.json`.          | —                       |
-| `basePath`| Base path for JSON files. Files are loaded from `{basePath}/{culture}.json`. | `'/assets/localization'`|
+| Option     | Description                                                                  | Default                  |
+| ---------- | ---------------------------------------------------------------------------- | ------------------------ |
+| `enabled`  | Turn on UI localization loading from `{basePath}/{culture}.json`.            | —                        |
+| `basePath` | Base path for JSON files. Files are loaded from `{basePath}/{culture}.json`. | `'/assets/localization'` |
 
 When `enabled` is `true`, the app loads a JSON file for the current language (e.g. `en`, `tr`) whenever the user changes language. Loaded data is merged with backend localizations (UI overrides backend for the same key).
 
@@ -71,13 +78,13 @@ Use the `abpLocalization` pipe as usual. Keys can come from backend only, UI onl
 
 ```html
 <!-- Backend (if available) or UI -->
-<p>{{ 'MyProjectName::Welcome' | abpLocalization }}</p>
+<p>{%{{ 'MyProjectName::Welcome' | abpLocalization }}%}</p>
 
 <!-- UI-only key (from /assets/localization/{{ culture }}.json) -->
-<p>{{ 'MyProjectName::CustomKey' | abpLocalization }}</p>
+<p>{%{{ 'MyProjectName::CustomKey' | abpLocalization }}%}</p>
 
 <!-- Backend key overridden by UI -->
-<p>{{ 'AbpAccount::Login' | abpLocalization }}</p>
+<p>{%{{ 'AbpAccount::Login' | abpLocalization }}%}</p>
 ```
 
 No template changes are needed; only the configuration and the JSON files.
@@ -91,7 +98,7 @@ The `UILocalizationService` (`@abp/ng.core`) manages UI localizations and merges
 To inspect what was loaded from the UI JSON files (e.g. for debugging or display):
 
 ```typescript
-import { UILocalizationService, SessionStateService } from '@abp/ng.core';
+import { UILocalizationService, SessionStateService } from "@abp/ng.core";
 
 export class MyComponent {
   private uiLocalizationService = inject(UILocalizationService);
@@ -103,7 +110,7 @@ export class MyComponent {
     // All loaded UI resources for current language
     const loaded = this.uiLocalizationService.getLoadedLocalizations();
     // Or for a specific culture
-    const loadedEn = this.uiLocalizationService.getLoadedLocalizations('en');
+    const loadedEn = this.uiLocalizationService.getLoadedLocalizations("en");
   }
 }
 ```
@@ -151,5 +158,5 @@ See `apps/dev-app/src/app/localization-test/localization-test.component.ts` and 
 | **Config**       | `provideAbpCore(withOptions({ uiLocalization: { enabled: true, basePath?: string } }))`. |
 | **File location**| `{basePath}/{culture}.json` (e.g. `/assets/localization/en.json`). |
 | **JSON format**   | `{ "ResourceName": { "Key": "Value", ... }, ... }`. |
-| **Template usage** | Same as before: `{{ 'ResourceName::Key' \| abpLocalization }}`. |
+| **Template usage** | Same as before: `{%{{ 'ResourceName::Key' \| abpLocalization }}%}`. |
 | **API**          | `UILocalizationService`: `getLoadedLocalizations(culture?)`, `addAngularLocalizeLocalization(culture, resourceName, translations)`. |

@@ -1,6 +1,6 @@
 # ABP.IO Platform 10.1 Final Has Been Released!
 
-We are glad to announce that [ABP](https://abp.io/) 10.1 stable version has been released today. 
+We are glad to announce that [ABP](https://abp.io/) 10.1 stable version has been released. 
 
 ## What's New With Version 10.1?
 

@@ -1620,6 +1620,10 @@
                       "path": "framework/ui/angular/localization.md"
                     },
                     {
+                      "text": "Hybrid Localization",
+                      "path": "framework/ui/angular/hybrid-localization.md"
+                    },
+                    {
                       "text": "Form Validation",
                       "path": "framework/ui/angular/form-validation.md"
                     },

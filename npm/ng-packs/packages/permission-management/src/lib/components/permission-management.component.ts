@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import { ConfigStateService, CurrentUserDto, LocalizationPipe } from '@abp/ng.core';
 import {
   ButtonComponent,
@@ -99,6 +100,7 @@ type PermissionWithGroupName = PermissionGrantInfoDto & {
   ],
   imports: [
     FormsModule,
+    NgStyle,
     ModalComponent,
     LocalizationPipe,
     ButtonComponent,

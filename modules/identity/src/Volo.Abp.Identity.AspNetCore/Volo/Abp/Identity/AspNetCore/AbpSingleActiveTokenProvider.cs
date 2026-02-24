@@ -62,7 +62,18 @@ public abstract class AbpSingleActiveTokenProvider : DataProtectorTokenProvider<
         }
 
         var inputHash = ComputeSha256Hash(token);
-        return string.Equals(storedHash, inputHash, StringComparison.Ordinal);
+        try
+        {
+            var storedHashBytes = Convert.FromHexString(storedHash);
+            var inputHashBytes = Convert.FromHexString(inputHash);
+            return CryptographicOperations.FixedTimeEquals(storedHashBytes, inputHashBytes);
+        }
+        catch (FormatException)
+        {
+            // In case the stored hash is corrupted or not a valid hex string,
+            // treat the token as invalid rather than throwing.
+            return false;
+        }
     }
 
     protected virtual string ComputeSha256Hash(string input)

@@ -369,9 +369,8 @@ AbpDynamicEntityConfig.EntityConfigurations.Configure(
 ### Adding Interceptors
 
 ````csharp
-entity.Interceptors.Add(new CommandInterceptorDescriptor
+entity.Interceptors.Add(new CommandInterceptorDescriptor("Create")
 {
-    CommandName = "Create",
     Type = InterceptorType.Pre,
     Javascript = "if(!context.commandArgs.data['Name']) { globalError = 'Name is required!'; }"
 });

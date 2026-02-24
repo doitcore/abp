@@ -56,16 +56,14 @@ AbpDynamicEntityConfig.EntityConfigurations.Configure(
     "MyApp.Organizations.Organization",
     entity =>
     {
-        entity.Interceptors.Add(new CommandInterceptorDescriptor
+        entity.Interceptors.Add(new CommandInterceptorDescriptor("Create")
         {
-            CommandName = "Create",
             Type = InterceptorType.Pre,
             Javascript = "if(!context.commandArgs.data['Name']) { globalError = 'Name is required!'; }"
         });
 
-        entity.Interceptors.Add(new CommandInterceptorDescriptor
+        entity.Interceptors.Add(new CommandInterceptorDescriptor("Delete")
         {
-            CommandName = "Delete",
             Type = InterceptorType.Post,
             Javascript = "context.log('Deleted: ' + context.commandArgs.entityId);"
         });

@@ -145,4 +145,4 @@ The `DynamicEntityAppService` checks these relations when building entity action
 
 * [model.json Structure](model-json.md)
 * [Reference Entities](reference-entities.md)
-* [Fluent API & Attributes](fluent-api.md)
+* [Attributes & Fluent API](fluent-api.md)

@@ -71,6 +71,7 @@ The **AI Management Module** adds the following items to the "Main" menu:
 
 * **AI Management**: Root menu item for AI Management module. (`AIManagement`)
   * **Workspaces**: Workspace management page. (`AIManagement.Workspaces`)
+  * **MCP Servers**: MCP server management page. (`AIManagement.McpServers`)
 
 `AIManagementMenus` class has the constants for the menu item names.
 
@@ -105,6 +106,37 @@ The AI Management module includes a built-in chat interface for testing workspac
 
 > Access the chat interface at: `/AIManagement/Workspaces/{WorkspaceName}`
 
+#### MCP Servers
+
+The [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) Servers page allows you to manage external MCP servers that can be used as tools by your AI workspaces. MCP enables AI models to interact with external services, databases, APIs, and more through a standardized protocol.
+
+![ai-management-mcp-servers](../../images/ai-management-mcp-servers.png)
+
+You can create, edit, delete, and test MCP server connections. Each MCP server supports one of the following transport types:
+
+* **Stdio**: Runs a local command (e.g., `npx`, `dotnet`, `python`) with arguments and environment variables.
+* **SSE**: Connects to a remote server using Server-Sent Events.
+* **StreamableHttp**: Connects to a remote server using the Streamable HTTP transport.
+
+For HTTP-based transports (SSE and StreamableHttp), you can configure authentication:
+
+* **None**: No authentication.
+* **API Key**: Sends an API key in the header.
+* **Bearer**: Sends a Bearer token in the Authorization header.
+* **Custom**: Sends a custom header name/value pair.
+
+You can test the connection to an MCP server after creating it. The test verifies connectivity and lists available tools from the server.
+
+![ai-management-mcp-test-connection](../../images/ai-management-mcp-test-connection.png)
+
+Once MCP servers are defined, you can associate them with workspaces. Navigate to a workspace's edit page and configure which MCP servers should be available as tools for that workspace.
+
+![ai-management-workspace-mcp-config](../../images/ai-management-workspace-mcp-config.png)
+
+When a workspace has MCP servers associated, the AI model can invoke tools from those servers during chat conversations. Tool calls and results are displayed in the chat interface.
+
+![ai-management-chat-mcp-tools](../../images/ai-management-chat-mcp-tools.png)
+
 ## Workspace Configuration
 
 Workspaces are the core concept of the AI Management module. A workspace represents an AI provider configuration that can be used throughout your application.
@@ -128,6 +160,11 @@ When creating or managing a workspace, you can configure the following propertie
 | `RequiredPermissionName`      | No       | Permission required to use this workspace                      |
 | `IsSystem`                    | No       | Whether it's a system workspace (read-only)                    |
 | `OverrideSystemConfiguration` | No       | Allow database configuration to override code-defined settings |
+| `EmbedderProvider`            | No       | Embedder provider for RAG (e.g., "OpenAI", "Ollama")           |
+| `EmbedderModelName`           | No       | Embedder model name (e.g., "text-embedding-3-small")           |
+| `EmbedderApiBaseUrl`          | No       | Embedder endpoint URL                                          |
+| `VectorStoreProvider`         | No       | Vector store provider for RAG (e.g., "Pgvector")               |
+| `VectorStoreSettings`         | No       | Vector store connection string or settings                     |
 
 **\*Not required for system workspaces**
 
@@ -202,6 +239,43 @@ public class WorkspaceDataSeederContributor : IDataSeedContributor, ITransientDe
 * Workspace names **cannot contain spaces** (use underscores or camelCase)
 * Workspace names are **case-sensitive**
 
+## RAG with File Upload
+
+The AI Management module supports RAG (Retrieval-Augmented Generation), which enables workspaces to answer questions based on the content of uploaded documents. When RAG is configured, the AI model searches the uploaded documents for relevant information before generating a response.
+
+### Supported File Formats
+
+* **PDF** (.pdf)
+* **Markdown** (.md)
+* **Text** (.txt)
+
+Maximum file size: **10 MB**.
+
+### Prerequisites
+
+RAG requires an **embedder** and a **vector store** to be configured on the workspace:
+
+* **Embedder**: Converts documents and queries into vector embeddings. You can use any provider that supports embedding generation (e.g., OpenAI `text-embedding-3-small`, Ollama `nomic-embed-text`).
+* **Vector Store**: Stores and retrieves vector embeddings. Currently, **PgVector** (PostgreSQL extension) is supported as a vector store provider.
+
+### Configuring RAG on a Workspace
+
+To enable RAG for a workspace, configure the following properties in the workspace edit page:
+
+* **Embedder Provider**: The provider for generating embeddings (e.g., "OpenAI", "Ollama").
+* **Embedder Model Name**: The embedding model (e.g., "text-embedding-3-small", "nomic-embed-text").
+* **Embedder Base URL**: The endpoint URL for the embedder (optional if using the default endpoint).
+* **Vector Store Provider**: The vector store to use (e.g., "Pgvector").
+* **Vector Store Settings**: The connection string for the vector store (e.g., `Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=myPassword`).
+
+### Uploading Documents
+
+![ai-management-rag-upload](../../images/ai-management-rag-upload.png)
+
+Once RAG is configured on a workspace, you can upload documents through the workspace management UI. Uploaded documents are automatically processed -- their content is chunked, embedded, and stored in the configured vector store. You can then ask questions in the chat interface, and the AI model will use the uploaded documents as context.
+
+![ai-management-rag-chat](../../images/ai-management-rag-chat.png)
+
 ## Permissions
 
 The AI Management module defines the following permissions:
@@ -212,6 +286,10 @@ The AI Management module defines the following permissions:
 | `AIManagement.Workspaces.Create` | Create new workspaces    | Admin role         |
 | `AIManagement.Workspaces.Update` | Edit existing workspaces | Admin role         |
 | `AIManagement.Workspaces.Delete` | Delete workspaces        | Admin role         |
+| `AIManagement.McpServers`        | View MCP servers         | Admin role         |
+| `AIManagement.McpServers.Create` | Create new MCP servers   | Admin role         |
+| `AIManagement.McpServers.Update` | Edit existing MCP servers| Admin role         |
+| `AIManagement.McpServers.Delete` | Delete MCP servers       | Admin role         |
 
 ### Workspace-Level Permissions
 
@@ -485,6 +563,71 @@ Your application acts as a proxy, forwarding these requests to the AI Management
 | **3. Client Remote**      | No                | Remote Service | Remote Service | No          | Microservices consuming AI centrally      |
 | **4. Client Proxy**       | No                | Remote Service | Remote Service | Yes         | API Gateway pattern, proxy services       |
 
+### OpenAI-Compatible API
+
+The AI Management module exposes an **OpenAI-compatible REST API** at the `/v1` path. This allows any application or tool that supports the OpenAI API format -- such as [AnythingLLM](https://anythingllm.com/), [Open WebUI](https://openwebui.com/), [Dify](https://dify.ai/), or custom scripts using the OpenAI SDK -- to connect directly to your AI Management instance.
+
+![ai-management-openai-anythingllm](../../images/ai-management-openai-anythingllm.png)
+
+Each AI Management **workspace** appears as a selectable model in the client application. The workspace's configured AI provider handles the actual inference transparently.
+
+![ai-management-openai-anythingllm2](../../images/ai-management-openai-anythingllm2.png)
+
+#### Available Endpoints
+
+| Endpoint                     | Method | Description                                     |
+| ---------------------------- | ------ | ----------------------------------------------- |
+| `/v1/chat/completions`       | POST   | Chat completions (streaming and non-streaming)  |
+| `/v1/completions`            | POST   | Legacy text completions                         |
+| `/v1/models`                 | GET    | List available models (workspaces)              |
+| `/v1/models/{modelId}`       | GET    | Retrieve a single model (workspace)             |
+| `/v1/embeddings`             | POST   | Generate embeddings                             |
+| `/v1/files`                  | GET    | List uploaded files                             |
+| `/v1/files`                  | POST   | Upload a file                                   |
+| `/v1/files/{fileId}`         | GET    | Get file info                                   |
+| `/v1/files/{fileId}`         | DELETE | Delete a file                                   |
+| `/v1/files/{fileId}/content` | GET    | Download file content                           |
+
+All endpoints require authentication via a **Bearer token** in the `Authorization` header.
+
+#### Usage
+
+The general pattern for connecting any OpenAI-compatible client:
+
+* **Base URL**: `https://<your-app-url>/v1`
+* **API Key**: A valid Bearer token obtained from your application's authentication endpoint.
+* **Model**: One of the workspace names returned by `GET /v1/models`.
+
+**Example with the OpenAI Python SDK:**
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://localhost:44336/v1",
+    api_key="<your-token>"
+)
+
+response = client.chat.completions.create(
+    model="MyWorkspace",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+print(response.choices[0].message.content)
+```
+
+**Example with cURL:**
+
+```bash
+curl -X POST https://localhost:44336/v1/chat/completions \
+  -H "Authorization: Bearer <your-token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "MyWorkspace",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+> The OpenAI-compatible endpoints are available from both the `Volo.AIManagement.Client.HttpApi` and `Volo.AIManagement.HttpApi` packages, depending on your deployment scenario.
 
 ## Client Usage
 
@@ -952,24 +1095,31 @@ The AI Management module follows Domain-Driven Design principles and has a well-
 #### Aggregates
 
 - **Workspace**: The main aggregate root representing an AI workspace configuration.
+- **McpServer**: Aggregate root representing an MCP server configuration.
 
 #### Repositories
 
 The following custom repositories are defined:
 
 - `IWorkspaceRepository`: Repository for workspace management with custom queries.
+- `IMcpServerRepository`: Repository for MCP server management with custom queries.
 
 #### Domain Services
 
 - `ApplicationWorkspaceManager`: Manages workspace operations and validations.
+- `McpServerManager`: Manages MCP server operations and validations.
 - `WorkspaceConfigurationStore`: Retrieves workspace configuration with caching. Implements `IWorkspaceConfigurationStore` interface.
 - `ChatClientResolver`: Resolves the appropriate `IChatClient` implementation for a workspace.
+- `EmbeddingClientResolver`: Resolves the appropriate embedding client for a workspace (used by RAG).
+- `IMcpToolProvider`: Resolves and aggregates MCP tools from all connected MCP servers for a workspace.
+- `IMcpServerConfigurationStore`: Retrieves MCP server configurations for workspaces.
 
 #### Integration Services
 
 The module exposes the following integration services for inter-service communication:
 
 - `IAIChatCompletionIntegrationService`: Executes AI chat completions remotely.
+- `IAIEmbeddingIntegrationService`: Generates embeddings remotely.
 - `IWorkspaceConfigurationIntegrationService`: Retrieves workspace configuration for remote setup.
 - `IWorkspaceIntegrationService`: Manages workspaces remotely.
 
@@ -980,7 +1130,9 @@ The module exposes the following integration services for inter-service communic
 #### Application Services
 
 - `WorkspaceAppService`: CRUD operations for workspace management.
+- `McpServerAppService`: CRUD operations for MCP server management.
 - `ChatCompletionClientAppService`: Client-side chat completion services.
+- `OpenAICompatibleChatAppService`: OpenAI-compatible API endpoint services.
 - `AIChatCompletionIntegrationService`: Integration service for remote AI execution.
 
 ### Caching

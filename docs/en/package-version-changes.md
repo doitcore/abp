@@ -4,6 +4,10 @@
 
 | Package | Old Version | New Version | PR |
 |---------|-------------|-------------|-----|
+| Blazorise | 1.8.8 | 2.0.0 | #24906 |
+| Blazorise.Components | 1.8.8 | 2.0.0 | #24906 |
+| Blazorise.DataGrid | 1.8.8 | 2.0.0 | #24906 |
+| Blazorise.Snackbar | 1.8.8 | 2.0.0 | #24906 |
 | TickerQ | 2.5.3 | 10.1.1 | #24916 |
 | TickerQ.Dashboard | 2.5.3 | 10.1.1 | #24916 |
 | TickerQ.EntityFrameworkCore | 2.5.3 | 10.1.1 | #24916 |

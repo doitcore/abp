@@ -260,11 +260,24 @@ RAG requires an **embedder** and a **vector store** to be configured on the work
 
 ### Configuring RAG on a Workspace
 
-To enable RAG for a workspace, configure the following properties in the workspace edit page:
+To enable RAG for a workspace, configure the embedder and vector store settings in the workspace edit page.
+
+#### Configuring Embedder
+
+![workspace-embedder](../../images/workspace-embedder.png)
+
+The **Embedder** tab allows you to configure how documents and queries are converted into vector embeddings:
 
 * **Embedder Provider**: The provider for generating embeddings (e.g., "OpenAI", "Ollama").
 * **Embedder Model Name**: The embedding model (e.g., "text-embedding-3-small", "nomic-embed-text").
 * **Embedder Base URL**: The endpoint URL for the embedder (optional if using the default endpoint).
+
+#### Configuring Vector Store
+
+![workspace-vector-store](../../images/workspace-vector-store.png)
+
+The **Vector Store** section allows you to configure where the generated embeddings are stored and retrieved:
+
 * **Vector Store Provider**: The vector store to use (e.g., "Pgvector").
 * **Vector Store Settings**: The connection string for the vector store (e.g., `Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=myPassword`).
 

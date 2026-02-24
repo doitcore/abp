@@ -5,7 +5,7 @@
 }
 ```
 
-# Fluent API & Attributes
+# Attributes & Fluent API
 
 C# Attributes and the Fluent API are the **recommended way** to define dynamic entities. They provide compile-time checking, IntelliSense, refactoring support, and keep your entity definitions close to your domain code.
 
@@ -74,7 +74,7 @@ The Low-Code System uses a layered configuration model. From lowest to highest p
 2. **JSON Layer** — `model.json` file (see [model.json Structure](model-json.md))
 3. **Fluent Layer** — `AbpDynamicEntityConfig.EntityConfigurations`
 
-A `DefaultsLayer` runs last to fill in any missing values with conventions.
+A `DefaultLayer` runs last to fill in any missing values with conventions.
 
 > When the same entity or property is configured in multiple layers, the higher-priority layer wins.
 

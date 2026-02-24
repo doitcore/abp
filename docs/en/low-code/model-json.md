@@ -416,7 +416,7 @@ When you modify `model.json`, you need database migrations for the changes to ta
 
 ## See Also
 
-* [Fluent API & Attributes](fluent-api.md)
+* [Attributes & Fluent API](fluent-api.md)
 * [Interceptors](interceptors.md)
 * [Custom Endpoints](custom-endpoints.md)
 * [Scripting API](scripting-api.md)

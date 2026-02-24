@@ -47,6 +47,34 @@ public class Organization
 
 The `Name` parameter must be one of: `"Create"`, `"Update"`, or `"Delete"`. The `InterceptorType` can be `Pre`, `Post`, or `Replace`. When `Replace` is used, the default database operation is completely skipped and only your JavaScript handler executes. Multiple interceptors can be added to the same class (`AllowMultiple = true`).
 
+## Defining Interceptors with Fluent API
+
+Use the `Interceptors` list on an `EntityDescriptor` to add interceptors programmatically in your [Low-Code Initializer](index.md#1-create-a-low-code-initializer):
+
+````csharp
+AbpDynamicEntityConfig.EntityConfigurations.Configure(
+    "MyApp.Organizations.Organization",
+    entity =>
+    {
+        entity.Interceptors.Add(new CommandInterceptorDescriptor
+        {
+            CommandName = "Create",
+            Type = InterceptorType.Pre,
+            Javascript = "if(!context.commandArgs.data['Name']) { globalError = 'Name is required!'; }"
+        });
+
+        entity.Interceptors.Add(new CommandInterceptorDescriptor
+        {
+            CommandName = "Delete",
+            Type = InterceptorType.Post,
+            Javascript = "context.log('Deleted: ' + context.commandArgs.entityId);"
+        });
+    }
+);
+````
+
+See [Attributes & Fluent API](fluent-api.md#adding-interceptors) for more details on Fluent API configuration.
+
 ## Defining Interceptors in model.json
 
 Add interceptors to the `interceptors` array of an entity:

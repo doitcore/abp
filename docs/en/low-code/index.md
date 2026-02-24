@@ -7,6 +7,8 @@
 
 # Low-Code System
 
+> You must have an ABP Team or a higher license to use this module.
+
 The ABP Low-Code System allows you to define entities using C# attributes or Fluent API and automatically generates:
 
 * **Database tables** (via EF Core migrations)
@@ -23,13 +25,13 @@ No need to write DTOs, application services, repositories, or UI pages manually.
 
 Traditionally, adding a new entity with full CRUD functionality to an ABP application requires:
 
-1. Entity class in Domain
-2. DbContext configuration in EF Core
-3. DTOs in Application.Contracts
-4. AppService in Application
-5. Controller in HttpApi
-6. Razor/Blazor pages in UI
-7. Permissions, menu items, localization
+* Entity class in Domain
+* DbContext configuration in EF Core
+* DTOs in Application.Contracts
+* AppService in Application
+* Controller in HttpApi
+* Razor/Blazor pages in UI
+* Permissions, menu items, localization
 
 **With Low-Code, a single C# class replaces all of the above:**
 
@@ -214,7 +216,7 @@ public class OrderLine : DynamicEntityBase
 }
 ````
 
-See [Fluent API & Attributes](fluent-api.md) for the full attribute reference.
+See [Attributes & Fluent API](fluent-api.md) for the full attribute reference.
 
 ### model.json (Declarative)
 
@@ -244,7 +246,7 @@ See [model.json Structure](model-json.md) for the full specification.
 
 | Feature | Description | Documentation |
 |---------|-------------|---------------|
-| **Attributes & Fluent API** | Define dynamic entities with C# attributes and configure programmatically | [Fluent API & Attributes](fluent-api.md) |
+| **Attributes & Fluent API** | Define dynamic entities with C# attributes and configure programmatically | [Attributes & Fluent API](fluent-api.md) |
 | **model.json** | Declarative dynamic entity definitions in JSON | [model.json Structure](model-json.md) |
 | **Reference Entities** | Read-only access to existing C# entities (e.g., `IdentityUser`) for foreign key lookups | [Reference Entities](reference-entities.md) |
 | **Interceptors** | Pre/Post hooks for Create, Update, Delete with JavaScript | [Interceptors](interceptors.md) |
@@ -358,6 +360,6 @@ Custom commands and queries are automatically discovered and registered at start
 
 ## See Also
 
-* [Fluent API & Attributes](fluent-api.md)
+* [Attributes & Fluent API](fluent-api.md)
 * [model.json Structure](model-json.md)
 * [Scripting API](scripting-api.md)

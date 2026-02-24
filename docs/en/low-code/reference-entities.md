@@ -144,4 +144,4 @@ if (user) {
 
 * [model.json Structure](model-json.md)
 * [Foreign Access](foreign-access.md)
-* [Fluent API & Attributes](fluent-api.md)
+* [Attributes & Fluent API](fluent-api.md)

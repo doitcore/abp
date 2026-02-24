@@ -39,7 +39,7 @@ public abstract class AbpSingleActiveTokenProviderTestBase : AbpIdentityAspNetCo
     /// <summary>Returns the token purpose used as the hash key prefix.</summary>
     protected abstract string GetPurpose();
 
-    private string GetHashKey() => GetPurpose() + AbpSingleActiveTokenProvider.TokenHashSuffix;
+    private string GetTokenHashName() => GetProviderName() + ":" + GetPurpose();
 
     [Fact]
     public async Task Generate_And_Verify_Token_Should_Succeed()
@@ -103,7 +103,7 @@ public abstract class AbpSingleActiveTokenProviderTestBase : AbpIdentityAspNetCo
 
             // Overwrite with a non-hex string to simulate data corruption.
             user = await UserRepository.GetAsync(TestData.UserJohnId);
-            await UserManager.SetAuthenticationTokenAsync(user, GetProviderName(), GetHashKey(), "not-valid-hex!!!");
+            await UserManager.SetAuthenticationTokenAsync(user, AbpSingleActiveTokenProvider.InternalLoginProvider, GetTokenHashName(), "not-valid-hex!!!");
 
             user = await UserRepository.GetAsync(TestData.UserJohnId);
 

@@ -7,7 +7,7 @@ namespace Volo.Abp.Identity.AspNetCore;
 /// Provides extension methods on <see cref="IdentityUserManager"/> for invalidating
 /// single-active tokens managed by <see cref="AbpSingleActiveTokenProvider"/>.
 /// These helpers live in the AspNetCore layer because they depend on
-/// <see cref="AbpSingleActiveTokenProvider.TokenHashSuffix"/>.
+/// <see cref="AbpSingleActiveTokenProvider.InternalLoginProvider"/>.
 /// </summary>
 public static class IdentityUserManagerSingleActiveTokenExtensions
 {
@@ -17,8 +17,8 @@ public static class IdentityUserManagerSingleActiveTokenExtensions
     /// </summary>
     public static Task<IdentityResult> RemovePasswordResetTokenAsync(this IdentityUserManager manager, IdentityUser user)
     {
-        var name = UserManager<IdentityUser>.ResetPasswordTokenPurpose + AbpSingleActiveTokenProvider.TokenHashSuffix;
-        return manager.RemoveAuthenticationTokenAsync(user, manager.Options.Tokens.PasswordResetTokenProvider, name);
+        var name = manager.Options.Tokens.PasswordResetTokenProvider + ":" + UserManager<IdentityUser>.ResetPasswordTokenPurpose;
+        return manager.RemoveAuthenticationTokenAsync(user, AbpSingleActiveTokenProvider.InternalLoginProvider, name);
     }
 
     /// <summary>
@@ -27,8 +27,8 @@ public static class IdentityUserManagerSingleActiveTokenExtensions
     /// </summary>
     public static Task<IdentityResult> RemoveEmailConfirmationTokenAsync(this IdentityUserManager manager, IdentityUser user)
     {
-        var name = UserManager<IdentityUser>.ConfirmEmailTokenPurpose + AbpSingleActiveTokenProvider.TokenHashSuffix;
-        return manager.RemoveAuthenticationTokenAsync(user, manager.Options.Tokens.EmailConfirmationTokenProvider, name);
+        var name = manager.Options.Tokens.EmailConfirmationTokenProvider + ":" + UserManager<IdentityUser>.ConfirmEmailTokenPurpose;
+        return manager.RemoveAuthenticationTokenAsync(user, AbpSingleActiveTokenProvider.InternalLoginProvider, name);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public static class IdentityUserManagerSingleActiveTokenExtensions
     /// </summary>
     public static Task<IdentityResult> RemoveChangeEmailTokenAsync(this IdentityUserManager manager, IdentityUser user, string newEmail)
     {
-        var name = UserManager<IdentityUser>.GetChangeEmailTokenPurpose(newEmail) + AbpSingleActiveTokenProvider.TokenHashSuffix;
-        return manager.RemoveAuthenticationTokenAsync(user, manager.Options.Tokens.ChangeEmailTokenProvider, name);
+        var name = manager.Options.Tokens.ChangeEmailTokenProvider + ":" + UserManager<IdentityUser>.GetChangeEmailTokenPurpose(newEmail);
+        return manager.RemoveAuthenticationTokenAsync(user, AbpSingleActiveTokenProvider.InternalLoginProvider, name);
     }
 }

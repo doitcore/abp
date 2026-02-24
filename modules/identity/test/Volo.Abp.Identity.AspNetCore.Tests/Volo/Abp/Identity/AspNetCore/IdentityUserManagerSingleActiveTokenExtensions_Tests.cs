@@ -30,8 +30,8 @@ public class IdentityUserManagerSingleActiveTokenExtensions_Tests : AbpIdentityA
         using (var uow = UnitOfWorkManager.Begin())
         {
             var user = await UserRepository.GetAsync(TestData.UserJohnId);
-            var providerName = UserManager.Options.Tokens.PasswordResetTokenProvider;
-            var tokenKey = UserManager<IdentityUser>.ResetPasswordTokenPurpose + AbpSingleActiveTokenProvider.TokenHashSuffix;
+            var providerName = AbpSingleActiveTokenProvider.InternalLoginProvider;
+            var tokenKey = UserManager.Options.Tokens.PasswordResetTokenProvider + ":" + UserManager<IdentityUser>.ResetPasswordTokenPurpose;
 
             await UserManager.SetAuthenticationTokenAsync(user, providerName, tokenKey, "hash-value");
             (await UserManager.GetAuthenticationTokenAsync(user, providerName, tokenKey)).ShouldNotBeNull();
@@ -51,8 +51,8 @@ public class IdentityUserManagerSingleActiveTokenExtensions_Tests : AbpIdentityA
         using (var uow = UnitOfWorkManager.Begin())
         {
             var user = await UserRepository.GetAsync(TestData.UserJohnId);
-            var providerName = UserManager.Options.Tokens.EmailConfirmationTokenProvider;
-            var tokenKey = UserManager<IdentityUser>.ConfirmEmailTokenPurpose + AbpSingleActiveTokenProvider.TokenHashSuffix;
+            var providerName = AbpSingleActiveTokenProvider.InternalLoginProvider;
+            var tokenKey = UserManager.Options.Tokens.EmailConfirmationTokenProvider + ":" + UserManager<IdentityUser>.ConfirmEmailTokenPurpose;
 
             await UserManager.SetAuthenticationTokenAsync(user, providerName, tokenKey, "hash-value");
             (await UserManager.GetAuthenticationTokenAsync(user, providerName, tokenKey)).ShouldNotBeNull();
@@ -72,8 +72,8 @@ public class IdentityUserManagerSingleActiveTokenExtensions_Tests : AbpIdentityA
         using (var uow = UnitOfWorkManager.Begin())
         {
             var user = await UserRepository.GetAsync(TestData.UserJohnId);
-            var providerName = UserManager.Options.Tokens.ChangeEmailTokenProvider;
-            var tokenKey = UserManager<IdentityUser>.GetChangeEmailTokenPurpose(NewEmail) + AbpSingleActiveTokenProvider.TokenHashSuffix;
+            var providerName = AbpSingleActiveTokenProvider.InternalLoginProvider;
+            var tokenKey = UserManager.Options.Tokens.ChangeEmailTokenProvider + ":" + UserManager<IdentityUser>.GetChangeEmailTokenPurpose(NewEmail);
 
             await UserManager.SetAuthenticationTokenAsync(user, providerName, tokenKey, "hash-value");
             (await UserManager.GetAuthenticationTokenAsync(user, providerName, tokenKey)).ShouldNotBeNull();

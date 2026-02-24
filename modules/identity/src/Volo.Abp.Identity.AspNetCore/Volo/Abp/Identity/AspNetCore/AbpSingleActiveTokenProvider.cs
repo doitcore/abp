@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Identity;
+using Volo.Abp.Threading;
 
 namespace Volo.Abp.Identity.AspNetCore;
 
@@ -19,27 +20,36 @@ namespace Volo.Abp.Identity.AspNetCore;
 /// </summary>
 public abstract class AbpSingleActiveTokenProvider : DataProtectorTokenProvider<IdentityUser>
 {
-    public const string TokenHashSuffix = "_TokenHash";
+    /// <summary>
+    /// The internal login provider name used to store token hashes in the user token table.
+    /// Using a bracketed name clearly distinguishes these internal entries from real external
+    /// login providers (e.g. Google, GitHub) stored in the same table.
+    /// </summary>
+    public const string InternalLoginProvider = "[AbpSingleActiveToken]";
 
     protected IIdentityUserRepository UserRepository { get; }
+
+    protected ICancellationTokenProvider CancellationTokenProvider { get; }
 
     protected AbpSingleActiveTokenProvider(
         IDataProtectionProvider dataProtectionProvider,
         IOptions<DataProtectionTokenProviderOptions> options,
         ILogger<DataProtectorTokenProvider<IdentityUser>> logger,
-        IIdentityUserRepository userRepository)
+        IIdentityUserRepository userRepository,
+        ICancellationTokenProvider cancellationTokenProvider)
         : base(dataProtectionProvider, options, logger)
     {
         UserRepository = userRepository;
+        CancellationTokenProvider = cancellationTokenProvider;
     }
 
     public override async Task<string> GenerateAsync(string purpose, UserManager<IdentityUser> manager, IdentityUser user)
     {
         var token = await base.GenerateAsync(purpose, manager, user);
 
-        await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens);
+        await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, CancellationTokenProvider.Token);
         var tokenHash = ComputeSha256Hash(token);
-        user.SetToken(Options.Name, purpose + TokenHashSuffix, tokenHash);
+        user.SetToken(InternalLoginProvider, Options.Name + ":" + purpose, tokenHash);
 
         await manager.UpdateAsync(user);
 
@@ -53,9 +63,9 @@ public abstract class AbpSingleActiveTokenProvider : DataProtectorTokenProvider<
             return false;
         }
 
-        await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens);
+        await UserRepository.EnsureCollectionLoadedAsync(user, u => u.Tokens, CancellationTokenProvider.Token);
 
-        var storedHash = user.FindToken(Options.Name, purpose + TokenHashSuffix)?.Value;
+        var storedHash = user.FindToken(InternalLoginProvider, Options.Name + ":" + purpose)?.Value;
         if (storedHash == null)
         {
             return false;

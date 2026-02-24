@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Identity;
+using Volo.Abp.Threading;
 
 namespace Volo.Abp.Identity.AspNetCore;
 
@@ -31,8 +32,9 @@ public class AbpEmailConfirmationTokenProvider : AbpSingleActiveTokenProvider
         IDataProtectionProvider dataProtectionProvider,
         IOptions<AbpEmailConfirmationTokenProviderOptions> options,
         ILogger<DataProtectorTokenProvider<IdentityUser>> logger,
-        IIdentityUserRepository userRepository)
-        : base(dataProtectionProvider, options, logger, userRepository)
+        IIdentityUserRepository userRepository,
+        ICancellationTokenProvider cancellationTokenProvider)
+        : base(dataProtectionProvider, options, logger, userRepository, cancellationTokenProvider)
     {
     }
 }

@@ -107,7 +107,7 @@ public class AbpSignInManager : SignInManager<IdentityUser>
         return await SignInOrTwoFactorAsync(user, isPersistent, loginProvider, bypassTwoFactor);
     }
 
-    public virtual async Task<IdentityUser> FindByEmaiAsync(string email)
+    public virtual async Task<IdentityUser> FindByEmailAsync(string email)
     {
         return await _identityUserManager.FindSharedUserByEmailAsync(email);
     }

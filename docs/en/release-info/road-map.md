@@ -1,7 +1,7 @@
 ```json
 //[doc-seo]
 {
-    "Description": "Explore the ABP Platform Road Map for insights on upcoming features, release schedules, and improvements in version 10.2, launching January 2026."
+    "Description": "Explore the ABP Platform Road Map for insights on upcoming features, release schedules, and improvements in version 10.3, planned for April 2026."
 }
 ```
 
@@ -13,7 +13,7 @@ This document provides a road map, release schedule, and planned features for th
 
 ### v10.3
 
-The next version will be 10.3 and planned to release the stable 10.3 version in April 2026. We will be mostly working on the following topics:
+The next version will be 10.3 and is planned to be released as a stable version in April 2026. We will be mostly working on the following topics:
 
 * Framework
   * Resource-Based Authorization Improvements
@@ -23,7 +23,7 @@ The next version will be 10.3 and planned to release the stable 10.3 version in 
 
 * ABP Suite
   * Improvements on the generated codes for nullability
-  * Improvements on Master-Detail Page Desing (making it more compact)
+  * Improvements on Master-Detail Page Design (making it more compact)
   * Improvements One-To-Many Scenarios
   * File Upload Modal Enhancements
 

@@ -82,7 +82,7 @@ yarn start
 
 After the Angular app starts, open the URL shown in the terminal (typically `http://localhost:4200`), sign in, and navigate to the *Catalog* page from the main menu to verify the `ModularCrm.Catalog` module UI is integrated.
 
-> TODO: Add Angular Catalog page screenshot.
+![abp-studio-solution-runner-initial-catalog-page](images/abp-studio-solution-runner-initial-catalog-page.png)
 
 {{end}}
 

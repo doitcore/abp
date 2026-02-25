@@ -537,7 +537,7 @@ Now, open the `projects/catalog/src/lib/components/catalog.component.html` file 
 
 In a module-based Angular UI, the route and menu are configured in the module's config project. Ensure `projects/catalog/config/src/providers/route.provider.ts` includes the `/catalog` route, and `projects/catalog/src/lib/catalog.routes.ts` lazy-loads `CatalogComponent`.
 
-> TODO: Add Angular Catalog component screenshot.
+![vscode-catalog-cshtml](images/vscode-catalog-cshtml.png)
 
 Finally, start the Angular app from the root `angular` folder and navigate to the *Catalog* page to see the products list:
 
@@ -545,7 +545,7 @@ Finally, start the Angular app from the root `angular` folder and navigate to th
 yarn start
 ```
 
-> TODO: Add Angular Catalog page screenshot.
+![abp-studio-browser-list-of-products](images/abp-studio-browser-list-of-products.png)
 
 {{end}}
 

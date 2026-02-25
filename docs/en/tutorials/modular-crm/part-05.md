@@ -559,7 +559,7 @@ Then open `projects/ordering/src/lib/components/ordering.component.html` and upd
 </abp-card>
 ```
 
-> TODO: Add Angular Ordering component screenshot.
+![visual-studio-ordering-contracts](images/visual-studio-ordering-contracts-v2.png)
 
 ### Editing the Menu Item
 
@@ -575,7 +575,7 @@ yarn start
 
 Navigate to the *Ordering* page and verify that the orders are listed. At this stage, showing `productId` is expected.
 
-> TODO: Add Angular Ordering page screenshot.
+![abp-studio-browser-orders-menu-item](images/abp-studio-browser-orders-menu-item-v2.png)
 
 {{end}}
 

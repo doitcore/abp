@@ -300,7 +300,7 @@ If your generated Angular proxy files are not up to date, run `abp generate-prox
 
 Then run the Angular app (`yarn start` in the `angular` folder), navigate to the *Ordering* page, and verify product names are shown instead of product IDs.
 
-> TODO: Add Angular Ordering page screenshot with product names.
+![abp-studio-browser-list-of-orders-with-product-name](images/abp-studio-browser-list-of-orders-with-product-name.png)
 
 {{end}}
 

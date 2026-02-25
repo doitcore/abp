@@ -335,6 +335,51 @@ Configure<PermissionManagementOptions>(options =>
 });
 ````
 
+#### Controlling Provider Availability
+
+You can control whether a provider is active in a given context by overriding `IsAvailableAsync()`. When a provider returns `false`, it is completely excluded from all read, write, and UI listing operations. This is useful for host-only providers that should not be visible or writable in a tenant context.
+
+````csharp
+public class CustomResourcePermissionManagementProvider 
+    : ResourcePermissionManagementProvider
+{
+    public override string Name => "Custom";
+
+    // ...constructor...
+
+    public override Task<bool> IsAvailableAsync()
+    {
+        // Only available for the host, not for tenants
+        return Task.FromResult(CurrentTenant.Id == null);
+    }
+}
+````
+
+The same `IsAvailableAsync()` method is available on `IResourcePermissionProviderKeyLookupService`, which controls whether the provider appears in the UI provider picker:
+
+````csharp
+public class CustomResourcePermissionProviderKeyLookupService
+    : IResourcePermissionProviderKeyLookupService, ITransientDependency
+{
+    public string Name => "Custom";
+    public ILocalizableString DisplayName { get; }
+
+    protected ICurrentTenant CurrentTenant { get; }
+
+    public CustomResourcePermissionProviderKeyLookupService(ICurrentTenant currentTenant)
+    {
+        CurrentTenant = currentTenant;
+    }
+
+    public Task<bool> IsAvailableAsync()
+    {
+        return Task.FromResult(CurrentTenant.Id == null);
+    }
+
+    // ...SearchAsync implementations...
+}
+````
+
 ## Permission Value Providers
 
 Permission value providers are used to determine if a permission is granted. They are different from management providers: **value providers** are used when *checking* permissions, while **management providers** are used when *setting* permissions.

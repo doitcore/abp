@@ -70,9 +70,17 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         );
     }
 
-    public virtual Task<List<IResourcePermissionProviderKeyLookupService>> GetProviderKeyLookupServicesAsync()
+    public virtual async Task<List<IResourcePermissionProviderKeyLookupService>> GetProviderKeyLookupServicesAsync()
     {
-        return Task.FromResult(_lazyProviderKeyLookupServices.Value);
+        var availableServices = new List<IResourcePermissionProviderKeyLookupService>();
+        foreach (var service in _lazyProviderKeyLookupServices.Value)
+        {
+            if (await service.IsAvailableAsync())
+            {
+                availableServices.Add(service);
+            }
+        }
+        return availableServices;
     }
 
     public virtual  Task<IResourcePermissionProviderKeyLookupService> GetProviderKeyLookupServiceAsync(string serviceName)
@@ -282,6 +290,12 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
             throw new AbpException("Unknown resource permission management provider: " + providerName);
         }
 
+        if (!await provider.IsAvailableAsync())
+        {
+            //TODO: BusinessException
+            throw new AbpException($"The resource permission management provider '{providerName}' is not available in the current context.");
+        }
+
         await provider.SetAsync(permissionName, resourceName, resourceKey, providerKey, isGranted);
     }
 
@@ -378,6 +392,11 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
 
         foreach (var provider in ManagementProviders)
         {
+            if (!await provider.IsAvailableAsync())
+            {
+                continue;
+            }
+
             permissionNames = resourcePermissions.Select(x => x.Name).ToArray();
             var multiplePermissionValueProviderGrantInfo = await provider.CheckAsync(permissionNames, resourceName, resourceKey, providerName, providerKey);
 

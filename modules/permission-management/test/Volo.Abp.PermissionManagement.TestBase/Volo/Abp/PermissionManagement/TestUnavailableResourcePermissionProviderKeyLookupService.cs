@@ -6,15 +6,15 @@ using Volo.Abp.Localization;
 
 namespace Volo.Abp.PermissionManagement;
 
-public class TestResourcePermissionProviderKeyLookupService : IResourcePermissionProviderKeyLookupService, ITransientDependency
+public class TestUnavailableResourcePermissionProviderKeyLookupService : IResourcePermissionProviderKeyLookupService, ITransientDependency
 {
-    public string Name => "Test";
+    public string Name => "TestUnavailable";
 
-    public ILocalizableString DisplayName => new LocalizableString("Test", "TestResource");
+    public ILocalizableString DisplayName => new LocalizableString("TestUnavailable", "TestResource");
 
     public Task<bool> IsAvailableAsync()
     {
-        return Task.FromResult(true);
+        return Task.FromResult(false);
     }
 
     public Task<List<ResourcePermissionProviderKeyInfo>> SearchAsync(string filter = null, int page = 1, CancellationToken cancellationToken = default)

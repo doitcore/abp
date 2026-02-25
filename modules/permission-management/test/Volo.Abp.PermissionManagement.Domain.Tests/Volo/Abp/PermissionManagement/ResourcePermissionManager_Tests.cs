@@ -334,4 +334,55 @@ public class ResourcePermissionManager_Tests : PermissionTestBase
             "Test",
             "Test")).ShouldBeNull();
     }
+
+    [Fact]
+    public async Task GetProviderKeyLookupServicesAsync_Should_Not_Return_Unavailable_Services()
+    {
+        var lookupServices = await _resourcePermissionManager.GetProviderKeyLookupServicesAsync();
+
+        lookupServices.ShouldContain(s => s.Name == "Test");
+        lookupServices.ShouldNotContain(s => s.Name == "TestUnavailable");
+    }
+
+    [Fact]
+    public async Task GetAsync_Should_Not_Return_Grant_From_Unavailable_Provider()
+    {
+        // Insert a grant directly via repository to simulate data stored by an unavailable provider
+        await _resourcePermissionGrantRepository.InsertAsync(new ResourcePermissionGrant(
+            Guid.NewGuid(),
+            "MyResourcePermission1",
+            TestEntityResource.ResourceName,
+            TestEntityResource.ResourceKey1,
+            "TestUnavailable",
+            "someKey")
+        );
+
+        var grantedProviders = await _resourcePermissionManager.GetAsync(
+            "MyResourcePermission1",
+            TestEntityResource.ResourceName,
+            TestEntityResource.ResourceKey1,
+            "TestUnavailable",
+            "someKey");
+
+        // The unavailable provider is skipped, so the permission should not be considered granted via it
+        grantedProviders.IsGranted.ShouldBeFalse();
+        grantedProviders.Providers.ShouldNotContain(p => p.Name == "TestUnavailable");
+    }
+
+    [Fact]
+    public async Task SetAsync_Should_Throw_When_Provider_Is_Unavailable()
+    {
+        var exception = await Assert.ThrowsAsync<AbpException>(async () =>
+        {
+            await _resourcePermissionManager.SetAsync(
+                "MyResourcePermission1",
+                TestEntityResource.ResourceName,
+                TestEntityResource.ResourceKey1,
+                "TestUnavailable",
+                "someKey",
+                true);
+        });
+
+        exception.Message.ShouldBe("The resource permission management provider 'TestUnavailable' is not available in the current context.");
+    }
 }

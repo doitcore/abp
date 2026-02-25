@@ -447,19 +447,6 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         return multiplePermissionWithGrantedProviders;
     }
 
-    protected virtual async Task<HashSet<string>> GetAvailableManagementProviderNamesAsync()
-    {
-        var names = new HashSet<string>();
-        foreach (var provider in ManagementProviders)
-        {
-            if (await provider.IsAvailableAsync())
-            {
-                names.Add(provider.Name);
-            }
-        }
-        return names;
-    }
-
     protected virtual async Task<HashSet<string>> GetUnavailableManagementProviderNamesAsync()
     {
         var names = new HashSet<string>();

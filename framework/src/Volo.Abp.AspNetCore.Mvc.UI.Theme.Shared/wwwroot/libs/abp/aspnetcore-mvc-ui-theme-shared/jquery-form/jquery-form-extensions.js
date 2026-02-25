@@ -92,12 +92,14 @@
 
             var formEl = $form[0];
 
-            var formData = new FormData(formEl);
             var arr = $form.serializeArray();
 
             if (options.beforeSubmit && options.beforeSubmit.call(formEl, arr, $form) === false) {
                 return;
             }
+
+            arr = $form.serializeArray();
+            var formData = new FormData(formEl);
 
             var method = (options.method || $form.attr("method") || "POST").toUpperCase();
             var url = $form.attr("action") || window.location.href;

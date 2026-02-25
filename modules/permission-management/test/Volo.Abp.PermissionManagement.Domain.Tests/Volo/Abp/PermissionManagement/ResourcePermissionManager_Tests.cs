@@ -391,4 +391,84 @@ public class ResourcePermissionManager_Tests : PermissionTestBase
 
         exception.Message.ShouldBe("The resource permission management provider 'TestUnavailable' is not available in the current context.");
     }
+
+    [Fact]
+    public async Task GetAllAsync_Should_Not_Include_Grants_From_Unavailable_Provider()
+    {
+        // Grant via the available "Test" provider and the unavailable "TestUnavailable" provider
+        await _resourcePermissionGrantRepository.InsertAsync(new ResourcePermissionGrant(
+            Guid.NewGuid(),
+            "MyResourcePermission1",
+            TestEntityResource.ResourceName,
+            TestEntityResource.ResourceKey1,
+            "Test",
+            "someKey")
+        );
+        await _resourcePermissionGrantRepository.InsertAsync(new ResourcePermissionGrant(
+            Guid.NewGuid(),
+            "MyResourcePermission1",
+            TestEntityResource.ResourceName,
+            TestEntityResource.ResourceKey1,
+            "TestUnavailable",
+            "someKey")
+        );
+
+        var result = await _resourcePermissionManager.GetAllAsync(
+            TestEntityResource.ResourceName,
+            TestEntityResource.ResourceKey1);
+
+        var item = result.FirstOrDefault(x => x.Name == "MyResourcePermission1");
+        item.ShouldNotBeNull();
+        item.IsGranted.ShouldBeTrue();
+        item.Providers.ShouldContain(p => p.Name == "Test");
+        item.Providers.ShouldNotContain(p => p.Name == "TestUnavailable");
+    }
+
+    [Fact]
+    public async Task GetAllGroupAsync_Should_Not_Include_Grants_From_Unavailable_Provider()
+    {
+        await _resourcePermissionGrantRepository.InsertAsync(new ResourcePermissionGrant(
+            Guid.NewGuid(),
+            "MyResourcePermission2",
+            TestEntityResource.ResourceName,
+            TestEntityResource.ResourceKey1,
+            "TestUnavailable",
+            "someKey")
+        );
+
+        var group = await _resourcePermissionManager.GetAllGroupAsync(
+            TestEntityResource.ResourceName,
+            TestEntityResource.ResourceKey1);
+
+        group.ShouldNotContain(g => g.ProviderName == "TestUnavailable");
+    }
+
+    [Fact]
+    public async Task DeleteAsync_Should_Throw_When_Provider_Is_Unavailable()
+    {
+        var exception = await Assert.ThrowsAsync<AbpException>(async () =>
+        {
+            await _resourcePermissionManager.DeleteAsync(
+                TestEntityResource.ResourceName,
+                TestEntityResource.ResourceKey1,
+                "TestUnavailable",
+                "someKey");
+        });
+        exception.Message.ShouldBe("The resource permission management provider 'TestUnavailable' is not available in the current context.");
+    }
+
+    [Fact]
+    public async Task DeleteAsyncByName_Should_Throw_When_Provider_Is_Unavailable()
+    {
+        var exception = await Assert.ThrowsAsync<AbpException>(async () =>
+        {
+            await _resourcePermissionManager.DeleteAsync(
+                "MyResourcePermission1",
+                TestEntityResource.ResourceName,
+                TestEntityResource.ResourceKey1,
+                "TestUnavailable",
+                "someKey");
+        });
+        exception.Message.ShouldBe("The resource permission management provider 'TestUnavailable' is not available in the current context.");
+    }
 }

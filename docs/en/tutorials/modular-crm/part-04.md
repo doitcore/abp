@@ -7,6 +7,13 @@
 
 # Creating the Initial Ordering Module
 
+```json
+//[doc-params]
+{
+  "UI": ["MVC", "NG"]
+}
+```
+
 ````json
 //[doc-nav]
 {
@@ -39,9 +46,19 @@ That command opens a dialog to define the properties of the new module:
 
 Set `ModularCrm.Ordering` as the *Module name*, leave the *Output folder* as is and click the *Next* button.
 
+{{if UI == "MVC"}}
+
 ![abp-studio-add-new-standard-module-ui-dialog](images/abp-studio-add-new-standard-module-ui-dialog.png)
 
 You can choose the type of UI you want to support in your module or select *No UI* if you don't need a user interface. In this example, we'll select the *MVC* option and click *Next*.
+
+{{else if UI == "NG"}}
+
+> TODO: Add ABP Studio new module dialog screenshot for Angular UI selection.
+
+You can choose the type of UI you want to support in your module or select *No UI* if you don't need a user interface. In this example, we'll select the *Angular* UI option and click *Next*.
+
+{{end}}
 
 ![abp-studio-add-new-standard-module-db-dialog](images/abp-studio-add-new-standard-module-db-dialog.png)
 

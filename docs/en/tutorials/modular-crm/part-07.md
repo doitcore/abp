@@ -261,7 +261,12 @@ Here are sample screenshots from the Products and Orders pages:
 
 At that point, open the Angular UI and validate the result on the *Ordering* (`/ordering`) and *Catalog* (`/catalog`) pages. Verify that the new order is listed in Ordering and the related product's stock count is decreased in Catalog.
 
-> TODO: Add Angular Ordering and Catalog pages screenshot after order creation validation.
+If the Angular app is not already running, start it from the root `angular` folder:
+
+```bash
+yarn symlinks:setup
+yarn start
+```
 
 {{end}}
 

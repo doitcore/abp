@@ -54,8 +54,6 @@ You can choose the type of UI you want to support in your module or select *No U
 
 {{else if UI == "NG"}}
 
-> TODO: Add ABP Studio new module dialog screenshot for Angular UI selection.
-
 You can choose the type of UI you want to support in your module or select *No UI* if you don't need a user interface. In this example, we'll select the *Angular* UI option and click *Next*.
 
 {{end}}
@@ -91,6 +89,18 @@ Select the `ModularCrm.Ordering` module and check the *Install this module* opti
 ![abp-studio-install-module-dialog](images/abp-studio-install-module-dialog-v2.png)
 
 Select the `ModularCrm.Ordering` and `ModularCrm.Ordering.UI` packages from the left area and ensure the  `ModularCrm` package from the middle area was checked as shown in the preceding figure. Finally, click _OK_.
+
+{{if UI == "NG"}}
+
+After installing a new Angular module, run the symlink setup command from the root `angular` folder to align shared package versions between the main app and local module packages:
+
+```bash
+yarn symlinks:setup
+```
+
+You should run this command again whenever you add another local module with Angular packages.
+
+{{end}}
 
 ## Summary
 

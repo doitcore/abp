@@ -34,7 +34,6 @@ Here is a brief list of titles explained in the next sections:
 - AI Management: RAG with File Upload
 - AI Management: OpenAI-Compatible Chat Endpoint
 - File Management: Resource-Based Authorization
-- Angular: CMS Kit Pro Implementation
 
 ### Multi-Tenant Account Usage: Shared User Accounts
 

@@ -83,12 +83,20 @@ public class ResourcePermissionManager : IResourcePermissionManager, ISingletonD
         return availableServices;
     }
 
-    public virtual  Task<IResourcePermissionProviderKeyLookupService> GetProviderKeyLookupServiceAsync(string serviceName)
+    public virtual async Task<IResourcePermissionProviderKeyLookupService> GetProviderKeyLookupServiceAsync(string serviceName)
     {
         var service = _lazyProviderKeyLookupServices.Value.FirstOrDefault(s => s.Name == serviceName);
-        return service == null
-            ? throw new AbpException("Unknown resource permission provider key lookup service: " + serviceName)
-            : Task.FromResult(service);
+        if (service == null)
+        {
+            throw new AbpException("Unknown resource permission provider key lookup service: " + serviceName);
+        }
+
+        if (!await service.IsAvailableAsync())
+        {
+            throw new AbpException("The resource permission provider key lookup service '" + serviceName + "' is not available in the current context.");
+        }
+
+        return service;
     }
 
     public virtual async Task<List<PermissionDefinition>> GetAvailablePermissionsAsync(string resourceName)

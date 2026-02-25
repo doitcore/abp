@@ -42,6 +42,12 @@ public class ResourcePermissionManager_Tests : PermissionTestBase
             await _resourcePermissionManager.GetProviderKeyLookupServiceAsync("UndefinedProvider");
         });
         exception.Message.ShouldBe("Unknown resource permission provider key lookup service: UndefinedProvider");
+
+        var unavailableException = await Assert.ThrowsAsync<AbpException>(async () =>
+        {
+            await _resourcePermissionManager.GetProviderKeyLookupServiceAsync("TestUnavailable");
+        });
+        unavailableException.Message.ShouldBe("The resource permission provider key lookup service 'TestUnavailable' is not available in the current context.");
     }
 
     [Fact]

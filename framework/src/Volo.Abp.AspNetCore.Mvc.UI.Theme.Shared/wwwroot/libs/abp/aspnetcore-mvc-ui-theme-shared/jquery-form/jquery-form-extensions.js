@@ -98,7 +98,6 @@
                 return;
             }
 
-            arr = $form.serializeArray();
             var formData = new FormData(formEl);
             var submitter = e.originalEvent && e.originalEvent.submitter;
             if (submitter && submitter.name) {

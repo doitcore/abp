@@ -51,6 +51,9 @@ If you need to integrate with a provider that isn't covered by the built-in pack
 
 ### Adding RAG Dependencies
 
+> [!TIP]
+> RAG is entirely optional. All other AI Management features work without any RAG dependencies installed.
+
 Retrieval-Augmented Generation (RAG) support requires both an embedding provider and a vector store provider.
 
 Install at least one embedding provider package:

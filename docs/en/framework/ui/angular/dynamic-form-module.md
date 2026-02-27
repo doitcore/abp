@@ -50,8 +50,8 @@ import { FormFieldConfig } from '@abp/ng.components/dynamic-form';
       [submitButtonText]="'Submit'"
       [showCancelButton]="true"
       (onSubmit)="handleSubmit($event)"
-      (formCancel)="handleCancel()">
-    </abp-dynamic-form>
+      (formCancel)="handleCancel()"
+    />
   `,
 })
 export class UserFormComponent {
@@ -570,8 +570,8 @@ const formFields: FormFieldConfig[] = [
     <abp-dynamic-form
       [fields]="formFields"
       [values]="initialValues"
-      (onSubmit)="handleSubmit($event)">
-    </abp-dynamic-form>
+      (onSubmit)="handleSubmit($event)"
+    />
   `,
 })
 export class MyComponent {
@@ -609,8 +609,8 @@ You can access the form instance using the `exportAs` property and template refe
     <abp-dynamic-form
       #myForm="abpDynamicForm"
       [fields]="formFields"
-      (onSubmit)="handleSubmit($event)">
-    </abp-dynamic-form>
+      (onSubmit)="handleSubmit($event)"
+    />
 
     <button (click)="myForm.resetForm()">Reset Form</button>
   `,
@@ -709,8 +709,8 @@ import { FormFieldConfig } from '@abp/ng.components/dynamic-form';
         [showCancelButton]="true"
         [submitInProgress]="isSubmitting"
         (onSubmit)="handleSubmit($event)"
-        (formCancel)="handleCancel()">
-      </abp-dynamic-form>
+        (formCancel)="handleCancel()"
+      />
     </div>
   `,
 })

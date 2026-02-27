@@ -364,6 +364,32 @@ Configure<AbpAspNetCoreMvcOptions>(options =>
 
 This will tell the ABP framework to create API controllers for the application services in the `ModularCrm.Ordering` assembly.
 
+{{if UI == "BlazorWebApp"}}
+
+### Configuring Client Proxies for the Ordering Module
+
+In the `ModularCrm.Client` project, configure HTTP client proxies for the Ordering contracts in the `ModularCrmClientModule` class:
+
+````csharp
+using ModularCrm.Ordering;
+
+[DependsOn(
+    typeof(OrderingContractsModule)
+    // ...other dependencies
+)]
+public class ModularCrmClientModule : AbpModule
+{
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddHttpClientProxies(typeof(OrderingContractsModule).Assembly);
+    }
+}
+````
+
+Also ensure the `ModularCrm.Ordering.Blazor` package is installed for both the `ModularCrm` and `ModularCrm.Client` projects.
+
+{{end}}
+
 ### Creating Example Orders
 
 This section will create a few example orders using the [Swagger UI](../../framework/api-development/swagger.md). Thus, you will have some sample orders to show on the UI.

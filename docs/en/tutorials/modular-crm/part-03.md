@@ -383,6 +383,32 @@ This will tell the ABP framework to create API controllers for the application s
 
 Now, ABP will automatically expose the application services defined in the `ModularCrm.Catalog` project as API controllers. The next section will use these API controllers to create some example products.
 
+{{if UI == "BlazorWebApp"}}
+
+### Configuring Client Proxies for the Catalog Module
+
+Since the Blazor WebApp template has a separate `ModularCrm.Client` project, configure HTTP client proxies for the Catalog contracts in the `ModularCrmClientModule` class:
+
+````csharp
+using ModularCrm.Catalog;
+
+[DependsOn(
+    typeof(CatalogContractsModule)
+    // ...other dependencies
+)]
+public class ModularCrmClientModule : AbpModule
+{
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddHttpClientProxies(typeof(CatalogContractsModule).Assembly);
+    }
+}
+````
+
+Also ensure the `ModularCrm.Catalog.Blazor` package is installed for both the `ModularCrm` and `ModularCrm.Client` projects.
+
+{{end}}
+
 ### Creating Example Products
 
 This section will create a few example products using the [Swagger UI](../../framework/api-development/swagger.md). Thus, you will have some sample products to show on the UI.

@@ -49,7 +49,7 @@ Use the `abp.ModalManager` to open the resource permission management dialog:
 
 ````javascript
 var _resourcePermissionsModal = new abp.ModalManager({
-    viewUrl: abp.appPath + "AbpPermissionManagement/ResourcePermissionManagementModal",
+    viewUrl: abp.appPath + 'AbpPermissionManagement/ResourcePermissionManagementModal',
     modalClass: 'ResourcePermissionManagement'
 });
 

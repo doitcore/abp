@@ -54,7 +54,7 @@ When you click the *OK* button, ABP Studio opens the *Install Module* dialog:
 ![abp-studio-module-installation-dialog-for-catalog](images/abp-studio-module-installation-dialog-for-catalog-blazor-webapp.png)
 {{end}}
 
-Select the `ModularCrm.Catalog` and {{if UI == "MVC"}}`ModularCrm.Catalog.UI`{{else if UI == "BlazorWebApp"}}`ModularCrm.Catalog.Blazor`{{end}} packages from the left area and ensure the {{if UI == "MVC"}}`ModularCrm`{{else if UI == "BlazorWebApp"}}`ModularCrm` and `ModularCrm.Client`{{end}} package{{if UI == "BlazorWebApp"}}s were{{else}} was{{end}} checked in the middle area as shown in the preceding figure. Finally, click _OK_.
+Select the `ModularCrm.Catalog` and {{if UI == "MVC"}}`ModularCrm.Catalog.UI`{{else if UI == "BlazorWebApp"}}`ModularCrm.Catalog.Blazor`{{end}} packages from the left area. {{if UI == "MVC"}}Ensure `ModularCrm` was checked in the middle area as shown in the preceding figure.{{else if UI == "BlazorWebApp"}}For `ModularCrm.Catalog`, ensure `ModularCrm` is checked. For `ModularCrm.Catalog.Blazor`, ensure both `ModularCrm` and `ModularCrm.Client` are checked in the middle area as shown in the preceding figure.{{end}} Finally, click _OK_.
 
 ## Building the Main Application
 

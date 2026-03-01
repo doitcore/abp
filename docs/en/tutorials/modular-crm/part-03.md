@@ -355,12 +355,16 @@ public partial class ProductToProductDtoMapper : MapperBase<Product, ProductDto>
 
 ### Exposing Application Services as HTTP API Controllers
 
+{{if UI == "MVC"}}
+
 > This application doesn't need to expose any functionality as HTTP API, because all the module integration and communication will be done in the same process as a natural aspect of a monolith modular application. However, in this section, we will create HTTP APIs because;
 >
 > 1. We will use these HTTP API endpoints in development to create some example data.
 > 2. To know how to do it when you need it.
 >
 > So, follow the instructions in this section and expose the product application service as an HTTP API endpoint.
+
+{{end}}
 
 To create HTTP API endpoints for the catalog module, you have two options:
 
@@ -400,7 +404,9 @@ public class ModularCrmClientModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddHttpClientProxies(typeof(CatalogContractsModule).Assembly);
+        ...
+        context.Services.AddHttpClientProxies(typeof(ModularCrmContractsModule).Assembly);
+        context.Services.AddHttpClientProxies(typeof(CatalogContractsModule).Assembly); // NEW: ADD HttpClientProxies
     }
 }
 ````
@@ -503,7 +509,7 @@ Here, you simply use the `IProductAppService` to get a list of all products and 
 {{else if UI == "BlazorWebApp"}}
 
 Open the `ModularCrm.Catalog` .NET solution in your IDE, and find the `Pages/Catalog/Index.razor` file under the `ModularCrm.Catalog.Blazor` project.
-> Blazor WebApp placeholder screenshot file: `images/vscode-catalog-index-razor-blazor-webapp.png`
+![vscode-catalog-index-razor-blazor-webapp](images/vscode-catalog-index-razor-blazor-webapp.png)
 
 Replace the `Index.razor` file with the following content:
 

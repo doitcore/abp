@@ -45,7 +45,17 @@ You can integrate this dialog into your own application to manage permissions fo
 
 #### MVC / Razor Pages
 
-Use the `abp.ModalManager` to open the resource permission management dialog:
+First, add the `resource-permission-management-modal.js` script to your page. This script registers the `ResourcePermissionManagement` modal class used by `abp.ModalManager`:
+
+````html
+@section scripts
+{
+    <abp-script src="/Pages/MyBook/Index.js"/>
+    <abp-script src="/Pages/AbpPermissionManagement/resource-permission-management-modal.js" />
+}
+````
+
+Then use the `abp.ModalManager` to open the resource permission management dialog:
 
 ````javascript
 var _resourcePermissionsModal = new abp.ModalManager({

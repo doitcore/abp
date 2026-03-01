@@ -381,7 +381,10 @@ public class ModularCrmClientModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddHttpClientProxies(typeof(OrderingContractsModule).Assembly);
+        ...
+        context.Services.AddHttpClientProxies(typeof(ModularCrmContractsModule).Assembly);
+        context.Services.AddHttpClientProxies(typeof(CatalogContractsModule).Assembly);
+        context.Services.AddHttpClientProxies(typeof(OrderingContractsModule).Assembly); // NEW: ADD HttpClientProxies
     }
 }
 ````
@@ -519,7 +522,6 @@ public class OrderingMenuContributor : IMenuContributor
 {{else if UI == "BlazorWebApp"}}
 
 Replace the `Index.razor` content in the `Pages/Ordering` folder of the `ModularCrm.Ordering.Blazor` project with the following code block:
-> Blazor WebApp placeholder screenshot file: `images/vscode-ordering-index-razor-blazor-webapp.png`
 
 ````razor
 @page "/ordering"

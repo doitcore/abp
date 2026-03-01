@@ -92,7 +92,7 @@ Select the `ModularCrm.Ordering` module and check the *Install this module* opti
 ![abp-studio-install-module-dialog](images/abp-studio-install-module-dialog-blazor-webapp.png)
 {{end}}
 
-Select the `ModularCrm.Ordering` and {{if UI == "MVC"}}`ModularCrm.Ordering.UI`{{else if UI == "BlazorWebApp"}}`ModularCrm.Ordering.Blazor`{{end}} packages from the left area and ensure the {{if UI == "MVC"}}`ModularCrm`{{else if UI == "BlazorWebApp"}}`ModularCrm` and `ModularCrm.Client`{{end}} package{{if UI == "BlazorWebApp"}}s were{{else}} was{{end}} checked in the middle area as shown in the preceding figure. Finally, click _OK_.
+Select the `ModularCrm.Ordering` and {{if UI == "MVC"}}`ModularCrm.Ordering.UI`{{else if UI == "BlazorWebApp"}}`ModularCrm.Ordering.Blazor`{{end}} packages from the left area. {{if UI == "MVC"}}Ensure `ModularCrm` was checked in the middle area as shown in the preceding figure.{{else if UI == "BlazorWebApp"}}For `ModularCrm.Ordering`, ensure `ModularCrm` is checked. For `ModularCrm.Ordering.Blazor`, ensure both `ModularCrm` and `ModularCrm.Client` are checked in the middle area as shown in the preceding figure.{{end}} Finally, click _OK_.
 
 ## Summary
 

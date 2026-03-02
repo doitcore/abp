@@ -15,7 +15,7 @@ namespace Volo.Abp.AspNetCore.Mvc.Client;
 
 public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigurationClient, ITransientDependency
 {
-    private const string ApplicationConfigurationDtoCacheKeyFormat = "ApplicationConfigurationDto_{0}_{1}_CacheKey";
+    private const string HttpContextItemsCacheKeyFormat = "ApplicationConfigurationDto_{0}_{1}_CacheKey";
 
     protected IHttpContextAccessor HttpContextAccessor { get; }
     protected AbpApplicationConfigurationClientProxy ApplicationConfigurationAppService { get; }
@@ -139,6 +139,6 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
 
     protected virtual string GetHttpContextItemsCacheKey()
     {
-        return string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous", CultureInfo.CurrentUICulture.Name);
+        return string.Format(CultureInfo.InvariantCulture, HttpContextItemsCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous", CultureInfo.CurrentUICulture.Name);
     }
 }

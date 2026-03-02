@@ -47,7 +47,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
     {
         string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
-        var itemsKey = string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous", CultureInfo.CurrentUICulture.Name);
+        var itemsKey = GetHttpContextItemsCacheKey();
         if (httpContext != null && httpContext.Items[itemsKey] is string key)
         {
             cacheKey = key;
@@ -109,7 +109,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
     {
         string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
-        var itemsKey = string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous", CultureInfo.CurrentUICulture.Name);
+        var itemsKey = GetHttpContextItemsCacheKey();
         if (httpContext != null && httpContext.Items[itemsKey] is string key)
         {
             cacheKey = key;
@@ -137,4 +137,8 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
         return await CacheHelper.CreateCacheKeyAsync(CurrentUser.Id);
     }
 
+    protected virtual string GetHttpContextItemsCacheKey()
+    {
+        return string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous", CultureInfo.CurrentUICulture.Name);
+    }
 }

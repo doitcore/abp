@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
@@ -14,7 +15,7 @@ namespace Volo.Abp.AspNetCore.Mvc.Client;
 
 public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigurationClient, ITransientDependency
 {
-    private const string ApplicationConfigurationDtoCacheKeyFormat = "ApplicationConfigurationDto_{0}_CacheKey";
+    private const string ApplicationConfigurationDtoCacheKeyFormat = "ApplicationConfigurationDto_{0}_{1}_CacheKey";
 
     protected IHttpContextAccessor HttpContextAccessor { get; }
     protected AbpApplicationConfigurationClientProxy ApplicationConfigurationAppService { get; }
@@ -46,7 +47,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
     {
         string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
-        var itemsKey = string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous");
+        var itemsKey = string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous", CultureInfo.CurrentUICulture.Name);
         if (httpContext != null && httpContext.Items[itemsKey] is string key)
         {
             cacheKey = key;
@@ -108,7 +109,7 @@ public class MvcCachedApplicationConfigurationClient : ICachedApplicationConfigu
     {
         string? cacheKey = null;
         var httpContext = HttpContextAccessor?.HttpContext;
-        var itemsKey = string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous");
+        var itemsKey = string.Format(ApplicationConfigurationDtoCacheKeyFormat, CurrentUser.Id?.ToString("N") ?? "Anonymous", CultureInfo.CurrentUICulture.Name);
         if (httpContext != null && httpContext.Items[itemsKey] is string key)
         {
             cacheKey = key;

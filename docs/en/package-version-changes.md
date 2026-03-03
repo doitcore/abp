@@ -1,5 +1,11 @@
 # Package Version Changes
 
+## 10.2.0-rc.1
+
+| Package | Old Version | New Version | PR |
+|---------|-------------|-------------|-----|
+| MongoDB.Driver | 3.6.0 | 3.7.0 | #25003 |
+
 ## 10.2.0-preview
 
 | Package | Old Version | New Version | PR |

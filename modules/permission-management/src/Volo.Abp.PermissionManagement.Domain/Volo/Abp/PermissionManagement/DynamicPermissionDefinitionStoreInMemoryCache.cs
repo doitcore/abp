@@ -59,6 +59,11 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
                 resourcePermission.IsEnabled);
         }
 
+        foreach (var rp in context.ResourcePermissions)
+        {
+            ResourcePermissionDefinitions.Add(rp);
+        }
+
         var permissions = permissionRecords.Where(x => x.ResourceName.IsNullOrWhiteSpace()).ToList();
         foreach (var permissionGroupRecord in permissionGroupRecords)
         {

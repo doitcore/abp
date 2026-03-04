@@ -171,11 +171,15 @@ When a workspace has MCP servers associated, the AI model can invoke tools from 
 
 Workspace Data Sources page is used to upload and manage RAG documents per workspace. Uploaded files are processed and indexed in the background.
 
-* Supported file extensions: `.txt`, `.md`, `.pdf`
-* Maximum file size: `10 MB`
+* Supported file extensions: `.txt`, `.md`, `.pdf` (configurable)
+* Maximum file size: `10 MB` (configurable)
 * Each uploaded file can be re-indexed individually or re-indexed in bulk per workspace
+* Deleting a data source also removes its vector embeddings and document chunks
 
 > Access the page from workspace details, or navigate to `/AIManagement/WorkspaceDataSources?WorkspaceId={WorkspaceId}`.
+
+> [!TIP]
+> You can customize the allowed file extensions and maximum file size via `WorkspaceDataSourceOptions`. See [Configuring Data Source Upload Options](#configuring-data-source-upload-options) for details.
 
 ## Workspace Configuration
 
@@ -286,11 +290,16 @@ The AI Management module supports RAG (Retrieval-Augmented Generation), which en
 
 ### Supported File Formats
 
+By default, the following file formats are supported:
+
 * **PDF** (.pdf)
 * **Markdown** (.md)
 * **Text** (.txt)
 
-Maximum file size: **10 MB**.
+Default maximum file size: **10 MB**.
+
+> [!TIP]
+> Both the allowed file extensions and the maximum file size are configurable via `WorkspaceDataSourceOptions`. See [Configuring Data Source Upload Options](#configuring-data-source-upload-options) for details.
 
 ### Prerequisites
 
@@ -361,7 +370,7 @@ The module exposes workspace data source endpoints under `/api/ai-management/wor
 * `GET /by-workspace/{workspaceId}`: List data sources for a workspace.
 * `GET /{id}`: Get a data source.
 * `PUT /{id}`: Update data source metadata.
-* `DELETE /{id}`: Delete data source and underlying blob.
+* `DELETE /{id}`: Delete data source, its vector embeddings, document chunks, and underlying blob.
 * `GET /{id}/download`: Download original file.
 * `POST /{id}/reindex`: Re-index a single file.
 * `POST /workspace/{workspaceId}/reindex-all`: Re-index all files in a workspace.
@@ -381,6 +390,47 @@ When workspace embedder or vector store configuration changes, AI Management aut
 * Initializes the new vector store configuration (if needed).
 * Deletes existing embeddings when embedder provider/model changes.
 * Re-queues all workspace data sources for re-indexing.
+
+### Configuring Data Source Upload Options
+
+The `WorkspaceDataSourceOptions` class allows you to customize the file upload constraints for workspace data sources. You can configure the allowed file extensions, maximum file size, and content type mappings.
+
+```csharp
+public override void ConfigureServices(ServiceConfigurationContext context)
+{
+    Configure<WorkspaceDataSourceOptions>(options =>
+    {
+        // Add support for additional file types
+        options.AllowedFileExtensions = new[] { ".txt", ".md", ".pdf", ".docx", ".csv" };
+
+        // Increase the maximum file size to 50 MB
+        options.MaxFileSize = 50 * 1024 * 1024;
+
+        // Add content type mappings for new extensions
+        options.ContentTypeMap[".docx"] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        options.ContentTypeMap[".csv"] = "text/csv";
+    });
+}
+```
+
+#### Available Properties
+
+| Property                | Type                         | Default                                      | Description                                                |
+| ----------------------- | ---------------------------- | -------------------------------------------- | ---------------------------------------------------------- |
+| `AllowedFileExtensions` | `string[]`                   | `{ ".txt", ".md", ".pdf" }`                  | File extensions allowed for upload                         |
+| `MaxFileSize`           | `long`                       | `10485760` (10 MB)                           | Maximum file size in bytes                                 |
+| `ContentTypeMap`        | `Dictionary<string, string>` | `.txt`, `.md`, `.pdf` with their MIME types   | Maps file extensions to MIME content types                 |
+
+The options class also provides helper methods:
+
+| Method                       | Description                                                          |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `GetMaxFileSizeDisplay()`    | Returns a human-readable size string (e.g., "10MB", "512KB")        |
+| `GetAllowedExtensionsDisplay()` | Returns a comma-separated display string (e.g., ".txt, .md, .pdf")  |
+| `GetAcceptAttribute()`       | Returns a string for the HTML `accept` attribute (e.g., ".txt,.md,.pdf") |
+
+> [!NOTE]
+> Adding new file extensions also requires a matching content extractor to be registered for document processing. The built-in extractors support `.txt`, `.md`, and `.pdf` files.
 
 ## Permissions
 
@@ -1239,6 +1289,7 @@ The following custom repositories are defined:
 - `VectorStoreInitializer`: Initializes vector store artifacts for newly configured workspaces.
 - `RagService`: Generates query embeddings and retrieves relevant chunks from vector stores.
 - `DocumentProcessingManager`: Extracts and chunks uploaded document contents.
+- `WorkspaceDataSourceManager`: Manages data source lifecycle including file deletion with full cleanup (vector embeddings, document chunks, and blob storage).
 
 #### Integration Services
 

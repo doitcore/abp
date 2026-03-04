@@ -48,20 +48,37 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
 
         var context = new PermissionDefinitionContext(null);
 
-        var resourcePermissions = permissionRecords.Where(x => !x.ResourceName.IsNullOrWhiteSpace());
-        foreach (var resourcePermission in resourcePermissions)
+        var resourcePermissionRecords = permissionRecords.Where(x => !x.ResourceName.IsNullOrWhiteSpace());
+        foreach (var resourcePermissionRecord in resourcePermissionRecords)
         {
-            context.AddResourcePermission(resourcePermission.Name,
-                resourcePermission.ResourceName,
-                resourcePermission.ManagementPermissionName,
-                resourcePermission.DisplayName != null ? LocalizableStringSerializer.Deserialize(resourcePermission.DisplayName) : null,
-                resourcePermission.MultiTenancySide,
-                resourcePermission.IsEnabled);
-        }
+            var resourcePermission = context.AddResourcePermission(resourcePermissionRecord.Name,
+                resourcePermissionRecord.ResourceName,
+                resourcePermissionRecord.ManagementPermissionName,
+                resourcePermissionRecord.DisplayName != null ? LocalizableStringSerializer.Deserialize(resourcePermissionRecord.DisplayName) : null,
+                resourcePermissionRecord.MultiTenancySide,
+                resourcePermissionRecord.IsEnabled);
 
-        foreach (var rp in context.ResourcePermissions)
-        {
-            ResourcePermissionDefinitions.Add(rp);
+            if (!resourcePermissionRecord.Providers.IsNullOrWhiteSpace())
+            {
+                resourcePermission.Providers.AddRange(resourcePermissionRecord.Providers.Split(','));
+            }
+
+            if (!resourcePermissionRecord.StateCheckers.IsNullOrWhiteSpace())
+            {
+                var checkers = StateCheckerSerializer
+                    .DeserializeArray(
+                        resourcePermissionRecord.StateCheckers,
+                        resourcePermission
+                    );
+                resourcePermission.StateCheckers.AddRange(checkers);
+            }
+
+            foreach (var property in resourcePermissionRecord.ExtraProperties)
+            {
+                resourcePermission[property.Key] = property.Value;
+            }
+
+            ResourcePermissionDefinitions.Add(resourcePermission);
         }
 
         var permissions = permissionRecords.Where(x => x.ResourceName.IsNullOrWhiteSpace()).ToList();

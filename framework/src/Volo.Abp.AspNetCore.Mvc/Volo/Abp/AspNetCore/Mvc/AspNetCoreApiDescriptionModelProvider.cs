@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using Asp.Versioning;
@@ -12,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Volo.Abp.AspNetCore.Mvc.ApiExploring;
 using Volo.Abp.AspNetCore.Mvc.Conventions;
 using Volo.Abp.AspNetCore.Mvc.Utils;
 using Volo.Abp.DependencyInjection;
@@ -29,17 +32,20 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
     private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
     private readonly AbpAspNetCoreMvcOptions _abpAspNetCoreMvcOptions;
     private readonly AbpApiDescriptionModelOptions _modelOptions;
+    private readonly IXmlDocumentationProvider _xmlDocProvider;
 
     public AspNetCoreApiDescriptionModelProvider(
         IOptions<AspNetCoreApiDescriptionModelProviderOptions> options,
         IApiDescriptionGroupCollectionProvider descriptionProvider,
         IOptions<AbpAspNetCoreMvcOptions> abpAspNetCoreMvcOptions,
-        IOptions<AbpApiDescriptionModelOptions> modelOptions)
+        IOptions<AbpApiDescriptionModelOptions> modelOptions,
+        IXmlDocumentationProvider xmlDocProvider)
     {
         _options = options.Value;
         _descriptionProvider = descriptionProvider;
         _abpAspNetCoreMvcOptions = abpAspNetCoreMvcOptions.Value;
         _modelOptions = modelOptions.Value;
+        _xmlDocProvider = xmlDocProvider;
 
         Logger = NullLogger<AspNetCoreApiDescriptionModelProvider>.Instance;
     }
@@ -161,10 +167,21 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
 
         if (input.IncludeTypes)
         {
-            AddCustomTypesToModel(applicationModel, method);
+            AddCustomTypesToModel(applicationModel, method, input.IncludeDescriptions);
         }
 
         AddParameterDescriptionsToModel(actionModel, method, apiDescription);
+
+        if (input.IncludeDescriptions)
+        {
+            if (controllerModel.Summary == null && controllerModel.Description == null && controllerModel.DisplayName == null)
+            {
+                PopulateControllerDescriptions(controllerModel, controllerType);
+            }
+
+            PopulateActionDescriptions(actionModel, method);
+            PopulateParameterDescriptions(actionModel, method);
+        }
     }
 
     private static List<string> GetSupportedVersions(Type controllerType, MethodInfo method,
@@ -191,18 +208,18 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
         return supportedVersions.Select(v => v.ToString()).Distinct().ToList();
     }
 
-    private void AddCustomTypesToModel(ApplicationApiDescriptionModel applicationModel, MethodInfo method)
+    private void AddCustomTypesToModel(ApplicationApiDescriptionModel applicationModel, MethodInfo method, bool includeDescriptions)
     {
         foreach (var parameterInfo in method.GetParameters())
         {
-            AddCustomTypesToModel(applicationModel, parameterInfo.ParameterType);
+            AddCustomTypesToModel(applicationModel, parameterInfo.ParameterType, includeDescriptions);
         }
 
-        AddCustomTypesToModel(applicationModel, method.ReturnType);
+        AddCustomTypesToModel(applicationModel, method.ReturnType, includeDescriptions);
     }
 
-    private static void AddCustomTypesToModel(ApplicationApiDescriptionModel applicationModel,
-        Type? type)
+    private void AddCustomTypesToModel(ApplicationApiDescriptionModel applicationModel,
+        Type? type, bool includeDescriptions)
     {
         if (type == null)
         {
@@ -229,14 +246,14 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
 
         if (TypeHelper.IsDictionary(type, out var keyType, out var valueType))
         {
-            AddCustomTypesToModel(applicationModel, keyType);
-            AddCustomTypesToModel(applicationModel, valueType);
+            AddCustomTypesToModel(applicationModel, keyType, includeDescriptions);
+            AddCustomTypesToModel(applicationModel, valueType, includeDescriptions);
             return;
         }
 
         if (TypeHelper.IsEnumerable(type, out var itemType))
         {
-            AddCustomTypesToModel(applicationModel, itemType);
+            AddCustomTypesToModel(applicationModel, itemType, includeDescriptions);
             return;
         }
 
@@ -244,11 +261,11 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
         {
             var genericTypeDefinition = type.GetGenericTypeDefinition();
 
-            AddCustomTypesToModel(applicationModel, genericTypeDefinition);
+            AddCustomTypesToModel(applicationModel, genericTypeDefinition, includeDescriptions);
 
             foreach (var genericArgument in type.GetGenericArguments())
             {
-                AddCustomTypesToModel(applicationModel, genericArgument);
+                AddCustomTypesToModel(applicationModel, genericArgument, includeDescriptions);
             }
 
             return;
@@ -262,11 +279,16 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
 
         applicationModel.Types[typeName] = TypeApiDescriptionModel.Create(type);
 
-        AddCustomTypesToModel(applicationModel, type.BaseType);
+        if (includeDescriptions)
+        {
+            PopulateTypeDescriptions(applicationModel.Types[typeName], type);
+        }
+
+        AddCustomTypesToModel(applicationModel, type.BaseType, includeDescriptions);
 
         foreach (var propertyInfo in type.GetProperties().Where(p => p.DeclaringType == type))
         {
-            AddCustomTypesToModel(applicationModel, propertyInfo.PropertyType);
+            AddCustomTypesToModel(applicationModel, propertyInfo.PropertyType, includeDescriptions);
         }
     }
 
@@ -413,5 +435,69 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
         }
 
         return null;
+    }
+
+    private void PopulateControllerDescriptions(ControllerApiDescriptionModel controllerModel, Type controllerType)
+    {
+        controllerModel.Summary = _xmlDocProvider.GetSummary(controllerType);
+        controllerModel.Remarks = _xmlDocProvider.GetRemarks(controllerType);
+        controllerModel.Description = controllerType.GetCustomAttribute<DescriptionAttribute>()?.Description;
+        controllerModel.DisplayName = controllerType.GetCustomAttribute<DisplayAttribute>()?.Name;
+    }
+
+    private void PopulateActionDescriptions(ActionApiDescriptionModel actionModel, MethodInfo method)
+    {
+        actionModel.Summary = _xmlDocProvider.GetSummary(method);
+        actionModel.Remarks = _xmlDocProvider.GetRemarks(method);
+        actionModel.Description = method.GetCustomAttribute<DescriptionAttribute>()?.Description;
+        actionModel.DisplayName = method.GetCustomAttribute<DisplayAttribute>()?.Name;
+        actionModel.ReturnValue.Summary = _xmlDocProvider.GetReturns(method);
+    }
+
+    private void PopulateParameterDescriptions(ActionApiDescriptionModel actionModel, MethodInfo method)
+    {
+        foreach (var param in actionModel.ParametersOnMethod)
+        {
+            var paramInfo = method.GetParameters().FirstOrDefault(p => p.Name == param.Name);
+            if (paramInfo == null)
+            {
+                continue;
+            }
+
+            param.Summary = _xmlDocProvider.GetParameterSummary(method, param.Name);
+            param.Description = paramInfo.GetCustomAttribute<DescriptionAttribute>()?.Description;
+            param.DisplayName = paramInfo.GetCustomAttribute<DisplayAttribute>()?.Name;
+        }
+
+        foreach (var param in actionModel.Parameters)
+        {
+            param.Summary = _xmlDocProvider.GetParameterSummary(method, param.NameOnMethod);
+        }
+    }
+
+    private void PopulateTypeDescriptions(TypeApiDescriptionModel typeModel, Type type)
+    {
+        typeModel.Summary = _xmlDocProvider.GetSummary(type);
+        typeModel.Remarks = _xmlDocProvider.GetRemarks(type);
+        typeModel.Description = type.GetCustomAttribute<DescriptionAttribute>()?.Description;
+        typeModel.DisplayName = type.GetCustomAttribute<DisplayAttribute>()?.Name;
+
+        if (typeModel.Properties == null)
+        {
+            return;
+        }
+
+        foreach (var propModel in typeModel.Properties)
+        {
+            var propInfo = type.GetProperty(propModel.Name, BindingFlags.Instance | BindingFlags.Public);
+            if (propInfo == null)
+            {
+                continue;
+            }
+
+            propModel.Summary = _xmlDocProvider.GetSummary(propInfo);
+            propModel.Description = propInfo.GetCustomAttribute<DescriptionAttribute>()?.Description;
+            propModel.DisplayName = propInfo.GetCustomAttribute<DisplayAttribute>()?.Name;
+        }
     }
 }

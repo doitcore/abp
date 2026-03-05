@@ -58,25 +58,7 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
                 resourcePermissionRecord.MultiTenancySide,
                 resourcePermissionRecord.IsEnabled);
 
-            if (!resourcePermissionRecord.Providers.IsNullOrWhiteSpace())
-            {
-                resourcePermission.Providers.AddRange(resourcePermissionRecord.Providers.Split(','));
-            }
-
-            if (!resourcePermissionRecord.StateCheckers.IsNullOrWhiteSpace())
-            {
-                var checkers = StateCheckerSerializer
-                    .DeserializeArray(
-                        resourcePermissionRecord.StateCheckers,
-                        resourcePermission
-                    );
-                resourcePermission.StateCheckers.AddRange(checkers);
-            }
-
-            foreach (var property in resourcePermissionRecord.ExtraProperties)
-            {
-                resourcePermission[property.Key] = property.Value;
-            }
+            ApplyPermissionProperties(resourcePermission, resourcePermissionRecord);
 
             ResourcePermissionDefinitions.Add(resourcePermission);
         }
@@ -146,6 +128,16 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
 
         PermissionDefinitions[permission.Name] = permission;
 
+        ApplyPermissionProperties(permission, permissionRecord);
+
+        foreach (var subPermission in allPermissionRecords.Where(p => p.ParentName == permissionRecord.Name))
+        {
+            AddPermissionRecursively(permission, subPermission, allPermissionRecords);
+        }
+    }
+
+    private void ApplyPermissionProperties(PermissionDefinition permission, PermissionDefinitionRecord permissionRecord)
+    {
         if (!permissionRecord.Providers.IsNullOrWhiteSpace())
         {
             permission.Providers.AddRange(permissionRecord.Providers.Split(','));
@@ -164,11 +156,6 @@ public class DynamicPermissionDefinitionStoreInMemoryCache :
         foreach (var property in permissionRecord.ExtraProperties)
         {
             permission[property.Key] = property.Value;
-        }
-
-        foreach (var subPermission in allPermissionRecords.Where(p => p.ParentName == permissionRecord.Name))
-        {
-            AddPermissionRecursively(permission, subPermission, allPermissionRecords);
         }
     }
 }

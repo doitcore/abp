@@ -142,6 +142,34 @@ public class DynamicPermissionDefinitionStoreInMemoryCache_Tests : PermissionTes
     }
 
     [Fact]
+    public async Task FillAsync_Should_Populate_ResourcePermission_With_StateCheckers()
+    {
+        // Arrange
+        var permissionGroupRecords = new List<PermissionGroupDefinitionRecord>();
+        var permissionRecords = new List<PermissionDefinitionRecord>
+        {
+            new PermissionDefinitionRecord(
+                Guid.NewGuid(),
+                groupName: null,
+                name: "TestResourcePerm3",
+                resourceName: "TestResource",
+                managementPermissionName: "TestManagementPerm",
+                parentName: null,
+                displayName: "F:Test Resource Permission 3",
+                stateCheckers: "[{\"T\":\"A\"}]"
+            )
+        };
+
+        // Act
+        await _cache.FillAsync(permissionGroupRecords, permissionRecords);
+
+        // Assert
+        var resourcePermission = _cache.GetResourcePermissionOrNull("TestResource", "TestResourcePerm3");
+        resourcePermission.ShouldNotBeNull();
+        resourcePermission.StateCheckers.Count.ShouldBe(1);
+    }
+
+    [Fact]
     public async Task FillAsync_Should_Clear_Previous_ResourcePermissions()
     {
         // Arrange - first fill

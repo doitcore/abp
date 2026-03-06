@@ -24,7 +24,7 @@ public class FixedWindowOperationRateLimitRule : IOperationRateLimitRule
         IOperationRateLimitStore store,
         ICurrentUser currentUser,
         ICurrentTenant currentTenant,
-        IClientIpAddressProvider clientInfoProvider)
+        IClientIpAddressProvider clientIpAddressProvider)
     {
         PolicyName = policyName;
         RuleIndex = ruleIndex;
@@ -32,7 +32,7 @@ public class FixedWindowOperationRateLimitRule : IOperationRateLimitRule
         Store = store;
         CurrentUser = currentUser;
         CurrentTenant = currentTenant;
-        ClientIpAddressProvider = clientInfoProvider;
+        ClientIpAddressProvider = clientIpAddressProvider;
     }
 
     public virtual async Task<OperationRateLimitRuleResult> AcquireAsync(

@@ -4,16 +4,14 @@ namespace Volo.Abp.OperationRateLimit;
 
 public class OperationRateLimitRuleBuilder
 {
-    private readonly OperationRateLimitPolicyBuilder? _policyBuilder;
+    private readonly OperationRateLimitPolicyBuilder _policyBuilder;
     private TimeSpan _duration;
     private int _maxCount;
     private OperationRateLimitPartitionType? _partitionType;
     private Func<OperationRateLimitContext, string>? _customPartitionKeyResolver;
     private bool _isMultiTenant;
 
-    public OperationRateLimitRuleBuilder()
-    {
-    }
+    internal bool IsCommitted { get; private set; }
 
     internal OperationRateLimitRuleBuilder(OperationRateLimitPolicyBuilder policyBuilder)
     {
@@ -41,7 +39,7 @@ public class OperationRateLimitRuleBuilder
     {
         _partitionType = OperationRateLimitPartitionType.Parameter;
         CommitToPolicyBuilder();
-        return _policyBuilder!;
+        return _policyBuilder;
     }
 
     /// <summary>
@@ -51,7 +49,7 @@ public class OperationRateLimitRuleBuilder
     {
         _partitionType = OperationRateLimitPartitionType.CurrentUser;
         CommitToPolicyBuilder();
-        return _policyBuilder!;
+        return _policyBuilder;
     }
 
     /// <summary>
@@ -61,7 +59,7 @@ public class OperationRateLimitRuleBuilder
     {
         _partitionType = OperationRateLimitPartitionType.CurrentTenant;
         CommitToPolicyBuilder();
-        return _policyBuilder!;
+        return _policyBuilder;
     }
 
     /// <summary>
@@ -71,7 +69,7 @@ public class OperationRateLimitRuleBuilder
     {
         _partitionType = OperationRateLimitPartitionType.ClientIp;
         CommitToPolicyBuilder();
-        return _policyBuilder!;
+        return _policyBuilder;
     }
 
     /// <summary>
@@ -82,7 +80,7 @@ public class OperationRateLimitRuleBuilder
     {
         _partitionType = OperationRateLimitPartitionType.Email;
         CommitToPolicyBuilder();
-        return _policyBuilder!;
+        return _policyBuilder;
     }
 
     /// <summary>
@@ -93,7 +91,7 @@ public class OperationRateLimitRuleBuilder
     {
         _partitionType = OperationRateLimitPartitionType.PhoneNumber;
         CommitToPolicyBuilder();
-        return _policyBuilder!;
+        return _policyBuilder;
     }
 
     /// <summary>
@@ -105,12 +103,13 @@ public class OperationRateLimitRuleBuilder
         _partitionType = OperationRateLimitPartitionType.Custom;
         _customPartitionKeyResolver = Check.NotNull(keyResolver, nameof(keyResolver));
         CommitToPolicyBuilder();
-        return _policyBuilder!;
+        return _policyBuilder;
     }
 
     protected virtual void CommitToPolicyBuilder()
     {
-        _policyBuilder?.AddRuleDefinition(Build());
+        _policyBuilder.AddRuleDefinition(Build());
+        IsCommitted = true;
     }
 
     internal OperationRateLimitRuleDefinition Build()

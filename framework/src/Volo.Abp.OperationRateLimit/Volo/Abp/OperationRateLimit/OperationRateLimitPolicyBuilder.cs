@@ -22,9 +22,12 @@ public class OperationRateLimitPolicyBuilder
     public OperationRateLimitPolicyBuilder AddRule(
         Action<OperationRateLimitRuleBuilder> configure)
     {
-        var builder = new OperationRateLimitRuleBuilder();
+        var builder = new OperationRateLimitRuleBuilder(this);
         configure(builder);
-        _rules.Add(builder.Build());
+        if (!builder.IsCommitted)
+        {
+            _rules.Add(builder.Build());
+        }
         return this;
     }
 
@@ -74,15 +77,17 @@ public class OperationRateLimitPolicyBuilder
         }
 
         var duplicate = _rules
-            .GroupBy(r => (r.Duration, r.MaxCount, r.PartitionType))
+            .Where(r => r.PartitionType != OperationRateLimitPartitionType.Custom)
+            .GroupBy(r => (r.Duration, r.MaxCount, r.PartitionType, r.IsMultiTenant))
             .FirstOrDefault(g => g.Count() > 1);
 
         if (duplicate != null)
         {
-            var (duration, maxCount, partitionType) = duplicate.Key;
+            var (duration, maxCount, partitionType, isMultiTenant) = duplicate.Key;
             throw new AbpException(
                 $"Operation rate limit policy '{_name}' has duplicate rules with the same " +
-                $"Duration ({duration}), MaxCount ({maxCount}), and PartitionType ({partitionType}). " +
+                $"Duration ({duration}), MaxCount ({maxCount}), PartitionType ({partitionType}), " +
+                $"and IsMultiTenant ({isMultiTenant}). " +
                 "Each rule in a policy must have a unique combination of these properties.");
         }
 

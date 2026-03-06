@@ -206,4 +206,52 @@ public class OperationRateLimitPolicyBuilder_Tests
 
         exception.Message.ShouldContain("maxCount >= 0");
     }
+
+    [Fact]
+    public void Should_Allow_Same_Rule_With_Different_MultiTenancy()
+    {
+        var options = new AbpOperationRateLimitOptions();
+
+        // Same Duration/MaxCount/PartitionType but different IsMultiTenant should be allowed
+        options.AddPolicy("MultiTenancyPolicy", policy =>
+        {
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                .PartitionByParameter());
+
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                .WithMultiTenancy()
+                .PartitionByParameter());
+        });
+
+        var policy = options.Policies["MultiTenancyPolicy"];
+        policy.Rules.Count.ShouldBe(2);
+        policy.Rules[0].IsMultiTenant.ShouldBeFalse();
+        policy.Rules[1].IsMultiTenant.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void Should_Allow_Multiple_Custom_Partition_Rules()
+    {
+        var options = new AbpOperationRateLimitOptions();
+
+        // Multiple custom partition rules with same Duration/MaxCount should be allowed
+        // because they may use different key resolvers
+        options.AddPolicy("MultiCustomPolicy", policy =>
+        {
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                .PartitionBy(ctx => $"by-ip:{ctx.Parameter}"));
+
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                .PartitionBy(ctx => $"by-device:{ctx.Parameter}"));
+        });
+
+        var policy = options.Policies["MultiCustomPolicy"];
+        policy.Rules.Count.ShouldBe(2);
+        policy.Rules[0].PartitionType.ShouldBe(OperationRateLimitPartitionType.Custom);
+        policy.Rules[1].PartitionType.ShouldBe(OperationRateLimitPartitionType.Custom);
+    }
 }

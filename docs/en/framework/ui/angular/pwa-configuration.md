@@ -282,7 +282,7 @@ In addition to updated icons, the library will generate splash screens. However,
 />
 ```
 
-### 3. Configure Service Worker
+## 3. Configure Service Worker
 
 Once the PWA schematic is installed and the manifest is customized, you should review and tune the Angular service worker configuration.
 

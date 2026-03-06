@@ -65,16 +65,31 @@ public class OperationRateLimitingChecker : IOperationRateLimitingChecker, ITran
             ThrowRateLimitException(policy, aggregatedResult, context);
         }
 
-        // Phase 2: All rules pass - now increment all counters.
-        // Also guard against a concurrent race where another request consumed the last quota
+        // Phase 2: All rules passed in Phase 1 - now increment counters.
+        // Guard against concurrent races where another request consumed the last quota
         // between Phase 1 and Phase 2.
+        // Once any rule fails during increment, stop incrementing subsequent rules
+        // to minimize wasted quota. Remaining rules use read-only check instead.
         var incrementResults = new List<OperationRateLimitingRuleResult>();
+        var phase2Failed = false;
         foreach (var rule in rules)
         {
-            incrementResults.Add(await rule.AcquireAsync(context));
+            if (phase2Failed)
+            {
+                incrementResults.Add(await rule.CheckAsync(context));
+            }
+            else
+            {
+                var result = await rule.AcquireAsync(context);
+                incrementResults.Add(result);
+                if (!result.IsAllowed)
+                {
+                    phase2Failed = true;
+                }
+            }
         }
 
-        if (incrementResults.Any(r => !r.IsAllowed))
+        if (phase2Failed)
         {
             var aggregatedResult = AggregateResults(incrementResults, policy);
             ThrowRateLimitException(policy, aggregatedResult, context);

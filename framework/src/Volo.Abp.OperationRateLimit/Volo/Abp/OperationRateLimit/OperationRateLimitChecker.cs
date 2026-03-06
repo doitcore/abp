@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Volo.Abp.AspNetCore.ClientIpAddress;
+using Volo.Abp.AspNetCore.WebClientInfo;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Users;
@@ -19,7 +19,7 @@ public class OperationRateLimitChecker : IOperationRateLimitChecker, ITransientD
     protected IOperationRateLimitStore Store { get; }
     protected ICurrentUser CurrentUser { get; }
     protected ICurrentTenant CurrentTenant { get; }
-    protected IClientIpAddressProvider ClientIpAddressProvider { get; }
+    protected IWebClientInfoProvider WebClientInfoProvider { get; }
 
     public OperationRateLimitChecker(
         IOptions<AbpOperationRateLimitOptions> options,
@@ -28,7 +28,7 @@ public class OperationRateLimitChecker : IOperationRateLimitChecker, ITransientD
         IOperationRateLimitStore store,
         ICurrentUser currentUser,
         ICurrentTenant currentTenant,
-        IClientIpAddressProvider clientIpAddressProvider)
+        IWebClientInfoProvider webClientInfoProvider)
     {
         Options = options.Value;
         PolicyProvider = policyProvider;
@@ -36,7 +36,7 @@ public class OperationRateLimitChecker : IOperationRateLimitChecker, ITransientD
         Store = store;
         CurrentUser = currentUser;
         CurrentTenant = currentTenant;
-        ClientIpAddressProvider = clientIpAddressProvider;
+        WebClientInfoProvider = webClientInfoProvider;
     }
 
     public virtual async Task CheckAsync(string policyName, OperationRateLimitContext? context = null)
@@ -162,7 +162,7 @@ public class OperationRateLimitChecker : IOperationRateLimitChecker, ITransientD
                 Store,
                 CurrentUser,
                 CurrentTenant,
-                ClientIpAddressProvider));
+                WebClientInfoProvider));
         }
 
         foreach (var customRuleType in policy.CustomRuleTypes)

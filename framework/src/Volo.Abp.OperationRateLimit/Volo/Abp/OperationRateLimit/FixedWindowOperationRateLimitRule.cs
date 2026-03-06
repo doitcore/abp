@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Volo.Abp.AspNetCore.ClientIpAddress;
+using Volo.Abp.AspNetCore.WebClientInfo;
 using Volo.Abp.MultiTenancy;
 using Volo.Abp.Users;
 
@@ -15,7 +15,7 @@ public class FixedWindowOperationRateLimitRule : IOperationRateLimitRule
     protected IOperationRateLimitStore Store { get; }
     protected ICurrentUser CurrentUser { get; }
     protected ICurrentTenant CurrentTenant { get; }
-    protected IClientIpAddressProvider ClientIpAddressProvider { get; }
+    protected IWebClientInfoProvider WebClientInfoProvider { get; }
 
     public FixedWindowOperationRateLimitRule(
         string policyName,
@@ -24,7 +24,7 @@ public class FixedWindowOperationRateLimitRule : IOperationRateLimitRule
         IOperationRateLimitStore store,
         ICurrentUser currentUser,
         ICurrentTenant currentTenant,
-        IClientIpAddressProvider clientIpAddressProvider)
+        IWebClientInfoProvider webClientInfoProvider)
     {
         PolicyName = policyName;
         RuleIndex = ruleIndex;
@@ -32,7 +32,7 @@ public class FixedWindowOperationRateLimitRule : IOperationRateLimitRule
         Store = store;
         CurrentUser = currentUser;
         CurrentTenant = currentTenant;
-        ClientIpAddressProvider = clientIpAddressProvider;
+        WebClientInfoProvider = webClientInfoProvider;
     }
 
     public virtual async Task<OperationRateLimitRuleResult> AcquireAsync(
@@ -78,10 +78,10 @@ public class FixedWindowOperationRateLimitRule : IOperationRateLimitRule
                 CurrentTenant.Id?.ToString() ?? HostTenantKey,
 
             OperationRateLimitPartitionType.ClientIp =>
-                ClientIpAddressProvider.ClientIpAddress
+                WebClientInfoProvider.ClientIpAddress
                 ?? throw new AbpException(
                     $"Client IP address could not be determined. Policy '{PolicyName}' requires PartitionByClientIp. " +
-                    "Ensure IClientIpAddressProvider is properly configured."),
+                    "Ensure IWebClientInfoProvider is properly configured."),
 
             OperationRateLimitPartitionType.Email =>
                 context.Parameter

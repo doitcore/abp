@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using Volo.Abp.AspNetCore.ClientIpAddress;
+using Volo.Abp.AspNetCore.WebClientInfo;
 using Volo.Abp.Autofac;
 using Volo.Abp.ExceptionHandling;
 using Volo.Abp.Modularity;
@@ -18,9 +18,9 @@ public class AbpOperationRateLimitTestModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        var mockIpProvider = Substitute.For<IClientIpAddressProvider>();
-        mockIpProvider.ClientIpAddress.Returns("127.0.0.1");
-        context.Services.AddSingleton<IClientIpAddressProvider>(mockIpProvider);
+        var mockWebClientInfoProvider = Substitute.For<IWebClientInfoProvider>();
+        mockWebClientInfoProvider.ClientIpAddress.Returns("127.0.0.1");
+        context.Services.AddSingleton<IWebClientInfoProvider>(mockWebClientInfoProvider);
 
         Configure<AbpOperationRateLimitOptions>(options =>
         {

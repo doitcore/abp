@@ -63,7 +63,7 @@ public class OperationRateLimitRuleBuilder
     }
 
     /// <summary>
-    /// Auto resolve from IClientIpAddressProvider.ClientIpAddress.
+    /// Auto resolve from IWebClientInfoProvider.ClientIpAddress.
     /// </summary>
     public OperationRateLimitPolicyBuilder PartitionByClientIp()
     {

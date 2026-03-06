@@ -7,6 +7,13 @@
 
 # Creating the Initial Ordering Module
 
+```json
+//[doc-params]
+{
+  "UI": ["MVC", "NG"]
+}
+```
+
 ````json
 //[doc-nav]
 {
@@ -39,9 +46,17 @@ That command opens a dialog to define the properties of the new module:
 
 Set `ModularCrm.Ordering` as the *Module name*, leave the *Output folder* as is and click the *Next* button.
 
+{{if UI == "MVC"}}
+
 ![abp-studio-add-new-standard-module-ui-dialog](images/abp-studio-add-new-standard-module-ui-dialog.png)
 
 You can choose the type of UI you want to support in your module or select *No UI* if you don't need a user interface. In this example, we'll select the *MVC* option and click *Next*.
+
+{{else if UI == "NG"}}
+
+You can choose the type of UI you want to support in your module or select *No UI* if you don't need a user interface. In this example, we'll select the *Angular* UI option and click *Next*.
+
+{{end}}
 
 ![abp-studio-add-new-standard-module-db-dialog](images/abp-studio-add-new-standard-module-db-dialog.png)
 
@@ -74,6 +89,18 @@ Select the `ModularCrm.Ordering` module and check the *Install this module* opti
 ![abp-studio-install-module-dialog](images/abp-studio-install-module-dialog-v2.png)
 
 Select the `ModularCrm.Ordering` and `ModularCrm.Ordering.UI` packages from the left area and ensure the  `ModularCrm` package from the middle area was checked as shown in the preceding figure. Finally, click _OK_.
+
+{{if UI == "NG"}}
+
+After installing a new Angular module, run the symlink setup command from the root `angular` folder to align shared package versions between the main app and local module packages:
+
+```bash
+yarn symlinks:setup
+```
+
+You should run this command again whenever you add another local module with Angular packages.
+
+{{end}}
 
 ## Summary
 

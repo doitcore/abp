@@ -476,5 +476,5 @@ Replace `IOperationRateLimitingPolicyProvider` to load policies from a database 
 ## See Also
 
 * [ASP.NET Core Rate Limiting Middleware](https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit)
-* [Distributed Caching](../../fundamentals/caching.md)
-* [Exception Handling](../../fundamentals/exception-handling.md)
+* [Distributed Caching](../fundamentals/caching.md)
+* [Exception Handling](../fundamentals/exception-handling.md)

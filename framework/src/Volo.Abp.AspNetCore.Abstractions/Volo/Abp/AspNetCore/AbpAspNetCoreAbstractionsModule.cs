@@ -12,6 +12,6 @@ public class AbpAspNetCoreAbstractionsModule : AbpModule
     {
         context.Services.AddSingleton<IWebContentFileProvider, NullWebContentFileProvider>();
         context.Services.AddSingleton<IWebClientInfoProvider, NullWebClientInfoProvider>();
-        context.Services.AddTransient<IClientIpAddressProvider, NullClientIpAddressProvider>();
+        context.Services.AddSingleton<IClientIpAddressProvider, NullClientIpAddressProvider>();
     }
 }

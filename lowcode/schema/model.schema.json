@@ -29,6 +29,13 @@
       "items": {
         "$ref": "definitions/endpoint-descriptor.schema.json"
       }
+    },
+    "pages": {
+      "type": "array",
+      "description": "List of UI pages that appear as menu items and define how entities are displayed",
+      "items": {
+        "$ref": "definitions/page-descriptor.schema.json"
+      }
     }
   },
   "additionalProperties": false

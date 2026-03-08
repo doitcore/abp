@@ -36,6 +36,13 @@
       "items": {
         "$ref": "definitions/page-descriptor.schema.json"
       }
+    },
+    "forms": {
+      "type": "array",
+      "description": "List of named form definitions for entity create/edit",
+      "items": {
+        "$ref": "definitions/form-descriptor.schema.json"
+      }
     }
   },
   "additionalProperties": false

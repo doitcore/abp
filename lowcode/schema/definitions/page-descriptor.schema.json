@@ -36,14 +36,51 @@
       "type": "integer",
       "description": "Menu sort order (lower values appear first)",
       "default": 0
+    },
+    "formName": {
+      "type": "string",
+      "description": "Name of the form to render (required when type is 'form')",
+      "minLength": 1
+    },
+    "createFormName": {
+      "type": "string",
+      "description": "Name of the form to use for creating entities (for dataGrid/kanban pages)"
+    },
+    "editFormName": {
+      "type": "string",
+      "description": "Name of the form to use for editing entities (for dataGrid/kanban pages)"
+    },
+    "createFormDisplay": {
+      "type": "string",
+      "enum": ["modal", "page"],
+      "description": "How to display the create form",
+      "default": "modal"
+    },
+    "editFormDisplay": {
+      "type": "string",
+      "enum": ["modal", "page"],
+      "description": "How to display the edit form",
+      "default": "modal"
     }
   },
   "required": ["name", "title", "type", "entityName"],
-  "if": {
-    "properties": { "type": { "const": "kanban" } }
-  },
-  "then": {
-    "required": ["groupByProperty"]
-  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "const": "kanban" } }
+      },
+      "then": {
+        "required": ["groupByProperty"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "form" } }
+      },
+      "then": {
+        "required": ["formName"]
+      }
+    }
+  ],
   "additionalProperties": false
 }

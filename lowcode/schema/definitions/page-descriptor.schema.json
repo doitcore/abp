@@ -24,7 +24,7 @@
     },
     "entityName": {
       "type": "string",
-      "description": "Full name of the root entity this page displays (e.g., 'Namespace.EntityName')",
+      "description": "Full name of the root entity this page displays (e.g., 'Namespace.EntityName'). Not required for dashboard pages.",
       "minLength": 1
     },
     "groupByProperty": {
@@ -66,14 +66,30 @@
       "$ref": "dashboard-descriptor.schema.json"
     }
   },
-  "required": ["name", "title", "type", "entityName"],
+  "required": ["name", "title", "type"],
   "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "const": "dataGrid" } }
+      },
+      "then": {
+        "required": ["entityName"]
+      }
+    },
     {
       "if": {
         "properties": { "type": { "const": "kanban" } }
       },
       "then": {
-        "required": ["groupByProperty"]
+        "required": ["entityName", "groupByProperty"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "calendar" } }
+      },
+      "then": {
+        "required": ["entityName"]
       }
     },
     {
@@ -81,7 +97,7 @@
         "properties": { "type": { "const": "form" } }
       },
       "then": {
-        "required": ["formName"]
+        "required": ["entityName", "formName"]
       }
     },
     {

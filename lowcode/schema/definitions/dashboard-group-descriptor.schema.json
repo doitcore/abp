@@ -49,6 +49,6 @@
       "minItems": 1
     }
   },
-  "required": ["name", "entityName", "visualizations"],
+  "required": ["name", "visualizations"],
   "additionalProperties": false
 }

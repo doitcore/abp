@@ -36,6 +36,11 @@
       "description": "Allow users to click to see underlying records",
       "default": false
     },
+    "entityName": {
+      "type": "string",
+      "description": "Override entity for this visualization. If omitted, uses the group's entityName.",
+      "minLength": 1
+    },
     "number": {
       "$ref": "dashboard-number-descriptor.schema.json"
     },

@@ -32,13 +32,15 @@ Using [ngx-datatable](https://github.com/swimlane/ngx-datatable) in extensible t
       /> 
 ````
 
- * `       actionsText : ` Column name of action column. **Type** : `string`
- * `              data : ` Items shown in your table. **Type** : `Array<any>`
- * `              list : ` Instance of ListService. **Type** : `ListService`
- * `actionsColumnWidth : ` Width of your action column. **Type** : `number`
- * `   actionsTemplate : ` Template of the action (e.g. an `ng-template`). **Type** : `TemplateRef<any>`
- * `      recordsTotal : ` Total count of records. **Type** : `number`
- * `    tableActivate  : ` Output fired when a cell or row is focused via keyboard or mouse click. **Type** : `EventEmitter`
+| Input / Output      | Description                                                                                  | Type                |
+|---------------------|----------------------------------------------------------------------------------------------|---------------------|
+| `actionsText`       | Column name of the action column.                                                            | `string`            |
+| `data`              | Items shown in your table.                                                                   | `Array<any>`        |
+| `list`              | Instance of `ListService`.                                                                   | `ListService`       |
+| `actionsColumnWidth`| Width of your action column.                                                                 | `number`            |
+| `actionsTemplate`   | Template of the action (for example, an `ng-template`).                                      | `TemplateRef<any>`  |
+| `recordsTotal`      | Total count of records.                                                                      | `number`            |
+| `tableActivate`     | Output fired when a cell or row is focused via keyboard or mouse click.                     | `EventEmitter`      |
 
 ### Multiple Selection
 
@@ -58,10 +60,12 @@ The extensible table supports both single-row and multi-row selection. Use the `
 
 When `selectionType` is `'single'`, each row displays a **radio button** and the header does not show a "select all" checkbox. For all other selection types (e.g. `'multiClick'`, `'checkbox'`), each row shows a **checkbox** and the header includes a "select all" checkbox.
 
- * `        selectable : ` Enables the row selection column. **Type** : `boolean`, **Default** : `false`
- * `   selectionType  : ` Controls the selection mode. Accepts `SelectionType` values such as `'single'`, `'multi'`, `'multiClick'`, `'checkbox'`, or `'cell'`. **Type** : `SelectionType | string`, **Default** : `'multiClick'`
- * `        selected  : ` The currently selected rows. **Type** : `any[]`, **Default** : `[]`
- * ` selectionChange  : ` Output fired when the selection changes. **Type** : `EventEmitter<any[]>`
+| Input / Output     | Description                                                                                                                                                 | Type                     | Default        |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|----------------|
+| `selectable`       | Enables the row selection column.                                                                                                                           | `boolean`                | `false`        |
+| `selectionType`    | Controls the selection mode. Accepts `SelectionType` values such as `'single'`, `'multi'`, `'multiClick'`, `'checkbox'`, or `'cell'`.                      | `SelectionType | string`| `'multiClick'` |
+| `selected`         | The currently selected rows.                                                                                                                                | `any[]`                  | `[]`           |
+| `selectionChange`  | Output fired when the selection changes.                                                                                                                    | `EventEmitter<any[]>`    | -              |
 
 ### Infinite Scroll
 
@@ -96,8 +100,10 @@ onLoadMore(): void {
 
 > **Note:** When `infiniteScroll` is `true`, set a fixed `tableHeight` so the table has a scrollable viewport. Pagination is automatically hidden.
 
- * `  infiniteScroll  : ` Enables infinite scroll mode (hides pagination). **Type** : `boolean`, **Default** : `false`
- * `     isLoading   : ` Indicates that more data is being fetched. Prevents duplicate `loadMore` events and shows a loading indicator. **Type** : `boolean`, **Default** : `false`
- * `   tableHeight   : ` Fixed height of the table in pixels when `infiniteScroll` is enabled. **Type** : `number`
- * ` scrollThreshold : ` Distance from the bottom (in pixels) at which `loadMore` is triggered. **Type** : `number`, **Default** : `10`
- * `      loadMore   : ` Output fired when the user scrolls near the bottom of the table (only when `infiniteScroll` is `true` and `isLoading` is `false`). **Type** : `EventEmitter<void>`
+| Input / Output    | Description                                                                                                                                                                                     | Type                 | Default   |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------|-----------|
+| `infiniteScroll`  | Enables infinite scroll mode (hides pagination).                                                                                                                                               | `boolean`            | `false`   |
+| `isLoading`       | Indicates that more data is being fetched. Prevents duplicate `loadMore` events and shows a loading indicator.                                                                                | `boolean`            | `false`   |
+| `tableHeight`     | Fixed height of the table in pixels when `infiniteScroll` is enabled.                                                                                                                         | `number`             | -         |
+| `scrollThreshold` | Distance from the bottom (in pixels) at which `loadMore` is triggered.                                                                                                                        | `number`             | `10`      |
+| `loadMore`        | Output fired when the user scrolls near the bottom of the table (only when `infiniteScroll` is `true` and `isLoading` is `false`).                                                            | `EventEmitter<void>` | -         |

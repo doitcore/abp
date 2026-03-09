@@ -25,4 +25,14 @@ public interface IDocumentedAppService : IApplicationService
     /// <param name="input">The input for creating a documented item.</param>
     /// <returns>The created documented item.</returns>
     Task<DocumentedDto> CreateAsync(DocumentedDto input);
+
+    /// <summary>
+    /// Searches for items matching the query.
+    /// </summary>
+    /// <param name="query">The search query string.</param>
+    /// <param name="maxResults">The maximum number of results to return.</param>
+    /// <returns>A list of matching item names.</returns>
+    Task<string> SearchAsync(string query, int maxResults);
+
+    Task DeleteAsync(int id);
 }

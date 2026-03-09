@@ -9,7 +9,7 @@ namespace Volo.Abp.AspNetCore.Mvc.ApiExploring;
 public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBase
 {
     [Fact]
-    public async Task Default_Should_Not_Include_Descriptions()
+    public async Task Default_Should_Not_Include_Controller_Descriptions()
     {
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition");
@@ -19,6 +19,55 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         controller.Remarks.ShouldBeNull();
         controller.Description.ShouldBeNull();
         controller.DisplayName.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Default_Should_Not_Include_Action_Descriptions()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition");
+
+        var controller = GetDocumentedController(model);
+        var action = GetAction(controller, "GetGreeting");
+        action.Summary.ShouldBeNull();
+        action.Remarks.ShouldBeNull();
+        action.Description.ShouldBeNull();
+        action.DisplayName.ShouldBeNull();
+        action.ReturnValue.Summary.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Default_Should_Not_Include_Parameter_Descriptions()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition");
+
+        var controller = GetDocumentedController(model);
+        var action = GetAction(controller, "GetGreeting");
+
+        var methodParam = action.ParametersOnMethod.FirstOrDefault(p => p.Name == "name");
+        methodParam.ShouldNotBeNull();
+        methodParam.Summary.ShouldBeNull();
+        methodParam.Description.ShouldBeNull();
+        methodParam.DisplayName.ShouldBeNull();
+
+        var httpParam = action.Parameters.FirstOrDefault(p => p.NameOnMethod == "name");
+        httpParam.ShouldNotBeNull();
+        httpParam.Summary.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task Default_Should_Not_Include_Type_Descriptions()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeTypes=true");
+
+        var documentedDtoType = model.Types.FirstOrDefault(t => t.Key.Contains("DocumentedDto"));
+        documentedDtoType.Value.ShouldNotBeNull();
+        documentedDtoType.Value.Summary.ShouldBeNull();
+        documentedDtoType.Value.Remarks.ShouldBeNull();
+        documentedDtoType.Value.Description.ShouldBeNull();
+        documentedDtoType.Value.DisplayName.ShouldBeNull();
     }
 
     [Fact]
@@ -64,18 +113,56 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
     }
 
     [Fact]
-    public async Task IncludeDescriptions_Should_Populate_Action_Descriptions()
+    public async Task Controller_Descriptions_Should_Be_Populated_Only_Once_For_Multiple_Actions()
     {
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeDescriptions=true");
 
         var controller = GetDocumentedController(model);
-        var action = GetAction(controller, "GetGreeting");
 
+        controller.Actions.Count.ShouldBeGreaterThan(1);
+        controller.Summary.ShouldNotBeNullOrEmpty();
+        controller.Summary.ShouldContain("documented application service");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Populate_Action_Summary()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "GetGreeting");
         action.Summary.ShouldNotBeNullOrEmpty();
         action.Summary.ShouldContain("greeting message");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Leave_Action_Remarks_Null_When_Not_Documented()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "GetGreeting");
         action.Remarks.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Populate_Action_Description_Attribute()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "GetGreeting");
         action.Description.ShouldBe("Get greeting description from attribute");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Populate_Action_DisplayName_Attribute()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "GetGreeting");
         action.DisplayName.ShouldBe("Get Greeting");
     }
 
@@ -85,11 +172,23 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeDescriptions=true");
 
-        var controller = GetDocumentedController(model);
-        var action = GetAction(controller, "GetGreeting");
-
+        var action = GetAction(GetDocumentedController(model), "GetGreeting");
         action.ReturnValue.Summary.ShouldNotBeNullOrEmpty();
         action.ReturnValue.Summary.ShouldContain("personalized greeting");
+    }
+
+    [Fact]
+    public async Task Undocumented_Action_Should_Have_Null_Descriptions()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "Delete");
+        action.Summary.ShouldBeNull();
+        action.Remarks.ShouldBeNull();
+        action.Description.ShouldBeNull();
+        action.DisplayName.ShouldBeNull();
+        action.ReturnValue.Summary.ShouldBeNull();
     }
 
     [Fact]
@@ -98,13 +197,40 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeDescriptions=true");
 
-        var controller = GetDocumentedController(model);
-        var action = GetAction(controller, "GetGreeting");
-
+        var action = GetAction(GetDocumentedController(model), "GetGreeting");
         var param = action.ParametersOnMethod.FirstOrDefault(p => p.Name == "name");
         param.ShouldNotBeNull();
         param.Summary.ShouldNotBeNullOrEmpty();
         param.Summary.ShouldContain("name of the person");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Populate_ParameterOnMethod_Description_And_DisplayName_From_Attribute()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "Search");
+        var param = action.ParametersOnMethod.FirstOrDefault(p => p.Name == "query");
+        param.ShouldNotBeNull();
+        param.Summary.ShouldNotBeNullOrEmpty();
+        param.Summary.ShouldContain("search query");
+        param.Description.ShouldBe("Query param description from attribute");
+        param.DisplayName.ShouldBe("Search Query");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Leave_Parameter_Attributes_Null_When_Not_Annotated()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "Search");
+        var param = action.ParametersOnMethod.FirstOrDefault(p => p.Name == "maxResults");
+        param.ShouldNotBeNull();
+        param.Summary.ShouldNotBeNullOrEmpty();
+        param.Description.ShouldBeNull();
+        param.DisplayName.ShouldBeNull();
     }
 
     [Fact]
@@ -113,9 +239,7 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeDescriptions=true");
 
-        var controller = GetDocumentedController(model);
-        var action = GetAction(controller, "GetGreeting");
-
+        var action = GetAction(GetDocumentedController(model), "GetGreeting");
         var param = action.Parameters.FirstOrDefault(p => p.NameOnMethod == "name");
         param.ShouldNotBeNull();
         param.Summary.ShouldNotBeNullOrEmpty();
@@ -123,23 +247,58 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
     }
 
     [Fact]
-    public async Task IncludeDescriptions_With_IncludeTypes_Should_Populate_Type_Descriptions()
+    public async Task IncludeDescriptions_Should_Populate_Parameter_Description_And_DisplayName_From_Attribute()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "Search");
+        var param = action.Parameters.FirstOrDefault(p => p.NameOnMethod == "query");
+        param.ShouldNotBeNull();
+        param.Summary.ShouldNotBeNullOrEmpty();
+        param.Description.ShouldBe("Query param description from attribute");
+        param.DisplayName.ShouldBe("Search Query");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Leave_Parameter_Attributes_Null_When_Not_Annotated_Http()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var action = GetAction(GetDocumentedController(model), "Search");
+        var param = action.Parameters.FirstOrDefault(p => p.NameOnMethod == "maxResults");
+        param.ShouldNotBeNull();
+        param.Description.ShouldBeNull();
+        param.DisplayName.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_With_IncludeTypes_Should_Populate_Type_Summary()
     {
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeDescriptions=true&includeTypes=true");
-
-        model.Types.ShouldNotBeEmpty();
 
         var documentedDtoType = model.Types.FirstOrDefault(t => t.Key.Contains("DocumentedDto"));
         documentedDtoType.Value.ShouldNotBeNull();
         documentedDtoType.Value.Summary.ShouldNotBeNullOrEmpty();
         documentedDtoType.Value.Summary.ShouldContain("documented DTO");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_With_IncludeTypes_Should_Populate_Type_Description_And_DisplayName()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true&includeTypes=true");
+
+        var documentedDtoType = model.Types.FirstOrDefault(t => t.Key.Contains("DocumentedDto"));
+        documentedDtoType.Value.ShouldNotBeNull();
         documentedDtoType.Value.Description.ShouldBe("Documented DTO description from attribute");
         documentedDtoType.Value.DisplayName.ShouldBe("Documented DTO");
     }
 
     [Fact]
-    public async Task IncludeDescriptions_With_IncludeTypes_Should_Populate_Property_Descriptions()
+    public async Task IncludeDescriptions_With_IncludeTypes_Should_Populate_Property_Summary()
     {
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeDescriptions=true&includeTypes=true");
@@ -152,8 +311,31 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         nameProp.ShouldNotBeNull();
         nameProp.Summary.ShouldNotBeNullOrEmpty();
         nameProp.Summary.ShouldContain("name of the documented item");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_With_IncludeTypes_Should_Populate_Property_Description_And_DisplayName()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true&includeTypes=true");
+
+        var documentedDtoType = model.Types.FirstOrDefault(t => t.Key.Contains("DocumentedDto"));
+        documentedDtoType.Value.ShouldNotBeNull();
+
+        var nameProp = documentedDtoType.Value.Properties!.FirstOrDefault(p => p.Name == "Name");
+        nameProp.ShouldNotBeNull();
         nameProp.Description.ShouldBe("Name description from attribute");
         nameProp.DisplayName.ShouldBe("Item Name");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_With_IncludeTypes_Should_Leave_Property_DisplayName_Null_When_Not_Set()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true&includeTypes=true");
+
+        var documentedDtoType = model.Types.FirstOrDefault(t => t.Key.Contains("DocumentedDto"));
+        documentedDtoType.Value.ShouldNotBeNull();
 
         var valueProp = documentedDtoType.Value.Properties!.FirstOrDefault(p => p.Name == "Value");
         valueProp.ShouldNotBeNull();
@@ -163,7 +345,7 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
     }
 
     [Fact]
-    public async Task Default_Should_Not_Include_Type_Descriptions()
+    public async Task IncludeTypes_Without_IncludeDescriptions_Should_Not_Populate_Type_Descriptions()
     {
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeTypes=true");
@@ -171,23 +353,85 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         var documentedDtoType = model.Types.FirstOrDefault(t => t.Key.Contains("DocumentedDto"));
         documentedDtoType.Value.ShouldNotBeNull();
         documentedDtoType.Value.Summary.ShouldBeNull();
+        documentedDtoType.Value.Remarks.ShouldBeNull();
         documentedDtoType.Value.Description.ShouldBeNull();
+        documentedDtoType.Value.DisplayName.ShouldBeNull();
+
+        if (documentedDtoType.Value.Properties != null)
+        {
+            foreach (var prop in documentedDtoType.Value.Properties)
+            {
+                prop.Summary.ShouldBeNull();
+                prop.Description.ShouldBeNull();
+                prop.DisplayName.ShouldBeNull();
+            }
+        }
     }
 
     [Fact]
-    public async Task Action_Without_Descriptions_Should_Have_Null_Properties()
+    public async Task IncludeDescriptions_Should_Fallback_To_Interface_For_Controller_Summary()
     {
         var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
             "/api/abp/api-definition?includeDescriptions=true");
 
-        var peopleController = model.Modules.Values
-            .SelectMany(m => m.Controllers.Values)
-            .First(c => c.ControllerName == "People");
+        var controller = GetInterfaceOnlyController(model);
+        controller.Summary.ShouldNotBeNullOrEmpty();
+        controller.Summary.ShouldContain("documented only on the interface");
+    }
 
-        var action = peopleController.Actions.Values.First(a => a.Name == "GetPhones");
-        action.Summary.ShouldBeNull();
-        action.Description.ShouldBeNull();
-        action.DisplayName.ShouldBeNull();
+    [Fact]
+    public async Task IncludeDescriptions_Should_Fallback_To_Interface_For_Controller_Remarks()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var controller = GetInterfaceOnlyController(model);
+        controller.Remarks.ShouldNotBeNullOrEmpty();
+        controller.Remarks.ShouldContain("resolved from the interface");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Fallback_To_Interface_For_Action_Summary()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var controller = GetInterfaceOnlyController(model);
+        var action = GetAction(controller, "GetMessage");
+        action.Summary.ShouldNotBeNullOrEmpty();
+        action.Summary.ShouldContain("documented only on the interface");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Fallback_To_Interface_For_Action_ReturnValue_Summary()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var controller = GetInterfaceOnlyController(model);
+        var action = GetAction(controller, "GetMessage");
+        action.ReturnValue.Summary.ShouldNotBeNullOrEmpty();
+        action.ReturnValue.Summary.ShouldContain("resolved message");
+    }
+
+    [Fact]
+    public async Task IncludeDescriptions_Should_Fallback_To_Interface_For_Parameter_Summary()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var controller = GetInterfaceOnlyController(model);
+        var action = GetAction(controller, "GetMessage");
+
+        var methodParam = action.ParametersOnMethod.FirstOrDefault(p => p.Name == "key");
+        methodParam.ShouldNotBeNull();
+        methodParam.Summary.ShouldNotBeNullOrEmpty();
+        methodParam.Summary.ShouldContain("message key");
+
+        var httpParam = action.Parameters.FirstOrDefault(p => p.NameOnMethod == "key");
+        httpParam.ShouldNotBeNull();
+        httpParam.Summary.ShouldNotBeNullOrEmpty();
+        httpParam.Summary.ShouldContain("message key");
     }
 
     private static ControllerApiDescriptionModel GetDocumentedController(ApplicationApiDescriptionModel model)
@@ -195,6 +439,13 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         return model.Modules.Values
             .SelectMany(m => m.Controllers.Values)
             .First(c => c.ControllerName == "Documented");
+    }
+
+    private static ControllerApiDescriptionModel GetInterfaceOnlyController(ApplicationApiDescriptionModel model)
+    {
+        return model.Modules.Values
+            .SelectMany(m => m.Controllers.Values)
+            .First(c => c.ControllerName == "InterfaceOnlyDocumented");
     }
 
     private static ActionApiDescriptionModel GetAction(ControllerApiDescriptionModel controller, string actionName)

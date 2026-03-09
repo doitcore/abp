@@ -23,9 +23,9 @@ public class DocumentedAppService : ApplicationService, IDocumentedAppService
     /// <returns>A personalized greeting message.</returns>
     [Description("Get greeting description from attribute")]
     [Display(Name = "Get Greeting")]
-    public Task<string> GetGreetingAsync(string name)
+    public async Task<string> GetGreetingAsync(string name)
     {
-        return Task.FromResult($"Hello, {name}!");
+        return await Task.FromResult($"Hello, {name}!");
     }
 
     /// <summary>
@@ -33,8 +33,26 @@ public class DocumentedAppService : ApplicationService, IDocumentedAppService
     /// </summary>
     /// <param name="input">The input for creating a documented item.</param>
     /// <returns>The created documented item.</returns>
-    public Task<DocumentedDto> CreateAsync(DocumentedDto input)
+    public async Task<DocumentedDto> CreateAsync(DocumentedDto input)
     {
-        return Task.FromResult(input);
+        return await Task.FromResult(input);
+    }
+
+    /// <summary>
+    /// Searches for items matching the query.
+    /// </summary>
+    /// <param name="query">The search query string.</param>
+    /// <param name="maxResults">The maximum number of results to return.</param>
+    /// <returns>A list of matching item names.</returns>
+    public async Task<string> SearchAsync(
+        [Description("Query param description from attribute")] [Display(Name = "Search Query")] string query,
+        int maxResults)
+    {
+        return await Task.FromResult($"Results for {query}");
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        await Task.CompletedTask;
     }
 }

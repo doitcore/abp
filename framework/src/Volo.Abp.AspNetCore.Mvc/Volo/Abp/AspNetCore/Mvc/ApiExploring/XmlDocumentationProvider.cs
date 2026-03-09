@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Volo.Abp.DependencyInjection;
@@ -12,42 +14,44 @@ namespace Volo.Abp.AspNetCore.Mvc.ApiExploring;
 
 public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDependency
 {
-    private readonly ConcurrentDictionary<Assembly, XDocument?> _xmlDocCache = new();
+    private static readonly Regex WhitespaceRegex = new(@"\s+", RegexOptions.Compiled);
 
-    public string? GetSummary(Type type)
+    private readonly ConcurrentDictionary<Assembly, Task<XDocument?>> _xmlDocCache = new();
+
+    public virtual async Task<string?> GetSummaryAsync(Type type)
     {
         var memberName = GetMemberNameForType(type);
-        return GetDocumentationElement(type.Assembly, memberName, "summary");
+        return await GetDocumentationElementAsync(type.Assembly, memberName, "summary");
     }
 
-    public string? GetRemarks(Type type)
+    public virtual async Task<string?> GetRemarksAsync(Type type)
     {
         var memberName = GetMemberNameForType(type);
-        return GetDocumentationElement(type.Assembly, memberName, "remarks");
+        return await GetDocumentationElementAsync(type.Assembly, memberName, "remarks");
     }
 
-    public string? GetSummary(MethodInfo method)
+    public virtual async Task<string?> GetSummaryAsync(MethodInfo method)
     {
         var memberName = GetMemberNameForMethod(method);
-        return GetDocumentationElement(method.DeclaringType!.Assembly, memberName, "summary");
+        return await GetDocumentationElementAsync(method.DeclaringType!.Assembly, memberName, "summary");
     }
 
-    public string? GetRemarks(MethodInfo method)
+    public virtual async Task<string?> GetRemarksAsync(MethodInfo method)
     {
         var memberName = GetMemberNameForMethod(method);
-        return GetDocumentationElement(method.DeclaringType!.Assembly, memberName, "remarks");
+        return await GetDocumentationElementAsync(method.DeclaringType!.Assembly, memberName, "remarks");
     }
 
-    public string? GetReturns(MethodInfo method)
+    public virtual async Task<string?> GetReturnsAsync(MethodInfo method)
     {
         var memberName = GetMemberNameForMethod(method);
-        return GetDocumentationElement(method.DeclaringType!.Assembly, memberName, "returns");
+        return await GetDocumentationElementAsync(method.DeclaringType!.Assembly, memberName, "returns");
     }
 
-    public string? GetParameterSummary(MethodInfo method, string parameterName)
+    public virtual async Task<string?> GetParameterSummaryAsync(MethodInfo method, string parameterName)
     {
         var memberName = GetMemberNameForMethod(method);
-        var doc = LoadXmlDocumentation(method.DeclaringType!.Assembly);
+        var doc = await LoadXmlDocumentationAsync(method.DeclaringType!.Assembly);
         if (doc == null)
         {
             return null;
@@ -58,15 +62,15 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
         return CleanXmlText(paramNode);
     }
 
-    public string? GetSummary(PropertyInfo property)
+    public virtual async Task<string?> GetSummaryAsync(PropertyInfo property)
     {
         var memberName = GetMemberNameForProperty(property);
-        return GetDocumentationElement(property.DeclaringType!.Assembly, memberName, "summary");
+        return await GetDocumentationElementAsync(property.DeclaringType!.Assembly, memberName, "summary");
     }
 
-    private string? GetDocumentationElement(Assembly assembly, string memberName, string elementName)
+    protected virtual async Task<string?> GetDocumentationElementAsync(Assembly assembly, string memberName, string elementName)
     {
-        var doc = LoadXmlDocumentation(assembly);
+        var doc = await LoadXmlDocumentationAsync(assembly);
         if (doc == null)
         {
             return null;
@@ -77,30 +81,33 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
         return CleanXmlText(element);
     }
 
-    private XDocument? LoadXmlDocumentation(Assembly assembly)
+    protected virtual Task<XDocument?> LoadXmlDocumentationAsync(Assembly assembly)
     {
-        return _xmlDocCache.GetOrAdd(assembly, static asm =>
+        return _xmlDocCache.GetOrAdd(assembly, LoadXmlDocumentationFromDiskAsync);
+    }
+
+    protected virtual async Task<XDocument?> LoadXmlDocumentationFromDiskAsync(Assembly assembly)
+    {
+        if (string.IsNullOrEmpty(assembly.Location))
         {
-            if (string.IsNullOrEmpty(asm.Location))
-            {
-                return null;
-            }
+            return null;
+        }
 
-            var xmlFilePath = Path.ChangeExtension(asm.Location, ".xml");
-            if (!File.Exists(xmlFilePath))
-            {
-                return null;
-            }
+        var xmlFilePath = Path.ChangeExtension(assembly.Location, ".xml");
+        if (!File.Exists(xmlFilePath))
+        {
+            return null;
+        }
 
-            try
-            {
-                return XDocument.Load(xmlFilePath);
-            }
-            catch
-            {
-                return null;
-            }
-        });
+        try
+        {
+            await using var stream = new FileStream(xmlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true);
+            return await XDocument.LoadAsync(stream, LoadOptions.None, CancellationToken.None);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private static string? CleanXmlText(XElement? element)
@@ -116,7 +123,7 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
             return null;
         }
 
-        return Regex.Replace(text.Trim(), @"\s+", " ");
+        return WhitespaceRegex.Replace(text.Trim(), " ");
     }
 
     private static string GetMemberNameForType(Type type)

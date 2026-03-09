@@ -1,21 +1,22 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Volo.Abp.AspNetCore.Mvc.ApiExploring;
 
 public interface IXmlDocumentationProvider
 {
-    string? GetSummary(Type type);
+    Task<string?> GetSummaryAsync(Type type);
 
-    string? GetRemarks(Type type);
+    Task<string?> GetRemarksAsync(Type type);
 
-    string? GetSummary(MethodInfo method);
+    Task<string?> GetSummaryAsync(MethodInfo method);
 
-    string? GetRemarks(MethodInfo method);
+    Task<string?> GetRemarksAsync(MethodInfo method);
 
-    string? GetReturns(MethodInfo method);
+    Task<string?> GetReturnsAsync(MethodInfo method);
 
-    string? GetParameterSummary(MethodInfo method, string parameterName);
+    Task<string?> GetParameterSummaryAsync(MethodInfo method, string parameterName);
 
-    string? GetSummary(PropertyInfo property);
+    Task<string?> GetSummaryAsync(PropertyInfo property);
 }

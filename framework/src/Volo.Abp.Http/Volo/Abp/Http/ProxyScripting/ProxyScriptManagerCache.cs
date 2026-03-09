@@ -19,6 +19,11 @@ public class ProxyScriptManagerCache : IProxyScriptManagerCache, ISingletonDepen
         return _cache.GetOrAdd(key, factory);
     }
 
+    public bool TryGet(string key, out string? value)
+    {
+        return _cache.TryGetValue(key, out value);
+    }
+
     public void Set(string key, string value)
     {
         _cache[key] = value;

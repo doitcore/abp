@@ -51,11 +51,6 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
         Logger = NullLogger<AspNetCoreApiDescriptionModelProvider>.Instance;
     }
 
-    public ApplicationApiDescriptionModel CreateApiModel(ApplicationApiDescriptionModelRequestDto input)
-    {
-        return AsyncHelper.RunSync(() => CreateApiModelAsync(input));
-    }
-
     public virtual async Task<ApplicationApiDescriptionModel> CreateApiModelAsync(ApplicationApiDescriptionModelRequestDto input)
     {
         //TODO: Can cache the model?

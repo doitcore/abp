@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dashboard-chart-descriptor.schema.json",
+  "title": "DashboardChartDescriptor",
+  "description": "Configuration for a chart visualization",
+  "type": "object",
+  "properties": {
+    "chartType": {
+      "$ref": "dashboard-chart-type.schema.json"
+    },
+    "xAxis": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "type": "string",
+          "description": "Property name to group by on the X-axis"
+        },
+        "useForeignDisplay": {
+          "type": "boolean",
+          "description": "Show the FK display property instead of the raw ID",
+          "default": false
+        },
+        "dateGrouping": {
+          "type": "string",
+          "enum": ["day", "week", "month", "quarter", "year"],
+          "description": "Grouping interval for DateTime properties"
+        }
+      },
+      "required": ["property"],
+      "additionalProperties": false
+    },
+    "yAxis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "aggregation": {
+            "$ref": "dashboard-aggregation-type.schema.json"
+          },
+          "property": {
+            "type": "string",
+            "description": "Property name for sum/average/min/max"
+          },
+          "label": {
+            "type": "string",
+            "description": "Display label for this series"
+          },
+          "color": {
+            "type": "string"
+          }
+        },
+        "required": ["aggregation"],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "size": {
+      "type": "string",
+      "enum": ["small", "medium", "large"],
+      "default": "medium"
+    },
+    "barOrientation": {
+      "type": "string",
+      "enum": ["vertical", "horizontal"],
+      "default": "vertical"
+    },
+    "showRecordCount": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["chartType", "xAxis", "yAxis"],
+  "additionalProperties": false
+}

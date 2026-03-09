@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dashboard-group-descriptor.schema.json",
+  "title": "DashboardGroupDescriptor",
+  "description": "A dashboard group bound to a single entity, containing visualizations",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique identifier for this group within the dashboard",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "description": "Display title for the group section"
+    },
+    "entityName": {
+      "type": "string",
+      "description": "Full entity name this group sources data from",
+      "minLength": 1
+    },
+    "filter": {
+      "$ref": "dashboard-filter-descriptor.schema.json"
+    },
+    "userFilters": {
+      "type": "array",
+      "description": "Properties exposed as dynamic filters for end users",
+      "items": {
+        "$ref": "dashboard-user-filter-descriptor.schema.json"
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "properties": {
+        "useBackground": {
+          "type": "boolean",
+          "description": "Show light background color for this group",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "visualizations": {
+      "type": "array",
+      "description": "Visualizations within this group",
+      "items": {
+        "$ref": "dashboard-visualization-descriptor.schema.json"
+      },
+      "minItems": 1
+    }
+  },
+  "required": ["name", "entityName", "visualizations"],
+  "additionalProperties": false
+}

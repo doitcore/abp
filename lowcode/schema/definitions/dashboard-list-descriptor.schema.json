@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dashboard-list-descriptor.schema.json",
+  "title": "DashboardListDescriptor",
+  "description": "Configuration for a list/table visualization",
+  "type": "object",
+  "properties": {
+    "fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Property names to display as columns"
+    },
+    "sortBy": {
+      "type": "object",
+      "properties": {
+        "property": { "type": "string" },
+        "direction": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "asc"
+        }
+      },
+      "required": ["property"],
+      "additionalProperties": false
+    },
+    "maxRows": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 10
+    },
+    "rowHeight": {
+      "type": "string",
+      "enum": ["compact", "normal", "tall"],
+      "default": "compact"
+    },
+    "colorBy": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["property", "conditions"]
+        },
+        "property": {
+          "type": "string",
+          "description": "Enum property name for automatic coloring"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["fields"],
+  "additionalProperties": false
+}

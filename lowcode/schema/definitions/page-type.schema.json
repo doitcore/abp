@@ -4,5 +4,5 @@
   "title": "PageType",
   "description": "The type of page to render",
   "type": "string",
-  "enum": ["dataGrid", "kanban", "calendar", "form"]
+  "enum": ["dataGrid", "kanban", "calendar", "form", "dashboard"]
 }

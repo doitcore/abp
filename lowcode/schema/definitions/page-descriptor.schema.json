@@ -61,6 +61,9 @@
       "enum": ["modal", "page"],
       "description": "How to display the edit form",
       "default": "modal"
+    },
+    "dashboard": {
+      "$ref": "dashboard-descriptor.schema.json"
     }
   },
   "required": ["name", "title", "type", "entityName"],
@@ -79,6 +82,14 @@
       },
       "then": {
         "required": ["formName"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "dashboard" } }
+      },
+      "then": {
+        "required": ["dashboard"]
       }
     }
   ],

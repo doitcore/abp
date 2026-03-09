@@ -1,11 +1,19 @@
 ---
 name: abp-ddd
-description: ABP DDD patterns - Entities, Aggregate Roots, Repositories, Domain Services, Domain Events, Specifications. Use when designing domain layer, creating entities, repositories, or domain services in ABP projects.
+description: ABP DDD patterns - Entities, Aggregate Roots, value objects, Repositories, Domain Services, Domain Events, Specifications. Use when designing domain layer, creating entities, repositories, or domain services in ABP projects.
 ---
 
 # ABP DDD Patterns
 
 > **Docs**: https://abp.io/docs/latest/framework/architecture/domain-driven-design
+
+## Anti-Patterns to Avoid
+
+- **Anemic entities**: public setters with no behavior — use private setters + methods that enforce invariants
+- **Repository for child entities**: only aggregate roots get repositories — access child entities through their root
+- **Generating GUID in entity constructor**: use `IGuidGenerator` from outside and pass `id` parameter
+- **Navigation properties to other aggregates**: reference by `Id` only, never add full navigation properties across aggregates
+- **Domain service depending on current user**: accept values from the application layer instead
 
 ## Rich Domain Model vs Anemic Domain Model
 

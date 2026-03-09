@@ -1,12 +1,20 @@
 ---
 name: abp-core
-description: Core ABP Framework conventions - module system, dependency injection, base classes, async patterns, time handling, business exceptions, localization. Use when working on any ABP project or when the user asks about ABP fundamentals.
+description: Core ABP Framework conventions - module system, DI registration, base classes (ApplicationService, DomainService), IClock, BusinessException, localization, async patterns. Use when working on any ABP project, asking about ABP fundamentals, or unsure which skill applies.
 ---
 
 # ABP Core Conventions
 
 > **Documentation**: https://abp.io/docs/latest
 > **API Reference**: https://abp.io/docs/api/
+
+## Key Rules
+
+- Use `IClock` / `Clock.Now` instead of `DateTime.Now` / `DateTime.UtcNow`
+- Use `ITransientDependency` / `ISingletonDependency` instead of `AddScoped/AddTransient/AddSingleton`
+- Use `IRepository<T>` instead of injecting `DbContext` directly
+- Check base class properties (`Clock`, `CurrentUser`, `GuidGenerator`, `L`) before injecting services
+- Use `BusinessException` with namespaced error codes for domain rule violations
 
 ## Module System
 Every ABP application/module has a module class that configures services:

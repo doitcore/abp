@@ -1,6 +1,6 @@
 ---
 name: abp-mvc
-description: ABP MVC and Razor Pages UI patterns - page models, tag helpers, JavaScript API, DataTables integration, modal pages, bundle/minification. Use when working on MVC or Razor Pages UI in ABP projects.
+description: ABP MVC and Razor Pages UI - AbpPageModel, abp tag helpers (abp-card, abp-dynamic-form, abp-modal), JavaScript abp.ajax/abp.auth/abp.notify, DataTables integration, bundle/minification. Use when working on MVC or Razor Pages UI in ABP projects.
 ---
 
 # ABP MVC / Razor Pages UI

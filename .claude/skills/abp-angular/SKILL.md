@@ -1,6 +1,6 @@
 ---
 name: abp-angular
-description: ABP Angular UI patterns - project structure, service proxies, list components, localization, authorization, forms, modals, toast notifications. Use when working on Angular UI in ABP projects.
+description: ABP Angular UI patterns - generate-proxy, ListService, PermissionGuard, abpLocalization pipe, ConfirmationService, ToasterService, ConfigStateService. Use when building or reviewing Angular UI components, routing, or service integration in ABP Angular projects.
 ---
 
 # ABP Angular UI

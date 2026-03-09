@@ -1,11 +1,19 @@
 ---
 name: abp-application-layer
-description: ABP Application Services, DTOs, validation, error handling, object mapping patterns. Use when creating or reviewing application services, DTOs, or working in the Application or Application.Contracts projects.
+description: ABP Application Services, DTOs, CRUD service, object mapping (Mapperly/AutoMapper), validation, error handling. Use when creating or reviewing application services, DTOs, or working in the Application or Application.Contracts projects.
 ---
 
 # ABP Application Layer Patterns
 
 > **Docs**: https://abp.io/docs/latest/framework/architecture/domain-driven-design/application-services
+
+## Anti-Patterns to Avoid
+
+- **Entity name in method**: use `GetAsync` not `GetBookAsync`
+- **ID inside UpdateDto**: pass `id` as a separate parameter, not inside the DTO
+- **Calling other app services in the same module**: use domain services or repositories directly
+- **Using `IFormFile`/`Stream` in app service**: accept `byte[]` from controllers instead
+- **Business logic in app service**: put it in domain entities or domain services
 
 ## Application Service Structure
 

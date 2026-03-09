@@ -1,6 +1,6 @@
 ---
 name: abp-app-nolayers
-description: ABP Single-Layer (No-Layers) application template patterns - simplified structure, file organization, simplified entities. Use when working with the single-layer web application template.
+description: ABP Single-Layer (No-Layers / nolayers) application template - single project structure, feature-based file organization, no separate Domain/Application.Contracts projects. Use when working with the single-layer web application template or when the project has no layered separation.
 ---
 
 # ABP Single-Layer Application Template

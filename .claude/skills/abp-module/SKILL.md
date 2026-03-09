@@ -1,6 +1,6 @@
 ---
 name: abp-module
-description: ABP Module solution template patterns - reusable module structure, database independence (EF Core + MongoDB), virtual methods for extensibility, module options, entity extension, localization. Use when building reusable ABP modules.
+description: ABP reusable Module solution template - EF Core + MongoDB dual support, virtual methods for extensibility, DbTablePrefix, module options pattern, entity extension, separate connection string. Use when building or reviewing reusable ABP modules that will be distributed or consumed by other solutions.
 ---
 
 # ABP Module Solution Template

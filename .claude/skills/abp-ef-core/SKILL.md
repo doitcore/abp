@@ -1,11 +1,20 @@
 ---
 name: abp-ef-core
-description: ABP Entity Framework Core patterns - DbContext configuration, entity configuration, repository implementation, migrations, data seeding. Use when working in EntityFrameworkCore projects or with EF Core repositories.
+description: ABP Entity Framework Core - DbContext, entity configuration, EfCoreRepository implementation, migrations (dotnet ef migrations add), data seeding. Use when working in EntityFrameworkCore projects, adding migrations, or implementing EF Core repositories.
 ---
 
 # ABP Entity Framework Core
 
 > **Docs**: https://abp.io/docs/latest/framework/data/entity-framework-core
+
+## Never Do
+
+| Don't | Do Instead |
+|-------|-----------|
+| Skip `b.ConfigureByConvention()` | Always call it first in entity config |
+| `AddDefaultRepositories(includeAllEntities: true)` | Use `AddDefaultRepositories()` only for aggregate roots |
+| Inject `DbContext` in application/domain services | Use `IRepository<T>` or custom repository interface |
+| Use `DbContext` directly outside the EF Core project | Access via `GetDbContextAsync()` inside repository only |
 
 ## DbContext Configuration
 

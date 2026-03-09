@@ -1,6 +1,6 @@
 ---
 name: abp-microservice
-description: ABP Microservice solution template patterns - solution structure, inter-service communication via Integration Services, distributed events, entity cache, pre-configured infrastructure. Use when working with the microservice solution template.
+description: ABP Microservice solution template - service structure, Integration Services ([IntegrationService]), inter-service HTTP proxies, distributed events with Outbox/Inbox, Entity Cache, RabbitMQ/Redis/YARP setup. Use when working with the ABP microservice solution template or inter-service communication patterns.
 ---
 
 # ABP Microservice Solution Template

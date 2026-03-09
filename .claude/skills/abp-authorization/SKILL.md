@@ -1,6 +1,6 @@
 ---
 name: abp-authorization
-description: ABP permission system and authorization patterns - defining permissions, using Authorize attribute, programmatic checks, current user access, multi-tenancy permissions. Use when working with permissions, authorization, or security in ABP projects.
+description: ABP permission system - PermissionDefinitionProvider, [Authorize] attribute, CheckPolicyAsync, IsGrantedAsync, ICurrentUser, IPermissionManager, multi-tenancy side. Use when working with permissions, authorization, role-based access, or security in ABP projects.
 ---
 
 # ABP Authorization

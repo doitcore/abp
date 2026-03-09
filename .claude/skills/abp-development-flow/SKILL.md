@@ -100,17 +100,7 @@ public class BookRepository : EfCoreRepository<MyDbContext, Book, Guid>, IBookRe
 ```
 
 ### 5. Run Migration
-```bash
-cd src/MyProject.EntityFrameworkCore
-
-# Add migration
-dotnet ef migrations add Added_Book
-
-# Apply migration (choose one):
-dotnet run --project ../MyProject.DbMigrator   # Recommended - also seeds data
-# OR
-dotnet ef database update  # EF Core command only
-```
+See `abp-ef-core` skill for migration commands. Recommended: use `DbMigrator` project to apply migrations and seed data.
 
 ### 6. Application.Contracts
 Create DTOs and service interface:
@@ -252,25 +242,6 @@ public class BookAppService_Tests : MyProjectApplicationTestBase
         result.Name.ShouldBe("Test Book");
     }
 }
-```
-
-## Quick Reference Commands
-
-### Build Solution
-```bash
-dotnet build
-```
-
-### Run Migrations
-```bash
-cd src/MyProject.EntityFrameworkCore
-dotnet ef migrations add MigrationName
-dotnet run --project ../MyProject.DbMigrator  # Apply migration + seed data
-```
-
-### Generate Angular Proxies
-```bash
-abp generate-proxy -t ng
 ```
 
 ## Checklist for New Features

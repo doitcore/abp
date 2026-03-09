@@ -1,6 +1,6 @@
 ---
 name: abp-mongodb
-description: ABP MongoDB patterns - MongoDbContext configuration, entity configuration, repository implementation, indexing. Use when working in MongoDB projects or with MongoDB repositories in ABP.
+description: ABP MongoDB patterns - AbpMongoDbContext, IMongoCollection, MongoDbRepository, no migrations, embedded documents vs references, manual UpdateAsync required. Use when working in MongoDB projects or implementing MongoDB repositories in ABP.
 ---
 
 # ABP MongoDB

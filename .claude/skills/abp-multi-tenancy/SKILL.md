@@ -1,6 +1,6 @@
 ---
 name: abp-multi-tenancy
-description: ABP Multi-Tenancy patterns - tenant-aware entities, data isolation, switching tenant context, disabling multi-tenant filters, tenant resolution. Use when working with multi-tenant features, tenant-specific data, or tenant isolation.
+description: ABP Multi-Tenancy - IMultiTenant interface, CurrentTenant, CurrentTenant.Change(), DataFilter.Disable<IMultiTenant>(), tenant resolution order, database-per-tenant. Use when working with multi-tenant features, tenant-specific data isolation, or switching tenant context.
 ---
 
 # ABP Multi-Tenancy

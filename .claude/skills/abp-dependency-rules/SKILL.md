@@ -1,6 +1,6 @@
 ---
 name: abp-dependency-rules
-description: ABP layer dependency rules and project structure guardrails - correct dependency directions, repository pattern enforcement, multi-application scenarios. Use when reviewing project structure, adding new projects, or checking if dependencies are correct.
+description: ABP project layer dependency rules - which projects can reference which, domain/application/infrastructure separation, cross-layer violations to avoid. Use when reviewing project structure, adding new project references, or checking if a dependency direction is correct.
 ---
 
 # ABP Dependency Rules

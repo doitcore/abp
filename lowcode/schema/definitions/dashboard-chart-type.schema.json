@@ -1,8 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "dashboard-chart-type.schema.json",
-  "title": "DashboardChartType",
-  "description": "The type of chart",
-  "type": "string",
-  "enum": ["bar", "line", "pie", "donut"]
-}

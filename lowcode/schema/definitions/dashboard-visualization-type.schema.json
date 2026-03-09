@@ -1,8 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "dashboard-visualization-type.schema.json",
-  "title": "DashboardVisualizationType",
-  "description": "The type of dashboard visualization",
-  "type": "string",
-  "enum": ["number", "chart", "list"]
-}

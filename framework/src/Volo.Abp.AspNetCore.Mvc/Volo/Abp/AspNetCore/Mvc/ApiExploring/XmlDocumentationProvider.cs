@@ -16,6 +16,11 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
 {
     private static readonly Regex WhitespaceRegex = new(@"\s+", RegexOptions.Compiled);
 
+    // Matches <see cref="T:Foo.Bar"/>, <see langword="null"/>, <paramref name="x"/>, <typeparamref name="T"/>
+    private static readonly Regex XmlRefTagRegex = new(
+        @"<(see|paramref|typeparamref)\s+(cref|name|langword)=""([TMFPE]:)?(?<display>[^""]+)""\s*/?>",
+        RegexOptions.Compiled);
+
     private readonly ConcurrentDictionary<Assembly, Task<XDocument?>> _xmlDocCache = new();
 
     public virtual async Task<string?> GetSummaryAsync(Type type)
@@ -117,13 +122,39 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
             return null;
         }
 
-        var text = element.Value;
-        if (string.IsNullOrWhiteSpace(text))
+        // Convert to string first so we can process inline XML tags like <see cref="..."/>
+        var raw = element.ToString();
+
+        // Strip the outer element tags (e.g. <summary>...</summary>)
+        var start = raw.IndexOf('>') + 1;
+        var end = raw.LastIndexOf('<');
+        if (start >= end)
         {
             return null;
         }
 
-        return WhitespaceRegex.Replace(text.Trim(), " ");
+        var inner = raw[start..end];
+
+        // Replace <see cref="T:Foo.Bar"/> with the short name "Bar"
+        // Replace <see langword="null"/> with "null"
+        // Replace <paramref name="x"/> and <typeparamref name="T"/> with the name
+        inner = XmlRefTagRegex.Replace(inner, m =>
+        {
+            var display = m.Groups["display"].Value;
+            // For cref values like "T:Foo.Bar.Baz", return only "Baz"
+            var dot = display.LastIndexOf('.');
+            return dot >= 0 ? display[(dot + 1)..] : display;
+        });
+
+        // Strip any remaining XML tags (e.g. <c>, <code>, <para>, <b>, etc.)
+        inner = Regex.Replace(inner, @"<[^>]+>", string.Empty);
+
+        if (string.IsNullOrWhiteSpace(inner))
+        {
+            return null;
+        }
+
+        return WhitespaceRegex.Replace(inner.Trim(), " ");
     }
 
     private static string GetMemberNameForType(Type type)

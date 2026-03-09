@@ -23,6 +23,6 @@
 
 | Package | Old Version | New Version | PR |
 |---------|-------------|-------------|-----|
-| Microsoft.SemanticKernel | 1.67.1 | 1.71.0 | #24891 |
-| Microsoft.SemanticKernel.Abstractions | 1.67.1 | 1.71.0 | #24891 |
+| Microsoft.SemanticKernel | 1.67.1 | 1.71.0 | [#24891](https://github.com/abpframework/abp/pull/24891) |
+| Microsoft.SemanticKernel.Abstractions | 1.67.1 | 1.71.0 | [#24891](https://github.com/abpframework/abp/pull/24891) |
 

@@ -148,10 +148,21 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
 
         var implementFrom = controllerType.FullName;
 
-        var interfaceType = controllerType.GetInterfaces().FirstOrDefault(i => i.GetMethods().Any(x => x.ToString() == method.ToString()));
-        if (interfaceType != null)
+        foreach (var iface in controllerType.GetInterfaces())
         {
-            implementFrom = TypeHelper.GetFullNameHandlingNullableAndGenerics(interfaceType);
+            try
+            {
+                var map = controllerType.GetInterfaceMap(iface);
+                if (Array.IndexOf(map.TargetMethods, method) >= 0)
+                {
+                    implementFrom = TypeHelper.GetFullNameHandlingNullableAndGenerics(iface);
+                    break;
+                }
+            }
+            catch (ArgumentException)
+            {
+                // GetInterfaceMap is not supported for some generic interface edge cases
+            }
         }
 
         var actionModel = controllerModel.AddAction(
@@ -182,8 +193,9 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
                 await PopulateControllerDescriptionsAsync(controllerModel, controllerType);
             }
 
-            await PopulateActionDescriptionsAsync(actionModel, method);
-            await PopulateParameterDescriptionsAsync(actionModel, method);
+            var interfaceMethod = GetInterfaceMethod(method);
+            await PopulateActionDescriptionsAsync(actionModel, method, interfaceMethod);
+            await PopulateParameterDescriptionsAsync(actionModel, method, interfaceMethod);
         }
     }
 
@@ -447,7 +459,7 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
 
         if (controllerModel.Summary == null && controllerModel.Remarks == null)
         {
-            foreach (var interfaceType in GetDirectInterfaces(controllerType))
+            foreach (var interfaceType in GetDirectInterfaces(controllerType).Where(i => !_modelOptions.IgnoredInterfaces.Contains(i)))
             {
                 controllerModel.Summary = await _xmlDocProvider.GetSummaryAsync(interfaceType);
                 controllerModel.Remarks = await _xmlDocProvider.GetRemarksAsync(interfaceType);
@@ -462,38 +474,29 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
         controllerModel.DisplayName = controllerType.GetCustomAttribute<DisplayAttribute>()?.Name;
     }
 
-    protected virtual async Task PopulateActionDescriptionsAsync(ActionApiDescriptionModel actionModel, MethodInfo method)
+    protected virtual async Task PopulateActionDescriptionsAsync(ActionApiDescriptionModel actionModel, MethodInfo method, MethodInfo? interfaceMethod)
     {
         actionModel.Summary = await _xmlDocProvider.GetSummaryAsync(method);
         actionModel.Remarks = await _xmlDocProvider.GetRemarksAsync(method);
 
-        if (actionModel.Summary == null && actionModel.Remarks == null)
+        if (actionModel.Summary == null && actionModel.Remarks == null && interfaceMethod != null)
         {
-            var interfaceMethod = GetInterfaceMethod(method);
-            if (interfaceMethod != null)
-            {
-                actionModel.Summary = await _xmlDocProvider.GetSummaryAsync(interfaceMethod);
-                actionModel.Remarks = await _xmlDocProvider.GetRemarksAsync(interfaceMethod);
-            }
+            actionModel.Summary = await _xmlDocProvider.GetSummaryAsync(interfaceMethod);
+            actionModel.Remarks = await _xmlDocProvider.GetRemarksAsync(interfaceMethod);
         }
 
         actionModel.Description = method.GetCustomAttribute<DescriptionAttribute>()?.Description;
         actionModel.DisplayName = method.GetCustomAttribute<DisplayAttribute>()?.Name;
 
         actionModel.ReturnValue.Summary = await _xmlDocProvider.GetReturnsAsync(method);
-        if (actionModel.ReturnValue.Summary == null)
+        if (actionModel.ReturnValue.Summary == null && interfaceMethod != null)
         {
-            var interfaceMethod = GetInterfaceMethod(method);
-            if (interfaceMethod != null)
-            {
-                actionModel.ReturnValue.Summary = await _xmlDocProvider.GetReturnsAsync(interfaceMethod);
-            }
+            actionModel.ReturnValue.Summary = await _xmlDocProvider.GetReturnsAsync(interfaceMethod);
         }
     }
 
-    protected virtual async Task PopulateParameterDescriptionsAsync(ActionApiDescriptionModel actionModel, MethodInfo method)
+    protected virtual async Task PopulateParameterDescriptionsAsync(ActionApiDescriptionModel actionModel, MethodInfo method, MethodInfo? interfaceMethod)
     {
-        var interfaceMethod = GetInterfaceMethod(method);
         var methodParameters = method.GetParameters();
 
         foreach (var param in actionModel.ParametersOnMethod)
@@ -516,6 +519,13 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
 
         foreach (var param in actionModel.Parameters)
         {
+            // Skip expanded properties from complex types - their descriptions
+            // should come from type-level documentation (PopulateTypeDescriptionsAsync)
+            if (!string.IsNullOrEmpty(param.DescriptorName) && param.Name != param.NameOnMethod)
+            {
+                continue;
+            }
+
             param.Summary = await _xmlDocProvider.GetParameterSummaryAsync(method, param.NameOnMethod);
             if (param.Summary == null && interfaceMethod != null)
             {
@@ -531,7 +541,7 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
         }
     }
 
-    private static MethodInfo? GetInterfaceMethod(MethodInfo method)
+    private MethodInfo? GetInterfaceMethod(MethodInfo method)
     {
         var declaringType = method.DeclaringType;
         if (declaringType == null || declaringType.IsInterface)
@@ -539,13 +549,15 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
             return null;
         }
 
-        foreach (var interfaceType in GetDirectInterfaces(declaringType))
+        foreach (var interfaceType in GetDirectInterfaces(declaringType).Where(i => !_modelOptions.IgnoredInterfaces.Contains(i)))
         {
-            var interfaceMethod = interfaceType.GetMethods()
-                .FirstOrDefault(m => m.ToString() == method.ToString());
-            if (interfaceMethod != null)
+            var map = declaringType.GetInterfaceMap(interfaceType);
+            for (var i = 0; i < map.TargetMethods.Length; i++)
             {
-                return interfaceMethod;
+                if (map.TargetMethods[i] == method)
+                {
+                    return map.InterfaceMethods[i];
+                }
             }
         }
 
@@ -573,7 +585,7 @@ public class AspNetCoreApiDescriptionModelProvider : IApiDescriptionModelProvide
 
         foreach (var propModel in typeModel.Properties)
         {
-            var propInfo = type.GetProperty(propModel.Name, BindingFlags.Instance | BindingFlags.Public);
+            var propInfo = type.GetProperty(propModel.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
             if (propInfo == null)
             {
                 continue;

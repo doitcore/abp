@@ -434,6 +434,86 @@ public class AbpApiDefinitionController_Description_Tests : AspNetCoreMvcTestBas
         httpParam.Summary.ShouldContain("message key");
     }
 
+    [Fact]
+    public async Task IncludeDescriptions_Should_Not_Apply_Container_Param_Summary_To_Expanded_Properties()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition?includeDescriptions=true");
+
+        var controller = GetDocumentedController(model);
+        var action = GetAction(controller, "Create");
+
+        // Expanded properties from DocumentedDto should not have the container parameter's summary
+        var expandedParams = action.Parameters
+            .Where(p => !string.IsNullOrEmpty(p.DescriptorName) && p.Name != p.NameOnMethod)
+            .ToList();
+
+        foreach (var param in expandedParams)
+        {
+            param.Summary.ShouldBeNull();
+            param.Description.ShouldBeNull();
+            param.DisplayName.ShouldBeNull();
+        }
+    }
+
+    [Fact]
+    public async Task Action_ImplementFrom_Should_Point_To_Implemented_Interface()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition");
+
+        var controller = GetDocumentedController(model);
+        var action = GetAction(controller, "GetGreeting");
+
+        action.ImplementFrom.ShouldNotBeNullOrEmpty();
+        action.ImplementFrom.ShouldContain("IDocumentedAppService");
+        action.ImplementFrom.ShouldNotContain("DocumentedAppService.");
+    }
+
+    [Fact]
+    public async Task Action_ImplementFrom_Should_Point_To_Interface_When_Only_Documented_On_Interface()
+    {
+        var model = await GetResponseAsObjectAsync<ApplicationApiDescriptionModel>(
+            "/api/abp/api-definition");
+
+        var controller = GetInterfaceOnlyController(model);
+        var action = GetAction(controller, "GetMessage");
+
+        action.ImplementFrom.ShouldNotBeNullOrEmpty();
+        action.ImplementFrom.ShouldContain("IInterfaceOnlyDocumentedAppService");
+        action.ImplementFrom.ShouldNotContain("InterfaceOnlyDocumentedAppService.");
+    }
+
+    [Fact]
+    public void CreateSubModel_Should_Preserve_All_Controller_Properties()
+    {
+        var controller = ControllerApiDescriptionModel.Create(
+            "TestController",
+            "TestGroup",
+            isRemoteService: true,
+            isIntegrationService: false,
+            apiVersion: "1.0",
+            typeof(AbpApiDefinitionController_Description_Tests));
+
+        controller.Summary = "Test summary";
+        controller.Remarks = "Test remarks";
+        controller.Description = "Test description";
+        controller.DisplayName = "Test display name";
+
+        var subModel = controller.CreateSubModel(null);
+
+        subModel.ControllerName.ShouldBe("TestController");
+        subModel.ControllerGroupName.ShouldBe("TestGroup");
+        subModel.IsRemoteService.ShouldBeTrue();
+        subModel.IsIntegrationService.ShouldBeFalse();
+        subModel.ApiVersion.ShouldBe("1.0");
+        subModel.Summary.ShouldBe("Test summary");
+        subModel.Remarks.ShouldBe("Test remarks");
+        subModel.Description.ShouldBe("Test description");
+        subModel.DisplayName.ShouldBe("Test display name");
+        subModel.Type.ShouldBe(controller.Type);
+    }
+
     private static ControllerApiDescriptionModel GetDocumentedController(ApplicationApiDescriptionModel model)
     {
         return model.Modules.Values

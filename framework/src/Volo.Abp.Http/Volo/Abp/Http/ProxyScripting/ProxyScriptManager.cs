@@ -37,14 +37,12 @@ public class ProxyScriptManager : IProxyScriptManager, ITransientDependency
     {
         var cacheKey = CreateCacheKey(scriptingModel);
 
-        if (scriptingModel.UseCache && _cache.TryGet(cacheKey, out var cached))
+        if (scriptingModel.UseCache)
         {
-            return cached!;
+            return await _cache.GetOrAddAsync(cacheKey, () => CreateScriptAsync(scriptingModel));
         }
 
-        var script = await CreateScriptAsync(scriptingModel);
-        _cache.Set(cacheKey, script);
-        return script;
+        return await CreateScriptAsync(scriptingModel);
     }
 
     private async Task<string> CreateScriptAsync(ProxyScriptingModel scriptingModel)

@@ -8,20 +8,32 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Volo.Abp.DependencyInjection;
 
 namespace Volo.Abp.AspNetCore.Mvc.ApiExploring;
 
 public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDependency
 {
+    public ILogger<XmlDocumentationProvider> Logger { get; set; }
+
+    public XmlDocumentationProvider()
+    {
+        Logger = NullLogger<XmlDocumentationProvider>.Instance;
+    }
+
     private static readonly Regex WhitespaceRegex = new(@"\s+", RegexOptions.Compiled);
+
+    // Matches any remaining XML tags like <c>, <code>, <para>, <b>, etc.
+    private static readonly Regex XmlTagRegex = new(@"<[^>]+>", RegexOptions.Compiled);
 
     // Matches <see cref="T:Foo.Bar"/>, <see langword="null"/>, <paramref name="x"/>, <typeparamref name="T"/>
     private static readonly Regex XmlRefTagRegex = new(
         @"<(see|paramref|typeparamref)\s+(cref|name|langword)=""([TMFPE]:)?(?<display>[^""]+)""\s*/?>",
         RegexOptions.Compiled);
 
-    private readonly ConcurrentDictionary<Assembly, Task<XDocument?>> _xmlDocCache = new();
+    private readonly ConcurrentDictionary<Assembly, Lazy<Task<XDocument?>>> _xmlDocCache = new();
 
     public virtual async Task<string?> GetSummaryAsync(Type type)
     {
@@ -88,7 +100,12 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
 
     protected virtual Task<XDocument?> LoadXmlDocumentationAsync(Assembly assembly)
     {
-        return _xmlDocCache.GetOrAdd(assembly, LoadXmlDocumentationFromDiskAsync);
+        return _xmlDocCache.GetOrAdd(
+            assembly,
+            asm => new Lazy<Task<XDocument?>>(
+                () => LoadXmlDocumentationFromDiskAsync(asm),
+                LazyThreadSafetyMode.ExecutionAndPublication)
+        ).Value;
     }
 
     protected virtual async Task<XDocument?> LoadXmlDocumentationFromDiskAsync(Assembly assembly)
@@ -109,8 +126,9 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
             await using var stream = new FileStream(xmlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true);
             return await XDocument.LoadAsync(stream, LoadOptions.None, CancellationToken.None);
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.LogWarning(ex, "Failed to load XML documentation from {XmlFilePath}.", xmlFilePath);
             return null;
         }
     }
@@ -147,7 +165,7 @@ public class XmlDocumentationProvider : IXmlDocumentationProvider, ISingletonDep
         });
 
         // Strip any remaining XML tags (e.g. <c>, <code>, <para>, <b>, etc.)
-        inner = Regex.Replace(inner, @"<[^>]+>", string.Empty);
+        inner = XmlTagRegex.Replace(inner, string.Empty);
 
         if (string.IsNullOrWhiteSpace(inner))
         {

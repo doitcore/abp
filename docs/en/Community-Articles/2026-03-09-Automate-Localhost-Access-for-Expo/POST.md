@@ -52,109 +52,109 @@ To follow this guide, you will need:
 
 Now, let’s configure the automation that makes this workflow "set it and forget it."
 
-  #### Phase A: Backend Configuration (The OAuth Handshake)
+#### Phase A: Backend Configuration (The OAuth Handshake)
 
-  Modern mobile authentication often relies on **OAuth 2.0** or **OpenID Connect**. For the login flow to succeed, your backend must "trust" the  redirect URI sent by the mobile app. ABP applications are an example for such handshake.
+Modern mobile authentication often relies on **OAuth 2.0** or **OpenID Connect**. For the login flow to succeed, your backend must "trust" the redirect URI sent by the mobile app. ABP applications are an example for such handshake.
 
-  Even though we are using a Cloudflare URL for the API calls, the `auth-session` of Expo typically generates a `localhost` redirect for development.   You must update your backend configuration (e.g., `appsettings.json` in a .NET TemplateTwo setup) to allow this:
+Even though we are using a Cloudflare URL for the API calls, the `auth-session` of Expo typically generates a `localhost` redirect for development. You must update your backend configuration (e.g., `appsettings.json` in a .NET TemplateTwo setup) to allow this:
 
-  **File:** `src/YourProject.DbMigrator/appsettings.json`
+**File:** `src/YourProject.DbMigrator/appsettings.json`
 
-  ```json
-  {
-    "OpenIddict": {
-      "Applications": {
-        "Mobile_App": {
-          "ClientId": "Mobile_App",
-          "RootUrl": "exp://localhost:19000"
-        }
+```json
+{
+  "OpenIddict": {
+    "Applications": {
+      "Mobile_App": {
+        "ClientId": "Mobile_App",
+        "RootUrl": "exp://localhost:19000"
       }
     }
   }
-  ```
+}
+```
 
-  **Note:** By setting the `RootUrl` to `exp://localhost:19000`, you ensure that once the user authenticates via the tunnel's secure page, the mobile OS knows exactly how to hand the token back to your running Expo instance.
+**Note:** By setting the `RootUrl` to `exp://localhost:19000`, you ensure that once the user authenticates via the tunnel's secure page, the mobile OS knows exactly how to hand the token back to your running Expo instance.
 
-  #### Phase B: The "Magic" Script (Automating the Tunnel)
+#### Phase B: The "Magic" Script (Automating the Tunnel)
 
-  The primary headache with free Cloudflare Tunnels is that they generate a **random URL** every time you restart the service. Manually copying `https://shiny-new-url.trycloudflare.com` into your frontend code every morning is a productivity killer.
+The primary headache with free Cloudflare Tunnels is that they generate a **random URL** every time you restart the service. Manually copying `https://shiny-new-url.trycloudflare.com` into your frontend code every morning is a productivity killer.
 
-  We solve this with a **Node.js automation script** that launches the tunnel, "listens" to the terminal output to find the new URL, and automatically injects it into your project's configuration.
+We solve this with a **Node.js automation script** that launches the tunnel, "listens" to the terminal output to find the new URL, and automatically injects it into your project's configuration.
 
-  **File:** `react-native/scripts/tunnel.js`
+**File:** `react-native/scripts/tunnel.js`
 
-  ```js
-  const { spawn } = require('child_process');
-  const fs = require('fs');
-  const path = require('path');
+```js
+const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-  // Target files for automation
-  const tunnelConfigFile = path.join(__dirname, '..', 'tunnel-config.json');
-  const environmentFile = path.join(__dirname, '..', 'Environment.ts');
+// Target files for automation
+const tunnelConfigFile = path.join(__dirname, '..', 'tunnel-config.json');
+const environmentFile = path.join(__dirname, '..', 'Environment.ts');
 
-  // 1. Launch the Cloudflare Tunnel pointing to your local API port
-  const cloudflared = spawn('cloudflared', ['tunnel', '--url', 'http://localhost:44358']);
+// 1. Launch the Cloudflare Tunnel pointing to your local API port
+const cloudflared = spawn('cloudflared', ['tunnel', '--url', 'http://localhost:44358']);
 
-  let domainCaptured = false;
+let domainCaptured = false;
 
-  cloudflared.stdout.on('data', data => {
-    const output = data.toString();
-    console.log(output); // Keep logs visible for debugging
+cloudflared.stdout.on('data', data => {
+  const output = data.toString();
+  console.log(output); // Keep logs visible for debugging
 
-    if (!domainCaptured) {
-      // 2. Regex to catch the dynamic "trycloudflare" URL
-      const urlMatch = output.match(/https:\/\/([a-z0-9-]+\.trycloudflare\.com)/);
-      if (urlMatch) {
-        const domain = urlMatch[1];
-
-        // 3. Save to a JSON file for the app to read
-        fs.writeFileSync(tunnelConfigFile, JSON.stringify({ domain }, null, 2));
-
-        // 4. Update the fallback value in Environment.ts directly
-        let envContent = fs.readFileSync(environmentFile, 'utf8');
-        envContent = envContent.replace(
-          /let tunnelDomain = '[^']*'; \/\/ fallback/,
-          `let tunnelDomain = '${domain}'; // fallback`,
-        );
-        fs.writeFileSync(environmentFile, envContent, 'utf8');
-
-        console.log(`\n✅ Tunnel Synchronized: ${domain}`);
-        domainCaptured = true;
-      }
+  if (!domainCaptured) {
+    // 2. Regex to catch the dynamic "trycloudflare" URL
+    const urlMatch = output.match(/https:\/\/([a-z0-9-]+\.trycloudflare\.com)/);
+    if (urlMatch) {
+      const domain = urlMatch[1];
+      
+      // 3. Save to a JSON file for the app to read
+      fs.writeFileSync(tunnelConfigFile, JSON.stringify({ domain }, null, 2));
+      
+      // 4. Update the fallback value in Environment.ts directly
+      let envContent = fs.readFileSync(environmentFile, 'utf8');
+      envContent = envContent.replace(
+        /let tunnelDomain = '[^']*'; \/\/ fallback/,
+        `let tunnelDomain = '${domain}'; // fallback`,
+      );
+      fs.writeFileSync(environmentFile, envContent, 'utf8');
+      
+      console.log(`\n✅ Tunnel Synchronized: ${domain}`);
+      domainCaptured = true;
     }
-  });
-  ```
-
-  By capturing the trycloudflare.com domain programmatically, we treat the tunnel like a dynamic environment variable. This ensures that your mobile app, your backend OAuth settings, and your API client stay in perfect sync without a single keystroke from you.
-
-  #### Phase C: Environment Integration
-
-  To make this work within your React Native code, your `Environment.ts` file needs to be "smart" enough to look for the generated config file. We use a `try/catch` block so the app doesn't crash if the tunnel isn't running.
-
-  **File:** `react-native/Environment.ts`
-
-  ```ts
-  let tunnelDomain = 'your-default-fallback.com'; // fallback
-
-  try {
-    // Pull the latest domain from the script's output
-    const tunnelConfig = require('./tunnel-config.json');
-    if (tunnelConfig?.domain) {
-      tunnelDomain = tunnelConfig.domain;
-    }
-  } catch (e) {
-    console.warn('⚠️ No active tunnel config found. Using fallback.');
   }
+});
+```
 
-  const apiUrl = `https://${tunnelDomain}`;
+By capturing the trycloudflare.com domain programmatically, we treat the tunnel like a dynamic environment variable. This ensures that your mobile app, your backend OAuth settings, and your API client stay in perfect sync without a single keystroke from you.
 
-  export const getEnvVars = () => {
-    return {
-      apiUrl,
-      // Other environment variables...
-    };
+#### Phase C: Environment Integration
+
+To make this work within your React Native code, your `Environment.ts` file needs to be "smart" enough to look for the generated config file. We use a `try/catch` block so the app doesn't crash if the tunnel isn't running.
+
+**File:** `react-native/Environment.ts`
+
+```tsx
+let tunnelDomain = 'your-default-fallback.com'; // fallback
+
+try {
+  // Pull the latest domain from the script's output
+  const tunnelConfig = require('./tunnel-config.json');
+  if (tunnelConfig?.domain) {
+    tunnelDomain = tunnelConfig.domain;
+  }
+} catch (e) {
+  console.warn('⚠️ No active tunnel config found. Using fallback.');
+}
+
+const apiUrl = `https://${tunnelDomain}`;
+
+export const getEnvVars = () => {
+  return {
+    apiUrl,
+    // Other environment variables...
   };
-  ```
+};
+```
 
 This setup creates a **"Single Source of Truth."** When you run the script, it updates `tunnel-config.json`, and your app instantly points to the correct secure endpoint.
 
@@ -179,25 +179,25 @@ To ensure your development build is ready for the Cloudflare tunnel, you'll typi
 
 To get your entire stack synchronized, follow this specific launch order. This ensures the tunnel is active and the configuration files are updated before the React Native app attempts to read them.
 
-  #### Step 1: Start the Backend
+#### Step 1: Start the Backend
 
-    Fire up your API (e.g., `.NET`, `Node`, `Go`). Ensure it is listening on the port defined in your `tunnel.js` (e.g., `44358`).
+Fire up your API (e.g., `.NET`, `Node`, `Go`). Ensure it is listening on the port defined in your `tunnel.js` (e.g., `44358`).
 
-  #### Step 2: Launch the Tunnel
+#### Step 2: Launch the Tunnel
 
-    In a new terminal, run your automation script.
+In a new terminal, run your automation script.
 
-    Wait for the message: `✅ Tunnel Synchronized`. This confirms `tunnel-config.json` has been updated with the new `trycloudflare.com` domain.
+Wait for the message: `✅ Tunnel Synchronized`. This confirms `tunnel-config.json` has been updated with the new `trycloudflare.com` domain.
 
-  #### Step 3: Start Expo
+#### Step 3: Start Expo
 
-    Finally, start your Expo development server:
+Finally, start your Expo development server:
 
-    ```bash
-    npx expo start
-    ```
+```bash
+npx expo start
+```
 
-    Open the app on your physical device by scanning the QR code. Your app is now communicating with your local machine over a secure, global HTTPS bridge.
+Open the app on your physical device by scanning the QR code. Your app is now communicating with your local machine over a secure, global HTTPS bridge.
 
 ### 6. Troubleshooting & Best Practices
 

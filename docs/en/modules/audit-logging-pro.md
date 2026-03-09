@@ -145,7 +145,7 @@ Configure<ExpiredAuditLogDeleterOptions>(options =>
     // The Hangfire Cron expression is different from the Quartz Cron expression, Please refer to the following links:
     // https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/crontriggers.html#cron-expressions
     // https://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html
-    options.ExcelFileCleanupOptions.CronExpression = "0 23 * * *"; // Quartz Cron expression is "0 23 * * * ?"
+    options.ExcelFileCleanupOptions.CronExpression = "0 23 * * *"; // Quartz Cron expression is "0 0 23 * * ?"
 });
 ```
 
@@ -166,7 +166,7 @@ Configure<AuditLogExcelFileOptions>(options =>
     // The Hangfire Cron expression is different from the Quartz Cron expression, Please refer to the following links:
     // https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/crontriggers.html#cron-expressions
     // https://docs.hangfire.io/en/latest/background-methods/performing-recurrent-tasks.html
-    options.ExcelFileCleanupOptions.CronExpression = "0 23 * * *"; // Quartz Cron expression is "0 23 * * * ?"
+    options.ExcelFileCleanupOptions.CronExpression = "0 23 * * *"; // Quartz Cron expression is "0 0 23 * * ?"
 });
 ```
 

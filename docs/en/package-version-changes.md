@@ -1,11 +1,14 @@
-```json
-//[doc-seo]
-{
-    "Description": "Explore the latest version changes for ABP Framework packages, including updates and improvements in dependencies for seamless development."
-}
-```
-
 # Package Version Changes
+
+## 10.3.0-preview
+
+| Package | Old Version | New Version | PR |
+|---------|-------------|-------------|-----|
+| OpenIddict.Abstractions | 7.2.0 | 7.3.0 | #25053 |
+| OpenIddict.Core | 7.2.0 | 7.3.0 | #25053 |
+| OpenIddict.Server.AspNetCore | 7.2.0 | 7.3.0 | #25053 |
+| OpenIddict.Validation.AspNetCore | 7.2.0 | 7.3.0 | #25053 |
+| OpenIddict.Validation.ServerIntegration | 7.2.0 | 7.3.0 | #25053 |
 
 ## 10.2.0-rc.1
 

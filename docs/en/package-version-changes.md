@@ -1,13 +1,6 @@
-```json
-//[doc-seo]
-{
-    "Description": "Explore the latest version changes for ABP Framework packages, including updates and improvements in dependencies for seamless development."
-}
-```
-
 # Package Version Changes
 
-## 10.3.0-rc.1
+## 10.3.0-preview
 
 | Package | Old Version | New Version | PR |
 |---------|-------------|-------------|-----|
@@ -22,6 +15,11 @@
 | Package | Old Version | New Version | PR |
 |---------|-------------|-------------|-----|
 | MongoDB.Driver | 3.6.0 | 3.7.0 | #25003 |
+
+## 10.2.0-preview
+
+| Package | Old Version | New Version | PR |
+|---------|-------------|-------------|-----|
 | Blazorise | 1.8.8 | 2.0.0 | #24906 |
 | Blazorise.Components | 1.8.8 | 2.0.0 | #24906 |
 | Blazorise.DataGrid | 1.8.8 | 2.0.0 | #24906 |

@@ -75,7 +75,7 @@ public class SmsAppService : ApplicationService
 }
 ```
 
-`CheckAsync` increments the counter and throws `AbpOperationRateLimitingException` (HTTP 429) if the limit is exceeded. ABP's exception pipeline catches this automatically and returns a standard error response. Put `CheckAsync` first — the rate limit check is the gate, and everything else only runs if it passes.
+`CheckAsync` checks the current usage against the limit and throws `AbpOperationRateLimitingException` (HTTP 429) if the limit is already exceeded. If the check passes, it then increments the counter and proceeds. ABP's exception pipeline catches this automatically and returns a standard error response. Put `CheckAsync` first — the rate limit check is the gate, and everything else only runs if it passes.
 
 ## Choosing a Partition Type
 

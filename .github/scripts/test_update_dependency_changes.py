@@ -14,7 +14,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from update_dependency_changes import merge_changes, render_section, normalize_version
+from update_dependency_changes import merge_changes, render_section, normalize_version, extract_preamble
 
 
 def test_update_then_revert():
@@ -367,9 +367,48 @@ def test_document_format():
     print("-" * 60 + "\n")
 
 
+def test_extract_preamble_with_seo_block():
+    """Test: content with a JSON SEO block before the heading."""
+    print("Test 17: extract_preamble - preamble before heading")
+    content = (
+        "```json\n"
+        "//[doc-seo]\n"
+        "{\n"
+        '    "Description": "Some description."\n'
+        "}\n"
+        "```\n"
+        "\n"
+        "# Package Version Changes\n"
+        "\n"
+        "## 10.1.0-rc.1\n"
+    )
+    result = extract_preamble(content)
+    assert result == "```json\n//[doc-seo]\n{\n    \"Description\": \"Some description.\"\n}\n```\n\n", \
+        f"Unexpected preamble: {repr(result)}"
+    print("✓ Passed: preamble correctly extracted\n")
+
+
+def test_extract_preamble_no_preamble():
+    """Test: heading at the very start — preamble should be empty string."""
+    print("Test 18: extract_preamble - no preamble before heading")
+    content = "# Package Version Changes\n\n## 10.1.0-rc.1\n"
+    result = extract_preamble(content)
+    assert result == "", f"Expected empty string, got: {repr(result)}"
+    print("✓ Passed: empty preamble returned when heading is at start\n")
+
+
+def test_extract_preamble_no_heading():
+    """Test: no matching heading — returns empty string."""
+    print("Test 19: extract_preamble - no matching heading")
+    content = "Some random content without the expected heading.\n"
+    result = extract_preamble(content)
+    assert result == "", f"Expected empty string, got: {repr(result)}"
+    print("✓ Passed: empty string returned when heading is absent\n")
+
+
 def test_normalize_version_preview():
     """Test: preview suffix is normalized to rc.1."""
-    print("Test 17: normalize_version - preview -> rc.1")
+    print("Test 20: normalize_version - preview -> rc.1")
     assert normalize_version("10.1.0-preview") == "10.1.0-rc.1", \
         f"Expected '10.1.0-rc.1', got: {normalize_version('10.1.0-preview')}"
     assert normalize_version("10.2.0-preview") == "10.2.0-rc.1", \
@@ -379,7 +418,7 @@ def test_normalize_version_preview():
 
 def test_normalize_version_rc():
     """Test: rc.N versions are unchanged."""
-    print("Test 18: normalize_version - rc.N unchanged")
+    print("Test 21: normalize_version - rc.N unchanged")
     assert normalize_version("10.1.0-rc.1") == "10.1.0-rc.1", \
         f"Expected '10.1.0-rc.1', got: {normalize_version('10.1.0-rc.1')}"
     assert normalize_version("10.2.0-rc.1") == "10.2.0-rc.1", \
@@ -391,7 +430,7 @@ def test_normalize_version_rc():
 
 def test_normalize_version_stable():
     """Test: stable versions are unchanged."""
-    print("Test 19: normalize_version - stable unchanged")
+    print("Test 22: normalize_version - stable unchanged")
     assert normalize_version("10.1.0") == "10.1.0", \
         f"Expected '10.1.0', got: {normalize_version('10.1.0')}"
     assert normalize_version("10.2.0") == "10.2.0", \
@@ -421,12 +460,15 @@ def run_all_tests():
     test_add_add()
     test_complex_chain_ending_in_original()
     test_document_format()
+    test_extract_preamble_with_seo_block()
+    test_extract_preamble_no_preamble()
+    test_extract_preamble_no_heading()
     test_normalize_version_preview()
     test_normalize_version_rc()
     test_normalize_version_stable()
 
     print("=" * 70)
-    print("All 19 tests passed! ✓")
+    print("All 22 tests passed! ✓")
     print("=" * 70)
     print("\nTest coverage summary:")
     print("  ✓ Basic scenarios (update, add, remove)")
@@ -434,6 +476,7 @@ def run_all_tests():
     print("  ✓ Complex multi-step sequences")
     print("  ✓ Edge cases and duplicates")
     print("  ✓ Document format validation")
+    print("  ✓ Preamble extraction (SEO block, no preamble, no heading)")
     print("  ✓ Version normalization (preview -> rc.1)")
     print("=" * 70)
 

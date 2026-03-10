@@ -14,7 +14,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from update_dependency_changes import merge_changes, render_section
+from update_dependency_changes import merge_changes, render_section, normalize_version
 
 
 def test_update_then_revert():
@@ -367,12 +367,44 @@ def test_document_format():
     print("-" * 60 + "\n")
 
 
+def test_normalize_version_preview():
+    """Test: preview suffix is normalized to rc.1."""
+    print("Test 17: normalize_version - preview -> rc.1")
+    assert normalize_version("10.1.0-preview") == "10.1.0-rc.1", \
+        f"Expected '10.1.0-rc.1', got: {normalize_version('10.1.0-preview')}"
+    assert normalize_version("10.2.0-preview") == "10.2.0-rc.1", \
+        f"Expected '10.2.0-rc.1', got: {normalize_version('10.2.0-preview')}"
+    print("✓ Passed: preview correctly normalized to rc.1\n")
+
+
+def test_normalize_version_rc():
+    """Test: rc.N versions are unchanged."""
+    print("Test 18: normalize_version - rc.N unchanged")
+    assert normalize_version("10.1.0-rc.1") == "10.1.0-rc.1", \
+        f"Expected '10.1.0-rc.1', got: {normalize_version('10.1.0-rc.1')}"
+    assert normalize_version("10.2.0-rc.1") == "10.2.0-rc.1", \
+        f"Expected '10.2.0-rc.1', got: {normalize_version('10.2.0-rc.1')}"
+    assert normalize_version("10.2.0-rc.2") == "10.2.0-rc.2", \
+        f"Expected '10.2.0-rc.2', got: {normalize_version('10.2.0-rc.2')}"
+    print("✓ Passed: rc.N versions unchanged\n")
+
+
+def test_normalize_version_stable():
+    """Test: stable versions are unchanged."""
+    print("Test 19: normalize_version - stable unchanged")
+    assert normalize_version("10.1.0") == "10.1.0", \
+        f"Expected '10.1.0', got: {normalize_version('10.1.0')}"
+    assert normalize_version("10.2.0") == "10.2.0", \
+        f"Expected '10.2.0', got: {normalize_version('10.2.0')}"
+    print("✓ Passed: stable versions unchanged\n")
+
+
 def run_all_tests():
     """Run all test cases."""
     print("=" * 70)
     print("Testing update_dependency_changes.py")
     print("=" * 70 + "\n")
-    
+
     test_update_then_revert()
     test_add_then_remove_same_version()
     test_remove_then_add_same_version()
@@ -389,9 +421,12 @@ def run_all_tests():
     test_add_add()
     test_complex_chain_ending_in_original()
     test_document_format()
-    
+    test_normalize_version_preview()
+    test_normalize_version_rc()
+    test_normalize_version_stable()
+
     print("=" * 70)
-    print("All 16 tests passed! ✓")
+    print("All 19 tests passed! ✓")
     print("=" * 70)
     print("\nTest coverage summary:")
     print("  ✓ Basic scenarios (update, add, remove)")
@@ -399,6 +434,7 @@ def run_all_tests():
     print("  ✓ Complex multi-step sequences")
     print("  ✓ Edge cases and duplicates")
     print("  ✓ Document format validation")
+    print("  ✓ Version normalization (preview -> rc.1)")
     print("=" * 70)
 
 

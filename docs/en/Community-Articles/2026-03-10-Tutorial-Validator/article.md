@@ -1,4 +1,4 @@
-# How We Built TutorialValidator to Automatically Validate Documentation Tutorials
+# How We Built a Tutorial Validator to Automatically Validate Documentation
 
 Writing a tutorial is hard. Keeping it correct over time is even harder.
 

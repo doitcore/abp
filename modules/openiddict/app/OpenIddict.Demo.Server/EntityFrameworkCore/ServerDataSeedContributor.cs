@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Demo.Server.ExtensionGrants;
 using Volo.Abp.Data;
@@ -154,6 +155,32 @@ public class ServerDataSeedContributor : IDataSeedContributor, ITransientDepende
                     OpenIddictConstants.Permissions.Scopes.Address,
                     OpenIddictConstants.Permissions.Scopes.Phone,
 
+                    OpenIddictConstants.Permissions.Prefixes.Scope + "AbpAPI"
+                }
+            });
+        }
+
+        if (await _applicationManager.FindByClientIdAsync("AbpConsoleAppWithJwks") == null)
+        {
+            // Load the pre-generated JWKS (public key) from the jwks.json file.
+            // The corresponding private key (jwks-private.pem) is stored in the parent app/ directory
+            // and used by OpenIddict.Demo.Client.Console to sign JWT client assertions.
+            // Both files are generated with: abp generate-jwks
+            var jwksPath = Path.Combine(AppContext.BaseDirectory, "jwks.json");
+            var jwks = new JsonWebKeySet(await File.ReadAllTextAsync(jwksPath));
+
+            await _applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ApplicationType = OpenIddictConstants.ApplicationTypes.Web,
+                ClientId = "AbpConsoleAppWithJwks",
+                ClientType = OpenIddictConstants.ClientTypes.Confidential,
+                DisplayName = "Abp Console App (private_key_jwt)",
+                JsonWebKeySet = jwks,
+                Permissions =
+                {
+                    OpenIddictConstants.Permissions.Endpoints.Token,
+                    OpenIddictConstants.Permissions.Endpoints.Introspection,
+                    OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
                     OpenIddictConstants.Permissions.Prefixes.Scope + "AbpAPI"
                 }
             });

@@ -9,7 +9,17 @@
 
     <ItemGroup>
         <PackageReference Include="Duende.IdentityModel" />
+        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
         <ProjectReference Include="..\..\..\..\framework\src\Volo.Abp.AspNetCore.Mvc.Contracts\Volo.Abp.AspNetCore.Mvc.Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- jwks-private.pem is the private key for the AbpConsoleAppWithJwks client, used to sign JWT client assertions.
+             The corresponding public key (jwks.json) is registered on the server side (OpenIddict.Demo.Server).
+             Both files originate from the parent app/ directory. -->
+        <None Include="..\jwks-private.pem">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Demo.Server.ExtensionGrants;
@@ -14,6 +16,8 @@ public class ServerDataSeedContributor : IDataSeedContributor, ITransientDepende
     private readonly IOpenIddictApplicationManager _applicationManager;
     private readonly IOpenIddictScopeManager _scopeManager;
 
+    public ILogger<ServerDataSeedContributor> Logger { get; set; }
+
     public ServerDataSeedContributor(
         ICurrentTenant currentTenant,
         IOpenIddictApplicationManager applicationManager,
@@ -22,6 +26,7 @@ public class ServerDataSeedContributor : IDataSeedContributor, ITransientDepende
         _currentTenant = currentTenant;
         _applicationManager = applicationManager;
         _scopeManager = scopeManager;
+        Logger = NullLogger<ServerDataSeedContributor>.Instance;
     }
 
     public async Task SeedAsync(DataSeedContext context)
@@ -169,10 +174,11 @@ public class ServerDataSeedContributor : IDataSeedContributor, ITransientDepende
             var jwksPath = Path.Combine(AppContext.BaseDirectory, "jwks.json");
             if (!File.Exists(jwksPath))
             {
-                Console.WriteLine(
-                    $"[OpenIddict] WARNING: JWKS file not found at '{jwksPath}'. " +
+                Logger.LogWarning(
+                    "JWKS file not found at '{JwksPath}'. " +
                     "Skipping creation of the 'AbpConsoleAppWithJwks' client. " +
-                    "Run 'abp generate-jwks' in the app/ directory to generate the key pair.");
+                    "Run 'abp generate-jwks' in the app/ directory to generate the key pair.",
+                    jwksPath);
             }
             else
             {

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -21,7 +22,7 @@ public class GenerateJwksCommand : IConsoleCommand, ITransientDependency
         Logger = NullLogger<GenerateJwksCommand>.Instance;
     }
 
-    public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
+    public Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
         var outputDir = commandLineArgs.Options.GetOrNull("output", "o")
                         ?? Directory.GetCurrentDirectory();
@@ -33,13 +34,13 @@ public class GenerateJwksCommand : IConsoleCommand, ITransientDependency
         if (!int.TryParse(keySizeStr, out var keySize) || (keySize != 2048 && keySize != 4096))
         {
             Logger.LogError("Invalid key size '{0}'. Supported values: 2048, 4096.", keySizeStr);
-            return;
+            return Task.CompletedTask;
         }
 
         if (!IsValidAlgorithm(alg))
         {
             Logger.LogError("Invalid algorithm '{0}'. Supported values: RS256, RS384, RS512, PS256, PS384, PS512.", alg);
-            return;
+            return Task.CompletedTask;
         }
 
         if (!Directory.Exists(outputDir))
@@ -49,7 +50,8 @@ public class GenerateJwksCommand : IConsoleCommand, ITransientDependency
 
         Logger.LogInformation("Generating RSA {0}-bit key pair (algorithm: {1})...", keySize, alg);
 
-        using var rsa = RSA.Create(keySize);
+        using var rsa = RSA.Create();
+        rsa.KeySize = keySize;
 
         var jwksJson = BuildJwksJson(rsa, alg, kid);
         var privateKeyPem = ExportPrivateKeyPem(rsa);
@@ -57,8 +59,8 @@ public class GenerateJwksCommand : IConsoleCommand, ITransientDependency
         var jwksFilePath = Path.Combine(outputDir, $"{filePrefix}.json");
         var privateKeyFilePath = Path.Combine(outputDir, $"{filePrefix}-private.pem");
 
-        await File.WriteAllTextAsync(jwksFilePath, jwksJson, Encoding.UTF8);
-        await File.WriteAllTextAsync(privateKeyFilePath, privateKeyPem, Encoding.UTF8);
+        File.WriteAllText(jwksFilePath, jwksJson, Encoding.UTF8);
+        File.WriteAllText(privateKeyFilePath, privateKeyPem, Encoding.UTF8);
 
         Logger.LogInformation("");
         Logger.LogInformation("Generated files:");
@@ -72,7 +74,7 @@ public class GenerateJwksCommand : IConsoleCommand, ITransientDependency
         Logger.LogInformation("IMPORTANT: Keep the private key file safe. Never share it or commit it to source control.");
         Logger.LogInformation("           The JWKS file contains only the public key and is safe to share.");
 
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     private static string BuildJwksJson(RSA rsa, string alg, string kid)
@@ -82,27 +84,34 @@ public class GenerateJwksCommand : IConsoleCommand, ITransientDependency
         var n = Base64UrlEncode(parameters.Modulus);
         var e = Base64UrlEncode(parameters.Exponent);
 
-        var sb = new StringBuilder();
-        sb.AppendLine("{");
-        sb.AppendLine("  \"keys\": [");
-        sb.AppendLine("    {");
-        sb.AppendLine("      \"kty\": \"RSA\",");
-        sb.AppendLine("      \"use\": \"sig\",");
-        sb.AppendLine($"      \"kid\": \"{kid}\",");
-        sb.AppendLine($"      \"alg\": \"{alg}\",");
-        sb.AppendLine($"      \"n\": \"{n}\",");
-        sb.AppendLine($"      \"e\": \"{e}\"");
-        sb.AppendLine("    }");
-        sb.AppendLine("  ]");
-        sb.Append("}");
+        using var stream = new System.IO.MemoryStream();
+        using var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true });
 
-        return sb.ToString();
+        writer.WriteStartObject();
+        writer.WriteStartArray("keys");
+        writer.WriteStartObject();
+        writer.WriteString("kty", "RSA");
+        writer.WriteString("use", "sig");
+        writer.WriteString("kid", kid);
+        writer.WriteString("alg", alg);
+        writer.WriteString("n", n);
+        writer.WriteString("e", e);
+        writer.WriteEndObject();
+        writer.WriteEndArray();
+        writer.WriteEndObject();
+        writer.Flush();
+
+        return Encoding.UTF8.GetString(stream.ToArray());
     }
 
     private static string ExportPrivateKeyPem(RSA rsa)
     {
 #if NET5_0_OR_GREATER
         return rsa.ExportPkcs8PrivateKeyPem();
+#elif NETSTANDARD2_0
+        // RSA.ExportPkcs8PrivateKey() was introduced in .NET Standard 2.1.
+        // The ABP CLI always runs on .NET 5+, so this path is never reached at runtime.
+        throw new PlatformNotSupportedException("Private key export requires .NET Standard 2.1 or later.");
 #else
         var privateKeyBytes = rsa.ExportPkcs8PrivateKey();
         var base64 = Convert.ToBase64String(privateKeyBytes, Base64FormattingOptions.InsertLineBreaks);
@@ -120,7 +129,8 @@ public class GenerateJwksCommand : IConsoleCommand, ITransientDependency
 
     private static bool IsValidAlgorithm(string alg)
     {
-        return alg is "RS256" or "RS384" or "RS512" or "PS256" or "PS384" or "PS512";
+        return alg == "RS256" || alg == "RS384" || alg == "RS512" ||
+               alg == "PS256" || alg == "PS384" || alg == "PS512";
     }
 
     public string GetUsageInfo()

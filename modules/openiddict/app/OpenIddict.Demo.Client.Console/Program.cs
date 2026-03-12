@@ -215,8 +215,20 @@ if (!File.Exists(privateKeyPath))
 using var rsaKey = RSA.Create();
 rsaKey.ImportFromPem(await File.ReadAllTextAsync(privateKeyPath));
 
-// The kid must match the "kid" field in the JWKS registered on the server.
-var signingKey = new RsaSecurityKey(rsaKey) { KeyId = "6444499c0f3e43c98db72bb85db5edee" };
+// Read the kid dynamically from the JWKS file so it stays in sync with the server-registered JWKS.
+string? signingKid = null;
+var jwksForKidPath = Path.Combine(AppContext.BaseDirectory, "jwks.json");
+if (File.Exists(jwksForKidPath))
+{
+    using var jwksDoc = JsonDocument.Parse(await File.ReadAllTextAsync(jwksForKidPath));
+    if (jwksDoc.RootElement.TryGetProperty("keys", out var keysElem) &&
+        keysElem.GetArrayLength() > 0 &&
+        keysElem[0].TryGetProperty("kid", out var kidElem))
+    {
+        signingKid = kidElem.GetString();
+    }
+}
+var signingKey = new RsaSecurityKey(rsaKey) { KeyId = signingKid };
 var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256);
 
 var now = DateTime.UtcNow;

@@ -167,23 +167,33 @@ public class ServerDataSeedContributor : IDataSeedContributor, ITransientDepende
             // and used by OpenIddict.Demo.Client.Console to sign JWT client assertions.
             // Both files are generated with: abp generate-jwks
             var jwksPath = Path.Combine(AppContext.BaseDirectory, "jwks.json");
-            var jwks = new JsonWebKeySet(await File.ReadAllTextAsync(jwksPath));
-
-            await _applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
+            if (!File.Exists(jwksPath))
             {
-                ApplicationType = OpenIddictConstants.ApplicationTypes.Web,
-                ClientId = "AbpConsoleAppWithJwks",
-                ClientType = OpenIddictConstants.ClientTypes.Confidential,
-                DisplayName = "Abp Console App (private_key_jwt)",
-                JsonWebKeySet = jwks,
-                Permissions =
+                Console.WriteLine(
+                    $"[OpenIddict] WARNING: JWKS file not found at '{jwksPath}'. " +
+                    "Skipping creation of the 'AbpConsoleAppWithJwks' client. " +
+                    "Run 'abp generate-jwks' in the app/ directory to generate the key pair.");
+            }
+            else
+            {
+                var jwks = new JsonWebKeySet(await File.ReadAllTextAsync(jwksPath));
+
+                await _applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    OpenIddictConstants.Permissions.Endpoints.Token,
-                    OpenIddictConstants.Permissions.Endpoints.Introspection,
-                    OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
-                    OpenIddictConstants.Permissions.Prefixes.Scope + "AbpAPI"
-                }
-            });
+                    ApplicationType = OpenIddictConstants.ApplicationTypes.Web,
+                    ClientId = "AbpConsoleAppWithJwks",
+                    ClientType = OpenIddictConstants.ClientTypes.Confidential,
+                    DisplayName = "Abp Console App (private_key_jwt)",
+                    JsonWebKeySet = jwks,
+                    Permissions =
+                    {
+                        OpenIddictConstants.Permissions.Endpoints.Token,
+                        OpenIddictConstants.Permissions.Endpoints.Introspection,
+                        OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
+                        OpenIddictConstants.Permissions.Prefixes.Scope + "AbpAPI"
+                    }
+                });
+            }
         }
 
         if (await _applicationManager.FindByClientIdAsync("Swagger") == null)

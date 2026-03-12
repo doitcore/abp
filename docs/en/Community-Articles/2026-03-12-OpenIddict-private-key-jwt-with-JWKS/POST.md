@@ -1,4 +1,4 @@
-# Passwordless Client Authentication in ABP: Using JWKS with OpenIddict
+# Secure Client Authentication with private_key_jwt in ABP 10.3
 
 If you've built a confidential client with ABP's OpenIddict module, you know the drill: create an application in the management UI, set a `client_id`, generate a `client_secret`, and paste that secret into your client's `appsettings.json` or environment variables. It works. It's familiar. And for a lot of projects, it's perfectly fine.
 

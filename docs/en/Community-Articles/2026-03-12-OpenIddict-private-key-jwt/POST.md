@@ -15,7 +15,7 @@ The underlying problem is that a shared secret is just a password. It can be sto
 
 With asymmetric key authentication, the client generates a key pair. The public key is registered with the authorization server. The private key never leaves the client. Each time the client needs a token, it signs a short-lived JWT — called a _client assertion_ — with the private key. The server verifies the signature using the registered public key. There is no secret on the server side that could be used to forge a request, because the private key is never transmitted or stored remotely.
 
-This is exactly what the **`private_key_jwt`** client authentication method, defined in [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication), provides. ABP Pro's OpenIddict module now supports it end-to-end: you register a **JSON Web Key Set (JWKS)** containing your public key through the application management UI, and your client authenticates using the corresponding private key.
+This is exactly what the **`private_key_jwt`** client authentication method, defined in [OpenID Connect Core](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication), provides. ABP's OpenIddict module now supports it end-to-end: you register a **JSON Web Key Set (JWKS)** containing your public key through the application management UI (ABP Commercial), and your client authenticates using the corresponding private key. The key generation tooling (`abp generate-jwks`) ships as part of the open-source ABP CLI.
 
 > This feature is available starting from **ABP Framework 10.3**.
 
@@ -54,7 +54,7 @@ The command also prints the contents of `jwks.json` to the console so you can co
 
 ## Registering the JWKS in the Management UI
 
-Open **OpenIddict → Applications** in the ABP back-office and create or edit a confidential application (Client Type: `Confidential`).
+Open **OpenIddict → Applications** in the ABP admin panel and create or edit a confidential application (Client Type: `Confidential`).
 
 In the **Client authentication method** section, you'll find the new **JSON Web Key Set** field.
 
@@ -153,7 +153,7 @@ A few things worth paying attention to:
 - **`Jti`** must be unique per request to prevent replay attacks.
 - Keep **`Expires`** short (five minutes or less). A client assertion is a one-time proof of identity, not a long-lived credential.
 
-This example uses [Duende.IdentityModel](https://github.com/DuendeSoftware/IdentityModel) for the token request helpers and [Microsoft.IdentityModel.JsonWebTokens](https://www.nuget.org/packages/Microsoft.IdentityModel.JsonWebTokens) for JWT creation.
+This example uses [IdentityModel](https://github.com/IdentityModel/IdentityModel) for the token request helpers and [Microsoft.IdentityModel.JsonWebTokens](https://www.nuget.org/packages/Microsoft.IdentityModel.JsonWebTokens) for JWT creation.
 
 ## Key Rotation Without Downtime
 

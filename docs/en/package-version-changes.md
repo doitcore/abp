@@ -1,5 +1,14 @@
 # Package Version Changes
 
+## 10.3.0-rc.1
+
+| Package | Old Version | New Version | PR |
+|---------|-------------|-------------|-----|
+| Microsoft.IdentityModel.JsonWebTokens | 8.14.0 | 8.16.0 | #25068 |
+| Microsoft.IdentityModel.Protocols.OpenIdConnect | 8.14.0 | 8.16.0 | #25068 |
+| Microsoft.IdentityModel.Tokens | 8.14.0 | 8.16.0 | #25068 |
+| System.IdentityModel.Tokens.Jwt | 8.14.0 | 8.16.0 | #25068 |
+
 ## 10.3.0-preview
 
 | Package | Old Version | New Version | PR |

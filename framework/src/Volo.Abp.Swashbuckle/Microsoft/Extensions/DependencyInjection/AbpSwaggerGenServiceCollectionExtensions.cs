@@ -104,7 +104,7 @@ public static class AbpSwaggerGenServiceCollectionExtensions
 
                     options.AddSecurityRequirement(document => new OpenApiSecurityRequirement()
                     {
-                        [new OpenApiSecuritySchemeReference("oauth2", document)] = []
+                        [new OpenApiSecuritySchemeReference("oidc", document)] = []
                     });
 
                     setupAction?.Invoke(options);

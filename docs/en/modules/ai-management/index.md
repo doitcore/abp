@@ -432,6 +432,67 @@ The options class also provides helper methods:
 > [!NOTE]
 > Adding new file extensions also requires a matching content extractor to be registered for document processing. The built-in extractors support `.txt`, `.md`, and `.pdf` files.
 
+#### Hosting-Level Upload Limits
+
+`WorkspaceDataSourceOptions.MaxFileSize` controls the module-level validation, but your hosting stack may reject large uploads before the request reaches AI Management. If you increase `MaxFileSize`, make sure the underlying server and proxy limits are also updated.
+
+Typical limits to review:
+
+* **ASP.NET Core form/multipart limit** (`FormOptions.MultipartBodyLengthLimit`)
+* **Kestrel request body limit** (`KestrelServerLimits.MaxRequestBodySize`)
+* **IIS request filtering limit** (`maxAllowedContentLength`)
+* **Reverse proxy limits** such as **Nginx** (`client_max_body_size`)
+
+Example ASP.NET Core configuration:
+
+```csharp
+using Microsoft.AspNetCore.Http.Features;
+
+public override void ConfigureServices(ServiceConfigurationContext context)
+{
+    Configure<WorkspaceDataSourceOptions>(options =>
+    {
+        options.MaxFileSize = 50 * 1024 * 1024;
+    });
+
+    Configure<FormOptions>(options =>
+    {
+        options.MultipartBodyLengthLimit = 50 * 1024 * 1024;
+    });
+}
+```
+
+```csharp
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 50 * 1024 * 1024;
+});
+```
+
+Example IIS configuration in `web.config`:
+
+```xml
+<configuration>
+  <system.webServer>
+    <security>
+      <requestFiltering>
+        <requestLimits maxAllowedContentLength="52428800" />
+      </requestFiltering>
+    </security>
+  </system.webServer>
+</configuration>
+```
+
+Example Nginx configuration:
+
+```nginx
+server {
+    client_max_body_size 50M;
+}
+```
+
+If you are hosting behind another proxy or gateway (for example Apache, YARP, Azure App Gateway, Cloudflare, or Kubernetes ingress), ensure its request-body limit is also greater than or equal to the configured `MaxFileSize`.
+
 ## Permissions
 
 The AI Management module defines the following permissions:

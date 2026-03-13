@@ -114,6 +114,70 @@ The two counters are completely independent. If `alice` fails 5 times, her accou
 
 When multiple rules are present, the module uses a two-phase approach: it checks all rules first, and only increments counters if every rule passes. This prevents a rule from consuming quota on a request that would have been rejected by another rule anyway.
 
+## Customizing Policies from Reusable Modules
+
+ABP modules (including your own) can ship with built-in rate limiting policies. For example, an Account module might define a `"Account.SendPasswordResetCode"` policy with conservative defaults that make sense for most applications. When you need different rules in your specific application, you have two options.
+
+**Complete replacement with `AddPolicy`:** call `AddPolicy` with the same name and the second registration wins, replacing all rules from the module:
+
+```csharp
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    options.AddPolicy("Account.SendPasswordResetCode", policy =>
+    {
+        policy.AddRule(rule => rule
+            .WithFixedWindow(TimeSpan.FromMinutes(5), maxCount: 3)
+            .PartitionByEmail());
+    });
+});
+```
+
+**Partial modification with `ConfigurePolicy`:** when you only want to tweak part of a policy — change the error code, add a secondary rule, or tighten the window — use `ConfigurePolicy`. The builder starts pre-populated with the module's existing rules, so you only express what changes.
+
+For example, keep the module's default rules but assign your own localized error code:
+
+```csharp
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    options.ConfigurePolicy("Account.SendPasswordResetCode", policy =>
+    {
+        policy.WithErrorCode("MyApp:PasswordResetLimit");
+    });
+});
+```
+
+Or add a secondary IP-based rule on top of what the module already defined, without touching it:
+
+```csharp
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    options.ConfigurePolicy("Account.SendPasswordResetCode", policy =>
+    {
+        policy.AddRule(rule => rule
+            .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 20)
+            .PartitionByClientIp());
+    });
+});
+```
+
+If you want a clean slate, call `ClearRules()` first and then define entirely new rules — this gives you the same result as `AddPolicy` but makes the intent explicit:
+
+```csharp
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    options.ConfigurePolicy("Account.SendPasswordResetCode", policy =>
+    {
+        policy.ClearRules()
+              .WithFixedWindow(TimeSpan.FromMinutes(10), maxCount: 5)
+              .PartitionByEmail();
+    });
+});
+```
+
+`ConfigurePolicy` throws if the policy name doesn't exist — which catches typos at startup rather than silently doing nothing.
+
+The general rule: use `AddPolicy` for full replacements, `ConfigurePolicy` for surgical modifications.
+
 ## Beyond Just Checking
 
 Not every scenario calls for throwing an exception. `IOperationRateLimitingChecker` provides three additional methods for more nuanced control.

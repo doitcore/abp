@@ -115,6 +115,78 @@ options.AddPolicy("Login", policy =>
 
 > When multiple rules are present, the module uses a **two-phase check**: it first verifies all rules without incrementing counters, then increments only if all rules pass. This prevents wasted quota when one rule would block the request.
 
+### Overriding an Existing Policy
+
+If a reusable module (e.g., ABP's Account module) defines a policy with default rules, you have two ways to customize it in your own module's `ConfigureServices`.
+
+**Option 1 — Full replacement with `AddPolicy`:**
+
+Call `AddPolicy` with the same name. The last registration wins and completely replaces all rules:
+
+````csharp
+// In your application module — runs after the Account module
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    options.AddPolicy("Account.SendPasswordResetCode", policy =>
+    {
+        // Replaces all rules defined by the Account module for this policy
+        policy.AddRule(rule => rule
+            .WithFixedWindow(TimeSpan.FromMinutes(5), maxCount: 3)
+            .PartitionByEmail());
+    });
+});
+````
+
+> `AddPolicy` stores policies in a dictionary keyed by name, so calling it again with the same name fully replaces the previous policy and all its rules.
+
+**Option 2 — Partial modification with `ConfigurePolicy`:**
+
+Use `ConfigurePolicy` to modify an existing policy without replacing it entirely. The builder is pre-populated with the existing rules, so you only need to express what changes:
+
+````csharp
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    // Only override the error code, keeping the module's original rules
+    options.ConfigurePolicy("Account.SendPasswordResetCode", policy =>
+    {
+        policy.WithErrorCode("MyApp:SmsCodeLimit");
+    });
+});
+````
+
+You can also add a rule on top of the existing ones:
+
+````csharp
+options.ConfigurePolicy("Account.SendPasswordResetCode", policy =>
+{
+    // Keep the module's per-email rule and add a per-IP rule on top
+    policy.AddRule(rule => rule
+        .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 20)
+        .PartitionByClientIp());
+});
+````
+
+Or clear all inherited rules first and define entirely new ones using `ClearRules()`:
+
+````csharp
+options.ConfigurePolicy("Account.SendPasswordResetCode", policy =>
+{
+    policy.ClearRules()
+          .WithFixedWindow(TimeSpan.FromMinutes(5), maxCount: 3)
+          .PartitionByEmail();
+});
+````
+
+`ConfigurePolicy` returns `AbpOperationRateLimitingOptions`, so you can chain multiple calls:
+
+````csharp
+options
+    .ConfigurePolicy("Account.SendPasswordResetCode", p => p.WithErrorCode("MyApp:SmsLimit"))
+    .ConfigurePolicy("Account.Login", p => p.WithErrorCode("MyApp:LoginLimit"));
+````
+
+> `ConfigurePolicy` throws `AbpException` if the policy name is not found. Use `AddPolicy` first (in the module that owns the policy), then `ConfigurePolicy` in downstream modules to customize it.
+
 ### Custom Error Code
 
 By default, the exception uses the error code `Volo.Abp.OperationRateLimiting:010001`. You can override it per policy:

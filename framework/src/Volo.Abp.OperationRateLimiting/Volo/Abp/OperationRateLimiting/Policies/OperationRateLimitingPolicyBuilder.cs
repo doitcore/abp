@@ -62,6 +62,29 @@ public class OperationRateLimitingPolicyBuilder
         return this;
     }
 
+    /// <summary>
+    /// Clears all rules and custom rule types from this policy builder,
+    /// allowing a full replacement of the inherited rules.
+    /// </summary>
+    /// <returns>The current builder instance for method chaining.</returns>
+    public OperationRateLimitingPolicyBuilder ClearRules()
+    {
+        _rules.Clear();
+        _customRuleTypes.Clear();
+        return this;
+    }
+
+    internal static OperationRateLimitingPolicyBuilder FromPolicy(OperationRateLimitingPolicy policy)
+    {
+        Check.NotNull(policy, nameof(policy));
+
+        var builder = new OperationRateLimitingPolicyBuilder(policy.Name);
+        builder._errorCode = policy.ErrorCode;
+        builder._rules.AddRange(policy.Rules);
+        builder._customRuleTypes.AddRange(policy.CustomRuleTypes);
+        return builder;
+    }
+
     internal void AddRuleDefinition(OperationRateLimitingRuleDefinition definition)
     {
         _rules.Add(definition);

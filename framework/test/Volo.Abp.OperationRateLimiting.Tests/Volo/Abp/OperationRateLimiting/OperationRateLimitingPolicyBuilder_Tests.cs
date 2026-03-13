@@ -255,4 +255,182 @@ public class OperationRateLimitingPolicyBuilder_Tests
         policy.Rules[0].PartitionType.ShouldBe(OperationRateLimitingPartitionType.Custom);
         policy.Rules[1].PartitionType.ShouldBe(OperationRateLimitingPartitionType.Custom);
     }
+
+    [Fact]
+    public void AddPolicy_With_Same_Name_Should_Replace_Existing_Policy()
+    {
+        var options = new AbpOperationRateLimitingOptions();
+
+        options.AddPolicy("MyPolicy", policy =>
+        {
+            policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                  .PartitionByParameter();
+        });
+
+        // Second AddPolicy with the same name replaces the first one entirely
+        options.AddPolicy("MyPolicy", policy =>
+        {
+            policy.WithFixedWindow(TimeSpan.FromMinutes(10), maxCount: 2)
+                  .PartitionByCurrentUser();
+        });
+
+        options.Policies.Count.ShouldBe(1);
+
+        var policy = options.Policies["MyPolicy"];
+        policy.Rules.Count.ShouldBe(1);
+        policy.Rules[0].Duration.ShouldBe(TimeSpan.FromMinutes(10));
+        policy.Rules[0].MaxCount.ShouldBe(2);
+        policy.Rules[0].PartitionType.ShouldBe(OperationRateLimitingPartitionType.CurrentUser);
+    }
+
+    [Fact]
+    public void ConfigurePolicy_Should_Override_ErrorCode_While_Keeping_Rules()
+    {
+        var options = new AbpOperationRateLimitingOptions();
+
+        options.AddPolicy("BasePolicy", policy =>
+        {
+            policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                  .PartitionByParameter();
+        });
+
+        options.ConfigurePolicy("BasePolicy", policy =>
+        {
+            policy.WithErrorCode("App:Custom:Override");
+        });
+
+        var result = options.Policies["BasePolicy"];
+        result.ErrorCode.ShouldBe("App:Custom:Override");
+        result.Rules.Count.ShouldBe(1);
+        result.Rules[0].MaxCount.ShouldBe(5);
+        result.Rules[0].PartitionType.ShouldBe(OperationRateLimitingPartitionType.Parameter);
+    }
+
+    [Fact]
+    public void ConfigurePolicy_Should_Add_Additional_Rule_To_Existing_Policy()
+    {
+        var options = new AbpOperationRateLimitingOptions();
+
+        options.AddPolicy("BasePolicy", policy =>
+        {
+            policy.WithFixedWindow(TimeSpan.FromMinutes(5), maxCount: 3)
+                  .PartitionByParameter();
+        });
+
+        options.ConfigurePolicy("BasePolicy", policy =>
+        {
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 20)
+                .PartitionByClientIp());
+        });
+
+        var result = options.Policies["BasePolicy"];
+        result.Rules.Count.ShouldBe(2);
+        result.Rules[0].Duration.ShouldBe(TimeSpan.FromMinutes(5));
+        result.Rules[0].MaxCount.ShouldBe(3);
+        result.Rules[0].PartitionType.ShouldBe(OperationRateLimitingPartitionType.Parameter);
+        result.Rules[1].Duration.ShouldBe(TimeSpan.FromHours(1));
+        result.Rules[1].MaxCount.ShouldBe(20);
+        result.Rules[1].PartitionType.ShouldBe(OperationRateLimitingPartitionType.ClientIp);
+    }
+
+    [Fact]
+    public void ConfigurePolicy_ClearRules_Should_Replace_All_Rules()
+    {
+        var options = new AbpOperationRateLimitingOptions();
+
+        options.AddPolicy("BasePolicy", policy =>
+        {
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 10)
+                .PartitionByParameter());
+
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromDays(1), maxCount: 50)
+                .PartitionByCurrentUser());
+        });
+
+        options.ConfigurePolicy("BasePolicy", policy =>
+        {
+            policy.ClearRules()
+                  .WithFixedWindow(TimeSpan.FromMinutes(5), maxCount: 3)
+                  .PartitionByEmail();
+        });
+
+        var result = options.Policies["BasePolicy"];
+        result.Rules.Count.ShouldBe(1);
+        result.Rules[0].Duration.ShouldBe(TimeSpan.FromMinutes(5));
+        result.Rules[0].MaxCount.ShouldBe(3);
+        result.Rules[0].PartitionType.ShouldBe(OperationRateLimitingPartitionType.Email);
+    }
+
+    [Fact]
+    public void ConfigurePolicy_Should_Support_Chaining()
+    {
+        var options = new AbpOperationRateLimitingOptions();
+
+        options.AddPolicy("PolicyA", policy =>
+        {
+            policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                  .PartitionByParameter();
+        });
+
+        options.AddPolicy("PolicyB", policy =>
+        {
+            policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 10)
+                  .PartitionByCurrentUser();
+        });
+
+        // ConfigurePolicy returns AbpOperationRateLimitingOptions for chaining
+        options
+            .ConfigurePolicy("PolicyA", policy => policy.WithErrorCode("App:LimitA"))
+            .ConfigurePolicy("PolicyB", policy => policy.WithErrorCode("App:LimitB"));
+
+        options.Policies["PolicyA"].ErrorCode.ShouldBe("App:LimitA");
+        options.Policies["PolicyB"].ErrorCode.ShouldBe("App:LimitB");
+    }
+
+    [Fact]
+    public void ConfigurePolicy_Should_Throw_When_Policy_Not_Found()
+    {
+        var options = new AbpOperationRateLimitingOptions();
+
+        var exception = Assert.Throws<AbpException>(() =>
+        {
+            options.ConfigurePolicy("NonExistentPolicy", policy =>
+            {
+                policy.WithErrorCode("App:SomeCode");
+            });
+        });
+
+        exception.Message.ShouldContain("NonExistentPolicy");
+    }
+
+    [Fact]
+    public void ConfigurePolicy_Should_Preserve_Existing_ErrorCode_When_Not_Overridden()
+    {
+        var options = new AbpOperationRateLimitingOptions();
+
+        options.AddPolicy("BasePolicy", policy =>
+        {
+            policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 5)
+                  .PartitionByParameter()
+                  .WithErrorCode("Original:ErrorCode");
+        });
+
+        options.ConfigurePolicy("BasePolicy", policy =>
+        {
+            policy.AddRule(rule => rule
+                .WithFixedWindow(TimeSpan.FromMinutes(10), maxCount: 3)
+                .PartitionByClientIp());
+        });
+
+        var result = options.Policies["BasePolicy"];
+        result.ErrorCode.ShouldBe("Original:ErrorCode");
+        result.Rules.Count.ShouldBe(2);
+        result.Rules[0].Duration.ShouldBe(TimeSpan.FromHours(1));
+        result.Rules[0].PartitionType.ShouldBe(OperationRateLimitingPartitionType.Parameter);
+        result.Rules[1].Duration.ShouldBe(TimeSpan.FromMinutes(10));
+        result.Rules[1].PartitionType.ShouldBe(OperationRateLimitingPartitionType.ClientIp);
+    }
 }

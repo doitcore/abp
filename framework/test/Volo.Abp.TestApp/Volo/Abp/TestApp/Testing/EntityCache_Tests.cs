@@ -36,11 +36,32 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
     }
 
     [Fact]
+    public async Task FindMany_Should_Return_Null_For_Not_Existing_Entities()
+    {
+        var notExistId = Guid.NewGuid();
+        var result = await ProductEntityCache.FindManyAsync(new[] { notExistId });
+        result.Count.ShouldBe(1);
+        result[0].ShouldBeNull();
+
+        var cacheItemResult = await ProductCacheItem.FindManyAsync(new[] { notExistId });
+        cacheItemResult.Count.ShouldBe(1);
+        cacheItemResult[0].ShouldBeNull();
+    }
+
+    [Fact]
     public async Task Should_Throw_EntityNotFoundException_IF_Entity_Not_Exist()
     {
         var notExistId = Guid.NewGuid();
         await Assert.ThrowsAsync<EntityNotFoundException<Product>>(() => ProductEntityCache.GetAsync(notExistId));
         await Assert.ThrowsAsync<EntityNotFoundException<Product>>(() => ProductCacheItem.GetAsync(notExistId));
+    }
+
+    [Fact]
+    public async Task GetMany_Should_Throw_EntityNotFoundException_For_Not_Existing_Entities()
+    {
+        var notExistId = Guid.NewGuid();
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => ProductEntityCache.GetManyAsync(new[] { notExistId }));
+        await Assert.ThrowsAsync<EntityNotFoundException>(() => ProductCacheItem.GetManyAsync(new[] { notExistId }));
     }
 
     [Fact]
@@ -61,6 +82,56 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
         productCacheItem.Id.ShouldBe(TestDataBuilder.ProductId);
         productCacheItem.Name.ShouldBe("Product1");
         productCacheItem.Price.ShouldBe(decimal.One);
+    }
+
+    [Fact]
+    public async Task FindMany_Should_Return_EntityCache()
+    {
+        var notExistId = Guid.NewGuid();
+        var ids = new[] { TestDataBuilder.ProductId, notExistId };
+
+        var products = await ProductEntityCache.FindManyAsync(ids);
+        products.Count.ShouldBe(2);
+        products[0].ShouldNotBeNull();
+        products[0]!.Id.ShouldBe(TestDataBuilder.ProductId);
+        products[0]!.Name.ShouldBe("Product1");
+        products[0]!.Price.ShouldBe(decimal.One);
+        products[1].ShouldBeNull();
+
+        // Call again to test caching
+        products = await ProductEntityCache.FindManyAsync(ids);
+        products.Count.ShouldBe(2);
+        products[0].ShouldNotBeNull();
+        products[0]!.Id.ShouldBe(TestDataBuilder.ProductId);
+
+        var productCacheItems = await ProductCacheItem.FindManyAsync(ids);
+        productCacheItems.Count.ShouldBe(2);
+        productCacheItems[0].ShouldNotBeNull();
+        productCacheItems[0]!.Id.ShouldBe(TestDataBuilder.ProductId);
+        productCacheItems[0]!.Name.ShouldBe("Product1");
+        productCacheItems[0]!.Price.ShouldBe(decimal.One);
+        productCacheItems[1].ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task GetMany_Should_Return_EntityCache()
+    {
+        var products = await ProductEntityCache.GetManyAsync(new[] { TestDataBuilder.ProductId });
+        products.Count.ShouldBe(1);
+        products[0].Id.ShouldBe(TestDataBuilder.ProductId);
+        products[0].Name.ShouldBe("Product1");
+        products[0].Price.ShouldBe(decimal.One);
+
+        // Call again to test caching
+        products = await ProductEntityCache.GetManyAsync(new[] { TestDataBuilder.ProductId });
+        products.Count.ShouldBe(1);
+        products[0].Id.ShouldBe(TestDataBuilder.ProductId);
+
+        var productCacheItems = await ProductCacheItem.GetManyAsync(new[] { TestDataBuilder.ProductId });
+        productCacheItems.Count.ShouldBe(1);
+        productCacheItems[0].Id.ShouldBe(TestDataBuilder.ProductId);
+        productCacheItems[0].Name.ShouldBe("Product1");
+        productCacheItems[0].Price.ShouldBe(decimal.One);
     }
 
     [Fact]

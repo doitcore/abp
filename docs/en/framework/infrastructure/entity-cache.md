@@ -147,6 +147,83 @@ context.Services.AddEntityCache<Product, ProductDto, Guid>(
 * Entity classes should be serializable/deserializable to/from JSON to be cached (because it's serialized to JSON when saving in the [Distributed Cache](../fundamentals/caching.md)). If your entity class is not serializable, you can consider using a cache-item/DTO class instead, as explained before.
 * Entity Caching System is designed as **read-only**. You should use the standard [repository](../architecture/domain-driven-design/repositories.md) methods to manipulate the entity if you need to. If you need to manipulate (update) the entity, do not get it from the entity cache. Instead, read it from the repository, change it and update using the repository.
 
+## Getting Multiple Entities
+
+In addition to the single-entity methods `FindAsync` and `GetAsync`, the `IEntityCache` service also provides `FindManyAsync` and `GetManyAsync` methods for retrieving multiple entities at once:
+
+```csharp
+public class ProductAppService : ApplicationService, IProductAppService
+{
+    private readonly IEntityCache<ProductDto, Guid> _productCache;
+
+    public ProductAppService(IEntityCache<ProductDto, Guid> productCache)
+    {
+        _productCache = productCache;
+    }
+
+    public async Task<List<ProductDto>> GetManyAsync(List<Guid> ids)
+    {
+        return await _productCache.GetManyAsync(ids);
+    }
+
+    public async Task<List<ProductDto?>> FindManyAsync(List<Guid> ids)
+    {
+        return await _productCache.FindManyAsync(ids);
+    }
+}
+```
+
+* `GetManyAsync` throws `EntityNotFoundException` if any entity is not found for the given IDs.
+* `FindManyAsync` returns a list where each entry corresponds to the given ID in the same order; an entry will be `null` if the entity was not found.
+
+Both methods internally use `IDistributedCache.GetOrAddManyAsync` to batch-fetch only the cache-missed entities from the database, making them more efficient than calling `FindAsync` or `GetAsync` in a loop.
+
+## Custom Object Mapping
+
+When you need full control over how an entity is mapped to a cache item, you can derive from `EntityCacheWithObjectMapper` and override the `MapToValue` method:
+
+```csharp
+public class ProductEntityCache :
+    EntityCacheWithObjectMapper<Product, ProductCacheDto, Guid>
+{
+    public ProductEntityCache(
+        IReadOnlyRepository<Product, Guid> repository,
+        IDistributedCache<EntityCacheItemWrapper<ProductCacheDto>, Guid> cache,
+        IUnitOfWorkManager unitOfWorkManager,
+        IObjectMapper objectMapper)
+        : base(repository, cache, unitOfWorkManager, objectMapper)
+    {
+    }
+
+    protected override ProductCacheDto MapToValue(Product entity)
+    {
+        // Custom mapping logic here
+        return new ProductCacheDto
+        {
+            Id = entity.Id,
+            Name = entity.Name.ToUpperInvariant(),
+            Price = entity.Price
+        };
+    }
+}
+```
+
+Register your custom cache class in the `ConfigureServices` method of your [module class](../architecture/modularity/basics.md):
+
+```csharp
+context.Services.TryAddTransient<IEntityCache<ProductCacheDto, Guid>, ProductEntityCache>();
+context.Services.TryAddTransient<ProductEntityCache>();
+
+context.Services.Configure<AbpDistributedCacheOptions>(options =>
+{
+    options.ConfigureCache<EntityCacheItemWrapper<ProductCacheDto>>(
+        new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+        });
+});
+```
+
 ## See Also
 
 * [Distributed caching](../fundamentals/caching.md)

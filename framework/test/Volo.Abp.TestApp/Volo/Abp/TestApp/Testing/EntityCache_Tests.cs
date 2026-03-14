@@ -9,6 +9,8 @@ using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.Domain.Entities.Caching;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Modularity;
+using Volo.Abp.ObjectMapping;
+using Volo.Abp.Uow;
 using Xunit;
 
 namespace Volo.Abp.TestApp.Testing;
@@ -19,12 +21,16 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
     protected readonly IRepository<Product, Guid> ProductRepository;
     protected readonly IEntityCache<Product, Guid> ProductEntityCache;
     protected readonly IEntityCache<ProductCacheItem, Guid> ProductCacheItem;
+    protected readonly IEntityCache<CustomProductCacheItem, Guid> CustomProductCacheItem;
+    protected readonly IEntityCache<CustomProductCacheItemWithoutPriorRegistration, Guid> CustomProductCacheItemWithoutPriorRegistration;
 
     protected EntityCache_Tests()
     {
         ProductRepository = GetRequiredService<IRepository<Product, Guid>>();
         ProductEntityCache = GetRequiredService<IEntityCache<Product, Guid>>();
         ProductCacheItem = GetRequiredService<IEntityCache<ProductCacheItem, Guid>>();
+        CustomProductCacheItem = GetRequiredService<IEntityCache<CustomProductCacheItem, Guid>>();
+        CustomProductCacheItemWithoutPriorRegistration = GetRequiredService<IEntityCache<CustomProductCacheItemWithoutPriorRegistration, Guid>>();
     }
 
     [Fact]
@@ -191,6 +197,22 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
     }
 
     [Fact]
+    public async Task ReplaceEntityCache_Should_Use_Custom_Mapping()
+    {
+        var product = await CustomProductCacheItem.FindAsync(TestDataBuilder.ProductId);
+        product.ShouldNotBeNull();
+        product.Name.ShouldBe("PRODUCT1");
+    }
+
+    [Fact]
+    public async Task ReplaceEntityCache_Without_Prior_Registration_Should_Work()
+    {
+        var product = await CustomProductCacheItemWithoutPriorRegistration.FindAsync(TestDataBuilder.ProductId);
+        product.ShouldNotBeNull();
+        product.Name.ShouldBe("PRODUCT1");
+    }
+
+    [Fact]
     public void EntityCache_Default_Options_Should_Be_2_Minutes()
     {
         var productCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<ProductCacheItem2>, Guid>>();
@@ -274,4 +296,70 @@ public class ProductCacheItem2
     public string Name { get; set; }
 
     public decimal Price { get; set; }
+}
+
+[Serializable]
+[CacheName("CustomProductCacheItem")]
+public class CustomProductCacheItem
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; }
+
+    public decimal Price { get; set; }
+}
+
+public class CustomProductEntityCache : EntityCacheWithObjectMapper<Product, CustomProductCacheItem, Guid>
+{
+    public CustomProductEntityCache(
+        IReadOnlyRepository<Product, Guid> repository,
+        IDistributedCache<EntityCacheItemWrapper<CustomProductCacheItem>, Guid> cache,
+        IUnitOfWorkManager unitOfWorkManager,
+        IObjectMapper objectMapper)
+        : base(repository, cache, unitOfWorkManager, objectMapper)
+    {
+    }
+
+    protected override CustomProductCacheItem MapToValue(Product entity)
+    {
+        return new CustomProductCacheItem
+        {
+            Id = entity.Id,
+            Name = entity.Name.ToUpperInvariant(),
+            Price = entity.Price
+        };
+    }
+}
+
+[Serializable]
+[CacheName("CustomProductCacheItemWithoutPriorRegistration")]
+public class CustomProductCacheItemWithoutPriorRegistration
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; }
+
+    public decimal Price { get; set; }
+}
+
+public class CustomProductEntityCacheWithoutPriorRegistration : EntityCacheWithObjectMapper<Product, CustomProductCacheItemWithoutPriorRegistration, Guid>
+{
+    public CustomProductEntityCacheWithoutPriorRegistration(
+        IReadOnlyRepository<Product, Guid> repository,
+        IDistributedCache<EntityCacheItemWrapper<CustomProductCacheItemWithoutPriorRegistration>, Guid> cache,
+        IUnitOfWorkManager unitOfWorkManager,
+        IObjectMapper objectMapper)
+        : base(repository, cache, unitOfWorkManager, objectMapper)
+    {
+    }
+
+    protected override CustomProductCacheItemWithoutPriorRegistration MapToValue(Product entity)
+    {
+        return new CustomProductCacheItemWithoutPriorRegistration
+        {
+            Id = entity.Id,
+            Name = entity.Name.ToUpperInvariant(),
+            Price = entity.Price
+        };
+    }
 }

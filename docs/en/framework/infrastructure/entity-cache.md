@@ -182,6 +182,19 @@ Both methods internally use `IDistributedCache.GetOrAddManyAsync` to batch-fetch
 
 When you need full control over how an entity is mapped to a cache item, you can derive from `EntityCacheWithObjectMapper` and override the `MapToValue` method:
 
+First, define the cache item class:
+
+```csharp
+public class ProductCacheDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public float Price { get; set; }
+}
+```
+
+Then, derive from `EntityCacheWithObjectMapper` and override `MapToValue`:
+
 ```csharp
 public class ProductEntityCache :
     EntityCacheWithObjectMapper<Product, ProductCacheDto, Guid>
@@ -211,18 +224,14 @@ public class ProductEntityCache :
 Register your custom cache class in the `ConfigureServices` method of your [module class](../architecture/modularity/basics.md):
 
 ```csharp
-context.Services.TryAddTransient<IEntityCache<ProductCacheDto, Guid>, ProductEntityCache>();
-context.Services.TryAddTransient<ProductEntityCache>();
-
-context.Services.Configure<AbpDistributedCacheOptions>(options =>
-{
-    options.ConfigureCache<EntityCacheItemWrapper<ProductCacheDto>>(
-        new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
-        });
-});
+context.Services.ReplaceEntityCache<ProductEntityCache, Product, ProductCacheDto, Guid>(
+    new DistributedCacheEntryOptions
+    {
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+    });
 ```
+
+> If no prior `AddEntityCache` registration exists for the same cache item type, `ReplaceEntityCache` will simply add the service instead of throwing an error.
 
 ## See Also
 

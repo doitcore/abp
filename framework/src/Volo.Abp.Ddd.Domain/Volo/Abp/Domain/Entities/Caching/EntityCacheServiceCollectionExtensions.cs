@@ -65,6 +65,24 @@ public static class EntityCacheServiceCollectionExtensions
         return services;
     }
 
+    public static IServiceCollection ReplaceEntityCache<TEntityCache, TEntity, TEntityCacheItem, TKey>(
+        this IServiceCollection services,
+        DistributedCacheEntryOptions? cacheOptions = null)
+        where TEntityCache : EntityCacheBase<TEntity, TEntityCacheItem, TKey>
+        where TEntity : Entity<TKey>
+        where TEntityCacheItem : class
+    {
+        services.Replace(ServiceDescriptor.Transient<IEntityCache<TEntityCacheItem, TKey>, TEntityCache>());
+        services.TryAddTransient<TEntityCache>();
+
+        services.Configure<AbpDistributedCacheOptions>(options =>
+        {
+            options.ConfigureCache<EntityCacheItemWrapper<TEntityCacheItem>>(cacheOptions ?? GetDefaultCacheOptions());
+        });
+
+        return services;
+    }
+
     private static DistributedCacheEntryOptions GetDefaultCacheOptions()
     {
         return new DistributedCacheEntryOptions {

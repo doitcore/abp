@@ -50,9 +50,12 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     {
         var idArray = ids.ToArray();
         var cacheItems = await GetOrAddManyCacheItemsAsync(idArray);
+#pragma warning disable CS8714
+        var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
+#pragma warning restore CS8714
 
         return idArray
-            .Select(id => cacheItems.FirstOrDefault(x => EqualityComparer<TKey>.Default.Equals(x.Key, id)).Value?.Value)
+            .Select(id => cacheItemDict.TryGetValue(id!, out var wrapper) ? wrapper?.Value : null)
             .ToList();
     }
 
@@ -75,11 +78,14 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     {
         var idArray = ids.ToArray();
         var cacheItems = await GetOrAddManyCacheItemsAsync(idArray);
+#pragma warning disable CS8714
+        var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
+#pragma warning restore CS8714
 
         return idArray
             .Select(id =>
             {
-                var cacheItem = cacheItems.FirstOrDefault(x => EqualityComparer<TKey>.Default.Equals(x.Key, id)).Value?.Value;
+                var cacheItem = cacheItemDict.TryGetValue(id!, out var wrapper) ? wrapper?.Value : null;
                 if (cacheItem == null)
                 {
                     throw new EntityNotFoundException(typeof(TEntity), id);
@@ -105,11 +111,14 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
                 var entities = await Repository.GetListAsync(
                     x => missingKeyArray.Contains(x.Id)
                 );
+#pragma warning disable CS8714
+                var entityDict = entities.ToDictionary(e => e.Id);
+#pragma warning restore CS8714
 
                 return missingKeyArray
                     .Select(key =>
                     {
-                        var entity = entities.FirstOrDefault(e => EqualityComparer<TKey>.Default.Equals(e.Id, key));
+                        entityDict.TryGetValue(key!, out var entity);
                         return new KeyValuePair<TKey, EntityCacheItemWrapper<TEntityCacheItem>>(
                             key,
                             MapToCacheItem(entity)!

@@ -49,7 +49,8 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     public virtual async Task<List<TEntityCacheItem?>> FindManyAsync(IEnumerable<TKey> ids)
     {
         var idArray = ids.ToArray();
-        var cacheItems = await GetOrAddManyCacheItemsAsync(idArray);
+        var distinctIds = idArray.Distinct().ToArray();
+        var cacheItems = await GetOrAddManyCacheItemsAsync(distinctIds);
 #pragma warning disable CS8714
         var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
 #pragma warning restore CS8714
@@ -77,7 +78,8 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     public virtual async Task<List<TEntityCacheItem>> GetManyAsync(IEnumerable<TKey> ids)
     {
         var idArray = ids.ToArray();
-        var cacheItems = await GetOrAddManyCacheItemsAsync(idArray);
+        var distinctIds = idArray.Distinct().ToArray();
+        var cacheItems = await GetOrAddManyCacheItemsAsync(distinctIds);
 #pragma warning disable CS8714
         var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
 #pragma warning restore CS8714
@@ -109,7 +111,8 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
 
                 var missingKeyArray = missingKeys.ToArray();
                 var entities = await Repository.GetListAsync(
-                    x => missingKeyArray.Contains(x.Id)
+                    x => missingKeyArray.Contains(x.Id),
+                    includeDetails: true
                 );
 #pragma warning disable CS8714
                 var entityDict = entities.ToDictionary(e => e.Id);

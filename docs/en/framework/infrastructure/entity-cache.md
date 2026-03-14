@@ -26,7 +26,7 @@ public class Product : AggregateRoot<Guid>
 
     public string Name { get; set; }
     public string Description { get; set; }
-    public float Price { get; set; }
+    public decimal Price { get; set; }
     public int StockCount { get; set; }
 }
 ```
@@ -72,7 +72,7 @@ public class ProductDto : EntityDto<Guid>
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public float Price { get; set; }
+    public decimal Price { get; set; }
     public int StockCount { get; set; }
 }
 ```
@@ -189,7 +189,7 @@ public class ProductCacheDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public float Price { get; set; }
+    public decimal Price { get; set; }
 }
 ```
 

@@ -197,6 +197,30 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
     }
 
     [Fact]
+    public async Task FindMany_Should_Handle_Duplicate_Ids()
+    {
+        var ids = new[] { TestDataBuilder.ProductId, TestDataBuilder.ProductId };
+
+        var products = await ProductEntityCache.FindManyAsync(ids);
+        products.Count.ShouldBe(2);
+        products[0].ShouldNotBeNull();
+        products[0]!.Id.ShouldBe(TestDataBuilder.ProductId);
+        products[1].ShouldNotBeNull();
+        products[1]!.Id.ShouldBe(TestDataBuilder.ProductId);
+    }
+
+    [Fact]
+    public async Task GetMany_Should_Handle_Duplicate_Ids()
+    {
+        var ids = new[] { TestDataBuilder.ProductId, TestDataBuilder.ProductId };
+
+        var products = await ProductEntityCache.GetManyAsync(ids);
+        products.Count.ShouldBe(2);
+        products[0].Id.ShouldBe(TestDataBuilder.ProductId);
+        products[1].Id.ShouldBe(TestDataBuilder.ProductId);
+    }
+
+    [Fact]
     public async Task ReplaceEntityCache_Should_Use_Custom_Mapping()
     {
         var product = await CustomProductCacheItem.FindAsync(TestDataBuilder.ProductId);

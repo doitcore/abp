@@ -80,6 +80,14 @@ public static class EntityCacheServiceCollectionExtensions
             options.ConfigureCache<EntityCacheItemWrapper<TEntityCacheItem>>(cacheOptions ?? GetDefaultCacheOptions());
         });
 
+        if (typeof(TEntity) == typeof(TEntityCacheItem))
+        {
+            services.Configure<AbpSystemTextJsonSerializerModifiersOptions>(options =>
+            {
+                options.Modifiers.Add(new AbpIncludeNonPublicPropertiesModifiers<TEntity, TKey>().CreateModifyAction(x => x.Id));
+            });
+        }
+
         return services;
     }
 

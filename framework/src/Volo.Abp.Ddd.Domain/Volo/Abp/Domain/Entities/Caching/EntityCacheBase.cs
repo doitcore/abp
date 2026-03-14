@@ -90,7 +90,7 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
                 var cacheItem = cacheItemDict.TryGetValue(id!, out var wrapper) ? wrapper?.Value : null;
                 if (cacheItem == null)
                 {
-                    throw new EntityNotFoundException(typeof(TEntity), id);
+                    throw new EntityNotFoundException<TEntity>(id);
                 }
 
                 return cacheItem;

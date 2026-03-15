@@ -1,11 +1,13 @@
 ````json
 //[doc-seo]
 {
-    "Description": "Learn how to use the Operation Rate Limiting module in ABP Framework to control the frequency of specific operations like SMS sending, login attempts, and resource-intensive tasks."
+    "Description": "Learn how to use the Operation Rate Limiting module (Pro) in ABP to control the frequency of specific operations like SMS sending, login attempts, and resource-intensive tasks."
 }
 ````
 
-# Operation Rate Limiting
+# Operation Rate Limiting Module (Pro)
+
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 ABP provides an operation rate limiting system that allows you to control the frequency of specific operations in your application. You may need operation rate limiting for several reasons:
 
@@ -15,15 +17,9 @@ ABP provides an operation rate limiting system that allows you to control the fr
 
 > This is not for [ASP.NET Core's built-in rate limiting middleware](https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit) which works at the HTTP request pipeline level. This module works at the **application/domain code level** and is called explicitly from your services. See the [Combining with ASP.NET Core Rate Limiting](#combining-with-aspnet-core-rate-limiting) section for a comparison.
 
-## Installation
+## How to Install
 
-You can open a command-line terminal and type the following command to install the [Volo.Abp.OperationRateLimiting](https://www.nuget.org/packages/Volo.Abp.OperationRateLimiting) package into your project:
-
-````bash
-abp add-package Volo.Abp.OperationRateLimiting
-````
-
-> If you haven't done it yet, you first need to install the [ABP CLI](../../../cli).
+This module is used by the [Account (Pro)](account-pro.md) module internally and comes pre-installed in the latest [startup templates](../solution-templates). So, no need to manually install it.
 
 ## Quick Start
 
@@ -31,7 +27,7 @@ This section shows the basic usage of the operation rate limiting system with a 
 
 ### Defining a Policy
 
-First, define a rate limiting policy in the `ConfigureServices` method of your [module class](../../architecture/modularity/basics.md):
+First, define a rate limiting policy in the `ConfigureServices` method of your [module class](../framework/architecture/modularity/basics.md):
 
 ````csharp
 Configure<AbpOperationRateLimitingOptions>(options =>
@@ -80,7 +76,7 @@ That's the basic usage. The following sections explain each concept in detail.
 
 ## Defining Policies
 
-Policies are defined using `AbpOperationRateLimitingOptions` in the `ConfigureServices` method of your [module class](../../architecture/modularity/basics.md). Each policy has a unique name, one or more rules, and a partition strategy.
+Policies are defined using `AbpOperationRateLimitingOptions` in the `ConfigureServices` method of your [module class](../framework/architecture/modularity/basics.md). Each policy has a unique name, one or more rules, and a partition strategy.
 
 ### Single-Rule Policies
 
@@ -539,7 +535,7 @@ public class MyCustomStore : IOperationRateLimitingStore, ITransientDependency
 }
 ````
 
-ABP's [dependency injection](../../fundamentals/dependency-injection.md) system will automatically use your implementation since it replaces the default one.
+ABP's [dependency injection](../framework/fundamentals/dependency-injection.md) system will automatically use your implementation since it replaces the default one.
 
 ### Custom Rule
 
@@ -560,5 +556,5 @@ Replace `IOperationRateLimitingPolicyProvider` to load policies from a database 
 ## See Also
 
 * [ASP.NET Core Rate Limiting Middleware](https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit)
-* [Distributed Caching](../fundamentals/caching.md)
-* [Exception Handling](../fundamentals/exception-handling.md)
+* [Distributed Caching](../framework/fundamentals/caching.md)
+* [Exception Handling](../framework/fundamentals/exception-handling.md)

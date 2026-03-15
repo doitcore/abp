@@ -1,4 +1,4 @@
-# Operation Rate Limiting in ABP Framework
+# Operation Rate Limiting in ABP
 
 Almost every user-facing system eventually runs into the same problem: **some operations cannot be allowed to run without limits**.
 
@@ -24,15 +24,9 @@ Real-world requirements tend to look like this:
 
 The pattern is clear: the identity being throttled is a **business identity** — a user, a phone number, a resource ID — not an IP address. And the action being throttled is a **business operation**, not an HTTP request.
 
-ABP Framework's **Operation Rate Limiting** module is built for exactly this. It lets you enforce limits directly in your application or domain layer, with full awareness of who is doing what.
+ABP's **Operation Rate Limiting** module is built for exactly this. It lets you enforce limits directly in your application or domain layer, with full awareness of who is doing what.
 
-Add the package to your project:
-
-```bash
-abp add-package Volo.Abp.OperationRateLimiting
-```
-
-> Operation Rate Limiting is available starting from **ABP Framework 10.3**. See the [pull request](https://github.com/abpframework/abp/pull/25024) for details.
+This module is used by the Account (Pro) modules internally and comes pre-installed in the latest startup templates. You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 ## Defining a Policy
 
@@ -247,6 +241,6 @@ ABP's Operation Rate Limiting fills the gap that ASP.NET Core's HTTP middleware 
 
 ## References
 
-- [Operation Rate Limiting](https://abp.io/docs/latest/framework/infrastructure/operation-rate-limiting)
+- [Operation Rate Limiting (Pro)](https://abp.io/docs/latest/modules/operation-rate-limiting)
 - [ASP.NET Core Rate Limiting Middleware](https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit)
 - [Exception Handling](https://abp.io/docs/latest/framework/fundamentals/exception-handling)

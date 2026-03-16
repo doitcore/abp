@@ -7,6 +7,13 @@
 
 # Creating the Initial Solution
 
+```json
+//[doc-params]
+{
+  "UI": ["MVC", "NG"]
+}
+```
+
 ````json
 //[doc-nav]
 {
@@ -28,8 +35,11 @@ In this first part of this tutorial, we will create a new ABP solution with modu
 Follow the *[Get Started](../../get-started/single-layer-web-application.md)* guide to create a single layer web application with the following configuration:
 
 * **Solution name**: `ModularCrm`
-* **UI Framework**: ASP.NET Core MVC / Razor Pages
+* **UI Framework**: {{if UI == "MVC"}}ASP.NET Core MVC / Razor Pages{{else if UI == "NG"}}Angular{{end}}
 * **Database Provider**: Entity Framework Core
+
+{{if UI == "NG"}}> **Note:** Angular users can continue with the Angular UI steps in the upcoming parts while following the same modularity flow.
+{{end}}
 
 You can select the other options based on your preference but at the **Modularity** step, check the _Setup as a modular solution_ option and add a new **Standard Module** named `ModularCrm.Catalog`:
 

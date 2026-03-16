@@ -94,15 +94,16 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
 
     public virtual async Task<Dictionary<TKey, TEntityCacheItem>> GetManyAsDictionaryAsync(IEnumerable<TKey> ids)
     {
-        var cacheItemDict = await GetCacheItemDictionaryAsync(ids.Distinct().ToArray());
+        var distinctIds = ids.Distinct().ToArray();
+        var cacheItemDict = await GetCacheItemDictionaryAsync(distinctIds);
         var result = new Dictionary<TKey, TEntityCacheItem>();
-        foreach (var pair in cacheItemDict)
+        foreach (var id in distinctIds)
         {
-            if (pair.Value == null)
+            if (!cacheItemDict.TryGetValue(id, out var item) || item == null)
             {
-                throw new EntityNotFoundException<TEntity>(pair.Key);
+                throw new EntityNotFoundException<TEntity>(id);
             }
-            result[pair.Key] = pair.Value;
+            result[id] = item;
         }
         return result;
     }

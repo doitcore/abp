@@ -182,7 +182,7 @@ public class ProductAppService : ApplicationService, IProductAppService
 
 ### Dictionary-Based Batch Retrieval
 
-`FindManyAsDictionaryAsync` and `GetManyAsDictionaryAsync` return a `Dictionary<TKey, TEntityCacheItem>` keyed by entity ID, which is convenient when you need fast lookup by ID:
+`FindManyAsDictionaryAsync` and `GetManyAsDictionaryAsync` return results as a dictionary keyed by entity ID, which is convenient when you need fast lookup by ID:
 
 ```csharp
 public async Task<Dictionary<Guid, ProductDto?>> FindManyAsDictionaryAsync(List<Guid> ids)

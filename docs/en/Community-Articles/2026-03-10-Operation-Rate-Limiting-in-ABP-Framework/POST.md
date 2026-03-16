@@ -60,7 +60,7 @@ public class SmsAppService : ApplicationService
         _rateLimitChecker = rateLimitChecker;
     }
 
-    public async Task SendCodeAsync(string phoneNumber)
+    public virtual async Task SendCodeAsync(string phoneNumber)
     {
         await _rateLimitChecker.CheckAsync("SendSmsCode", phoneNumber);
 
@@ -70,6 +70,74 @@ public class SmsAppService : ApplicationService
 ```
 
 `CheckAsync` checks the current usage against the limit and throws `AbpOperationRateLimitingException` (HTTP 429) if the limit is already exceeded. If the check passes, it then increments the counter and proceeds. ABP's exception pipeline catches this automatically and returns a standard error response. Put `CheckAsync` first — the rate limit check is the gate, and everything else only runs if it passes.
+
+## Declarative Usage with `[OperationRateLimiting]`
+
+The explicit `CheckAsync` approach is useful when you need fine-grained control — for example, when you want to check the limit conditionally, or when the parameter value comes from somewhere other than a method argument. But for the common case where you simply want to enforce a policy on every invocation of a specific method, there's a cleaner way: the `[OperationRateLimiting]` attribute.
+
+```csharp
+public class SmsAppService : ApplicationService
+{
+    [OperationRateLimiting("SendSmsCode")]
+    public virtual async Task SendCodeAsync([RateLimitingParameter] string phoneNumber)
+    {
+        // Rate limit is enforced automatically — no manual CheckAsync needed.
+        await _smsSender.SendAsync(phoneNumber, GenerateCode());
+    }
+}
+```
+
+The attribute works on both **Application Service methods** (via ABP's interceptor) and **MVC Controller actions** (via an action filter). No manual injection of `IOperationRateLimitingChecker` required.
+
+### Providing the Partition Key
+
+When using the attribute, the partition key is resolved from the method's parameters automatically:
+
+- Mark a parameter with `[RateLimitingParameter]` to use its `ToString()` value as the key — this is the most common case when the key is a single primitive like a phone number or email.
+- Have your input DTO implement `IHasOperationRateLimitingParameter` and provide a `GetPartitionParameter()` method — useful when the key is a property buried inside a complex input object.
+
+```csharp
+public class SendSmsCodeInput : IHasOperationRateLimitingParameter
+{
+    public string PhoneNumber { get; set; }
+    public string Language { get; set; }
+
+    public string? GetPartitionParameter() => PhoneNumber;
+}
+
+[OperationRateLimiting("SendSmsCode")]
+public virtual async Task SendCodeAsync(SendSmsCodeInput input)
+{
+    // input.GetPartitionParameter() = input.PhoneNumber is used as the partition key.
+}
+```
+
+If neither is provided, `Parameter` is `null` — which is perfectly valid for policies that use `PartitionByCurrentUser`, `PartitionByClientIp`, or similar partition types that don't rely on an explicit value.
+
+```csharp
+// Policy uses PartitionByCurrentUser — no partition key needed.
+[OperationRateLimiting("GenerateReport")]
+public virtual async Task<ReportDto> GenerateMonthlyReportAsync()
+{
+    // Rate limit is checked per current user, automatically.
+}
+```
+
+> The resolution order is: `[RateLimitingParameter]` first, then `IHasOperationRateLimitingParameter`, then `null`. If the method has parameters but none is resolved, a warning is logged to help you catch the misconfiguration early.
+
+You can also place `[OperationRateLimiting]` on the class itself to apply the policy to all public methods:
+
+```csharp
+[OperationRateLimiting("MyServiceLimit")]
+public class MyAppService : ApplicationService
+{
+    public virtual async Task MethodAAsync([RateLimitingParameter] string key) { ... }
+
+    public virtual async Task MethodBAsync([RateLimitingParameter] string key) { ... }
+}
+```
+
+A method-level attribute always takes precedence over the class-level one.
 
 ## Choosing a Partition Type
 
@@ -237,7 +305,7 @@ public override void ConfigureServices(ServiceConfigurationContext context)
 
 ## Summary
 
-ABP's Operation Rate Limiting fills the gap that ASP.NET Core's HTTP middleware can't: rate limiting with real awareness of *who* is doing *what*. Define a named policy, pick a time window, a max count, and a partition type. Call `CheckAsync` wherever you need it. Counter storage, distributed locking, and exception handling are all taken care of.
+ABP's Operation Rate Limiting fills the gap that ASP.NET Core's HTTP middleware can't: rate limiting with real awareness of *who* is doing *what*. Define a named policy, pick a time window, a max count, and a partition type. Then either call `CheckAsync` explicitly, or just add `[OperationRateLimiting]` to your method and let the framework handle the rest. Counter storage, distributed locking, and exception handling are all taken care of.
 
 ## References
 

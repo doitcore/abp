@@ -58,7 +58,7 @@ public class SmsAppService : ApplicationService
         _rateLimitChecker = rateLimitChecker;
     }
 
-    public async Task SendCodeAsync(string phoneNumber)
+    public virtual async Task SendCodeAsync(string phoneNumber)
     {
         await _rateLimitChecker.CheckAsync("SendSmsCode", phoneNumber);
 
@@ -73,6 +73,117 @@ public class SmsAppService : ApplicationService
 * Passing `phoneNumber` directly is a shortcut for `new OperationRateLimitingContext { Parameter = phoneNumber }`. Extension methods are provided for all four methods (`CheckAsync`, `IsAllowedAsync`, `GetStatusAsync`, `ResetAsync`) when you only need to pass a `parameter` string.
 
 That's the basic usage. The following sections explain each concept in detail.
+
+## Declarative Usage (Attribute)
+
+Instead of injecting `IOperationRateLimitingChecker` manually, you can use the `[OperationRateLimiting]` attribute to enforce a policy declaratively on Application Service methods or MVC Controller actions.
+
+> **Application Services** are handled by the ABP interceptor (built into the Domain layer).
+> **MVC Controllers** are handled by `AbpOperationRateLimitingActionFilter`, which is automatically registered when you reference the `Volo.Abp.OperationRateLimiting.AspNetCore` package.
+
+### Applying to an Application Service
+
+````csharp
+public class SmsAppService : ApplicationService
+{
+    [OperationRateLimiting("SendSmsCode")]
+    public virtual async Task SendCodeAsync([RateLimitingParameter] string phoneNumber)
+    {
+        // Rate limit is checked automatically before this line executes.
+        await _smsSender.SendAsync(phoneNumber, GenerateCode());
+    }
+}
+````
+
+### Applying to an MVC Controller
+
+````csharp
+[Route("api/account")]
+public class AccountController : AbpController
+{
+    [HttpPost("send-sms-code")]
+    [OperationRateLimiting("SendSmsCode")]
+    public async Task<IActionResult> SendSmsCodeAsync([RateLimitingParameter] string phoneNumber)
+    {
+        // Rate limit is checked automatically before this line executes.
+        await _smsSender.SendAsync(phoneNumber, GenerateCode());
+        return Ok();
+    }
+}
+````
+
+### Resolving the Parameter Value
+
+The `[OperationRateLimiting]` attribute resolves `OperationRateLimitingContext.Parameter` automatically using the following priority order:
+
+1. **`[RateLimitingParameter]`** — a method parameter marked with this attribute. Its `ToString()` value is used as the partition key.
+2. **`IHasOperationRateLimitingParameter`** — a method parameter whose type implements this interface. The value returned by `GetPartitionParameter()` is used as the partition key.
+3. **`null`** — no parameter is resolved; suitable for policies that use `PartitionByCurrentUser`, `PartitionByClientIp`, etc.
+
+#### Using `[RateLimitingParameter]`
+
+Mark a single parameter to use its value as the partition key:
+
+````csharp
+[OperationRateLimiting("SendSmsCode")]
+public virtual async Task SendCodeAsync([RateLimitingParameter] string phoneNumber)
+{
+    // partition key = phoneNumber
+}
+````
+
+#### Using `IHasOperationRateLimitingParameter`
+
+Implement the interface on an input DTO when the partition key is a property of the DTO:
+
+````csharp
+public class SendSmsCodeInput : IHasOperationRateLimitingParameter
+{
+    public string PhoneNumber { get; set; }
+    public string Language { get; set; }
+
+    public string? GetPartitionParameter() => PhoneNumber;
+}
+````
+
+````csharp
+[OperationRateLimiting("SendSmsCode")]
+public virtual async Task SendCodeAsync(SendSmsCodeInput input)
+{
+    // partition key = input.GetPartitionParameter() = input.PhoneNumber
+}
+````
+
+#### No Partition Parameter
+
+If no parameter is marked and no DTO implements the interface, the policy is checked without a `Parameter` value. This is appropriate for policies that use `PartitionByCurrentUser`, `PartitionByClientIp`, or `PartitionByCurrentTenant`:
+
+````csharp
+// Policy uses PartitionByCurrentUser — no explicit parameter needed.
+[OperationRateLimiting("GenerateReport")]
+public virtual async Task<ReportDto> GenerateMonthlyReportAsync()
+{
+    // Rate limit is checked per current user automatically.
+}
+````
+
+> If the method has parameters but none is resolved, a **warning log** is emitted to help you catch misconfigured usages early.
+
+### Applying to a Class
+
+You can also place `[OperationRateLimiting]` on the class to apply it to **all public methods** of that class:
+
+````csharp
+[OperationRateLimiting("MyServiceLimit")]
+public class MyAppService : ApplicationService
+{
+    public virtual async Task MethodAAsync([RateLimitingParameter] string key) { ... }
+
+    public virtual async Task MethodBAsync([RateLimitingParameter] string key) { ... }
+}
+````
+
+> A method-level attribute takes precedence over the class-level attribute.
 
 ## Defining Policies
 
@@ -502,7 +613,7 @@ This module and ASP.NET Core's built-in [rate limiting middleware](https://learn
 |---|---|---|
 | **Level** | HTTP request pipeline | Application/domain code |
 | **Scope** | All incoming requests | Specific business operations |
-| **Usage** | Middleware (automatic) | Explicit `CheckAsync` calls |
+| **Usage** | Middleware (automatic) | `[OperationRateLimiting]` attribute or explicit `CheckAsync` calls |
 | **Typical use** | API throttling, DDoS protection | Business logic limits (SMS, reports) |
 
 A common pattern is to use ASP.NET Core middleware for broad API protection and this module for fine-grained business operation limits.

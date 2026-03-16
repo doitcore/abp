@@ -374,13 +374,58 @@ Works the same way as `PartitionByEmail`: resolves from `context.Parameter` firs
 
 ### Custom Partition (PartitionBy)
 
-You can provide a custom async function to generate the partition key. The async signature allows you to perform database queries or other I/O operations:
+You can register a named custom resolver to generate the partition key. The resolver is an async function, so you can perform database queries or other I/O operations. Because the resolver is stored by name (not as an anonymous delegate), it can be serialized and managed from a UI or database.
+
+**Step 1 — Register the resolver by name:**
+
+````csharp
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    options.AddPartitionKeyResolver("ByDevice", ctx =>
+        Task.FromResult($"{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+});
+````
+
+**Step 2 — Reference it in a policy:**
 
 ````csharp
 policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 100)
-      .PartitionBy(ctx => Task.FromResult(
-          $"{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+      .PartitionBy("ByDevice");
 ````
+
+You can also register and reference in one step (inline):
+
+````csharp
+policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 100)
+      .PartitionBy("ByDevice", ctx =>
+          Task.FromResult($"{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+````
+
+> If you call `PartitionBy("name")` with a resolver name that hasn't been registered, an exception is thrown at configuration time (not at runtime), so typos are caught early.
+
+To replace an existing resolver (e.g., in a downstream module), use `ReplacePartitionKeyResolver`:
+
+````csharp
+options.ReplacePartitionKeyResolver("ByDevice", ctx =>
+    Task.FromResult($"v2:{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+````
+
+### Named Rules (WithName)
+
+By default, a rule's store key is derived from its `Duration`, `MaxCount`, and `PartitionType`. This means that if you change a rule's parameters (e.g., increase `maxCount` from 5 to 10), the counter resets because the key changes.
+
+To keep a stable key across parameter changes, give the rule a name:
+
+````csharp
+policy.AddRule(rule => rule
+    .WithName("HourlyLimit")
+    .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 100)
+    .PartitionByCurrentUser());
+````
+
+When a name is set, it is used as the store key instead of the content-based descriptor. This is particularly useful when rules are managed from a database or UI — changing the `maxCount` or `duration` will not reset existing counters.
+
+> Rule names must be unique within a policy. Duplicate names cause an exception at build time.
 
 ## Multi-Tenancy
 
@@ -663,6 +708,31 @@ Replace `IOperationRateLimitingFormatter` to customize how time durations are di
 ### Custom Policy Provider
 
 Replace `IOperationRateLimitingPolicyProvider` to load policies from a database or external configuration source instead of the in-memory options.
+
+When loading pre-built policies from an external source, use the `AddPolicy` overload that accepts an `OperationRateLimitingPolicy` object directly (bypassing the builder):
+
+````csharp
+options.AddPolicy(new OperationRateLimitingPolicy
+{
+    Name = "DynamicPolicy",
+    Rules =
+    [
+        new OperationRateLimitingRuleDefinition
+        {
+            Name = "HourlyLimit",
+            Duration = TimeSpan.FromHours(1),
+            MaxCount = 100,
+            PartitionType = OperationRateLimitingPartitionType.CurrentUser
+        }
+    ]
+});
+````
+
+To remove a policy (e.g., when it is deleted from the database), use `RemovePolicy`:
+
+````csharp
+options.RemovePolicy("DynamicPolicy");
+````
 
 ## See Also
 

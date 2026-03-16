@@ -149,7 +149,11 @@ context.Services.AddEntityCache<Product, ProductDto, Guid>(
 
 ## Getting Multiple Entities
 
-In addition to the single-entity methods `FindAsync` and `GetAsync`, the `IEntityCache` service also provides `FindManyAsync` and `GetManyAsync` methods for retrieving multiple entities at once:
+In addition to the single-entity methods `FindAsync` and `GetAsync`, the `IEntityCache` service provides batch retrieval methods for retrieving multiple entities at once.
+
+### List-Based Batch Retrieval
+
+`FindManyAsync` and `GetManyAsync` return results as a list, preserving the order of the given IDs (including duplicates):
 
 ```csharp
 public class ProductAppService : ApplicationService, IProductAppService
@@ -176,7 +180,26 @@ public class ProductAppService : ApplicationService, IProductAppService
 * `GetManyAsync` throws `EntityNotFoundException` if any entity is not found for the given IDs.
 * `FindManyAsync` returns a list where each entry corresponds to the given ID in the same order; an entry will be `null` if the entity was not found.
 
-Both methods internally use `IDistributedCache.GetOrAddManyAsync` to batch-fetch only the cache-missed entities from the database, making them more efficient than calling `FindAsync` or `GetAsync` in a loop.
+### Dictionary-Based Batch Retrieval
+
+`FindManyAsDictionaryAsync` and `GetManyAsDictionaryAsync` return a `Dictionary<TKey, TEntityCacheItem>` keyed by entity ID, which is convenient when you need fast lookup by ID:
+
+```csharp
+public async Task<Dictionary<Guid, ProductDto?>> FindManyAsDictionaryAsync(List<Guid> ids)
+{
+    return await _productCache.FindManyAsDictionaryAsync(ids);
+}
+
+public async Task<Dictionary<Guid, ProductDto>> GetManyAsDictionaryAsync(List<Guid> ids)
+{
+    return await _productCache.GetManyAsDictionaryAsync(ids);
+}
+```
+
+* `GetManyAsDictionaryAsync` throws `EntityNotFoundException` if any entity is not found for the given IDs.
+* `FindManyAsDictionaryAsync` returns a dictionary where the value is `null` if the entity was not found for the corresponding key.
+
+All batch methods internally use `IDistributedCache.GetOrAddManyAsync` to batch-fetch only the cache-missed entities from the database, making them more efficient than calling `FindAsync` or `GetAsync` in a loop.
 
 ## Custom Object Mapping
 

@@ -16,6 +16,7 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     ILocalEventHandler<EntityChangedEventData<TEntity>>
     where TEntity : Entity<TKey>
     where TEntityCacheItem : class
+    where TKey : notnull
 {
     protected IReadOnlyRepository<TEntity, TKey> Repository { get; }
     protected IDistributedCache<EntityCacheItemWrapper<TEntityCacheItem>, TKey> Cache { get; }
@@ -49,15 +50,15 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     public virtual async Task<List<TEntityCacheItem?>> FindManyAsync(IEnumerable<TKey> ids)
     {
         var idArray = ids.ToArray();
-        var distinctIds = idArray.Distinct().ToArray();
-        var cacheItems = await GetOrAddManyCacheItemsAsync(distinctIds);
-#pragma warning disable CS8714
-        var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
-#pragma warning restore CS8714
-
+        var cacheItemDict = await GetCacheItemDictionaryAsync(idArray.Distinct().ToArray());
         return idArray
-            .Select(id => cacheItemDict.TryGetValue(id!, out var wrapper) ? wrapper?.Value : null)
+            .Select(id => cacheItemDict.TryGetValue(id, out var item) ? item : null)
             .ToList();
+    }
+
+    public virtual async Task<Dictionary<TKey, TEntityCacheItem?>> FindManyAsDictionaryAsync(IEnumerable<TKey> ids)
+    {
+        return await GetCacheItemDictionaryAsync(ids.Distinct().ToArray());
     }
 
     public virtual async Task<TEntityCacheItem> GetAsync(TKey id)
@@ -78,24 +79,38 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
     public virtual async Task<List<TEntityCacheItem>> GetManyAsync(IEnumerable<TKey> ids)
     {
         var idArray = ids.ToArray();
-        var distinctIds = idArray.Distinct().ToArray();
-        var cacheItems = await GetOrAddManyCacheItemsAsync(distinctIds);
-#pragma warning disable CS8714
-        var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
-#pragma warning restore CS8714
-
+        var cacheItemDict = await GetCacheItemDictionaryAsync(idArray.Distinct().ToArray());
         return idArray
             .Select(id =>
             {
-                var cacheItem = cacheItemDict.TryGetValue(id!, out var wrapper) ? wrapper?.Value : null;
-                if (cacheItem == null)
+                if (!cacheItemDict.TryGetValue(id, out var item) || item == null)
                 {
                     throw new EntityNotFoundException<TEntity>(id);
                 }
-
-                return cacheItem;
+                return item;
             })
             .ToList();
+    }
+
+    public virtual async Task<Dictionary<TKey, TEntityCacheItem>> GetManyAsDictionaryAsync(IEnumerable<TKey> ids)
+    {
+        var cacheItemDict = await GetCacheItemDictionaryAsync(ids.Distinct().ToArray());
+        var result = new Dictionary<TKey, TEntityCacheItem>();
+        foreach (var pair in cacheItemDict)
+        {
+            if (pair.Value == null)
+            {
+                throw new EntityNotFoundException<TEntity>(pair.Key);
+            }
+            result[pair.Key] = pair.Value;
+        }
+        return result;
+    }
+
+    protected virtual async Task<Dictionary<TKey, TEntityCacheItem?>> GetCacheItemDictionaryAsync(TKey[] distinctIds)
+    {
+        var cacheItems = await GetOrAddManyCacheItemsAsync(distinctIds);
+        return cacheItems.ToDictionary(x => x.Key, x => x.Value?.Value);
     }
 
     protected virtual async Task<KeyValuePair<TKey, EntityCacheItemWrapper<TEntityCacheItem>?>[]> GetOrAddManyCacheItemsAsync(TKey[] ids)
@@ -114,14 +129,12 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
                     x => missingKeyArray.Contains(x.Id),
                     includeDetails: true
                 );
-#pragma warning disable CS8714
                 var entityDict = entities.ToDictionary(e => e.Id);
-#pragma warning restore CS8714
 
                 return missingKeyArray
                     .Select(key =>
                     {
-                        entityDict.TryGetValue(key!, out var entity);
+                        entityDict.TryGetValue(key, out var entity);
                         return new KeyValuePair<TKey, EntityCacheItemWrapper<TEntityCacheItem>>(
                             key,
                             MapToCacheItem(entity)!

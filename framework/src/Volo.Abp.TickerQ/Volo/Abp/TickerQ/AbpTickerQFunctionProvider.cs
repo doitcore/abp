@@ -24,6 +24,17 @@ public class AbpTickerQFunctionProvider : ISingletonDependency
         TickerTaskPriority priority = TickerTaskPriority.Normal,
         int maxConcurrency = 0)
     {
-        Functions.TryAdd(name, (string.Empty, priority, function, maxConcurrency));
+        Check.NotNullOrWhiteSpace(name, nameof(name));
+        Check.NotNull(function, nameof(function));
+
+        if (maxConcurrency < 0)
+        {
+            throw new ArgumentException("maxConcurrency must be greater than or equal to 0.", nameof(maxConcurrency));
+        }
+
+        if (!Functions.TryAdd(name, (string.Empty, priority, function, maxConcurrency)))
+        {
+            throw new AbpException($"A function with the name '{name}' is already registered.");
+        }
     }
 }

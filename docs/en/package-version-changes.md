@@ -8,10 +8,6 @@
 | Microsoft.IdentityModel.Protocols.OpenIdConnect | 8.14.0 | 8.16.0 | #25068 |
 | Microsoft.IdentityModel.Tokens | 8.14.0 | 8.16.0 | #25068 |
 | System.IdentityModel.Tokens.Jwt | 8.14.0 | 8.16.0 | #25068 |
-| TickerQ | 10.1.1 | 10.2.0 | #25091 |
-| TickerQ.Dashboard | 10.1.1 | 10.2.0 | #25091 |
-| TickerQ.EntityFrameworkCore | 10.1.1 | 10.2.0 | #25091 |
-| TickerQ.Utilities | 10.1.1 | 10.2.0 | #25091 |
 
 ## 10.3.0-preview
 

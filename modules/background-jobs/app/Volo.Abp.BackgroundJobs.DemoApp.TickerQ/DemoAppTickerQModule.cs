@@ -83,7 +83,7 @@ public class DemoAppTickerQModule : AbpModule
             var request = await TickerRequestProvider.GetRequestAsync<string>(tickerFunctionContext, cancellationToken);
             var genericContext = new TickerFunctionContext<string>(tickerFunctionContext, request);
             await service.CleanupLogsAsync(genericContext, cancellationToken);
-        })));
+        }), 0));
         abpTickerQFunctionProvider.RequestTypes.TryAdd(nameof(CleanupJobs), (typeof(string).FullName, typeof(string)));
         return Task.CompletedTask;
     }

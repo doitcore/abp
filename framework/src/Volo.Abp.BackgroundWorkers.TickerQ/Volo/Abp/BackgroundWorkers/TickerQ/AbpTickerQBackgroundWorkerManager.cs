@@ -57,7 +57,7 @@ public class AbpTickerQBackgroundWorkerManager : BackgroundWorkerManager, ISingl
             {
                 var workerInvoker = new AbpTickerQPeriodicBackgroundWorkerInvoker(worker, serviceProvider);
                 await workerInvoker.DoWorkAsync(tickerFunctionContext, tickerQCancellationToken);
-            }));
+            }, config?.MaxConcurrency ?? 0));
 
             AbpTickerQBackgroundWorkersProvider.BackgroundWorkers.Add(name!, new AbpTickerQCronBackgroundWorker
             {

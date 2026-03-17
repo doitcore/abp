@@ -1,11 +1,18 @@
 # One Endpoint, Many AI Clients: Turning ABP Workspaces into OpenAI-Compatible Models
 
-ABP's AI Management module already makes it easy to define and manage AI workspaces (provider, model, API key/base URL, system prompt, permissions, MCP tools, RAG settings, and more).
-With **ABP v10.2**, there is a major addition: you can now expose those workspaces through **OpenAI-compatible endpoints** under `/v1`.
+ABP's AI Management module already makes it easy to define and manage AI workspaces (provider, model, API key/base URL, system prompt, permissions, MCP tools, RAG settings, and more). With **ABP v10.2**, there is a major addition: you can now expose those workspaces through **OpenAI-compatible endpoints** under `/v1`.
 
 That changes the integration story in a practical way. Instead of wiring every external tool directly to a provider, you can point those tools to ABP and keep runtime decisions centralized in one place.
 
 In this post, we will walk through a practical setup with **AnythingLLM** and show why this pattern is useful in real projects.
+
+Before we get into the details, here's a quick look at the full flow in action:
+
+## See It in Action: AnythingLLM + ABP
+
+The demo below shows the full flow: connecting an OpenAI-compatible client to ABP, selecting a workspace-backed model, and sending a successful chat request through `/v1`.
+
+![ABP AI Management OpenAI-compatible endpoints demo](./openai-compatible-endpoints-demo.gif)
 
 ## Why This Is a Big Deal
 
@@ -29,7 +36,7 @@ In ABP AI Management, that `model` maps to a **workspace name**.
 - Workspace name: `SupportAgent`
 - Client request model: `SupportAgent`
 
-When the client calls `/v1/chat/completions` with `"model": "SupportAgent"`, ABP routes the request to that workspace and applies that workspace's provider and model configuration.
+When the client calls `/v1/chat/completions` with `"model": "SupportAgent"`, ABP routes the request to that workspace and applies that workspace's provider (OpenAI, Ollama etc.) and model configuration.
 
 This is the main mental model to keep in mind while integrating any OpenAI-compatible tool with ABP.
 
@@ -138,12 +145,6 @@ This approach is a strong fit when you want to:
 - Switch providers or model settings without rewriting client-side integration.
 
 If your team uses multiple AI clients, this pattern keeps integration simple while preserving control where it matters.
-
-## See It in Action: AnythingLLM + ABP
-
-The demo below shows the full flow: connecting an OpenAI-compatible client to ABP, selecting a workspace-backed model, and sending a successful chat request through `/v1`.
-
-![ABP AI Management OpenAI-compatible endpoints demo](./openai-compatible-endpoints-demo.gif)
 
 ## Learn More
 

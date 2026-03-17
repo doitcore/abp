@@ -319,7 +319,7 @@ RAG requires an **embedder** and a **vector store** to be configured on the work
 * **Vector Store**: Stores and retrieves vector embeddings. Supported providers: **MongoDb**, **Pgvector**, and **Qdrant**.
 
 > [!IMPORTANT]
-> If the workspace uses Ollama for chat or embeddings, the configured model names must exist in the local Ollama instance first. For example, if you configure `ModelName = llama3.2` and `EmbedderModelName = nomic-embed-text`, pull both models before using the workspace:
+> If the workspace uses Ollama for chat or embeddings, the configured model names must exist in the local Ollama instance first. For example, if you configure `ModelName = "llama3.2"` and `EmbedderModelName = "nomic-embed-text"`, pull both models before using the workspace:
 >
 > ```bash
 > ollama pull llama3.2

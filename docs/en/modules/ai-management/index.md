@@ -44,6 +44,16 @@ abp add-package Volo.AIManagement.OpenAI
 abp add-package Volo.AIManagement.Ollama
 ```
 
+> [!IMPORTANT]
+> If you use Ollama, make sure the Ollama server is installed and running, and that the models referenced by your workspace are already available locally. Before configuring an Ollama workspace, pull the chat model and any embedding model you plan to use. For example:
+>
+> ```bash
+> ollama pull llama3.2
+> ollama pull nomic-embed-text
+> ```
+>
+> Replace the model names with the exact models you configure in the workspace. `nomic-embed-text` is an embedding-only model and can't be used as a chat model.
+
 > [!TIP]
 > You can install multiple provider packages to support different AI providers simultaneously in your workspaces.
 
@@ -307,6 +317,14 @@ RAG requires an **embedder** and a **vector store** to be configured on the work
 
 * **Embedder**: Converts documents and queries into vector embeddings. You can use any provider that supports embedding generation (e.g., OpenAI `text-embedding-3-small`, Ollama `nomic-embed-text`).
 * **Vector Store**: Stores and retrieves vector embeddings. Supported providers: **MongoDb**, **Pgvector**, and **Qdrant**.
+
+> [!IMPORTANT]
+> If the workspace uses Ollama for chat or embeddings, the configured model names must exist in the local Ollama instance first. For example, if you configure `ModelName = llama3.2` and `EmbedderModelName = nomic-embed-text`, pull both models before using the workspace:
+>
+> ```bash
+> ollama pull llama3.2
+> ollama pull nomic-embed-text
+> ```
 
 ### Configuring RAG on a Workspace
 

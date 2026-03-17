@@ -18,7 +18,7 @@ What's needed is not "one account per tenant" but "one account, multiple tenants
 
 ABP's **Shared User Accounts** (`TenantUserSharingStrategy.Shared`) does exactly this. It makes user identity global and turns tenants into workspaces that a user can join and switch between — similar to how one person can belong to multiple workspaces in Slack.
 
-> This is a **commercial** feature, provided by the Account.Pro and Identity.Pro modules.
+> This is a **commercial** feature, available starting from **ABP 10.2**, provided by the Account.Pro and Identity.Pro modules.
 
 ## Enabling the Shared Strategy
 
@@ -32,7 +32,7 @@ Configure<AbpMultiTenancyOptions>(options =>
 });
 ```
 
-The most important behavior change after switching to Shared: **username and email uniqueness becomes global** instead of per-tenant. This follows naturally — if the same account needs to be recognized across tenants, its identifiers must be unique across the entire system.
+The most important behavior change after switching to Shared: **username and email uniqueness become global** instead of per-tenant. This follows naturally — if the same account needs to be recognized across tenants, its identifiers must be unique across the entire system.
 
 Security-related settings (2FA, account lockout, password policies, captcha, etc.) are also managed at the **Host** level. This makes sense too: if user identity is global, the security rules around it should be global as well.
 

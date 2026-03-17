@@ -58,7 +58,7 @@ Before configuration, ensure:
 
 1. AI Management is installed and running in your ABP app.
 2. At least one workspace is created and **active**.
-3. You have a valid bearer token for your ABP application.
+3. You have a valid Bearer token for your ABP application.
 
 ### 1) Get an access token
 

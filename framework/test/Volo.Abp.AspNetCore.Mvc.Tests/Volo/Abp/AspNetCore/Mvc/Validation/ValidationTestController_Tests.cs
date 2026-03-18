@@ -121,7 +121,7 @@ public class ValidationTestController_Tests : AspNetCoreMvcTestBase
         // FluentValidationTestInput has a FluentValidator with MinimumLength(3) rule,
         // but this is a regular AbpController (not IValidationEnabled),
         // so FluentValidation should NOT be triggered.
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/validation-test/fluent-validation-action")
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/validation-test/fluent-validation-action")
         {
             Content = new StringContent("{\"name\": \"A\"}", Encoding.UTF8, "application/json")
         };

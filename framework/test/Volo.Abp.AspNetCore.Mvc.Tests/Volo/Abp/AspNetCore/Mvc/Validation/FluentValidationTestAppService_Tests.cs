@@ -53,7 +53,7 @@ public class FluentValidationTestAppService_Tests : AspNetCoreMvcTestBase
 
     private async Task<HttpResponseMessage> PostAsync(string jsonContent)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/app/fluent-validation-test")
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/app/fluent-validation-test")
         {
             Content = new StringContent(jsonContent, Encoding.UTF8, "application/json")
         };

@@ -60,6 +60,28 @@ public class AbpValidationActionFilter : IAsyncActionFilter, IAbpFilter, ITransi
         }
 
         context.GetRequiredService<IModelStateValidator>().Validate(context.ModelState);
+
+        if (context.Controller is IValidationEnabled)
+        {
+            await ValidateActionArgumentsAsync(context);
+        }
+
         await next();
+    }
+
+    protected virtual async Task ValidateActionArgumentsAsync(ActionExecutingContext context)
+    {
+        var methodInfo = context.ActionDescriptor.GetMethodInfo();
+        var parameterValues = methodInfo.GetParameters()
+            .Select(p => context.ActionArguments.TryGetValue(p.Name!, out var value) ? value : null)
+            .ToArray();
+
+        await context.GetRequiredService<IMethodInvocationValidator>().ValidateAsync(
+            new MethodInvocationValidationContext(
+                context.Controller,
+                methodInfo,
+                parameterValues
+            )
+        );
     }
 }

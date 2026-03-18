@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -39,23 +40,13 @@ public class AbpValidationActionFilter : IAsyncActionFilter, IAbpFilter, ITransi
             return;
         }
 
-        if (context.ActionDescriptor.GetMethodInfo().DeclaringType != context.Controller.GetType())
+        var effectiveMethod = GetEffectiveMethodInfo(context);
+        if (effectiveMethod != null)
         {
-            var baseMethod = context.ActionDescriptor.GetMethodInfo();
-
-            var overrideMethod = context.Controller.GetType().GetMethods().FirstOrDefault(x =>
-                x.DeclaringType == context.Controller.GetType() &&
-                x.Name == baseMethod.Name &&
-                x.ReturnType == baseMethod.ReturnType &&
-                x.GetParameters().Select(p => p.ToString()).SequenceEqual(baseMethod.GetParameters().Select(p => p.ToString())));
-
-            if (overrideMethod != null)
+            if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(effectiveMethod) != null)
             {
-                if (ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<DisableValidationAttribute>(overrideMethod) != null)
-                {
-                    await next();
-                    return;
-                }
+                await next();
+                return;
             }
         }
 
@@ -69,9 +60,26 @@ public class AbpValidationActionFilter : IAsyncActionFilter, IAbpFilter, ITransi
         await next();
     }
 
+    protected virtual MethodInfo? GetEffectiveMethodInfo(ActionExecutingContext context)
+    {
+        var baseMethod = context.ActionDescriptor.GetMethodInfo();
+        if (baseMethod.DeclaringType == context.Controller.GetType())
+        {
+            return null;
+        }
+
+        return context.Controller.GetType().GetMethods().FirstOrDefault(x =>
+            x.DeclaringType == context.Controller.GetType() &&
+            x.Name == baseMethod.Name &&
+            x.ReturnType == baseMethod.ReturnType &&
+            x.GetParameters().Select(p => p.ToString()).SequenceEqual(baseMethod.GetParameters().Select(p => p.ToString())));
+    }
+
     protected virtual async Task ValidateActionArgumentsAsync(ActionExecutingContext context)
     {
-        var methodInfo = context.ActionDescriptor.GetMethodInfo();
+        var baseMethod = context.ActionDescriptor.GetMethodInfo();
+        var methodInfo = GetEffectiveMethodInfo(context) ?? baseMethod;
+
         var parameterValues = methodInfo.GetParameters()
             .Select(p => context.ActionArguments.TryGetValue(p.Name!, out var value) ? value : null)
             .ToArray();

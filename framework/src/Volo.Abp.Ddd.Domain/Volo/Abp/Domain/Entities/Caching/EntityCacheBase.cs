@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Volo.Abp.Caching;
 using Volo.Abp.Data;
 using Volo.Abp.Domain.Entities.Events;
@@ -44,6 +46,20 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
             }))?.Value;
     }
 
+    public virtual async Task<List<TEntityCacheItem?>> FindManyAsync(IEnumerable<TKey> ids)
+    {
+        var idArray = ids.ToArray();
+        var distinctIds = idArray.Distinct().ToArray();
+        var cacheItems = await GetOrAddManyCacheItemsAsync(distinctIds);
+#pragma warning disable CS8714
+        var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
+#pragma warning restore CS8714
+
+        return idArray
+            .Select(id => cacheItemDict.TryGetValue(id!, out var wrapper) ? wrapper?.Value : null)
+            .ToList();
+    }
+
     public virtual async Task<TEntityCacheItem> GetAsync(TKey id)
     {
         return (await Cache.GetOrAddAsync(
@@ -57,6 +73,62 @@ public abstract class EntityCacheBase<TEntity, TEntityCacheItem, TKey> :
 
                 return MapToCacheItem(await Repository.GetAsync(id))!;
             }))!.Value!;
+    }
+
+    public virtual async Task<List<TEntityCacheItem>> GetManyAsync(IEnumerable<TKey> ids)
+    {
+        var idArray = ids.ToArray();
+        var distinctIds = idArray.Distinct().ToArray();
+        var cacheItems = await GetOrAddManyCacheItemsAsync(distinctIds);
+#pragma warning disable CS8714
+        var cacheItemDict = cacheItems.ToDictionary(x => x.Key, x => x.Value);
+#pragma warning restore CS8714
+
+        return idArray
+            .Select(id =>
+            {
+                var cacheItem = cacheItemDict.TryGetValue(id!, out var wrapper) ? wrapper?.Value : null;
+                if (cacheItem == null)
+                {
+                    throw new EntityNotFoundException<TEntity>(id);
+                }
+
+                return cacheItem;
+            })
+            .ToList();
+    }
+
+    protected virtual async Task<KeyValuePair<TKey, EntityCacheItemWrapper<TEntityCacheItem>?>[]> GetOrAddManyCacheItemsAsync(TKey[] ids)
+    {
+        return await Cache.GetOrAddManyAsync(
+            ids,
+            async missingKeys =>
+            {
+                if (HasObjectExtensionInfo())
+                {
+                    Repository.EnableTracking();
+                }
+
+                var missingKeyArray = missingKeys.ToArray();
+                var entities = await Repository.GetListAsync(
+                    x => missingKeyArray.Contains(x.Id),
+                    includeDetails: true
+                );
+#pragma warning disable CS8714
+                var entityDict = entities.ToDictionary(e => e.Id);
+#pragma warning restore CS8714
+
+                return missingKeyArray
+                    .Select(key =>
+                    {
+                        entityDict.TryGetValue(key!, out var entity);
+                        return new KeyValuePair<TKey, EntityCacheItemWrapper<TEntityCacheItem>>(
+                            key,
+                            MapToCacheItem(entity)!
+                        );
+                    })
+                    .ToList();
+            });
     }
 
     protected virtual bool HasObjectExtensionInfo()

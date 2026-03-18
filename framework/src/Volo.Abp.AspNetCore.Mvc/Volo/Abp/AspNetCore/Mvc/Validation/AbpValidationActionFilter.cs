@@ -54,7 +54,7 @@ public class AbpValidationActionFilter : IAsyncActionFilter, IAbpFilter, ITransi
 
         if (context.Controller is IValidationEnabled)
         {
-            await ValidateActionArgumentsAsync(context);
+            await ValidateActionArgumentsAsync(context, effectiveMethod);
         }
 
         await next();
@@ -75,10 +75,9 @@ public class AbpValidationActionFilter : IAsyncActionFilter, IAbpFilter, ITransi
             x.GetParameters().Select(p => p.ToString()).SequenceEqual(baseMethod.GetParameters().Select(p => p.ToString())));
     }
 
-    protected virtual async Task ValidateActionArgumentsAsync(ActionExecutingContext context)
+    protected virtual async Task ValidateActionArgumentsAsync(ActionExecutingContext context, MethodInfo? effectiveMethod = null)
     {
-        var baseMethod = context.ActionDescriptor.GetMethodInfo();
-        var methodInfo = GetEffectiveMethodInfo(context) ?? baseMethod;
+        var methodInfo = effectiveMethod ?? context.ActionDescriptor.GetMethodInfo();
 
         var parameterValues = methodInfo.GetParameters()
             .Select(p => context.ActionArguments.TryGetValue(p.Name!, out var value) ? value : null)

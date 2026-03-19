@@ -179,7 +179,7 @@ public class JobQueue<TArgs> : IJobQueue<TArgs>
         if (delay.HasValue)
         {
             routingKey = QueueConfiguration.DelayedQueueName;
-            basicProperties.Expiration = Math.Max(1, (long)Math.Ceiling(delay.Value.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
+            basicProperties.Expiration = Math.Max(0, (long)Math.Ceiling(delay.Value.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
         }
 
         if (ChannelAccessor != null)

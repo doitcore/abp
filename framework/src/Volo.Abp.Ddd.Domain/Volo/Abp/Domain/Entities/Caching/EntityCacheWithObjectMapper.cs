@@ -10,6 +10,7 @@ public class EntityCacheWithObjectMapper<TEntity, TEntityCacheItem, TKey> :
     EntityCacheBase<TEntity, TEntityCacheItem, TKey>
     where TEntity : Entity<TKey>
     where TEntityCacheItem : class
+    where TKey : notnull
 {
     protected IObjectMapper ObjectMapper { get; }
 

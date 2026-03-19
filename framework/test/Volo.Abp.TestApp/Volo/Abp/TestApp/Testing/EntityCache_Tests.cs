@@ -237,6 +237,100 @@ public abstract class EntityCache_Tests<TStartupModule> : TestAppTestBase<TStart
     }
 
     [Fact]
+    public async Task FindManyAsDictionary_Should_Return_Null_For_Not_Existing_Entities()
+    {
+        var notExistId = Guid.NewGuid();
+
+        var result = await ProductEntityCache.FindManyAsDictionaryAsync(new[] { notExistId });
+        result.Count.ShouldBe(1);
+        result.ContainsKey(notExistId).ShouldBeTrue();
+        result[notExistId].ShouldBeNull();
+
+        var cacheItemResult = await ProductCacheItem.FindManyAsDictionaryAsync(new[] { notExistId });
+        cacheItemResult.Count.ShouldBe(1);
+        cacheItemResult.ContainsKey(notExistId).ShouldBeTrue();
+        cacheItemResult[notExistId].ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task GetManyAsDictionary_Should_Throw_EntityNotFoundException_For_Not_Existing_Entities()
+    {
+        var notExistId = Guid.NewGuid();
+        await Assert.ThrowsAsync<EntityNotFoundException<Product>>(() => ProductEntityCache.GetManyAsDictionaryAsync(new[] { notExistId }));
+        await Assert.ThrowsAsync<EntityNotFoundException<Product>>(() => ProductCacheItem.GetManyAsDictionaryAsync(new[] { notExistId }));
+    }
+
+    [Fact]
+    public async Task FindManyAsDictionary_Should_Return_EntityCache()
+    {
+        var notExistId = Guid.NewGuid();
+        var ids = new[] { TestDataBuilder.ProductId, notExistId };
+
+        var products = await ProductEntityCache.FindManyAsDictionaryAsync(ids);
+        products.Count.ShouldBe(2);
+        products[TestDataBuilder.ProductId].ShouldNotBeNull();
+        products[TestDataBuilder.ProductId]!.Id.ShouldBe(TestDataBuilder.ProductId);
+        products[TestDataBuilder.ProductId]!.Name.ShouldBe("Product1");
+        products[TestDataBuilder.ProductId]!.Price.ShouldBe(decimal.One);
+        products[notExistId].ShouldBeNull();
+
+        // Call again to test caching
+        products = await ProductEntityCache.FindManyAsDictionaryAsync(ids);
+        products.Count.ShouldBe(2);
+        products[TestDataBuilder.ProductId].ShouldNotBeNull();
+
+        var productCacheItems = await ProductCacheItem.FindManyAsDictionaryAsync(ids);
+        productCacheItems.Count.ShouldBe(2);
+        productCacheItems[TestDataBuilder.ProductId].ShouldNotBeNull();
+        productCacheItems[TestDataBuilder.ProductId]!.Id.ShouldBe(TestDataBuilder.ProductId);
+        productCacheItems[TestDataBuilder.ProductId]!.Name.ShouldBe("Product1");
+        productCacheItems[TestDataBuilder.ProductId]!.Price.ShouldBe(decimal.One);
+        productCacheItems[notExistId].ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task GetManyAsDictionary_Should_Return_EntityCache()
+    {
+        var products = await ProductEntityCache.GetManyAsDictionaryAsync(new[] { TestDataBuilder.ProductId });
+        products.Count.ShouldBe(1);
+        products[TestDataBuilder.ProductId].Id.ShouldBe(TestDataBuilder.ProductId);
+        products[TestDataBuilder.ProductId].Name.ShouldBe("Product1");
+        products[TestDataBuilder.ProductId].Price.ShouldBe(decimal.One);
+
+        // Call again to test caching
+        products = await ProductEntityCache.GetManyAsDictionaryAsync(new[] { TestDataBuilder.ProductId });
+        products.Count.ShouldBe(1);
+        products[TestDataBuilder.ProductId].Id.ShouldBe(TestDataBuilder.ProductId);
+
+        var productCacheItems = await ProductCacheItem.GetManyAsDictionaryAsync(new[] { TestDataBuilder.ProductId });
+        productCacheItems.Count.ShouldBe(1);
+        productCacheItems[TestDataBuilder.ProductId].Id.ShouldBe(TestDataBuilder.ProductId);
+        productCacheItems[TestDataBuilder.ProductId].Name.ShouldBe("Product1");
+        productCacheItems[TestDataBuilder.ProductId].Price.ShouldBe(decimal.One);
+    }
+
+    [Fact]
+    public async Task FindManyAsDictionary_Should_Handle_Duplicate_Ids()
+    {
+        var ids = new[] { TestDataBuilder.ProductId, TestDataBuilder.ProductId };
+
+        var products = await ProductEntityCache.FindManyAsDictionaryAsync(ids);
+        products.Count.ShouldBe(1);
+        products[TestDataBuilder.ProductId].ShouldNotBeNull();
+        products[TestDataBuilder.ProductId]!.Id.ShouldBe(TestDataBuilder.ProductId);
+    }
+
+    [Fact]
+    public async Task GetManyAsDictionary_Should_Handle_Duplicate_Ids()
+    {
+        var ids = new[] { TestDataBuilder.ProductId, TestDataBuilder.ProductId };
+
+        var products = await ProductEntityCache.GetManyAsDictionaryAsync(ids);
+        products.Count.ShouldBe(1);
+        products[TestDataBuilder.ProductId].Id.ShouldBe(TestDataBuilder.ProductId);
+    }
+
+    [Fact]
     public void EntityCache_Default_Options_Should_Be_2_Minutes()
     {
         var productCache = GetRequiredService<IDistributedCache<EntityCacheItemWrapper<ProductCacheItem2>, Guid>>();

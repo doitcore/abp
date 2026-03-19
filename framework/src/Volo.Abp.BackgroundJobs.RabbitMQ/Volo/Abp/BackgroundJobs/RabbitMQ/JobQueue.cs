@@ -176,10 +176,10 @@ public class JobQueue<TArgs> : IJobQueue<TArgs>
             CorrelationId = CorrelationIdProvider.Get()
         };
 
-        if (delay.HasValue)
+        if (delay.HasValue && delay.Value > TimeSpan.Zero)
         {
             routingKey = QueueConfiguration.DelayedQueueName;
-            basicProperties.Expiration = Math.Max(0, (long)Math.Ceiling(delay.Value.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
+            basicProperties.Expiration = ((long)Math.Ceiling(delay.Value.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
         }
 
         if (ChannelAccessor != null)

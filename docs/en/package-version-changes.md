@@ -7,6 +7,7 @@
 | Microsoft.IdentityModel.JsonWebTokens | 8.14.0 | 8.16.0 | #25068 |
 | Microsoft.IdentityModel.Protocols.OpenIdConnect | 8.14.0 | 8.16.0 | #25068 |
 | Microsoft.IdentityModel.Tokens | 8.14.0 | 8.16.0 | #25068 |
+| MongoDB.Driver | 3.7.0 | 3.7.1 | #25114 |
 | System.IdentityModel.Tokens.Jwt | 8.14.0 | 8.16.0 | #25068 |
 | TickerQ | 10.1.1 | 10.2.0 | #25091 |
 | TickerQ.Dashboard | 10.1.1 | 10.2.0 | #25091 |

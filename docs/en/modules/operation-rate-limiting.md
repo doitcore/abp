@@ -1,11 +1,13 @@
 ````json
 //[doc-seo]
 {
-    "Description": "Learn how to use the Operation Rate Limiting module in ABP Framework to control the frequency of specific operations like SMS sending, login attempts, and resource-intensive tasks."
+    "Description": "Learn how to use the Operation Rate Limiting module (Pro) in ABP to control the frequency of specific operations like SMS sending, login attempts, and resource-intensive tasks."
 }
 ````
 
-# Operation Rate Limiting
+# Operation Rate Limiting Module (Pro)
+
+> You must have an [ABP Team or a higher license](https://abp.io/pricing) to use this module.
 
 ABP provides an operation rate limiting system that allows you to control the frequency of specific operations in your application. You may need operation rate limiting for several reasons:
 
@@ -15,15 +17,9 @@ ABP provides an operation rate limiting system that allows you to control the fr
 
 > This is not for [ASP.NET Core's built-in rate limiting middleware](https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit) which works at the HTTP request pipeline level. This module works at the **application/domain code level** and is called explicitly from your services. See the [Combining with ASP.NET Core Rate Limiting](#combining-with-aspnet-core-rate-limiting) section for a comparison.
 
-## Installation
+## How to Install
 
-You can open a command-line terminal and type the following command to install the [Volo.Abp.OperationRateLimiting](https://www.nuget.org/packages/Volo.Abp.OperationRateLimiting) package into your project:
-
-````bash
-abp add-package Volo.Abp.OperationRateLimiting
-````
-
-> If you haven't done it yet, you first need to install the [ABP CLI](../../../cli).
+This module is used by the [Account (Pro)](account-pro.md) module internally and comes pre-installed in the latest [startup templates](../solution-templates). So, no need to manually install it.
 
 ## Quick Start
 
@@ -31,7 +27,7 @@ This section shows the basic usage of the operation rate limiting system with a 
 
 ### Defining a Policy
 
-First, define a rate limiting policy in the `ConfigureServices` method of your [module class](../../architecture/modularity/basics.md):
+First, define a rate limiting policy in the `ConfigureServices` method of your [module class](../framework/architecture/modularity/basics.md):
 
 ````csharp
 Configure<AbpOperationRateLimitingOptions>(options =>
@@ -62,7 +58,7 @@ public class SmsAppService : ApplicationService
         _rateLimitChecker = rateLimitChecker;
     }
 
-    public async Task SendCodeAsync(string phoneNumber)
+    public virtual async Task SendCodeAsync(string phoneNumber)
     {
         await _rateLimitChecker.CheckAsync("SendSmsCode", phoneNumber);
 
@@ -78,9 +74,120 @@ public class SmsAppService : ApplicationService
 
 That's the basic usage. The following sections explain each concept in detail.
 
+## Declarative Usage (Attribute)
+
+Instead of injecting `IOperationRateLimitingChecker` manually, you can use the `[OperationRateLimiting]` attribute to enforce a policy declaratively on Application Service methods or MVC Controller actions.
+
+> **Application Services** are handled by the ABP interceptor (built into the Domain layer).
+> **MVC Controllers** are handled by `AbpOperationRateLimitingActionFilter`, which is automatically registered when you reference the `Volo.Abp.OperationRateLimiting.AspNetCore` package.
+
+### Applying to an Application Service
+
+````csharp
+public class SmsAppService : ApplicationService
+{
+    [OperationRateLimiting("SendSmsCode")]
+    public virtual async Task SendCodeAsync([RateLimitingParameter] string phoneNumber)
+    {
+        // Rate limit is checked automatically before this line executes.
+        await _smsSender.SendAsync(phoneNumber, GenerateCode());
+    }
+}
+````
+
+### Applying to an MVC Controller
+
+````csharp
+[Route("api/account")]
+public class AccountController : AbpController
+{
+    [HttpPost("send-sms-code")]
+    [OperationRateLimiting("SendSmsCode")]
+    public async Task<IActionResult> SendSmsCodeAsync([RateLimitingParameter] string phoneNumber)
+    {
+        // Rate limit is checked automatically before this line executes.
+        await _smsSender.SendAsync(phoneNumber, GenerateCode());
+        return Ok();
+    }
+}
+````
+
+### Resolving the Parameter Value
+
+The `[OperationRateLimiting]` attribute resolves `OperationRateLimitingContext.Parameter` automatically using the following priority order:
+
+1. **`[RateLimitingParameter]`** — a method parameter marked with this attribute. Its `ToString()` value is used as the partition key.
+2. **`IHasOperationRateLimitingParameter`** — a method parameter whose type implements this interface. The value returned by `GetPartitionParameter()` is used as the partition key.
+3. **`null`** — no parameter is resolved; suitable for policies that use `PartitionByCurrentUser`, `PartitionByClientIp`, etc.
+
+#### Using `[RateLimitingParameter]`
+
+Mark a single parameter to use its value as the partition key:
+
+````csharp
+[OperationRateLimiting("SendSmsCode")]
+public virtual async Task SendCodeAsync([RateLimitingParameter] string phoneNumber)
+{
+    // partition key = phoneNumber
+}
+````
+
+#### Using `IHasOperationRateLimitingParameter`
+
+Implement the interface on an input DTO when the partition key is a property of the DTO:
+
+````csharp
+public class SendSmsCodeInput : IHasOperationRateLimitingParameter
+{
+    public string PhoneNumber { get; set; }
+    public string Language { get; set; }
+
+    public string? GetPartitionParameter() => PhoneNumber;
+}
+````
+
+````csharp
+[OperationRateLimiting("SendSmsCode")]
+public virtual async Task SendCodeAsync(SendSmsCodeInput input)
+{
+    // partition key = input.GetPartitionParameter() = input.PhoneNumber
+}
+````
+
+#### No Partition Parameter
+
+If no parameter is marked and no DTO implements the interface, the policy is checked without a `Parameter` value. This is appropriate for policies that use `PartitionByCurrentUser`, `PartitionByClientIp`, or `PartitionByCurrentTenant`:
+
+````csharp
+// Policy uses PartitionByCurrentUser — no explicit parameter needed.
+[OperationRateLimiting("GenerateReport")]
+public virtual async Task<ReportDto> GenerateMonthlyReportAsync()
+{
+    // Rate limit is checked per current user automatically.
+}
+````
+
+> If the method has parameters but none is resolved, a **warning log** is emitted to help you catch misconfigured usages early.
+
+### Applying to a Class
+
+You can also place `[OperationRateLimiting]` on the class to apply it to **all public methods** of that class:
+
+````csharp
+[OperationRateLimiting("MyServiceLimit")]
+public class MyAppService : ApplicationService
+{
+    public virtual async Task MethodAAsync([RateLimitingParameter] string key) { ... }
+
+    public virtual async Task MethodBAsync([RateLimitingParameter] string key) { ... }
+}
+````
+
+> A method-level attribute takes precedence over the class-level attribute.
+
 ## Defining Policies
 
-Policies are defined using `AbpOperationRateLimitingOptions` in the `ConfigureServices` method of your [module class](../../architecture/modularity/basics.md). Each policy has a unique name, one or more rules, and a partition strategy.
+Policies are defined using `AbpOperationRateLimitingOptions` in the `ConfigureServices` method of your [module class](../framework/architecture/modularity/basics.md). Each policy has a unique name, one or more rules, and a partition strategy.
 
 ### Single-Rule Policies
 
@@ -267,13 +374,58 @@ Works the same way as `PartitionByEmail`: resolves from `context.Parameter` firs
 
 ### Custom Partition (PartitionBy)
 
-You can provide a custom async function to generate the partition key. The async signature allows you to perform database queries or other I/O operations:
+You can register a named custom resolver to generate the partition key. The resolver is an async function, so you can perform database queries or other I/O operations. Because the resolver is stored by name (not as an anonymous delegate), it can be serialized and managed from a UI or database.
+
+**Step 1 — Register the resolver by name:**
+
+````csharp
+Configure<AbpOperationRateLimitingOptions>(options =>
+{
+    options.AddPartitionKeyResolver("ByDevice", ctx =>
+        Task.FromResult($"{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+});
+````
+
+**Step 2 — Reference it in a policy:**
 
 ````csharp
 policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 100)
-      .PartitionBy(ctx => Task.FromResult(
-          $"{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+      .PartitionBy("ByDevice");
 ````
+
+You can also register and reference in one step (inline):
+
+````csharp
+policy.WithFixedWindow(TimeSpan.FromHours(1), maxCount: 100)
+      .PartitionBy("ByDevice", ctx =>
+          Task.FromResult($"{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+````
+
+> If you call `PartitionBy("name")` with a resolver name that hasn't been registered, an exception is thrown at configuration time (not at runtime), so typos are caught early.
+
+To replace an existing resolver (e.g., in a downstream module), use `ReplacePartitionKeyResolver`:
+
+````csharp
+options.ReplacePartitionKeyResolver("ByDevice", ctx =>
+    Task.FromResult($"v2:{ctx.Parameter}:{ctx.ExtraProperties["DeviceId"]}"));
+````
+
+### Named Rules (WithName)
+
+By default, a rule's store key is derived from its `Duration`, `MaxCount`, and `PartitionType`. This means that if you change a rule's parameters (e.g., increase `maxCount` from 5 to 10), the counter resets because the key changes.
+
+To keep a stable key across parameter changes, give the rule a name:
+
+````csharp
+policy.AddRule(rule => rule
+    .WithName("HourlyLimit")
+    .WithFixedWindow(TimeSpan.FromHours(1), maxCount: 100)
+    .PartitionByCurrentUser());
+````
+
+When a name is set, it is used as the store key instead of the content-based descriptor. This is particularly useful when rules are managed from a database or UI — changing the `maxCount` or `duration` will not reset existing counters.
+
+> Rule names must be unique within a policy. Duplicate names cause an exception at build time.
 
 ## Multi-Tenancy
 
@@ -506,7 +658,7 @@ This module and ASP.NET Core's built-in [rate limiting middleware](https://learn
 |---|---|---|
 | **Level** | HTTP request pipeline | Application/domain code |
 | **Scope** | All incoming requests | Specific business operations |
-| **Usage** | Middleware (automatic) | Explicit `CheckAsync` calls |
+| **Usage** | Middleware (automatic) | `[OperationRateLimiting]` attribute or explicit `CheckAsync` calls |
 | **Typical use** | API throttling, DDoS protection | Business logic limits (SMS, reports) |
 
 A common pattern is to use ASP.NET Core middleware for broad API protection and this module for fine-grained business operation limits.
@@ -539,7 +691,7 @@ public class MyCustomStore : IOperationRateLimitingStore, ITransientDependency
 }
 ````
 
-ABP's [dependency injection](../../fundamentals/dependency-injection.md) system will automatically use your implementation since it replaces the default one.
+ABP's [dependency injection](../framework/fundamentals/dependency-injection.md) system will automatically use your implementation since it replaces the default one.
 
 ### Custom Rule
 
@@ -557,8 +709,33 @@ Replace `IOperationRateLimitingFormatter` to customize how time durations are di
 
 Replace `IOperationRateLimitingPolicyProvider` to load policies from a database or external configuration source instead of the in-memory options.
 
+When loading pre-built policies from an external source, use the `AddPolicy` overload that accepts an `OperationRateLimitingPolicy` object directly (bypassing the builder):
+
+````csharp
+options.AddPolicy(new OperationRateLimitingPolicy
+{
+    Name = "DynamicPolicy",
+    Rules =
+    [
+        new OperationRateLimitingRuleDefinition
+        {
+            Name = "HourlyLimit",
+            Duration = TimeSpan.FromHours(1),
+            MaxCount = 100,
+            PartitionType = OperationRateLimitingPartitionType.CurrentUser
+        }
+    ]
+});
+````
+
+To remove a policy (e.g., when it is deleted from the database), use `RemovePolicy`:
+
+````csharp
+options.RemovePolicy("DynamicPolicy");
+````
+
 ## See Also
 
 * [ASP.NET Core Rate Limiting Middleware](https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit)
-* [Distributed Caching](../fundamentals/caching.md)
-* [Exception Handling](../fundamentals/exception-handling.md)
+* [Distributed Caching](../framework/fundamentals/caching.md)
+* [Exception Handling](../framework/fundamentals/exception-handling.md)
